@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.10.1/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="../public/css/externals/bootstrap-slider.css">
+    <link rel="stylesheet" href="../public/css/externals/bootstrap.glyphicon.css">
+    <link rel="stylesheet" href="../public/css/style.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <link rel="stylesheet" href="http://localhost/terrama2/css/terrama2.css">
+
+    <script src="http://openlayers.org/en/v3.10.1/build/ol.js" type="text/javascript"></script>
+    <script src="http://static.jpope.org/cdnjs/ajax/libs/jquery/2.0.0/jquery.min.js" type="text/javascript"></script>
+    <!--<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>-->
+    <script src="../public/js/externals/bootstrap-slider.js" type="text/javascript"></script>
+    <script src="../public/js/externals/jquery.mask.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
+    <title>TerraMA2</title>
+  </head>
+  <body>
+    <div id="gov-identity-bar"></div>
+    <div class="banner"></div>
+    <div class="terrama2-container">
+      <div id="terrama2-leftbar">
+        <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-layertree">Data</button>
+        <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-lala">Lala</button>
+      </div>
+      <div id="terrama2-layertree" class="terrama2-leftbox"><div class="terrama2-leftbox-content"></div></div>
+      <div id="terrama2-lala" class="terrama2-leftbox">
+        <div class="terrama2-leftbox-content">
+          <div class="terrama2-leftbox-header"><h2>Filtro Temporal</h2><hr></div>
+          <div class="terrama2-form-group">
+            <input type="text" class="terrama2-input date" placeholder="De"/>
+            <input type="text" class="terrama2-input date" placeholder="At&eacute;"/>
+            <button class="terrama2-form-button">Aplicar</button>
+          </div>
+        </div>
+      </div>
+      <div id="terrama2-map"></div>
+    </div>
+    <script src="http://localhost/terrama2/js/terrama2.js" type="text/javascript"></script>
+    <!--<script src="../public/terrama2/javascript/components/layertree.terrama2.js" type="text/javascript"></script>
+    <script src="../public/terrama2/javascript/components/leftbar.terrama2.js" type="text/javascript"></script>-->
+
+    <script>
+    $("#gov-identity-bar").load('templates/barra-identidade-gov.html');
+
+    var terrama2 = new TerraMA2(["MapDisplay", "LayerExplorer", "LeftBar", "ToolBox"]);
+    </script>
+  </body>
+</html>
