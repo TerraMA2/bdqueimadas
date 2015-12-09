@@ -12,7 +12,11 @@ Below we show the list of third-party softwares and its versions that you need t
 
 ## Instructions for Running
 
-To run BDQueimadas you need to set the path to the TerraMA2 in the index.html file:
+Below we show the steps to run BDQueimadas:
+
+- Place the application folder into the Apache root directory.
+
+- Set the path to the TerraMA2 in the index.html file (bdqueimadas/views/index.html):
 
 ```
 <script src="http://localhost/terrama2/webapp/js/terrama2.js" type="text/javascript"></script>
