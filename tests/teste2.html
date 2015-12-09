@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="http://openlayers.org/en/v3.10.1/css/ol.css" type="text/css">
+
+  <style>
+  .map {
+    height: 100%;
+    width: 100%;
+  }
+  </style>
+
+  <script src="http://openlayers.org/en/v3.10.1/build/ol.js" type="text/javascript"></script>
+  <title>OpenLayers 3 + GeoServer Example</title>
+</head>
+<body>
+  <div id="map" class="map"></div>
+  <button onclick="base();">Base</button>
+  <button onclick="mapserver();">Mapserver</button>
+  <script type="text/javascript">
+
+  var map = new ol.Map({
+    target: 'map',
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM(),
+        name: "Base"
+      }),
+      new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          projection: 'EPSG:4326',
+          preload: Infinity,
+          url: 'http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map',
+          serverType: 'mapserver',
+          params:{
+            'LAYERS':"paises,estados,focos_2dias", 'TILED':true
+          }
+        })
+      })
+    ],
+    view: new ol.View({
+      projection: 'EPSG:4326',
+      center: [-55, -15],
+      zoom: 5
+    })
+  });
+
+  function base() {
+    map.setView(new ol.View({
+      center: ol.proj.fromLonLat([-55, -15]),
+      zoom: 3
+    }));
+  }
+
+
+  function mapserver() {
+    map.setView(new ol.View({
+      projection: 'EPSG:4326',
+      center: [-55, -15],
+      zoom: 5
+    }));
+  }
+
+  </script>
+</body>
+</html>
