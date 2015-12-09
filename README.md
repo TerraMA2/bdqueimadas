@@ -16,7 +16,7 @@ Below we show the steps to run BDQueimadas:
 
 - Place the application folder into the Apache root directory.
 
-- Set the path to the TerraMA2 in the index.html file (bdqueimadas/views/index.html):
+- Set the correct path to TerraMA2 in the index.html file (bdqueimadas/views/index.html):
 
 ```
 <script src="http://localhost/terrama2/webapp/js/terrama2.js" type="text/javascript"></script>
