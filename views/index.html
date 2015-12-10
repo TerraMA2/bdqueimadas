@@ -17,20 +17,20 @@
   </head>
   <body>
     <div id="gov-identity-bar"></div>
-    <div class="banner"></div>
+    <div class="banner"><div style="position: relative; margin: 0 auto; width: 545px; top: 50%; transform: translateY(-50%);">SIG - Focos de Queimadas</div></div>
     <div class="terrama2-container">
       <div id="terrama2-leftbar">
         <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-layertree">Data</button>
-        <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-lala">Lala</button>
+        <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-filter">Filtro</button>
       </div>
       <div id="terrama2-layertree" class="terrama2-leftbox"><div class="terrama2-leftbox-content"></div></div>
-      <div id="terrama2-lala" class="terrama2-leftbox">
+      <div id="terrama2-filter" class="terrama2-leftbox">
         <div class="terrama2-leftbox-content">
           <div class="terrama2-leftbox-header"><h2>Filtro Temporal</h2><hr></div>
           <div class="terrama2-form-group">
-            <input type="text" class="terrama2-input date" placeholder="De"/>
-            <input type="text" class="terrama2-input date" placeholder="At&eacute;"/>
-            <button class="terrama2-form-button">Aplicar</button>
+            <input type="text" class="terrama2-input date regular" id="terrama2-filter-date-de" placeholder="De"/>
+            <input type="text" class="terrama2-input date regular" id="terrama2-filter-date-ate" placeholder="At&eacute;"/>
+            <button class="terrama2-form-button" id="terrama2-filter-button">Aplicar</button>
           </div>
         </div>
       </div>
@@ -39,7 +39,13 @@
     <script src="http://localhost/terrama2/webapp/js/terrama2.js" type="text/javascript"></script>
     <script>
     $("#gov-identity-bar").load('templates/barra-identidade-gov.html');
-    var terrama2 = new TerraMA2(["MapDisplay", "LayerExplorer", "LeftBar", "ToolBox"]);
+    var terrama2 = new TerraMA2([
+      "MapDisplay",
+      "LayerExplorer",
+      "LeftBar",
+      "ToolBox",
+      "Filter"
+    ]);
     </script>
   </body>
 </html>

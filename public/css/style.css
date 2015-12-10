@@ -1,3 +1,79 @@
+@font-face {
+  font-family: 'Titillium Light Upright';
+  src: url('../fonts/titillium/Titillium-LightUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Regular Upright';
+  src: url('../fonts/titillium/Titillium-RegularUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Semibold Upright';
+  src: url('../fonts/titillium/Titillium-SemiboldUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Thin Upright';
+  src: url('../fonts/titillium/Titillium-ThinUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Black';
+  src: url('../fonts/titillium/TitilliumWeb-Black.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Bold';
+  src: url('../fonts/titillium/TitilliumWeb-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium BoldItalic';
+  src: url('../fonts/titillium/TitilliumWeb-BoldItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium ExtraLight';
+  src: url('../fonts/titillium/TitilliumWeb-ExtraLight.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Extra Light Italic';
+  src: url('../fonts/titillium/TitilliumWeb-ExtraLightItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Italic';
+  src: url('../fonts/titillium/TitilliumWeb-Italic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Light';
+  src: url('../fonts/titillium/TitilliumWeb-Light.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Light Italic';
+  src: url('../fonts/titillium/TitilliumWeb-LightItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Regular';
+  src: url('../fonts/titillium/TitilliumWeb-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Semibold';
+  src: url('../fonts/titillium/TitilliumWeb-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Semibold Italic';
+  src: url('../fonts/titillium/TitilliumWeb-SemiBoldItalic.ttf');
+}
+
+
 html, body {
   margin: 0;
 }
@@ -5,8 +81,13 @@ html, body {
 .banner {
   position: relative;
   width: 100%;
-  height: 120px;
-  background-color: #a6a07c;
-  box-shadow: 0 4px 9px 0 rgba(0,0,0,0.5),0 10px 20px 0 rgba(0,0,0,0.2) !important;
+  height: 148px;
+  background-color: #f1f1f1;
+  /*box-shadow: 0 4px 9px 0 rgba(0,0,0,0.5),0 10px 20px 0 rgba(0,0,0,0.2) !important;*/
   z-index: 99999;
+  border-bottom: 1px solid #a6a07c;
+  font-family: 'Titillium Semibold Upright';
+  font-size: 48px;
+  text-transform: uppercase;
+  color: rgb(84,84,84);
 }
