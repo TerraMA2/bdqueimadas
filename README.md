@@ -4,13 +4,19 @@ Este aplicativo permite visualizar os focos (ocorrência do fogo na vegetação)
 
 A versão anterior deste aplicativo encontra-se operacional em: http://www.dpi.inpe.br/proarco/bdqueimadas.
 
-## Instructions for Running
+## Dependências
 
-Below we show the steps to run BDQueimadas:
+Para executar o BDQueimadas você vai precisar instalar alguns softwares de terceitos. Abaixo listamos quais são os softwares e suas versões:
 
-- Place the application folder into the Apache root directory.
+- **Apache (Obrigatório):** Para que o BDQueimadas funcione é necessário que ele esteja sendo executado por um servidor http. O servidor a ser utilizado é o Apache HTTP Server na versão 2.4 (ou versões superiores). O software pode ser baixado em: https://httpd.apache.org.
 
-- Set the correct path to TerraMA2 in the index.html file (bdqueimadas/views/index.html):
+## Instruções para Execução
+
+Abaixo mostramos os passos para executar o BDQueimadas:
+
+- Coloque a pasta da aplicação no diretório raiz do Apache.
+
+- Verifique se o caminho para a API TerraMA² está correto no arquivo index.html (bdqueimadas/views/index.html):
 
 ```
 <script src="http://localhost/terrama2/webapp/js/terrama2.js" type="text/javascript"></script>
