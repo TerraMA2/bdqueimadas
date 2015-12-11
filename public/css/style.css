@@ -96,14 +96,27 @@ html, body {
   font-size: 48px;
   text-transform: uppercase;
   color: rgb(84,84,84);
+  background-image: url('../img/logos.png'), url('../img/icon_idioma.png');
+  background-repeat: no-repeat;
+  background-position: 50px 37px, calc(100% - 50px) 70px;
 }
 
 .banner-title {
   position: relative;
   margin: 0 auto;
-  width: 545px;
-  top: 50%;
+  width: 295px;
+  top: 76px;
   transform: translateY(-50%);
+}
+
+.banner-language {
+  font-family: 'Titillium Regular';
+  font-size: 17px;
+  color: #818181;
+  text-transform: none;
+  text-align: right;
+  margin-top: 12px;
+  margin-right: 85px;
 }
 
 .footer {
