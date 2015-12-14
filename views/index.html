@@ -25,15 +25,18 @@
       <div class="terrama2-container">
         <div id="terrama2-leftbar">
           <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-layerexplorer"></button>
-          <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-filter">Filtro</button>
+          <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-filter"></button>
         </div>
         <div id="terrama2-layerexplorer" class="terrama2-leftbox"></div>
         <div id="terrama2-filter" class="terrama2-leftbox">
           <div class="terrama2-leftbox-content">
-            <div class="terrama2-leftbox-header"><h2>Filtro Temporal</h2><hr></div>
+            <div class="terrama2-leftbox-header"><h2>Filtro</h2><hr></div>
             <div class="terrama2-form-group">
+              <h4>Temporal</h4>
               <input type="text" class="terrama2-input date regular" id="terrama2-filter-date-de" placeholder="De"/>
               <input type="text" class="terrama2-input date regular" id="terrama2-filter-date-ate" placeholder="At&eacute;"/>
+              <h4>Por Sat&eacute;lite</h4>
+              <select class="terrama2-input terrama2-select" id="terrama2-filter-satellite"></select>
               <button class="terrama2-form-button" id="terrama2-filter-button">Aplicar</button>
             </div>
           </div>
