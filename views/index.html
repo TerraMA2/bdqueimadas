@@ -36,8 +36,8 @@
             <div class="terrama2-leftbox-header"><h2>Filtro</h2></div>
             <div class="terrama2-form-group">
               <h4>Temporal</h4>
-              <input type="text" class="terrama2-input date regular" id="terrama2-filter-date-de" placeholder="De"/>
-              <input type="text" class="terrama2-input date regular" id="terrama2-filter-date-ate" placeholder="At&eacute;"/>
+              <input type="text" class="terrama2-input terrama2-date terrama2-regular" id="terrama2-filter-date-de" placeholder="De"/>
+              <input type="text" class="terrama2-input terrama2-date terrama2-regular" id="terrama2-filter-date-ate" placeholder="At&eacute;"/>
               <h4>Por Sat&eacute;lite</h4>
               <select class="terrama2-input terrama2-select" id="terrama2-filter-satellite"></select>
               <button class="terrama2-form-button" id="terrama2-filter-button">Aplicar</button>
@@ -47,7 +47,7 @@
         <div id="terrama2-table" class="terrama2-leftbox terrama2-leftbox-fullscreen">
           <div class="terrama2-table-container">
             <div class="terrama2-leftbox-header"><h2>Tabelas</h2></div>
-          <table id="example" class="display" cellspacing="0">
+            <table class="display terrama2-table">
               <thead>
                   <tr>
                       <th>Name</th>
@@ -547,10 +547,6 @@
       "LeftBar",
       "Filter"
     ]);
-
-    $(document).ready(function() {
-        $('#example').DataTable();
-    } );
     </script>
   </body>
 </html>
