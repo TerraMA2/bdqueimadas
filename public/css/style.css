@@ -82,13 +82,13 @@ html, body {
 .content {
   position: relative;
   width: 100%;
-  height: calc(100% - 253px);
+  height: calc(100% - 210px);
 }
 
 .banner {
   position: relative;
   width: 100%;
-  height: 148px;
+  height: 105px;
   background-color: #f1f1f1;
   z-index: 99999;
   border-bottom: 1px solid #a6a07c;
@@ -96,16 +96,16 @@ html, body {
   font-size: 48px;
   text-transform: uppercase;
   color: rgb(84,84,84);
-  background-image: url('../img/logos.png'), url('../img/icon_idioma.png');
+  background-image: url('../img/logo_queimadas.png'), url('../img/icon_idioma.png');
   background-repeat: no-repeat;
-  background-position: 50px 37px, calc(100% - 50px) 70px;
+  background-position: 50px 17px, calc(100% - 50px) 48px;
 }
 
 .banner-title {
   position: relative;
   margin: 0 auto;
   width: 295px;
-  top: 76px;
+  top: 55px;
   transform: translateY(-50%);
 }
 
@@ -115,7 +115,7 @@ html, body {
   color: #818181;
   text-transform: none;
   text-align: right;
-  margin-top: 12px;
+  margin-top: -10px;
   margin-right: 85px;
 }
 
@@ -126,27 +126,15 @@ html, body {
   background-color: #FFFFFF;
   z-index: 99999;
   border-top: 1px solid #a6a07c;
-  font-family: 'Titillium Light Upright' !important;
+  font-family: 'Titillium Regular' !important;
   font-size: 14px;
   color: rgb(84,84,84);
+  text-align: center;
+  line-height: 22px;
 }
 
 .footer-text {
   position: relative;
-  margin: 0 auto;
-  width: 550px;
-  height: 55px;
   top: 50%;
   transform: translateY(-50%);
-  white-space: nowrap;
-}
-
-.footer-text-title {
-  font-family: 'Titillium Semibold Upright' !important;
-  float: left;
-  width: 100px;
-}
-
-.footer-text-content {
-  float: left;
 }
