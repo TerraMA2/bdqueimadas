@@ -20,9 +20,9 @@
   </head>
   <body>
     <div id="gov-identity-bar"></div>
-    <div class="banner">
-      <div class="banner-title">BDQueimadas</div>
-      <div class="banner-language">Idioma</div>
+    <div class="top">
+      <div class="top-title">BDQueimadas</div>
+      <div class="top-language">Idioma</div>
     </div>
     <div class="content">
       <div id="terrama2-container">
@@ -30,7 +30,7 @@
           <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-layerexplorer"></button>
           <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-filter"></button>
           <button class="terrama2-leftbar-button terrama2-leftbar-button-table" title="Data" terrama2-box="terrama2-table"></button>
-          <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-graph">graph</button>
+          <button class="terrama2-leftbar-button terrama2-leftbar-button-graphic" title="Data" terrama2-box="terrama2-graphic"></button>
         </div>
         <div id="terrama2-layerexplorer" class="terrama2-leftbox terrama2-resizable-horizontal"></div>
         <div id="terrama2-filter" class="terrama2-leftbox">
@@ -41,21 +41,27 @@
               <input type="text" class="terrama2-input terrama2-date terrama2-regular" id="terrama2-filter-date-de" placeholder="De"/>
               <input type="text" class="terrama2-input terrama2-date terrama2-regular" id="terrama2-filter-date-ate" placeholder="At&eacute;"/>
               <h4>Por Sat&eacute;lite</h4>
-              <select class="terrama2-input terrama2-select" id="terrama2-filter-satellite"></select>
+              <select class="terrama2-input terrama2-select" id="terrama2-filter-satellite"><option value="all">TODOS</option><option value="GOES-13">GOES-13</option><option value="METEOSAT-02">METEOSAT-02</option><option value="NPP">NPP</option><option value="NPP_375">NPP_375</option><option value="TERRA_M-M">TERRA_M-M</option></select>
               <button class="terrama2-form-button" id="terrama2-filter-button">Aplicar</button>
             </div>
           </div>
         </div>
         <div id="terrama2-table" class="terrama2-leftbox terrama2-leftbox-fullscreen">
-          <div class="terrama2-table-container">
+          <div class="terrama2-fullscreen-container">
             <div class="terrama2-leftbox-header"><h2>Tabelas</h2></div>
             <table class="display terrama2-table" id="table"></table>
           </div>
         </div>
-        <div id="terrama2-graph" class="terrama2-leftbox terrama2-leftbox-fullscreen">
-          <div class="terrama2-table-container">
-            <div class="terrama2-leftbox-header"><h2>Gr&aacute;ficos</h2></div>
-            <canvas id="canvas" style="/*max-width: calc(100% - 70px); max-height: calc(100% - 70px);*/"></canvas>
+        <div id="terrama2-graphic" class="terrama2-leftbox terrama2-leftbox-fullscreen terrama2-leftbox-left">
+          <div class="terrama2-fullscreen-container">
+            <div class="terrama2-leftbox-header">
+              <h2>Gr&aacute;ficos</h2>
+              <h3><span class="terrama2-span-active" style="margin-right: 30px;" id="graphic-left">Focos por Estados</span>|<span style="margin-left: 30px;" id="graphic-right">Focos por Biomas</span></h3>
+            </div>
+            <div style="width: 99%; height: 80%;">
+              <canvas id="canvas"></canvas>
+              <canvas id="chart-area" style="display: none;"/>
+            </div>
           </div>
         </div>
         <div id="terrama2-map"></div>
@@ -69,6 +75,8 @@
     </div>
     <script src="http://localhost/terrama2/webapp/public/js/terrama2.js" type="text/javascript"></script>
     <script>
+    $(".content").css("visibility", "hidden");
+
     $("#gov-identity-bar").load('templates/barra-identidade-gov.html');
     var terrama2 = new TerraMA2([
       "MapDisplay",
@@ -94,6 +102,20 @@
       }
       return false;
     }
+
+    var SortArr = function (j) {
+      var arr = [];
+      for (var key in j) {
+        arr.push({ key: key, val: j[key] });
+      }
+      arr.sort(function (a, b) {
+        var intA = parseInt(a.val), intB = parseInt(b.val);
+        if (intA > intB) return -1;
+        if (intA < intB) return 1;
+        return 0;
+      });
+      return arr;
+    };
 
     $.ajax({
       url: serverConfig.ProxyURL,
@@ -144,36 +166,107 @@
             $("#table").empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot><tbody>" + items + "</tbody>");
 
             $('.terrama2-table').DataTable();
+
+            var groupedData = {};
+            var groupedDataBioma = {};
+            var states = [];
+            var biomas = [];
+
+            for(var i = 0; i < 1000; i++) {
+              var itemUf = features.features[i].properties.Uf;
+              var itemBioma = features.features[i].properties.Bioma;
+
+              if(strInArr(states, itemUf)) {
+                groupedData[itemUf]++;
+              } else {
+                groupedData[itemUf] = 1;
+                states.push(itemUf);
+              }
+
+              if(strInArr(biomas, itemBioma)) {
+                groupedDataBioma[itemBioma]++;
+              } else {
+                groupedDataBioma[itemBioma] = 1;
+                biomas.push(itemBioma);
+              }
+            }
+
+            groupedData = SortArr(groupedData);
+            groupedDataBioma = SortArr(groupedDataBioma);
+
+            var labels = [];
+            var values = [];
+
+            var labelsB = [];
+            var valuesB = [];
+
+            var groupedDataLength = groupedData.length;
+            var groupedDataBiomaLength = groupedDataBioma.length;
+
+            for(var i = 0; i < groupedDataLength; i++) {
+              labels.push(groupedData[i].key);
+              values.push(groupedData[i].val);
+            }
+
+            for(var i = 0; i < groupedDataBiomaLength; i++) {
+              labelsB.push(groupedDataBioma[i].key);
+              valuesB.push(groupedDataBioma[i].val);
+            }
+
+            var barChartData = {
+              labels : labels,
+              datasets : [
+                {
+                  fillColor : "rgba(151,187,205,0.5)",
+                  strokeColor : "rgba(151,187,205,0.8)",
+                  highlightFill : "rgba(151,187,205,0.75)",
+                  highlightStroke : "rgba(151,187,205,1)",
+                  data : values
+                }
+              ]
+            }
+
+            var pieData = [
+              {
+                value: valuesB[0], color:"#F7464A", highlight: "#FF5A5E", label: labelsB[0]
+              }, {
+                value: valuesB[1], color: "#46BFBD", highlight: "#5AD3D1", label: labelsB[1]
+              }, {
+                value: valuesB[2], color: "#FDB45C", highlight: "#FFC870", label: labelsB[2]
+              }, {
+                value: valuesB[3], color: "#949FB1", highlight: "#A8B3C5", label: labelsB[3]
+              }, {
+                value: valuesB[4], color: "#4D5360", highlight: "#616774", label: labelsB[4]
+              }
+            ];
+
+            var ctxBar = document.getElementById("canvas").getContext("2d");
+            var ctxPie = document.getElementById("chart-area").getContext("2d");
+
+            window.myBar = new Chart(ctxBar).Bar(barChartData, { responsive : true, maintainAspectRatio: false });
+            window.myPie = new Chart(ctxPie).Pie(pieData, { responsive : true, maintainAspectRatio: false });
+
+            $("#graphic-left").on('click', function() {
+              $("#graphic-left").addClass("terrama2-span-active");
+              $("#graphic-right").removeClass("terrama2-span-active");
+
+              $("#canvas").css("display", "");
+              $("#chart-area").css("display", "none");
+            });
+
+            $("#graphic-right").on('click', function() {
+              $("#graphic-right").addClass("terrama2-span-active");
+              $("#graphic-left").removeClass("terrama2-span-active");
+
+              $("#canvas").css("display", "none");
+              $("#chart-area").css("display", "");
+            });
           }
         });
       }
     });
 
-    var barChartData = {
-      labels : ["January","February","March","April","May","June","July"],
-      datasets : [
-        {
-          fillColor : "rgba(220,220,220,0.5)",
-          strokeColor : "rgba(220,220,220,0.8)",
-          highlightFill: "rgba(220,220,220,0.75)",
-          highlightStroke: "rgba(220,220,220,1)",
-          data : [1,2,3,4,5,6,7]
-        },
-        {
-          fillColor : "rgba(151,187,205,0.5)",
-          strokeColor : "rgba(151,187,205,0.8)",
-          highlightFill : "rgba(151,187,205,0.75)",
-          highlightStroke : "rgba(151,187,205,1)",
-          data : [7,6,5,4,3,2,1]
-        }
-      ]
-
-    }
-
-    var ctx = document.getElementById("canvas").getContext("2d");
-    window.myBar = new Chart(ctx).Bar(barChartData, {
-      responsive : true
-    });
+    $(".content").css("visibility", "visible");
     </script>
   </body>
 </html>
