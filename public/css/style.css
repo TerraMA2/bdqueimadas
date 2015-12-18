@@ -85,7 +85,7 @@ html, body {
   height: calc(100% - 210px);
 }
 
-.banner {
+.top {
   position: relative;
   width: 100%;
   height: 105px;
@@ -101,7 +101,7 @@ html, body {
   background-position: 50px 17px, calc(100% - 50px) 48px;
 }
 
-.banner-title {
+.top-title {
   position: relative;
   margin: 0 auto;
   width: 295px;
@@ -109,7 +109,7 @@ html, body {
   transform: translateY(-50%);
 }
 
-.banner-language {
+.top-language {
   font-family: 'Titillium Regular';
   font-size: 17px;
   color: #818181;
