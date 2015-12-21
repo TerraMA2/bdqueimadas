@@ -27,6 +27,7 @@
     <div class="content">
       <div id="terrama2-container">
         <div id="terrama2-leftbar">
+          <div id="maximized-map-logos" class="hide"></div>
           <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-layerexplorer"></button>
           <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-filter"></button>
           <button class="terrama2-leftbar-button terrama2-leftbar-button-table" title="Data" terrama2-box="terrama2-table"></button>
@@ -64,7 +65,11 @@
             </div>
           </div>
         </div>
-        <div id="terrama2-map"></div>
+        <div id="terrama2-map">
+          <div class="map-button">
+            <button id="maximize-map-button"></button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -74,6 +79,7 @@
       </div>
     </div>
     <script src="http://localhost/terrama2/webapp/public/js/terrama2.js" type="text/javascript"></script>
+    <script src="../public/js/events.js" type="text/javascript"></script>
     <script>
 
     $("#gov-identity-bar").load('templates/barra-identidade-gov.html');
