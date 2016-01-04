@@ -187,11 +187,20 @@ html, body {
 }
 
 #maximize-map-button {
+  cursor: pointer;
+  outline: none;
+}
+
+.maximize-map {
+  background-image: url('../img/icon_max.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.minimize-map {
   background-image: url('../img/icon_restaurar.jpg');
   background-repeat: no-repeat;
   background-position: center;
-  cursor: pointer;
-  outline: none;
 }
 
 .top.minor {
