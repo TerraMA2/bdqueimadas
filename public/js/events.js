@@ -12,6 +12,7 @@ $(document).ready(function() {
       $(".footer-text").css("display", "none");
       $("#maximized-map-logos").removeClass("hide");
       $(".content").addClass("bigger");
+      $(this).removeClass("maximize-map").addClass("minimize-map");
       terrama2.getMapDisplay().updateMapSize();
     } else {
       regularMap = true;
@@ -22,6 +23,7 @@ $(document).ready(function() {
       $(".footer-text").css("display", "");
       $("#maximized-map-logos").addClass("hide");
       $(".content").removeClass("bigger");
+      $(this).removeClass("minimize-map").addClass("maximize-map");
       terrama2.getMapDisplay().updateMapSize();
     }
   });
