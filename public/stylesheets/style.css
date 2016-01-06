@@ -1,0 +1,239 @@
+@font-face {
+  font-family: 'Titillium Light Upright';
+  src: url('../fonts/titillium/Titillium-LightUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Regular Upright';
+  src: url('../fonts/titillium/Titillium-RegularUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Semibold Upright';
+  src: url('../fonts/titillium/Titillium-SemiboldUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Thin Upright';
+  src: url('../fonts/titillium/Titillium-ThinUpright.otf');
+}
+
+@font-face {
+  font-family: 'Titillium Black';
+  src: url('../fonts/titillium/TitilliumWeb-Black.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Bold';
+  src: url('../fonts/titillium/TitilliumWeb-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium BoldItalic';
+  src: url('../fonts/titillium/TitilliumWeb-BoldItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium ExtraLight';
+  src: url('../fonts/titillium/TitilliumWeb-ExtraLight.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Extra Light Italic';
+  src: url('../fonts/titillium/TitilliumWeb-ExtraLightItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Italic';
+  src: url('../fonts/titillium/TitilliumWeb-Italic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Light';
+  src: url('../fonts/titillium/TitilliumWeb-Light.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Light Italic';
+  src: url('../fonts/titillium/TitilliumWeb-LightItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Regular';
+  src: url('../fonts/titillium/TitilliumWeb-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Semibold';
+  src: url('../fonts/titillium/TitilliumWeb-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Titillium Semibold Italic';
+  src: url('../fonts/titillium/TitilliumWeb-SemiBoldItalic.ttf');
+}
+
+
+html, body {
+  font-family: 'Titillium Regular', Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 210px);
+}
+
+.content.bigger {
+  height: calc(100% - 45px);
+}
+
+.top {
+  position: relative;
+  width: 100%;
+  height: 105px;
+  background-color: #f1f1f1;
+  z-index: 99999;
+  border-bottom: 1px solid #a6a07c;
+  font-family: 'Titillium Semibold Upright';
+  font-size: 48px;
+  text-transform: uppercase;
+  color: rgb(84,84,84);
+  background-image: url('../images/logo_queimadas.png'), url('../images/icon_idioma.png');
+  background-repeat: no-repeat;
+  background-position: 50px 17px, calc(100% - 50px) 48px;
+}
+
+.top-title {
+  position: relative;
+  margin: 0 auto;
+  width: 295px;
+  top: 55px;
+  transform: translateY(-50%);
+}
+
+.top-language {
+  font-family: 'Titillium Regular';
+  font-size: 17px;
+  color: #818181;
+  text-transform: none;
+  text-align: right;
+  margin-top: -10px;
+  margin-right: 85px;
+}
+
+.footer {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  background-color: #FFFFFF;
+  z-index: 99999;
+  border-top: 1px solid #a6a07c;
+  font-family: 'Titillium Regular' !important;
+  font-size: 14px;
+  color: rgb(84,84,84);
+  text-align: center;
+  line-height: 22px;
+}
+
+.footer-text {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.terrama2-map-simple-zoom {
+  top: 110px !important;
+}
+
+.map-button {
+  position: absolute;
+  float: right;
+  right: 50px;
+  top: 30px;
+  z-index: 99999;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  background-color: rgba(255,255,255,.4);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.map-button:hover {
+  background-color: rgba(255,255,255,.6) !important;
+}
+
+.map-button > button {
+  position: relative;
+  width: 47px;
+  height: 45px;
+  display: block;
+  margin: 1px;
+  padding: 0;
+  opacity: 0.8;
+  border: none;
+  border-radius: 2px;
+  background-color: rgba(241, 241, 241, 0.8);
+}
+
+.map-button > button:hover {
+  background-color: rgba(241, 241, 241, 1) !important;
+}
+
+#maximize-map-button {
+  cursor: pointer;
+  outline: none;
+}
+
+.maximize-map {
+  background-image: url('../images/icon_max.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.minimize-map {
+  background-image: url('../images/icon_restaurar.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.top.minor {
+  background-image: none;
+  border: none;
+  color: transparent;
+  height: 5px;
+  -webkit-box-shadow: 0px 3px 11px -1px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 3px 11px -1px rgba(0,0,0,0.3);
+  box-shadow: 0px 3px 11px -1px rgba(0,0,0,0.3);
+}
+
+.footer.minor {
+  color: transparent;
+  border: 0;
+  height: 5px;
+  -webkit-box-shadow: 0px -3px 11px -1px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px -3px 11px -1px rgba(0,0,0,0.3);
+  box-shadow: 0px -3px 11px -1px rgba(0,0,0,0.3);
+}
+
+#maximized-map-logos {
+  width: 100%;
+  background-color: white;
+  height: 98px;
+  margin-top: -22px;
+  background-image: url('../images/logo_bdqueimadas_reduzida.jpg'), url('../images/logo_bdqueimadas_reduzida.jpg');
+  background-repeat: no-repeat;
+  background-position: 50% 4px, 50% calc(100% - 4px);
+  border-right: 1px solid white;
+  border-bottom: 1px solid #2b2b2b;
+}
+
+.hide {
+  display: none;
+}
