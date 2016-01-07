@@ -14,11 +14,28 @@ Para executar o BDQueimadas você vai precisar instalar alguns softwares de terc
 
 Abaixo mostramos os passos para executar o BDQueimadas:
 
-- Coloque a pasta da aplicação no diretório raiz do Apache.
-
-- Verifique se o caminho para a API TerraMA² está correto no arquivo index.html (bdqueimadas/views/index.html):
+- Execute o clone da aplicação para o diretório desejado:
 
 ```
-<script src="http://localhost/terrama2/webapp/js/terrama2.js" type="text/javascript"></script>
-<link rel="stylesheet" href="http://localhost/terrama2/webapp/css/terrama2.css">
+git clone https://github.com/TerraMA2/bdqueimadas.git
+```
+
+- Verifique se a URL para o servidor da API TerraMA² está correto na variável terrama2Path localizada no arquivo index.ejs (bdqueimadas/views/index.ejs):
+
+```
+<%
+  var terrama2Path = "http://localhost:36000";
+%>
+```
+
+- Acesse o diretório da aplicação via linha de comando e execute o seguinte comando:
+
+```
+npm start
+```
+
+- Por padrão o sistema vai rodar na porta 35000, caso deseje alterar, acesse o arquivo bdqueimadas/bin/www:
+
+```
+var portNumber = '35000';
 ```
