@@ -8,7 +8,7 @@ A versão anterior deste aplicativo encontra-se operacional em: http://www.dpi.i
 
 Para executar o BDQueimadas você vai precisar instalar alguns softwares de terceiros. Abaixo listamos quais são os softwares e suas versões:
 
-- **Apache (Obrigatório):** Para que o BDQueimadas funcione é necessário que ele esteja sendo executado por um servidor http. O servidor a ser utilizado é o Apache HTTP Server na versão 2.4 (ou versões superiores). O software pode ser baixado em: https://httpd.apache.org.
+- **Node.js (Obrigatório):** Para que o BDQueimadas funcione é necessário que o interpretador Node.js esteja instalado na versão 4.2.3 (ou versões superiores). O software pode ser baixado em: https://nodejs.org/.
 
 ## Instruções para Execução
 

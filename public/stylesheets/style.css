@@ -225,11 +225,11 @@ html, body {
 #maximized-map-logos {
   width: 100%;
   background-color: white;
-  height: 98px;
+  height: 125px;
   margin-top: -22px;
-  background-image: url('../images/logo_bdqueimadas_reduzida.jpg'), url('../images/logo_bdqueimadas_reduzida.jpg');
+  background-image: url('../images/logo_queimadas_reduzida.jpg'), url('../images/logo_bdqueimadas_reduzida.jpg');
   background-repeat: no-repeat;
-  background-position: 50% 4px, 50% calc(100% - 4px);
+  background-position: 50% 12px, 50% calc(100% - 12px);
   border-right: 1px solid white;
   border-bottom: 1px solid #2b2b2b;
 }
