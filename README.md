@@ -23,9 +23,7 @@ git clone https://github.com/TerraMA2/bdqueimadas.git
 - Verifique se a URL para o servidor da API TerraMA² está correto na variável terrama2Path localizada no arquivo index.ejs (bdqueimadas/views/index.ejs):
 
 ```
-<%
-  var terrama2Path = "http://localhost:36000";
-%>
+var terrama2Path = "http://localhost:36000";
 ```
 
 - Acesse o diretório da aplicação via linha de comando e execute o seguinte comando:
