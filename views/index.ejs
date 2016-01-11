@@ -50,7 +50,7 @@
         <div id="terrama2-table" class="terrama2-leftbox terrama2-leftbox-fullscreen">
           <div class="terrama2-fullscreen-container">
             <div class="terrama2-leftbox-header"><h2>Tabelas</h2></div>
-            <table class="display terrama2-table" id="table"></table>
+            <table class="display terrama2-table" id="attributes-table"></table>
           </div>
         </div>
         <div id="terrama2-graphic" class="terrama2-leftbox terrama2-leftbox-fullscreen terrama2-leftbox-left">
@@ -81,6 +81,9 @@
     <script src="<%= terrama2Path %>/javascripts/terrama2.js" type="text/javascript"></script>
     <script src="/javascripts/events.js" type="text/javascript"></script>
     <script src="/javascripts/filter.js" type="text/javascript"></script>
+    <script src="/javascripts/bdqueimadas.js" type="text/javascript"></script>
+    <script src="/javascripts/attributestable.js" type="text/javascript"></script>
+    <script src="/javascripts/graphics.js" type="text/javascript"></script>
     <script>
     var terrama2 = new TerraMA2(
       "<%= terrama2Path %>",
@@ -91,7 +94,13 @@
       ]
     );
 
-    var filter = new Filter(terrama2);
+    var bdqueimadas = new BDQueimadas(terrama2);
+
+    var filter = new Filter(bdqueimadas, terrama2);
+
+    var table = new AttributesTable(bdqueimadas);
+
+    var graphics = new Graphics(bdqueimadas);
 
     $('.date').mask("00/00/0000", {clearIfNotMatch: true});
     </script>

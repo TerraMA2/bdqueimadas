@@ -1,7 +1,5 @@
 /** Filter class of the BDQueimadas. */
-var Filter = function(terrama2) {
-
-  var filterConfig = null;
+var Filter = function(bdqueimadas, terrama2) {
 
   /**
    * Create the date filter
@@ -10,9 +8,9 @@ var Filter = function(terrama2) {
    * @returns {string} cql - date cql filter
    */
   var createDateFilter = function(dateFrom, dateTo) {
-    var cql = filterConfig.DateFieldName + ">=" + processDate(dateFrom, filterConfig.DateFormat);
+    var cql = bdqueimadas.getFilterConfig().DateFieldName + ">=" + processDate(dateFrom, bdqueimadas.getFilterConfig().DateFormat);
     cql += " and ";
-    cql += filterConfig.DateFieldName + "<=" + processDate(dateTo, filterConfig.DateFormat);
+    cql += bdqueimadas.getFilterConfig().DateFieldName + "<=" + processDate(dateTo, bdqueimadas.getFilterConfig().DateFormat);
 
     return cql;
   }
@@ -23,7 +21,7 @@ var Filter = function(terrama2) {
    * @returns {string} cql - satellite cql filter
    */
   var createSatelliteFilter = function(satellite) {
-    var cql = filterConfig.SatelliteFieldName + "='" + satellite + "'";
+    var cql = bdqueimadas.getFilterConfig().SatelliteFieldName + "='" + satellite + "'";
     return cql;
   }
 
@@ -48,7 +46,7 @@ var Filter = function(terrama2) {
       cql += createSatelliteFilter(satellite);
     }
 
-    terrama2.applyCQLFilter(cql, filterConfig.LayerToFilter);
+    terrama2.applyCQLFilter(cql, bdqueimadas.getFilterConfig().LayerToFilter);
   }
 
   /**
@@ -89,8 +87,6 @@ var Filter = function(terrama2) {
 
     return result;
   }
-
-  $.ajax({ url: "../config/filter.json", dataType: 'json', async: false, success: function(data) { filterConfig = data; } });
 
   $(document).ready(function() {
     $('#filter-button').on('click', function(el) {
