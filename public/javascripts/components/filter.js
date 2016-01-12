@@ -46,7 +46,7 @@ var Filter = function(bdqueimadas, terrama2) {
       cql += createSatelliteFilter(satellite);
     }
 
-    terrama2.applyCQLFilter(cql, bdqueimadas.getFilterConfig().LayerToFilter);
+    bdqueimadas.getTerrama2().applyCQLFilter(cql, bdqueimadas.getFilterConfig().LayerToFilter);
   }
 
   /**

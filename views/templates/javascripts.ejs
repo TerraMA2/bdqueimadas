@@ -1,0 +1,19 @@
+<script src="/externals/javascripts/openlayers/ol.js" type="text/javascript"></script>
+<script src="/externals/javascripts/jquery/jquery.min.js" type="text/javascript"></script>
+<script src="/externals/javascripts/jquery/jquery.mask.js" type="text/javascript"></script>
+<script src="/externals/javascripts/jquery/jquery-ui.js" type="text/javascript"></script>
+<script src="/externals/javascripts/jquery/DataTables-1.10.10/media/js/jquery.dataTables.js" type="text/javascript"></script>
+<script src="/externals/javascripts/chart.js/Chart.min.js" type="text/javascript"></script>
+<script src="/javascripts/bdqueimadas.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var terrama2 = new TerraMA2(
+    "<%= terrama2Path %>",
+    [
+      "MapDisplay",
+      "LayerExplorer",
+      "LeftBar"
+    ]
+  );
+
+  var bdqueimadas = new BDQueimadas(terrama2);
+</script>

@@ -1,5 +1,5 @@
 /** Main class of the BDQueimadas. */
-var BDQueimadas = function(terrama2) {
+var BDQueimadas = function(_terrama2) {
 
   var _this = this;
 
@@ -8,6 +8,16 @@ var BDQueimadas = function(terrama2) {
   var featureDescription = null;
   var features = null;
   var socket = null;
+  var attributesTable = null;
+  var filter = null;
+  var graphics = null;
+  var terrama2 = _terrama2;
+
+  var regularMap = true;
+
+  _this.getTerrama2 = function() {
+    return terrama2;
+  }
 
   _this.getFeatureDescription = function() {
     return featureDescription;
@@ -36,6 +46,18 @@ var BDQueimadas = function(terrama2) {
   var loadConfigurations = function() {
     $.ajax({ url: "../config/filter.json", dataType: 'json', async: false, success: function(data) { filterConfig = data; } });
     $.ajax({ url: "../config/server.json", dataType: 'json', async: false, success: function(data) { serverConfig = data; } });
+  }
+
+  var loadComponents = function() {
+    $.ajax({ url: "/javascripts/components/filter.js", dataType: "script", success: function() {
+      filter = new Filter(_this);
+      $.ajax({ url: "/javascripts/components/attributestable.js", dataType: "script", success: function() {
+        attributesTable = new AttributesTable(_this);
+        $.ajax({ url: "/javascripts/components/graphics.js", dataType: "script", success: function() {
+          graphics = new Graphics(_this);
+        }});
+      }});
+    }});
   }
 
   var loadFeaturesDescription = function() {
@@ -72,7 +94,41 @@ var BDQueimadas = function(terrama2) {
     });
   }
 
+  var loadEvents = function() {
+    $("#maximize-map-button").on('click', function() {
+      if(regularMap) {
+        regularMap = false;
+        $(".top").addClass("minor");
+        $(".top-title").css("display", "none");
+        $(".top-language").css("display", "none");
+        $(".footer").addClass("minor");
+        $(".footer-text").css("display", "none");
+        $("#maximized-map-logos").removeClass("hide");
+        $(".content").addClass("bigger");
+        $(this).removeClass("maximize-map").addClass("minimize-map");
+        terrama2.getMapDisplay().updateMapSize();
+      } else {
+        regularMap = true;
+        $(".top").removeClass("minor");
+        $(".top-title").css("display", "");
+        $(".top-language").css("display", "");
+        $(".footer").removeClass("minor");
+        $(".footer-text").css("display", "");
+        $("#maximized-map-logos").addClass("hide");
+        $(".content").removeClass("bigger");
+        $(this).removeClass("minimize-map").addClass("maximize-map");
+        terrama2.getMapDisplay().updateMapSize();
+      }
+    });
+  }
+
+  var loadPlugins = function() {
+    $('.date').mask("00/00/0000", {clearIfNotMatch: true});
+  }
+
   $(document).ready(function() {
+    loadPlugins();
+    loadEvents();
     loadConfigurations();
 
     $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -80,6 +136,7 @@ var BDQueimadas = function(terrama2) {
         socket = io(window.location.origin);
         loadFeatures();
         loadFeaturesDescription();
+        loadComponents();
       }
     });
   });
