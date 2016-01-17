@@ -8,17 +8,32 @@ A versão anterior deste aplicativo encontra-se operacional em: http://www.dpi.i
 
 Para executar o BDQueimadas você vai precisar instalar alguns softwares de terceiros. Abaixo listamos quais são os softwares e suas versões:
 
-- **Apache (Obrigatório):** Para que o BDQueimadas funcione é necessário que ele esteja sendo executado por um servidor http. O servidor a ser utilizado é o Apache HTTP Server na versão 2.4 (ou versões superiores). O software pode ser baixado em: https://httpd.apache.org.
+- **Node.js (Obrigatório):** Para que o BDQueimadas funcione é necessário que o interpretador Node.js esteja instalado na versão 4.2.3 (ou versões superiores). O software pode ser baixado em: https://nodejs.org/.
 
 ## Instruções para Execução
 
 Abaixo mostramos os passos para executar o BDQueimadas:
 
-- Coloque a pasta da aplicação no diretório raiz do Apache.
-
-- Verifique se o caminho para a API TerraMA² está correto no arquivo index.html (bdqueimadas/views/index.html):
+- Execute o clone da aplicação para o diretório desejado:
 
 ```
-<script src="http://localhost/terrama2/webapp/js/terrama2.js" type="text/javascript"></script>
-<link rel="stylesheet" href="http://localhost/terrama2/webapp/css/terrama2.css">
+git clone https://github.com/TerraMA2/bdqueimadas.git
+```
+
+- Verifique se a URL para o servidor da API TerraMA² está correto na variável terrama2Path localizada no arquivo app.js (bdqueimadas/app.js):
+
+```
+terrama2Path = "http://localhost:36000";
+```
+
+- Acesse o diretório da aplicação via linha de comando e execute o seguinte comando:
+
+```
+npm start
+```
+
+- Por padrão o sistema vai rodar na porta 35000, caso deseje alterar, acesse o arquivo bdqueimadas/bin/www:
+
+```
+var portNumber = '35000';
 ```
