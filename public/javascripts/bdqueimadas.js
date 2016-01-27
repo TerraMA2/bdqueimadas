@@ -99,7 +99,7 @@ var BDQueimadas = function(_terrama2) {
   }
 
   var loadPlugins = function() {
-    $('.date').mask("00/00/0000", {clearIfNotMatch: true});
+    //$('.date').mask("00/00/0000", {clearIfNotMatch: true});
   }
 
   $(document).ready(function() {
