@@ -100,9 +100,7 @@
       $("#terrama2-map").removeClass('fullmenu');
     }
 
-    var interval = window.setInterval(function() { terrama2.getMapDisplay().updateMapSize(); }, 10);
-
-    window.setTimeout(function() { clearInterval(interval); }, 300);
+    terrama2.getMapDisplay().updateMapSize();
   });
 
   var closeBg = function() {

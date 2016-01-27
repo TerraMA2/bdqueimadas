@@ -104,14 +104,14 @@
   background-image: url('../images/icon_layers.png');
 }
 
-.lit-logo {
+.logo-mini {
   height: 100%;
   background-image: url('../images/lit.png');
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.big-logo {
+.logo-lg {
   height: 100%;
   background-image: url('../images/big.png');
   background-repeat: no-repeat;
