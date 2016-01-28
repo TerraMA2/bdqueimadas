@@ -98,17 +98,17 @@ var Filter = function(bdqueimadas, terrama2) {
         applyFilter(dateFrom, dateTo, satellite);
       } else {
         if(dateFrom.length === 0) {
-          $("#filter-date-from:not([class*='warning'])").removeClass('regular').addClass('warning');
+          $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
         }
         if(dateTo.length === 0) {
-          $("#filter-date-to:not([class*='warning'])").removeClass('regular').addClass('warning');
+          $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
         }
       }
     });
 
-    $('.input').on('focus', function(el) {
-      if($(this).hasClass('warning')) {
-        $(this).removeClass('warning').addClass('regular');
+    $('.filter-date').on('focus', function(el) {
+      if($(this).parent().hasClass('has-error')) {
+        $(this).parent().removeClass('has-error');
       }
     });
   });
