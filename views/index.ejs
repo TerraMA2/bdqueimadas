@@ -13,7 +13,6 @@
       <% include templates/header %>
       <% include templates/leftbar %>
       <% include templates/left-content-boxes %>
-
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -24,22 +23,15 @@
             <li class="active">Banco de Dados de Queimadas</li>
           </ol>
         </section>
-
         <!-- Main content -->
         <section class="content">
           <!-- Small boxes (Stat box) -->
           <div class="row">
             <div id="terrama2-map" class="terrama2-map"></div>
           </div>
-
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
     </div><!-- ./wrapper -->
-
-
-
-    <div id="terrama2-layerexplorer" class="terrama2-leftbox terrama2-resizable-horizontal"></div>
-
     <% include templates/footer %>
     <script src="<%= terrama2Path %>/javascripts/terrama2.js" type="text/javascript"></script>
     <% include templates/javascripts %>
