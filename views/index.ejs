@@ -2,61 +2,44 @@
 <html lang="pt-br">
   <head>
     <meta charset="utf-8">
-    <% include templates/stylesheets %>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="<%= terrama2Path %>/stylesheets/terrama2.css">
-    <title>Banco de Dados de Queimadasrs</title>
+    <% include templates/stylesheets %>
+    <title>Banco de Dados de Queimadas</title>
   </head>
-  <body>
-    <% include templates/gov-identity-bar %>
-    <% include templates/header %>
-    <div class="content">
-      <div id="terrama2-container">
-        <div id="terrama2-leftbar">
-          <div id="maximized-map-logos" class="hide"></div>
-          <button class="terrama2-leftbar-button" title="Data" terrama2-box="terrama2-layerexplorer"></button>
-          <button class="terrama2-leftbar-button button-filter" title="Data" terrama2-box="filter" title="Filtro"></button>
-          <button class="terrama2-leftbar-button terrama2-leftbar-button-table" title="Data" terrama2-box="terrama2-table"></button>
-          <button class="terrama2-leftbar-button terrama2-leftbar-button-graphic" title="Data" terrama2-box="terrama2-graphic"></button>
-        </div>
-        <div id="terrama2-layerexplorer" class="terrama2-leftbox terrama2-resizable-horizontal"></div>
-        <div id="filter" class="terrama2-leftbox">
-          <div class="terrama2-leftbox-content">
-            <div class="terrama2-leftbox-header"><h2>Filtro</h2></div>
-            <div class="form-group">
-              <h4>Temporal</h4>
-              <input type="text" class="input regular date" id="filter-date-from" placeholder="De"/>
-              <input type="text" class="input regular date" id="filter-date-to" placeholder="At&eacute;"/>
-              <h4>Por Sat&eacute;lite</h4>
-              <select class="input select" id="filter-satellite"><option value="all">TODOS</option><option value="GOES-13">GOES-13</option><option value="METEOSAT-02">METEOSAT-02</option><option value="NPP">NPP</option><option value="NPP_375">NPP_375</option><option value="TERRA_M-M">TERRA_M-M</option></select>
-              <button class="form-button" id="filter-button">Aplicar</button>
-            </div>
+  <body class="skin-blue sidebar-mini wysihtml5-supported sidebar-collapse fixed">
+    <div class="wrapper">
+      <% include templates/header %>
+      <% include templates/leftbar %>
+      <% include templates/left-content-boxes %>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>Banco de Dados de Queimadas</h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Banco de Dados de Queimadas</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <div id="terrama2-map" class="terrama2-map"></div>
           </div>
-        </div>
-        <div id="terrama2-table" class="terrama2-leftbox terrama2-leftbox-fullscreen">
-          <div class="terrama2-fullscreen-container">
-            <div class="terrama2-leftbox-header"><h2>Tabelas</h2></div>
-            <table class="display terrama2-table" id="attributes-table"></table>
-          </div>
-        </div>
-        <div id="terrama2-graphic" class="terrama2-leftbox terrama2-leftbox-fullscreen terrama2-leftbox-fullscreen-fullwidth">
-          <div class="terrama2-fullscreen-container">
-            <div class="terrama2-leftbox-header">
-              <h2>Gr&aacute;ficos</h2>
-              <h3><span class="terrama2-span-active" style="margin-right: 30px;" id="graphic-left">Focos por Estados</span>|<span style="margin-left: 30px;" id="graphic-right">Focos por Biomas</span></h3>
-            </div>
-            <div style="width: 99%; height: 80%;">
-              <canvas id="canvas"></canvas>
-              <canvas id="chart-area" style="display: none;"/>
-            </div>
-          </div>
-        </div>
-        <div id="terrama2-map">
-          <div class="map-button">
-            <button id="maximize-map-button" class="maximize-map"></button>
-          </div>
-        </div>
-      </div>
-    </div>
+
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+    </div><!-- ./wrapper -->
+
+
+
+    <div id="terrama2-layerexplorer" class="terrama2-leftbox terrama2-resizable-horizontal"></div>
+
     <% include templates/footer %>
     <script src="<%= terrama2Path %>/javascripts/terrama2.js" type="text/javascript"></script>
     <% include templates/javascripts %>

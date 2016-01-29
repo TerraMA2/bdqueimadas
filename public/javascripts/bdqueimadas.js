@@ -95,41 +95,119 @@ var BDQueimadas = function(_terrama2) {
   }
 
   var loadEvents = function() {
-    $("#maximize-map-button").on('click', function() {
-      if(regularMap) {
-        regularMap = false;
-        $(".top").addClass("minor");
-        $(".top-title").css("display", "none");
-        $(".top-language").css("display", "none");
-        $(".footer").addClass("minor");
-        $(".footer-text").css("display", "none");
-        $("#maximized-map-logos").removeClass("hide");
-        $(".content").addClass("bigger");
-        $(this).removeClass("maximize-map").addClass("minimize-map");
-        terrama2.getMapDisplay().updateMapSize();
+    $(".sidebar-menu > li").on('click', function(event) {
+      event.preventDefault();
+
+      var box = $(this).attr('box');
+      var id = $(this).attr('id');
+
+      if(box !== "" && box !== undefined) {
+        var active = $("#" + box).hasClass('active');
+
+        closeAllContentBoxes();
+        closeBg();
+
+        if(!active) {
+          openBg(id, box);
+          openContentBox(box);
+        }
       } else {
-        regularMap = true;
-        $(".top").removeClass("minor");
-        $(".top-title").css("display", "");
-        $(".top-language").css("display", "");
-        $(".footer").removeClass("minor");
-        $(".footer-text").css("display", "");
-        $("#maximized-map-logos").addClass("hide");
-        $(".content").removeClass("bigger");
-        $(this).removeClass("minimize-map").addClass("maximize-map");
-        terrama2.getMapDisplay().updateMapSize();
+        var active = $("#left-content-box-background").hasClass('active');
+        var boxActive = $("#left-content-box-background").attr('box');
+
+        closeAllContentBoxes();
+        closeBg();
+
+        if(boxActive !== id || !active) {
+          openBg(id, '');
+        }
       }
+    });
+
+    $('.sidebar-toggle').on('click', function() {
+      if($(".left-content-box").hasClass('active')) {
+        var currentBox = $("#" + $("#left-content-box-background").attr('box')).attr('box');
+        ajustBoxesSize(currentBox);
+      }
+
+      if($("#left-content-box-background").hasClass('active')) {
+        ajustBoxesSize("left-content-box-background");
+      }
+
+      if($("body").hasClass('sidebar-collapse')) {
+        $("#terrama2-map").removeClass('fullmenu');
+      } else {
+        $("#terrama2-map").addClass('fullmenu');
+      }
+
+      terrama2.getMapDisplay().updateMapSize();
     });
   }
 
+  var closeBg = function() {
+    $("#left-content-box-background").removeClass('active');
+    $("#left-content-box-background").animate({ width: '350px', left: '-350px' }, { duration: 300, queue: false });
+    $("#left-content-box-background").attr('box', '');
+  }
+
+  var closeAllContentBoxes = function() {
+    $(".left-content-box").removeClass('active');
+    $(".left-content-box").removeClass('fullmenu');
+    $(".left-content-box").animate({ left: '-100%' }, { duration: 300, queue: false });
+  }
+
+  var ajustBoxesSize = function(id) {
+    if($("#" + id).css('left') === '230px') {
+      $("#" + id).animate({ left: '50px' }, { duration: 250, queue: false });
+      if($("#" + id).hasClass('fullscreen')) $("#" + id).removeClass('fullmenu');
+    } else {
+      $("#" + id).animate({ left: '230px' }, { duration: 400, queue: false });
+      if($("#" + id).hasClass('fullscreen')) $("#" + id).addClass('fullmenu');
+    }
+  }
+
+  var openBg = function(box, contentBox) {
+    var width = '';
+    var left = '';
+
+    if(contentBox !== '' && $("#" + contentBox).hasClass('fullscreen')) {
+      width = '100%';
+    } else {
+      width = '350px';
+    }
+
+    if($("body").hasClass('sidebar-collapse')) {
+      left = '50px';
+    } else {
+      left = '230px';
+    }
+
+    $("#left-content-box-background").addClass('active');
+    $("#left-content-box-background").attr('box', box);
+    $("#left-content-box-background").animate({ width: width, left: left }, { duration: 300, queue: false });
+  }
+
+  var openContentBox = function(box) {
+    $("#" + box).addClass('active');
+
+    if($("body").hasClass('sidebar-collapse')) {
+      $("#" + box).animate({ left: '50px' }, { duration: 300, queue: false });
+    } else {
+      if($("#" + box).hasClass('fullscreen')) $("#" + box).addClass('fullmenu');
+      $("#" + box).animate({ left: '230px' }, { duration: 300, queue: false });
+    }
+  }
+
   var loadPlugins = function() {
-    $('.date').mask("00/00/0000", {clearIfNotMatch: true});
+    $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
+
+    window.setTimeout(function() { $('.left-content-box').mCustomScrollbar({ axis:"yx" }); }, 3000);
   }
 
   $(document).ready(function() {
-    loadPlugins();
     loadEvents();
     loadConfigurations();
+    loadPlugins();
 
     $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
       success: function() {
