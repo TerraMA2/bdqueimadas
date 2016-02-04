@@ -9,7 +9,7 @@ var io = require('../io');
 var load = require('express-load');
 var debug = require('debug')('bdqueimadas:server');
 var http = require('http');
-var portNumber = '35000';
+var portNumber = '38000';
 
 /**
  * Get port from environment and store in Express.

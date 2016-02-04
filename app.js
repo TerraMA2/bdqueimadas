@@ -1,6 +1,6 @@
 const KEY = 'bdqueimadas.sid';
 
-terrama2Path = "http://localhost:36000";
+terrama2Path = "http://localhost:37000";
 
 var express = require('express'),
     path = require('path'),
