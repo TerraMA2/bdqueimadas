@@ -1,6 +1,4 @@
-var Graphics = function(bdqueimadas) {
-
-  var _this = this;
+BDQueimadas.components.Graphics = (function() {
 
   var SortArr = function (j) {
     var arr = [];
@@ -23,10 +21,10 @@ var Graphics = function(bdqueimadas) {
       }
     }
     return false;
-  }
+  };
 
-  _this.loadGraphics = function() {
-    var features = JSON.parse(bdqueimadas.getFeatures());
+  var loadGraphics = function() {
+    var features = JSON.parse(BDQueimadas.obj.getFeatures());
 
     var groupedData = {};
     var groupedDataBioma = {};
@@ -121,14 +119,21 @@ var Graphics = function(bdqueimadas) {
       $("#canvas").css("display", "none");
       $("#chart-area").css("display", "");
     });
-  }
+  };
 
   var verifiesOutsideVars = function() {
-    if(bdqueimadas.getFeatures() !== null) {
-      _this.loadGraphics();
+    if(BDQueimadas.obj.getFeatures() !== null) {
+      loadGraphics();
       clearInterval(interval);
     }
-  }
+  };
 
-  var interval = window.setInterval(verifiesOutsideVars, 3000);
-};
+  var init = function() {
+    var interval = window.setInterval(verifiesOutsideVars, 3000);
+  };
+
+  return {
+    loadGraphics: loadGraphics,
+    init: init
+  };
+})();

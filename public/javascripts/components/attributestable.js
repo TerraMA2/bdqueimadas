@@ -1,7 +1,5 @@
 /** Filter class of the BDQueimadas. */
-var AttributesTable = function(bdqueimadas) {
-
-  var _this = this;
+BDQueimadas.components.AttributesTable = (function() {
 
   var strInArr = function(arr, str) {
     for(i = 0, j = arr.length; i < j; i++) {
@@ -10,13 +8,13 @@ var AttributesTable = function(bdqueimadas) {
       }
     }
     return false;
-  }
+  };
 
-  _this.loadTable = function() {
+  var loadTable = function() {
     var ignore = ['the_geom', 'Id'];
-    var featureDescription = JSON.parse(bdqueimadas.getFeatureDescription());
+    var featureDescription = JSON.parse(BDQueimadas.obj.getFeatureDescription());
     var featuresDescriptionLength = featureDescription.featureTypes[0].properties.length;
-    var features = JSON.parse(bdqueimadas.getFeatures());
+    var features = JSON.parse(BDQueimadas.obj.getFeatures());
     var titles = "";
     var items = "";
 
@@ -38,14 +36,21 @@ var AttributesTable = function(bdqueimadas) {
     }
 
     $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot><tbody>" + items + "</tbody>").DataTable();
-  }
+  };
 
   var verifiesOutsideVars = function() {
-    if(bdqueimadas.getFeatureDescription() !== null && bdqueimadas.getFeatures() !== null) {
-      _this.loadTable();
+    if(BDQueimadas.obj.getFeatureDescription() !== null && BDQueimadas.obj.getFeatures() !== null) {
+      loadTable();
       clearInterval(interval);
     }
-  }
+  };
 
-  var interval = window.setInterval(verifiesOutsideVars, 3000);
-};
+  var init = function() {
+    var interval = window.setInterval(verifiesOutsideVars, 3000);
+  };
+
+  return {
+  	loadTable: loadTable,
+  	init: init
+  };
+})();

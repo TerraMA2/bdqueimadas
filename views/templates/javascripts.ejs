@@ -50,7 +50,7 @@
 <script src="/javascripts/bdqueimadas.js" type="text/javascript"></script>
 <script src="<%= terrama2Path %>/javascripts/terrama2.js" type="text/javascript"></script>
 <script type="text/javascript">
-  var terrama2 = new TerraMA2(
+  TerraMA2WebComponents.obj.init(
     "<%= terrama2Path %>",
     [
       "MapDisplay",
@@ -58,5 +58,5 @@
     ]
   );
 
-  var bdqueimadas = new BDQueimadas(terrama2);
+  BDQueimadas.obj.init();
 </script>

@@ -1,7 +1,9 @@
-/** Main class of the BDQueimadas. */
-var BDQueimadas = function(_terrama2) {
+window.BDQueimadas = {
+  components: {}
+};
 
-  var _this = this;
+/** Main class of the BDQueimadas. */
+BDQueimadas.obj = (function() {
 
   var filterConfig = null;
   var serverConfig = null;
@@ -11,27 +13,22 @@ var BDQueimadas = function(_terrama2) {
   var attributesTable = null;
   var filter = null;
   var graphics = null;
-  var terrama2 = _terrama2;
 
   var regularMap = true;
 
-  _this.getTerrama2 = function() {
-    return terrama2;
-  }
-
-  _this.getFeatureDescription = function() {
+  var getFeatureDescription = function() {
     return featureDescription;
-  }
+  };
 
-  _this.getFeatures = function() {
+  var getFeatures = function() {
     return features;
-  }
+  };
 
-  _this.getFilterConfig = function() {
+  var getFilterConfig = function() {
     return filterConfig;
-  }
+  };
 
-  _this.randomText = function() {
+  var randomText = function() {
     var characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     var random = '';
 
@@ -41,27 +38,27 @@ var BDQueimadas = function(_terrama2) {
     }
 
     return random;
-  }
+  };
 
   var loadConfigurations = function() {
     $.ajax({ url: "../config/filter.json", dataType: 'json', async: false, success: function(data) { filterConfig = data; } });
     $.ajax({ url: "../config/server.json", dataType: 'json', async: false, success: function(data) { serverConfig = data; } });
-  }
+  };
 
   var loadComponents = function() {
     $.ajax({ url: "/javascripts/components/filter.js", dataType: "script", success: function() {
-      filter = new Filter(_this);
+      BDQueimadas.components.Filter.init();
       $.ajax({ url: "/javascripts/components/attributestable.js", dataType: "script", success: function() {
-        attributesTable = new AttributesTable(_this);
+        BDQueimadas.components.AttributesTable.init();
         $.ajax({ url: "/javascripts/components/graphics.js", dataType: "script", success: function() {
-          graphics = new Graphics(_this);
+          BDQueimadas.components.Graphics.init();
         }});
       }});
     }});
-  }
+  };
 
   var loadFeaturesDescription = function() {
-    var requestId = bdqueimadas.randomText();
+    var requestId = randomText();
 
     socket.emit(
       'proxyRequest',
@@ -75,10 +72,10 @@ var BDQueimadas = function(_terrama2) {
         featureDescription = msg.msg;
       }
     });
-  }
+  };
 
   var loadFeatures = function() {
-    var requestId = bdqueimadas.randomText();
+    var requestId = randomText();
 
     socket.emit(
       'proxyRequest',
@@ -92,7 +89,7 @@ var BDQueimadas = function(_terrama2) {
         features = msg.msg;
       }
     });
-  }
+  };
 
   var loadEvents = function() {
     $(".sidebar-menu > li").on('click', function(event) {
@@ -140,21 +137,21 @@ var BDQueimadas = function(_terrama2) {
         $("#terrama2-map").addClass('fullmenu');
       }
 
-      terrama2.getMapDisplay().updateMapSize();
+      TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
     });
-  }
+  };
 
   var closeBg = function() {
     $("#left-content-box-background").removeClass('active');
     $("#left-content-box-background").animate({ width: '350px', left: '-350px' }, { duration: 300, queue: false });
     $("#left-content-box-background").attr('box', '');
-  }
+  };
 
   var closeAllContentBoxes = function() {
     $(".left-content-box").removeClass('active');
     $(".left-content-box").removeClass('fullmenu');
     $(".left-content-box").animate({ left: '-100%' }, { duration: 300, queue: false });
-  }
+  };
 
   var ajustBoxesSize = function(id) {
     if($("#" + id).css('left') === '230px') {
@@ -164,7 +161,7 @@ var BDQueimadas = function(_terrama2) {
       $("#" + id).animate({ left: '230px' }, { duration: 400, queue: false });
       if($("#" + id).hasClass('fullscreen')) $("#" + id).addClass('fullmenu');
     }
-  }
+  };
 
   var openBg = function(box, contentBox) {
     var width = '';
@@ -185,7 +182,7 @@ var BDQueimadas = function(_terrama2) {
     $("#left-content-box-background").addClass('active');
     $("#left-content-box-background").attr('box', box);
     $("#left-content-box-background").animate({ width: width, left: left }, { duration: 300, queue: false });
-  }
+  };
 
   var openContentBox = function(box) {
     $("#" + box).addClass('active');
@@ -196,26 +193,36 @@ var BDQueimadas = function(_terrama2) {
       if($("#" + box).hasClass('fullscreen')) $("#" + box).addClass('fullmenu');
       $("#" + box).animate({ left: '230px' }, { duration: 300, queue: false });
     }
-  }
+  };
 
   var loadPlugins = function() {
     $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
 
     window.setTimeout(function() { $('.left-content-box').mCustomScrollbar({ axis:"yx" }); }, 3000);
-  }
+  };
 
-  $(document).ready(function() {
-    loadEvents();
-    loadConfigurations();
-    loadPlugins();
+  var init = function() {
+    $(document).ready(function() {
+      loadEvents();
+      loadConfigurations();
+      loadPlugins();
 
-    $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
-      success: function() {
-        socket = io(window.location.origin);
-        loadFeatures();
-        loadFeaturesDescription();
-        loadComponents();
-      }
+      $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
+        success: function() {
+          socket = io(window.location.origin);
+          loadFeatures();
+          loadFeaturesDescription();
+          loadComponents();
+        }
+      });
     });
-  });
-};
+  };
+
+  return {
+  	getFeatureDescription: getFeatureDescription,
+  	getFeatures: getFeatures,
+  	getFilterConfig: getFilterConfig,
+  	randomText: randomText,
+  	init: init
+  };
+})();

@@ -1,5 +1,5 @@
 /** Filter class of the BDQueimadas. */
-var Filter = function(bdqueimadas, terrama2) {
+BDQueimadas.components.Filter = (function() {
 
   /**
    * Create the date filter
@@ -8,12 +8,12 @@ var Filter = function(bdqueimadas, terrama2) {
    * @returns {string} cql - date cql filter
    */
   var createDateFilter = function(dateFrom, dateTo) {
-    var cql = bdqueimadas.getFilterConfig().DateFieldName + ">=" + processDate(dateFrom, bdqueimadas.getFilterConfig().DateFormat);
+    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + processDate(dateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
     cql += " and ";
-    cql += bdqueimadas.getFilterConfig().DateFieldName + "<=" + processDate(dateTo, bdqueimadas.getFilterConfig().DateFormat);
+    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + processDate(dateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
 
     return cql;
-  }
+  };
 
   /**
    * Create the satellite filter
@@ -21,9 +21,9 @@ var Filter = function(bdqueimadas, terrama2) {
    * @returns {string} cql - satellite cql filter
    */
   var createSatelliteFilter = function(satellite) {
-    var cql = bdqueimadas.getFilterConfig().SatelliteFieldName + "='" + satellite + "'";
+    var cql = BDQueimadas.obj.getFilterConfig().SatelliteFieldName + "='" + satellite + "'";
     return cql;
-  }
+  };
 
   /**
    * Apply the date and satellite filter
@@ -46,8 +46,8 @@ var Filter = function(bdqueimadas, terrama2) {
       cql += createSatelliteFilter(satellite);
     }
 
-    bdqueimadas.getTerrama2().applyCQLFilter(cql, bdqueimadas.getFilterConfig().LayerToFilter);
-  }
+    BDQueimadas.obj.getTerrama2().applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter);
+  };
 
   /**
    * Apply the correct date format
@@ -71,7 +71,7 @@ var Filter = function(bdqueimadas, terrama2) {
     }
 
     return finalDate;
-  }
+  };
 
   /**
    * Remove the repetitions from a given array
@@ -86,30 +86,36 @@ var Filter = function(bdqueimadas, terrama2) {
     });
 
     return result;
-  }
+  };
 
-  $(document).ready(function() {
-    $('#filter-button').on('click', function(el) {
-      var dateFrom = $('#filter-date-from').val();
-      var dateTo = $('#filter-date-to').val();
-      var satellite = $('#filter-satellite').val();
+  var init = function() {
+    $(document).ready(function() {
+      $('#filter-button').on('click', function(el) {
+        var dateFrom = $('#filter-date-from').val();
+        var dateTo = $('#filter-date-to').val();
+        var satellite = $('#filter-satellite').val();
 
-      if((dateFrom.length > 0 && dateTo.length > 0) || (dateFrom.length === 0 && dateTo.length === 0)) {
-        applyFilter(dateFrom, dateTo, satellite);
-      } else {
-        if(dateFrom.length === 0) {
-          $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
+        if((dateFrom.length > 0 && dateTo.length > 0) || (dateFrom.length === 0 && dateTo.length === 0)) {
+          applyFilter(dateFrom, dateTo, satellite);
+        } else {
+          if(dateFrom.length === 0) {
+            $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
+          }
+          if(dateTo.length === 0) {
+            $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
+          }
         }
-        if(dateTo.length === 0) {
-          $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
-        }
-      }
-    });
+      });
 
-    $('.filter-date').on('focus', function(el) {
-      if($(this).parent().hasClass('has-error')) {
-        $(this).parent().removeClass('has-error');
-      }
+      $('.filter-date').on('focus', function(el) {
+        if($(this).parent().hasClass('has-error')) {
+          $(this).parent().removeClass('has-error');
+        }
+      });
     });
-  });
-}
+  };
+
+  return {
+    init: init
+  };
+})();
