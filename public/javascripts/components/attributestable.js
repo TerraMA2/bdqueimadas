@@ -1,6 +1,8 @@
 /** Filter class of the BDQueimadas. */
 BDQueimadas.components.AttributesTable = (function() {
 
+  var interval = null;
+
   var strInArr = function(arr, str) {
     for(i = 0, j = arr.length; i < j; i++) {
       if(arr[i] === str) {
@@ -46,7 +48,7 @@ BDQueimadas.components.AttributesTable = (function() {
   };
 
   var init = function() {
-    var interval = window.setInterval(verifiesOutsideVars, 3000);
+    interval = window.setInterval(verifiesOutsideVars, 3000);
   };
 
   return {

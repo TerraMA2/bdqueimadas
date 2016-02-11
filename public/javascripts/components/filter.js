@@ -46,7 +46,7 @@ BDQueimadas.components.Filter = (function() {
       cql += createSatelliteFilter(satellite);
     }
 
-    BDQueimadas.obj.getTerrama2().applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter);
+    TerraMA2WebComponents.obj.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter);
   };
 
   /**

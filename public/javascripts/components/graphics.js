@@ -1,5 +1,7 @@
 BDQueimadas.components.Graphics = (function() {
 
+  var interval = null;
+
   var SortArr = function (j) {
     var arr = [];
     for (var key in j) {
@@ -129,7 +131,7 @@ BDQueimadas.components.Graphics = (function() {
   };
 
   var init = function() {
-    var interval = window.setInterval(verifiesOutsideVars, 3000);
+    interval = window.setInterval(verifiesOutsideVars, 3000);
   };
 
   return {
