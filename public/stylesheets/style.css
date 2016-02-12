@@ -1,14 +1,56 @@
-.footer-text {
-  text-align: center;
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: "OpenSans-Bold";
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.eot");
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.woff") format("woff"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.ttf") format("truetype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.svg#open_sansbold") format("svg");
 }
 
-.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
-.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
-  display: none !important;
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: "OpenSans-ExtraBold";
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.eot");
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.woff") format("woff"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.ttf") format("truetype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.svg#open_sansextrabold") format("svg");
 }
 
-.main-sidebar {
-  padding-top: 83px !important;
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: "OpenSans-Light";
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.eot");
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.woff") format("woff"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.ttf") format("truetype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.svg#open_sanslight") format("svg");
+}
+
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: "OpenSans-Regular";
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.eot");
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.woff") format("woff"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.ttf") format("truetype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.svg#open_sansregular") format("svg");
+}
+
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: "OpenSans-Semibold";
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.eot");
+  src: url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.eot?#iefix") format("embedded-opentype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.woff") format("woff"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.ttf") format("truetype"),
+       url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.svg#open_sanssemibold") format("svg");
 }
 
 .sidebar-menu > li > a {
@@ -24,12 +66,40 @@
   background-size: 14px !important;
 }
 
-.sidebar-menu > li > a > span {
-  padding-left: 22px;
+#layerexplorer-btn > a {
+  background-image: url('../images/icon_layers.png');
 }
 
-.content-header {
-  margin-top: 30px;
+#layerexplorer-btn > a:hover {
+  background-image: url('../images/icon_layers_hover.png');
+}
+
+#filters-btn > a {
+  background-image: url('../images/icon_calendar.png');
+}
+
+#filters-btn > a:hover {
+  background-image: url('../images/icon_calendar_hover.png');
+}
+
+#tables-btn > a {
+  background-image: url('../images/icon_table.png');
+}
+
+#tables-btn > a:hover {
+  background-image: url('../images/icon_table_hover.png');
+}
+
+#graphs-btn > a {
+  background-image: url('../images/icon_graphics.png');
+}
+
+#graphs-btn > a: {
+  background-image: url('../images/icon_graphics.png');
+}
+
+.sidebar-menu > li > a > span {
+  padding-left: 22px;
 }
 
 .content {
@@ -91,36 +161,7 @@
   color: white;
 }
 
-#filters-btn > a {
-  background-image: url('../images/icon_calendar.png');
-}
 
-#tables-btn > a {
-  background-image: url('../images/icon_table.png');
-}
-
-#graphs-btn > a {
-  background-image: url('../images/icon_graphics.png');
-}
-
-#layerexplorer-btn > a {
-  background-image: url('../images/icon_layers.png');
-}
-
-.logo-mini {
-  height: 100%;
-  background-image: url('../images/lit.png');
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.logo-lg {
-  height: 100%;
-  background-image: url('../images/big.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-left: -15px;
-}
 
 #terrama2-map {
   width: calc(100% - 50px);
@@ -132,3 +173,14 @@
   -o-transition: width 0.3s ease-in-out;
   transition: width 0.3s ease-in-out;
 }
+
+
+
+.skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../../externals/adminlte/img/sprite.png") 0 2px;}
+.skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../../externals/adminlte/img/sprite.png");}
+.skin-queimadas .main-header #gov-header #header #logo #portal-title {
+  background: url("../../externals/adminlte/img/logo_queimadas.png");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../../externals/adminlte/img/logo_bd.png");
