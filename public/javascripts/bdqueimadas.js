@@ -40,9 +40,9 @@ BDQueimadas.obj = (function() {
     return random;
   };
 
-  var loadConfigurations = function() {
-    $.ajax({ url: "../config/filter.json", dataType: 'json', async: false, success: function(data) { filterConfig = data; } });
-    $.ajax({ url: "../config/server.json", dataType: 'json', async: false, success: function(data) { serverConfig = data; } });
+  var loadConfigurations = function(_filterConfig, _serverConfig) {
+    filterConfig = _filterConfig;
+    serverConfig = _serverConfig;
   };
 
   var loadComponents = function() {
@@ -201,10 +201,10 @@ BDQueimadas.obj = (function() {
     window.setTimeout(function() { $('.left-content-box').mCustomScrollbar({ axis:"yx" }); }, 3000);
   };
 
-  var init = function() {
+  var init = function(_filterConfig, _serverConfig) {
     $(document).ready(function() {
       loadEvents();
-      loadConfigurations();
+      loadConfigurations(_filterConfig, _serverConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,

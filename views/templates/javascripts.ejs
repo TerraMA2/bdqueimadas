@@ -58,5 +58,8 @@
     ]
   );
 
-  BDQueimadas.obj.init();
+  var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
+  var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
+
+  BDQueimadas.obj.init(filterConfig, serverConfig);
 </script>
