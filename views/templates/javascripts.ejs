@@ -64,4 +64,6 @@
   var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
 
   BDQueimadas.obj.init(filterConfig, serverConfig);
+
+  TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer('http://localhost:9095/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=sde:countries');
 </script>
