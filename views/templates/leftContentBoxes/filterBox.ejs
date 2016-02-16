@@ -1,5 +1,4 @@
 <div class="left-content-box" id="filter-box">
-  <h3 class="box-title">Filtros</h3>
   <div class="form-group">
     <label for="exampleInputEmail1">Temporal</label>
     <input type="text" class="form-control date filter-date" id="filter-date-from" placeholder="De" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
@@ -11,7 +10,9 @@
     <label>Por Satélite</label>
     <select class="form-control" id="filter-satellite">
       <option value="all">TODOS</option>
-      
+      <% filterConfig.SatellitesList.forEach(function(satellite, index) { %>
+        <option value="<%- satellite.Name %>"><%- satellite.Name %></option>
+      <% }) %>
     </select>
   </div>
   <button class="btn btn-primary" id="filter-button">Aplicar</button>

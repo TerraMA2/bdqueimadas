@@ -16,6 +16,8 @@ BDQueimadas.obj = (function() {
 
   var regularMap = true;
 
+  var height = null;
+
   var getFeatureDescription = function() {
     return featureDescription;
   };
@@ -133,11 +135,49 @@ BDQueimadas.obj = (function() {
 
       if($("body").hasClass('sidebar-collapse')) {
         $("#terrama2-map").removeClass('fullmenu');
+
+        $('.content-wrapper').attr("style", "min-height: " + (height - 62) + "px");
+        $('#terrama2-map').attr("style", "height: " + (height - 116) + "px");
+        $('.left-content-box').animate({ 'margin-top': '120px' }, { duration: 300, queue: false });
+
+        $('.left-content-box').attr("style", "height: " + (height - 116) + "px");
       } else {
         $("#terrama2-map").addClass('fullmenu');
+
+        $('.content-wrapper').attr("style", "min-height: " + (height - 244) + "px");
+        $('#terrama2-map').attr("style", "height: " + (height - 298) + "px");
+        $('.left-content-box').animate({ 'margin-top': '300px' }, { duration: 300, queue: false });
+
+        $('.left-content-box').attr("style", "height: " + (height - 298) + "px");
       }
 
       TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
+    });
+
+    $(window).resize(function() {
+      closeAllContentBoxes();
+      closeBg();
+      
+      var newHeight = $(window).height();
+
+      if(newHeight != height) {
+        if($("body").hasClass('sidebar-collapse')) {
+          $('.content-wrapper').attr("style", "min-height: " + (newHeight - 62) + "px");
+          $('#terrama2-map').attr("style", "height: " + (newHeight - 116) + "px");
+
+          $('.left-content-box').attr("style", "height: " + (height - 116) + "px");
+        } else {
+          $('.content-wrapper').attr("style", "min-height: " + (newHeight - 244) + "px");
+          $('#terrama2-map').attr("style", "height: " + (newHeight - 298) + "px");
+
+          $('.left-content-box').attr("style", "height: " + (height - 298) + "px");
+        }
+      }
+
+      height = newHeight;
+
+      var interval = window.setInterval(function() { TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize(); }, 10);
+      window.setTimeout(function() { clearInterval(interval); }, 300);
     });
   };
 
@@ -201,8 +241,20 @@ BDQueimadas.obj = (function() {
     window.setTimeout(function() { $('.left-content-box').mCustomScrollbar({ axis:"yx" }); }, 3000);
   };
 
+  var getHeight = function() {
+    return height;
+  };
+
+  var setHeight = function(newHeight) {
+    height = newHeight;
+  };
+
   var init = function(_filterConfig, _serverConfig) {
     $(document).ready(function() {
+      height = $(window).height();
+      $('.content-wrapper').attr("style", "min-height: " + (height - 244) + "px");
+      $('#terrama2-map').attr("style", "height: " + (height - 298) + "px");
+
       loadEvents();
       loadConfigurations(_filterConfig, _serverConfig);
       loadPlugins();
@@ -223,6 +275,8 @@ BDQueimadas.obj = (function() {
   	getFeatures: getFeatures,
   	getFilterConfig: getFilterConfig,
   	randomText: randomText,
+    getHeight: getHeight,
+    setHeight: setHeight,
   	init: init
   };
 })();

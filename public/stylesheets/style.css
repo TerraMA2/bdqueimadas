@@ -1,3 +1,5 @@
+/* AdminLTEQueimadas fonts paths adjustments */
+
 @font-face {
   font-weight: normal;
   font-style: normal;
@@ -53,6 +55,81 @@
        url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.svg#open_sanssemibold") format("svg");
 }
 
+/* BDQueimadas styles */
+
+#filter-box {
+  color: black;
+}
+
+.left-content-box {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: absolute;
+  float: left;
+  z-index: 500;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 20px 0 20px;
+  top: 0;
+  bottom: 0;
+  width: 350px;
+  left: -350px;
+  margin-top: 300px;
+  height: calc(100% - 83px);
+  overflow: auto;
+}
+
+.fullscreen {
+  width: calc(100% - 50px);
+  left: -100%;
+  -webkit-transition: width 0.3s ease-in-out;
+  -moz-transition: width 0.3s ease-in-out;
+  -o-transition: width 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out;
+}
+
+.fullmenu {
+  width: calc(100% - 230px) !important;
+}
+
+#left-content-box-background {
+  width: 350px;
+  position: fixed;
+  height: 100%;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
+  left: -350px;
+  top: 0;
+  bottom: 0;
+}
+
+/* TerraMA2Components styles */
+
+#terrama2-layerexplorer {
+  color: black;
+}
+
+#terrama2-map {
+  position: absolute;
+  width: calc(100% - 50px);
+  -webkit-transition: width 0.3s ease-in-out;
+  -moz-transition: width 0.3s ease-in-out;
+  -o-transition: width 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out;
+}
+
+/* AdminLTEQueimadas general adjustments */
+
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+  display: none !important;
+}
+
 .sidebar-menu > li > a {
   height: 44px;
   background-repeat: no-repeat;
@@ -102,85 +179,21 @@
   padding-left: 22px;
 }
 
-.content {
-  min-height: 0px !important;
-}
-
-#filter-box {
-  color: white;
-}
-
-.left-content-box {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: absolute;
-  float: left;
-  z-index: 500;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 0 20px 0 20px;
-  top: 0;
-  bottom: 0;
-  width: 350px;
-  height: calc(100% - 83px);
-  left: -350px;
-  overflow: auto;
-  margin-top: 83px;
-}
-
-.fullscreen {
-  width: calc(100% - 50px) !important;
-  left: -100%;
-  -webkit-transition: width 0.3s ease-in-out;
-  -moz-transition: width 0.3s ease-in-out;
-  -o-transition: width 0.3s ease-in-out;
-  transition: width 0.3s ease-in-out;
-}
-
-.fullmenu {
-  width: calc(100% - 230px) !important;
-}
-
-#left-content-box-background {
-  width: 350px;
-  position: fixed;
-  height: 100%;
-  z-index: 500;
-  background: rgba(34,45,50,0.85);
-  left: -350px;
-  top: 0;
-  bottom: 0;
-}
-
-#terrama2-layerexplorer {
-  color: white;
-}
-
-
-
-#terrama2-map {
-  width: calc(100% - 50px);
-  height: calc(100% - 210px) !important;
-  min-height: calc(100% - 210px) !important;
-  max-height: calc(100% - 210px) !important;
-  -webkit-transition: width 0.3s ease-in-out;
-  -moz-transition: width 0.3s ease-in-out;
-  -o-transition: width 0.3s ease-in-out;
-  transition: width 0.3s ease-in-out;
-}
-
-
-
 .skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../../externals/adminlte/img/sprite.png") 0 2px;}
+
 .skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../../externals/adminlte/img/sprite.png");}
+
 .skin-queimadas .main-header #gov-header #header #logo #portal-title {
   background: url("../../externals/adminlte/img/logo_queimadas.png");
   background-position: center;
   background-repeat: no-repeat;
 }
-.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../../externals/adminlte/img/logo_bd.png");
+
+.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../../externals/adminlte/img/logo_bd.png");}
+
+.content {
+  min-height: 0px !important;
+  padding-top: 0px !important;
+}
+
+.skin-queimadas .content-header { z-index: 500 !important; }
