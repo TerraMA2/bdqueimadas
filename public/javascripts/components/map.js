@@ -16,6 +16,10 @@ BDQueimadas.components.Map = (function() {
           $(this).addClass('active');
         }
       });
+
+      $('#initialExtent').on('click', function() {
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
+      })
     });
   };
 
