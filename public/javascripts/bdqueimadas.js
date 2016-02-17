@@ -59,6 +59,9 @@ BDQueimadas.obj = (function() {
         BDQueimadas.components.AttributesTable.init();
         $.ajax({ url: "/javascripts/components/graphics.js", dataType: "script", success: function() {
           BDQueimadas.components.Graphics.init();
+          $.ajax({ url: "/javascripts/components/map.js", dataType: "script", success: function() {
+            BDQueimadas.components.Map.init();
+          }});
         }});
       }});
     }});
