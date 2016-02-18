@@ -108,6 +108,9 @@
   bottom: 0;
 }
 
+.cursor-crosshair { cursor: crosshair !important; }
+.cursor-move { cursor: move !important; }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer {

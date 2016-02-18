@@ -11,9 +11,13 @@ BDQueimadas.components.Map = (function() {
         if($(this).hasClass('active')) {
           TerraMA2WebComponents.webcomponents.MapDisplay.removeDragBox();
           $(this).removeClass('active');
+          $('#terrama2-map').removeClass('cursor-crosshair');
+          $('#terrama2-map').addClass('cursor-move');
         } else {
           TerraMA2WebComponents.webcomponents.MapDisplay.addDragBox();
           $(this).addClass('active');
+          $('#terrama2-map').addClass('cursor-crosshair');
+          $('#terrama2-map').removeClass('cursor-move');
         }
       });
 
