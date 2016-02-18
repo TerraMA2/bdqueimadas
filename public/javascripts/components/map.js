@@ -3,7 +3,7 @@ BDQueimadas.components.Map = (function() {
   var init = function() {
     $(document).ready(function() {
       TerraMA2WebComponents.webcomponents.MapDisplay.setDragBoxEnd(function() {
-        var extent = TerraMA2WebComponents.webcomponents.MapDisplay.gerDragBoxExtent();
+        var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getDragBoxExtent();
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extent);
       });
 
@@ -23,7 +23,7 @@ BDQueimadas.components.Map = (function() {
 
       $('#initialExtent').on('click', function() {
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
-      })
+      });
     });
   };
 
