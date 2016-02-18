@@ -1,51 +1,69 @@
 /** Filter class of the BDQueimadas. */
 BDQueimadas.components.Filter = (function() {
 
+  var dateFrom = null;
+  var dateTo = null;
+  var satellite = "all";
+
   /**
    * Create the date filter
-   * @param {string} dateFrom - initial filter date
-   * @param {strin} dateTo - final filter date
+   * @param {string} _dateFrom - initial filter date
+   * @param {strin} _dateTo - final filter date
    * @returns {string} cql - date cql filter
    */
-  var createDateFilter = function(dateFrom, dateTo) {
-    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + processDate(dateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
+  var createDateFilter = function(_dateFrom, _dateTo) {
+    updateDates(_dateFrom, _dateTo);
+
+    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + processDate(_dateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
     cql += " and ";
-    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + processDate(dateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
+    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + processDate(_dateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
 
     return cql;
   };
 
+  var updateDates = function(_dateFrom, _dateTo) {
+    var dateFromSplited = _dateFrom.split("/");
+    var dateToSplited = _dateTo.split("/");
+
+    dateFrom = new Date(dateFromSplited[2] + '-' + dateFromSplited[1] + '-' + dateFromSplited[0] + ' UTC-03:00');
+    dateTo = new Date(dateToSplited[2] + '-' + dateToSplited[1] + '-' + dateToSplited[0] + ' UTC-03:00');
+
+    dateFrom.setHours(0,0,0,0);
+    dateTo.setHours(0,0,0,0);
+  };
+
   /**
    * Create the satellite filter
-   * @param {string} satellite - filter satellite
+   * @param {string} _satellite - filter satellite
    * @returns {string} cql - satellite cql filter
    */
-  var createSatelliteFilter = function(satellite) {
-    var cql = BDQueimadas.obj.getFilterConfig().SatelliteFieldName + "='" + satellite + "'";
+  var createSatelliteFilter = function(_satellite) {
+    var cql = BDQueimadas.obj.getFilterConfig().SatelliteFieldName + "='" + _satellite + "'";
     return cql;
   };
 
   /**
    * Apply the date and satellite filter
-   * @param {string} dateFrom - initial filter date
-   * @param {strin} dateTo - final filter date
-   * @param {string} satellite - filter satellite
+   * @param {string} _dateFrom - initial filter date
+   * @param {strin} _dateTo - final filter date
+   * @param {string} _satellite - filter satellite
    */
-  var applyFilter = function(dateFrom, dateTo, satellite) {
+  var applyFilter = function(_dateFrom, _dateTo, _satellite) {
     var cql = "";
 
-    if(dateFrom.length > 0 && dateTo.length > 0) {
-      cql += createDateFilter(dateFrom, dateTo);
+    if(_dateFrom.length > 0 && _dateTo.length > 0) {
+      cql += createDateFilter(_dateFrom, _dateTo);
     }
 
-    if(dateFrom.length > 0 && dateTo.length > 0 && satellite !== "all") {
+    if(_dateFrom.length > 0 && _dateTo.length > 0 && _satellite !== "all") {
       cql += " AND ";
     }
 
-    if(satellite !== "all") {
-      cql += createSatelliteFilter(satellite);
+    if(_satellite !== "all") {
+      cql += createSatelliteFilter(_satellite);
     }
 
+    updateSatelliteSelect();
     TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter);
   };
 
@@ -78,7 +96,7 @@ BDQueimadas.components.Filter = (function() {
    * @param {array} list - array to be filtered
    * @returns {array} result - array without repetitions
    */
-  function unique(list) {
+  var unique = function(list) {
     var result = [];
 
     $.each(list, function(i, e) {
@@ -88,30 +106,62 @@ BDQueimadas.components.Filter = (function() {
     return result;
   };
 
+  var updateSatelliteSelect = function() {
+    var elem = "<option value=\"all\">TODOS</option>";
+    var satellitesList = BDQueimadas.obj.getFilterConfig().SatellitesList;
+
+    $.each(satellitesList, function(i, _satellite) {
+      var satelliteBegin = new Date(_satellite.Begin + ' UTC-03:00');
+      var satelliteEnd = new Date(_satellite.End + ' UTC-03:00');
+
+      satelliteBegin.setHours(0,0,0,0);
+      satelliteEnd.setHours(0,0,0,0);
+
+      if((satelliteBegin <= dateFrom && satelliteEnd >= dateTo) || (satelliteBegin <= dateFrom && _satellite.Current)) {
+        elem += "<option value=\"" + _satellite.Name + "\">" + _satellite.Name + "</option>";
+      } else if(satellite === _satellite.Name) {
+        elem += "<option value=\"" + _satellite.Name + "\" selected>" + _satellite.Name + "</option>";
+      }
+    });
+
+    $('#filter-satellite').empty().html(elem);
+  };
+
+  var loadEvents = function() {
+    $('#filter-button').on('click', function(el) {
+      var _dateFrom = $('#filter-date-from').val();
+      var _dateTo = $('#filter-date-to').val();
+      satellite = $('#filter-satellite').val();
+
+      if((_dateFrom.length > 0 && _dateTo.length > 0) || (_dateFrom.length === 0 && _dateTo.length === 0)) {
+        applyFilter(_dateFrom, _dateTo, satellite);
+      } else {
+        if(_dateFrom.length === 0) {
+          $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
+        }
+        if(_dateTo.length === 0) {
+          $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
+        }
+      }
+    });
+
+    $('.filter-date').on('focus', function(el) {
+      if($(this).parent().hasClass('has-error')) {
+        $(this).parent().removeClass('has-error');
+      }
+    });
+  };
+
   var init = function() {
     $(document).ready(function() {
-      $('#filter-button').on('click', function(el) {
-        var dateFrom = $('#filter-date-from').val();
-        var dateTo = $('#filter-date-to').val();
-        var satellite = $('#filter-satellite').val();
+      dateFrom = new Date();
+      dateTo = new Date();
+      dateFrom.setHours(dateFrom.getHours() - 24);
 
-        if((dateFrom.length > 0 && dateTo.length > 0) || (dateFrom.length === 0 && dateTo.length === 0)) {
-          applyFilter(dateFrom, dateTo, satellite);
-        } else {
-          if(dateFrom.length === 0) {
-            $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
-          }
-          if(dateTo.length === 0) {
-            $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
-          }
-        }
-      });
+      dateFrom.setHours(0,0,0,0);
+      dateTo.setHours(0,0,0,0);
 
-      $('.filter-date').on('focus', function(el) {
-        if($(this).parent().hasClass('has-error')) {
-          $(this).parent().removeClass('has-error');
-        }
-      });
+      loadEvents();
     });
   };
 

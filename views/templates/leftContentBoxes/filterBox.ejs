@@ -10,9 +10,15 @@
     <label>Por Satélite</label>
     <select class="form-control" id="filter-satellite">
       <option value="all">TODOS</option>
-      <% filterConfig.SatellitesList.forEach(function(satellite, index) { %>
+      <%
+      filterConfig.SatellitesList.forEach(function(satellite, index) {
+        if(satellite.Current) {
+        %>
         <option value="<%- satellite.Name %>"><%- satellite.Name %></option>
-      <% }) %>
+        <%
+        }
+      })
+      %>
     </select>
   </div>
   <button class="btn btn-primary" id="filter-button">Aplicar</button>
