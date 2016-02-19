@@ -55,6 +55,77 @@
        url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.svg#open_sanssemibold") format("svg");
 }
 
+@font-face {
+  font-family: 'Myriad Pro Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Regular'), url('../fonts/MyriadPro/MYRIADPRO-REGULAR.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Condensed';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Condensed'), url('../fonts/MyriadPro/MYRIADPRO-COND.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Semibold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Semibold Italic'), url('../fonts/MyriadPro/MYRIADPRO-SEMIBOLDIT.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Semibold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Semibold'), url('../fonts/MyriadPro/MYRIADPRO-SEMIBOLD.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Condensed Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Condensed Italic'), url('../fonts/MyriadPro/MYRIADPRO-CONDIT.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Bold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold Italic'), url('../fonts/MyriadPro/MYRIADPRO-BOLDIT.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Bold Condensed Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold Condensed Italic'), url('../fonts/MyriadPro/MYRIADPRO-BOLDCONDIT.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Bold Condensed';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold Condensed'), url('../fonts/MyriadPro/MYRIADPRO-BOLDCOND.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Myriad Pro Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold'), url('../fonts/MyriadPro/MYRIADPRO-BOLD.woff') format('woff');
+}
+
 /* BDQueimadas styles */
 
 #filter-box {
@@ -113,16 +184,103 @@
 .cursor-move { cursor: move !important; }
 
 #welcome {
-  /*background-image: url('../images/welcome.jpg');
-  background-repeat: no-repeat;
-  background-position: top;
-  background-size: cover;*/
   position: absolute;
   left: 0;
   z-index: 999999999;
   width: 100%;
   height: 720px;
   margin-top: -54px;
+}
+
+#welcome > img {
+  float: left;
+}
+
+#welcome > #welcome-text {
+  color: white;
+  position: absolute;
+  right: 170px;
+  font-family: 'Myriad Pro Regular';
+  margin-top: 75px;
+  text-align: right;
+  width: 600px;
+}
+
+#welcome > #welcome-text > p.title {
+  font-size: 76px;
+  line-height: 76px;
+}
+
+#welcome > #welcome-text > p.text {
+  font-size: 23px;
+  line-height: 40px;
+}
+
+#welcome > #welcome-text > button {
+  width: 200px;
+  height: 70px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-size: 20px;
+  outline: none;
+}
+
+@media only screen and (max-width: 991px) {
+  #welcome {
+    margin-top: -90px !important;
+  }
+}
+
+@media only screen and (max-height: 724px) and (min-width: 1120px) {
+  #welcome > img {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-height: 724px) and (max-width: 1119px), (min-height: 725px) {
+  #welcome > img {
+    height: 100%;
+  }
+}
+
+@media only screen and (max-height: 600px) {
+  #welcome > #welcome-text {
+    margin-top: 30px;
+  }
+
+  #welcome > #welcome-text > p.title {
+    font-size: 40px !important;
+    line-height: 40px !important;
+  }
+
+  #welcome > #welcome-text > p.text {
+    font-size: 18px !important;
+    line-height: 30px !important;
+  }
+
+  #welcome > #welcome-text > button {
+    width: 130px !important;
+    height: 45px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media only screen and (min-height: 601px) and (max-height: 830px) {
+  #welcome > #welcome-text > p.title {
+    font-size: 50px !important;
+    line-height: 50px !important;
+  }
+
+  #welcome > #welcome-text > p.text {
+    font-size: 20px !important;
+    line-height: 35px !important;
+  }
+
+  #welcome > #welcome-text > button {
+    width: 150px !important;
+    height: 50px !important;
+    font-size: 17px !important;
+  }
 }
 
 /* TerraMA2Components styles */

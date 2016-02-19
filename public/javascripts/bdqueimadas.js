@@ -134,6 +134,11 @@ BDQueimadas.obj = (function() {
     $('.sidebar-toggle').on('click', function() {
       updateSizeVars();
 
+      if($(this).hasClass("comecar")) {
+        $('#welcome').animate({ 'opacity': '0' }, { duration: 300, queue: false });
+        window.setTimeout(function() { $('#welcome').css('display', 'none'); }, 300);
+      }
+
       if($(".left-content-box").hasClass('active')) {
         var currentBox = $("#" + $("#left-content-box-background").attr('box')).attr('box');
         ajustBoxSize(currentBox);
@@ -162,17 +167,15 @@ BDQueimadas.obj = (function() {
       closeAllContentBoxes();
       closeBg();
 
-      var newHeight = $(window).outerHeight();
+      updateSizeVars();
 
       if($("body").hasClass('sidebar-collapse')) {
-        updateReducedContentSize(newHeight);
+        updateReducedContentSize(height);
       } else {
-        updateFullContentSize(newHeight);
+        updateFullContentSize(height);
       }
 
       $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
-
-      height = newHeight;
 
       var interval = window.setInterval(function() { TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize(); }, 10);
       window.setTimeout(function() { clearInterval(interval); }, 300);
