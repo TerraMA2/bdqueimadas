@@ -137,6 +137,7 @@ BDQueimadas.obj = (function() {
       if($(this).hasClass("comecar")) {
         $('#welcome').animate({ 'opacity': '0' }, { duration: 300, queue: false });
         window.setTimeout(function() { $('#welcome').css('display', 'none'); }, 300);
+        $('#main-sidebar-toggle').css("display", "");
       }
 
       if($(".left-content-box").hasClass('active')) {

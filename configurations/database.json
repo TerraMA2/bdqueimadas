@@ -1,0 +1,13 @@
+{
+  "Port": 5432,
+  "Host": "localhost",
+  "Database": "geoserver",
+  "Schema": "public",
+  "User": "postgres",
+  "Password": "postgres",
+  "FiresTable": {
+      "Name": "focus",
+      "DateFieldName": "data",
+      "TimeFieldName": "horagmt"
+  }
+}

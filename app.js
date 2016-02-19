@@ -12,6 +12,8 @@ var express = require('express'),
     server = require('http').Server(app),
     io = require('socket.io')(server);
 
+require(path.join(__dirname, 'modules/pg-connector.js')).initDb();
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
