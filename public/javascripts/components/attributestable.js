@@ -13,10 +13,10 @@ BDQueimadas.components.AttributesTable = (function() {
   };
 
   var loadTable = function() {
-    var ignore = ['the_geom', 'Id'];
+    //var ignore = ['the_geom', 'Id'];
+    var ignore = ['gid'];
     var featureDescription = JSON.parse(BDQueimadas.obj.getFeatureDescription());
     var featuresDescriptionLength = featureDescription.featureTypes[0].properties.length;
-    var features = JSON.parse(BDQueimadas.obj.getFeatures());
     var titles = "";
     var items = "";
 
@@ -26,18 +26,13 @@ BDQueimadas.components.AttributesTable = (function() {
       }
     }
 
-    //for(var i = 0; i < features.totalFeatures; i++) {
-    for(var i = 0; i < 1000; i++) {
-      items += "<tr>";
-      for(var j = 0; j < featuresDescriptionLength; j++) {
-        if(!strInArr(ignore, featureDescription.featureTypes[0].properties[j].name)) {
-          items += "<td>" + features.features[i].properties[featureDescription.featureTypes[0].properties[j].name] + "</td>";
-        }
+    $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>").DataTable(
+      {
+        "processing": true,
+        "serverSide": true,
+        "ajax": "/test"
       }
-      items += "</tr>";
-    }
-
-    $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot><tbody>" + items + "</tbody>").DataTable();
+    );
   };
 
   var verifiesOutsideVars = function() {
@@ -48,6 +43,13 @@ BDQueimadas.components.AttributesTable = (function() {
   };
 
   var init = function() {
+
+    $('#box-attributes-table').attr('style', 'width: ' + ($("#terrama2-map").outerWidth() - 40) + 'px');
+
+    $('.sidebar-toggle').on('click', function() {
+      window.setTimeout(function() { $('#box-attributes-table').attr('style', 'width: ' + ($("#terrama2-map").outerWidth() - 40) + 'px'); }, 310);
+    });
+
     interval = window.setInterval(verifiesOutsideVars, 3000);
   };
 

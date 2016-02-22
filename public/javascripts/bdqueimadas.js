@@ -8,7 +8,6 @@ BDQueimadas.obj = (function() {
   var filterConfig = null;
   var serverConfig = null;
   var featureDescription = null;
-  var features = null;
   var socket = null;
   var attributesTable = null;
   var filter = null;
@@ -25,10 +24,6 @@ BDQueimadas.obj = (function() {
 
   var getFeatureDescription = function() {
     return featureDescription;
-  };
-
-  var getFeatures = function() {
-    return features;
   };
 
   var getFilterConfig = function() {
@@ -80,23 +75,6 @@ BDQueimadas.obj = (function() {
     socket.on('proxyResponse', function(msg) {
       if(msg.requestId === requestId) {
         featureDescription = msg.msg;
-      }
-    });
-  };
-
-  var loadFeatures = function() {
-    var requestId = randomText();
-
-    socket.emit(
-      'proxyRequest',
-      {
-        url: serverConfig.URL + serverConfig.GetFeatureParams + filterConfig.LayerToFilter,
-        requestId: requestId
-      }
-    );
-    socket.on('proxyResponse', function(msg) {
-      if(msg.requestId === requestId) {
-        features = msg.msg;
       }
     });
   };
@@ -263,13 +241,13 @@ BDQueimadas.obj = (function() {
   var updateFullContentSize = function(_height) {
     $('.content-wrapper').attr("style", "min-height: " + (_height - (headerHeight + reducedFooterHeight)) + "px");
     $('#terrama2-map').attr("style", "height: " + (_height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
-    $('.left-content-box').attr("style", "height: " + (_height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
+    $('.left-content-box').attr("style", "height: " + (_height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (headerHeight + contentHeaderHeight) + "px;");
   };
 
   var updateReducedContentSize = function(_height) {
     $('.content-wrapper').attr("style", "min-height: " + (_height - (navbarHeight + reducedFooterHeight)) + "px");
     $('#terrama2-map').attr("style", "height: " + (_height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
-    $('.left-content-box').attr("style", "height: " + (_height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
+    $('.left-content-box').attr("style", "height: " + (_height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (navbarHeight + contentHeaderHeight) + "px;");
   };
 
   var init = function(_filterConfig, _serverConfig) {
@@ -283,7 +261,6 @@ BDQueimadas.obj = (function() {
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
         success: function() {
           socket = io(window.location.origin);
-          loadFeatures();
           loadFeaturesDescription();
           loadComponents();
         }
@@ -303,7 +280,6 @@ BDQueimadas.obj = (function() {
 
   return {
   	getFeatureDescription: getFeatureDescription,
-  	getFeatures: getFeatures,
   	getFilterConfig: getFilterConfig,
   	randomText: randomText,
   	init: init

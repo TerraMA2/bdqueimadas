@@ -12,6 +12,8 @@ var express = require('express'),
     server = require('http').Server(app),
     io = require('socket.io')(server);
 
+require('events').EventEmitter.prototype._maxListeners = 100;
+
 require(path.join(__dirname, 'modules/pg-connector.js')).initDb();
 
 app.set('views', path.join(__dirname, 'views'));

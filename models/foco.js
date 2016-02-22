@@ -5,21 +5,36 @@ var path = require('path'),
 
 var foco = function() {};
 
-foco.getPage = function(numberOfRegisters, initialRegister) {
+foco.getPage = function(numberOfRegisters, initialRegister, dateFrom, dateTo, options, callback) {
   db.connect(function(err) {
-    if(err) return console.error('could not connect to postgres', err);
+    if(!err) {
+      var query = 'select * from ' + pgConnector.getSchema() + '.' + firesTableConfiguration.Name + ' where ' + firesTableConfiguration.DateFieldName + ' between ' + dateFrom + ' and ' + dateTo;
+      if(options.satellite !== undefined) query += ' and ' + firesTableConfiguration.SatelliteFieldName + ' = ' + options.satellite;
+      query += ' order by ' + firesTableConfiguration.DateFieldName + ', ' + firesTableConfiguration.TimeFieldName + ' asc ' + ' limit ' + numberOfRegisters + ' offset ' + initialRegister + ';';
 
-    var query = 'select * from ' + pgConnector.getSchema() + '.' + firesTableConfiguration.Name +
-                ' order by ' + firesTableConfiguration.DateFieldName + ', ' + firesTableConfiguration.TimeFieldName + ' asc limit ' +
-                numberOfRegisters + ' offset ' + initialRegister + ' order;';
+      db.query(query, function(err, result) {
+        if(!err) {
+          db.end();
+          return callback(null, result);
+        } else return callback(err);
+      });
+    } else return callback(err);
+  });
+};
 
-    db.query(query, function(err, result) {
-      if(err) return console.error('error running query', err);
+foco.getPageCount = function(dateFrom, dateTo, options, callback) {
+  db.connect(function(err) {
+    if(!err) {
+      var query = 'select count(*) from ' + pgConnector.getSchema() + '.' + firesTableConfiguration.Name + ' where ' + firesTableConfiguration.DateFieldName + ' between ' + dateFrom + ' and ' + dateTo;
+      if(options.satellite !== undefined) query += ' and ' + firesTableConfiguration.SatelliteFieldName + ' = ' + options.satellite;
 
-      db.end();
-
-      return result;
-    });
+      db.query(query, function(err, result) {
+        if(!err) {
+          db.end();
+          return callback(null, result);
+        } else return callback(err);
+      });
+    } else return callback(err);
   });
 };
 
