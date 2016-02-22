@@ -14,7 +14,7 @@ var express = require('express'),
 
 require('events').EventEmitter.prototype._maxListeners = 100;
 
-require(path.join(__dirname, 'modules/pg-connector.js')).initDb();
+require(path.join(__dirname, 'modules/PgConnector.js')).initDb();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

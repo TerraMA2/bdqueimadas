@@ -1,15 +1,15 @@
 var path = require('path'),
-    pgConnector = require(path.join(__dirname, '../modules/pg-connector.js')),
+    pgConnector = require(path.join(__dirname, '../modules/PgConnector.js')),
     firesTableConfiguration = pgConnector.getFiresTableConfiguration(),
     db = pgConnector.getDb();
 
-var foco = function() {};
+var Filter = function() {};
 
-foco.getPage = function(numberOfRegisters, initialRegister, dateFrom, dateTo, options, callback) {
+Filter.getAttributesTablePage = function(numberOfRegisters, initialRegister, dateFrom, dateTo, options, callback) {
   db.connect(function(err) {
     if(!err) {
       var query = 'select * from ' + pgConnector.getSchema() + '.' + firesTableConfiguration.Name + ' where ' + firesTableConfiguration.DateFieldName + ' between ' + dateFrom + ' and ' + dateTo;
-      if(options.satellite !== undefined) query += ' and ' + firesTableConfiguration.SatelliteFieldName + ' = ' + options.satellite;
+      if(options.satellite !== undefined) query += ' and ' + firesTableConfiguration.SatelliteFieldName + ' = \'' + options.satellite + '\'';
       query += ' order by ' + firesTableConfiguration.DateFieldName + ', ' + firesTableConfiguration.TimeFieldName + ' asc ' + ' limit ' + numberOfRegisters + ' offset ' + initialRegister + ';';
 
       db.query(query, function(err, result) {
@@ -22,7 +22,7 @@ foco.getPage = function(numberOfRegisters, initialRegister, dateFrom, dateTo, op
   });
 };
 
-foco.getPageCount = function(dateFrom, dateTo, options, callback) {
+Filter.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
   db.connect(function(err) {
     if(!err) {
       var query = 'select count(*) from ' + pgConnector.getSchema() + '.' + firesTableConfiguration.Name + ' where ' + firesTableConfiguration.DateFieldName + ' between ' + dateFrom + ' and ' + dateTo;
@@ -38,4 +38,4 @@ foco.getPageCount = function(dateFrom, dateTo, options, callback) {
   });
 };
 
-module.exports = foco;
+module.exports = Filter;

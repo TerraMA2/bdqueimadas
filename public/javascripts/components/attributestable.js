@@ -2,6 +2,11 @@
 BDQueimadas.components.AttributesTable = (function() {
 
   var interval = null;
+  var table = null;
+
+  var updateTable = function() {
+    table.ajax.reload();
+  }
 
   var strInArr = function(arr, str) {
     for(i = 0, j = arr.length; i < j; i++) {
@@ -26,35 +31,41 @@ BDQueimadas.components.AttributesTable = (function() {
       }
     }
 
-    $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>").DataTable(
+    $('#attributes-table')
+      .empty()
+      .append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
+
+    table = $('#attributes-table').DataTable(
       {
         "processing": true,
         "serverSide": true,
-        "ajax": "/test"
+        "ajax": {
+          "url": "/get-attributes-table",
+          "type": "POST",
+          "data": function(data) {
+            data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom();
+            data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo();
+            data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
+          }
+        }
       }
     );
   };
 
   var verifiesOutsideVars = function() {
-    if(BDQueimadas.obj.getFeatureDescription() !== null && BDQueimadas.obj.getFeatures() !== null) {
+    if(BDQueimadas.obj.getFeatureDescription() !== null) {
       loadTable();
       clearInterval(interval);
     }
   };
 
   var init = function() {
-
-    $('#box-attributes-table').attr('style', 'width: ' + ($("#terrama2-map").outerWidth() - 40) + 'px');
-
-    $('.sidebar-toggle').on('click', function() {
-      window.setTimeout(function() { $('#box-attributes-table').attr('style', 'width: ' + ($("#terrama2-map").outerWidth() - 40) + 'px'); }, 310);
-    });
-
     interval = window.setInterval(verifiesOutsideVars, 3000);
   };
 
   return {
   	loadTable: loadTable,
+    updateTable: updateTable,
   	init: init
   };
 })();

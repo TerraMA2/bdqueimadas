@@ -2,26 +2,26 @@ var pg = require('pg').native,
     path = require('path'),
     databaseConfigurations = require(path.join(__dirname, '../configurations/database.json'));
 
-var pgConnector = function() {};
+var PgConnector = function() {};
 
-pgConnector.getDb = function() {
-  if(typeof pgConnector.db === 'undefined') {
-    pgConnector.initDb();
+PgConnector.getDb = function() {
+  if(typeof PgConnector.db === 'undefined') {
+    PgConnector.initDb();
   }
-  return pgConnector.db;
+  return PgConnector.db;
 };
 
-pgConnector.getSchema = function() {
+PgConnector.getSchema = function() {
   return databaseConfigurations.Schema;
 };
 
-pgConnector.getFiresTableConfiguration = function() {
+PgConnector.getFiresTableConfiguration = function() {
   return databaseConfigurations.FiresTable;
 };
 
-pgConnector.initDb = function() {
+PgConnector.initDb = function() {
   var connectionString = "postgres://" + databaseConfigurations.User + ":" + databaseConfigurations.Password + "@" + databaseConfigurations.Host + ":" + databaseConfigurations.Port + "/" + databaseConfigurations.Database;
-  pgConnector.db = new pg.Client(connectionString);
+  PgConnector.db = new pg.Client(connectionString);
 };
 
-module.exports = pgConnector;
+module.exports = PgConnector;

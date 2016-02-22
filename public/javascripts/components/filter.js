@@ -5,6 +5,18 @@ BDQueimadas.components.Filter = (function() {
   var dateTo = null;
   var satellite = "all";
 
+  var getFormattedDateFrom = function() {
+    return dateFrom.getFullYear().toString() + ('0' + (dateFrom.getMonth() + 1)).slice(-2) + ('0' + dateFrom.getDate()).slice(-2);
+  };
+
+  var getFormattedDateTo = function() {
+    return dateTo.getFullYear().toString() + ('0' + (dateTo.getMonth() + 1)).slice(-2) + ('0' + dateTo.getDate()).slice(-2);
+  };
+
+  var getSatellite = function() {
+    return satellite;
+  };
+
   /**
    * Create the date filter
    * @param {string} _dateFrom - initial filter date
@@ -64,6 +76,9 @@ BDQueimadas.components.Filter = (function() {
     }
 
     updateSatelliteSelect();
+
+    BDQueimadas.components.AttributesTable.updateTable();
+
     TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter);
   };
 
@@ -166,6 +181,9 @@ BDQueimadas.components.Filter = (function() {
   };
 
   return {
+    getFormattedDateFrom: getFormattedDateFrom,
+    getFormattedDateTo: getFormattedDateTo,
+    getSatellite: getSatellite,
     init: init
   };
 })();

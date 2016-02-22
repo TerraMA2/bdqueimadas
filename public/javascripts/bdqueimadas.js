@@ -8,6 +8,7 @@ BDQueimadas.obj = (function() {
   var filterConfig = null;
   var serverConfig = null;
   var featureDescription = null;
+  var features = null;
   var socket = null;
   var attributesTable = null;
   var filter = null;
@@ -24,6 +25,10 @@ BDQueimadas.obj = (function() {
 
   var getFeatureDescription = function() {
     return featureDescription;
+  };
+
+  var getFeatures = function() {
+    return features;
   };
 
   var getFilterConfig = function() {
@@ -75,6 +80,23 @@ BDQueimadas.obj = (function() {
     socket.on('proxyResponse', function(msg) {
       if(msg.requestId === requestId) {
         featureDescription = msg.msg;
+      }
+    });
+  };
+
+  var loadFeatures = function() {
+    var requestId = randomText();
+
+    socket.emit(
+      'proxyRequest',
+      {
+        url: serverConfig.URL + serverConfig.GetFeatureParams + filterConfig.LayerToFilter,
+        requestId: requestId
+      }
+    );
+    socket.on('proxyResponse', function(msg) {
+      if(msg.requestId === requestId) {
+        features = msg.msg;
       }
     });
   };
@@ -261,6 +283,7 @@ BDQueimadas.obj = (function() {
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
         success: function() {
           socket = io(window.location.origin);
+          loadFeatures();
           loadFeaturesDescription();
           loadComponents();
         }
@@ -280,6 +303,7 @@ BDQueimadas.obj = (function() {
 
   return {
   	getFeatureDescription: getFeatureDescription,
+    getFeatures: getFeatures,
   	getFilterConfig: getFilterConfig,
   	randomText: randomText,
   	init: init
