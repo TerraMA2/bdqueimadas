@@ -7,6 +7,7 @@ BDQueimadas.obj = (function() {
 
   var filterConfig = null;
   var serverConfig = null;
+  var attributesTableConfig = null;
   var featureDescription = null;
   var features = null;
   var socket = null;
@@ -35,6 +36,10 @@ BDQueimadas.obj = (function() {
     return filterConfig;
   };
 
+  var getAttributesTableConfig = function() {
+    return attributesTableConfig;
+  };
+
   var randomText = function() {
     var characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     var random = '';
@@ -47,9 +52,10 @@ BDQueimadas.obj = (function() {
     return random;
   };
 
-  var loadConfigurations = function(_filterConfig, _serverConfig) {
+  var loadConfigurations = function(_filterConfig, _serverConfig, _attributesTableConfig) {
     filterConfig = _filterConfig;
     serverConfig = _serverConfig;
+    attributesTableConfig = _attributesTableConfig;
   };
 
   var loadComponents = function() {
@@ -272,12 +278,12 @@ BDQueimadas.obj = (function() {
     $('.left-content-box').attr("style", "height: " + (_height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (navbarHeight + contentHeaderHeight) + "px;");
   };
 
-  var init = function(_filterConfig, _serverConfig) {
+  var init = function(_filterConfig, _serverConfig, _attributesTableConfig) {
     $(document).ready(function() {
       updateSizeVars();
       updateFullContentSize(height);
       loadEvents();
-      loadConfigurations(_filterConfig, _serverConfig);
+      loadConfigurations(_filterConfig, _serverConfig, _attributesTableConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -305,6 +311,7 @@ BDQueimadas.obj = (function() {
   	getFeatureDescription: getFeatureDescription,
     getFeatures: getFeatures,
   	getFilterConfig: getFilterConfig,
+    getAttributesTableConfig: getAttributesTableConfig,
   	randomText: randomText,
   	init: init
   };

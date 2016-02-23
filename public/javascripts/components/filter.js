@@ -122,6 +122,8 @@ BDQueimadas.components.Filter = (function() {
   };
 
   var updateSatelliteSelect = function() {
+    var selectedOption = $('#filter-satellite').value;
+
     var elem = "<option value=\"all\">TODOS</option>";
     var satellitesList = BDQueimadas.obj.getFilterConfig().SatellitesList;
 
@@ -133,7 +135,11 @@ BDQueimadas.components.Filter = (function() {
       satelliteEnd.setHours(0,0,0,0);
 
       if((satelliteBegin <= dateFrom && satelliteEnd >= dateTo) || (satelliteBegin <= dateFrom && _satellite.Current)) {
-        elem += "<option value=\"" + _satellite.Name + "\">" + _satellite.Name + "</option>";
+        if(satellite === _satellite.Name) {
+          elem += "<option value=\"" + _satellite.Name + "\" selected>" + _satellite.Name + "</option>";
+        } else {
+          elem += "<option value=\"" + _satellite.Name + "\">" + _satellite.Name + "</option>";
+        }
       } else if(satellite === _satellite.Name) {
         elem += "<option value=\"" + _satellite.Name + "\" selected>" + _satellite.Name + "</option>";
       }

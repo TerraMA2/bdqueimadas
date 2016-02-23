@@ -3,8 +3,17 @@ BDQueimadas.components.AttributesTable = (function() {
 
   var interval = null;
   var table = null;
+  var activeColumnNames = [];
 
   var updateTable = function() {
+    var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
+    var columnsLength = columns.length;
+    activeColumnNames = [];
+
+    for(var i = 0; i < columnsLength; i++)
+      if(columns[i].Show)
+        activeColumnNames.push({ "name": columns[i].Name });
+
     table.ajax.reload();
   }
 
@@ -18,25 +27,24 @@ BDQueimadas.components.AttributesTable = (function() {
   };
 
   var loadTable = function() {
-    //var ignore = ['the_geom', 'Id'];
-    var ignore = ['gid'];
-    var featureDescription = JSON.parse(BDQueimadas.obj.getFeatureDescription());
-    var featuresDescriptionLength = featureDescription.featureTypes[0].properties.length;
+    var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
+    var columnsLength = columns.length;
     var titles = "";
-    var items = "";
 
-    for(var i = 0; i < featuresDescriptionLength; i++) {
-      if(!strInArr(ignore, featureDescription.featureTypes[0].properties[i].name)) {
-        titles += "<th>" + featureDescription.featureTypes[0].properties[i].name + "</th>";
-      }
+    for(var i = 0; i < columnsLength; i++) {
+      if(columns[i].Show) activeColumnNames.push({ "name": columns[i].Name });
+      titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
     }
 
     $('#attributes-table')
       .empty()
       .append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
+    activeColumnNames.push();
+
     table = $('#attributes-table').DataTable(
       {
+        "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -47,7 +55,8 @@ BDQueimadas.components.AttributesTable = (function() {
             data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo();
             data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
           }
-        }
+        },
+        "columns": activeColumnNames
       }
     );
   };

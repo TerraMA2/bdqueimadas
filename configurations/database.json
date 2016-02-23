@@ -6,9 +6,9 @@
   "User": "postgres",
   "Password": "postgres",
   "FiresTable": {
-      "Name": "focos",
-      "DateFieldName": "data",
-      "TimeFieldName": "horagmt",
-      "SatelliteFieldName": "Satelite"
+    "Name": "focos",
+    "DateFieldName": "data",
+    "TimeFieldName": "horagmt",
+    "SatelliteFieldName": "satelite"
   }
 }

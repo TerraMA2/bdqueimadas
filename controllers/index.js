@@ -1,12 +1,17 @@
 module.exports = function(app) {
   var path = require('path'),
-      filterConfig = require(path.join(__dirname, '../configurations/filter.json')),
-      serverConfig = require(path.join(__dirname, '../configurations/server.json'));
+      fs = require('fs');
 
   function indexController(request, response) {
+
+    var filterConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/filter.json'), 'utf8')),
+        serverConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/server.json'), 'utf8')),
+        attributesTableConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/attributestable.json'), 'utf8'));
+
     var params = {
       filterConfig: filterConfig,
-      serverConfig: serverConfig
+      serverConfig: serverConfig,
+      attributesTableConfig: attributesTableConfig
     };
 
     response.render('index', params);
