@@ -5,12 +5,40 @@ BDQueimadas.components.Filter = (function() {
   var dateTo = null;
   var satellite = "all";
 
-  var getFormattedDateFrom = function() {
-    return dateFrom.getFullYear().toString() + ('0' + (dateFrom.getMonth() + 1)).slice(-2) + ('0' + dateFrom.getDate()).slice(-2);
+  var getFormattedDateFrom = function(format) {
+    var finalDate = format;
+
+    var dd = ('0' + dateFrom.getDate()).slice(-2);
+    var mm = ('0' + (dateFrom.getMonth() + 1)).slice(-2);
+    var yyyy = dateFrom.getFullYear().toString();
+
+    if(format.match(/YYYY/)) {
+      finalDate = finalDate.replace("YYYY", yyyy);
+    } if(format.match(/MM/)) {
+      finalDate = finalDate.replace("MM", mm);
+    } if(format.match(/DD/)) {
+      finalDate = finalDate.replace("DD", dd);
+    }
+
+    return finalDate;
   };
 
-  var getFormattedDateTo = function() {
-    return dateTo.getFullYear().toString() + ('0' + (dateTo.getMonth() + 1)).slice(-2) + ('0' + dateTo.getDate()).slice(-2);
+  var getFormattedDateTo = function(format) {
+    var finalDate = format;
+
+    var dd = ('0' + dateTo.getDate()).slice(-2);
+    var mm = ('0' + (dateTo.getMonth() + 1)).slice(-2);
+    var yyyy = dateTo.getFullYear().toString();
+
+    if(format.match(/YYYY/)) {
+      finalDate = finalDate.replace("YYYY", yyyy);
+    } if(format.match(/MM/)) {
+      finalDate = finalDate.replace("MM", mm);
+    } if(format.match(/DD/)) {
+      finalDate = finalDate.replace("DD", dd);
+    }
+
+    return finalDate;
   };
 
   var getSatellite = function() {
@@ -39,6 +67,15 @@ BDQueimadas.components.Filter = (function() {
 
     dateFrom = new Date(dateFromSplited[2] + '-' + dateFromSplited[1] + '-' + dateFromSplited[0] + ' UTC-03:00');
     dateTo = new Date(dateToSplited[2] + '-' + dateToSplited[1] + '-' + dateToSplited[0] + ' UTC-03:00');
+
+    dateFrom.setHours(0,0,0,0);
+    dateTo.setHours(0,0,0,0);
+  };
+
+  var updateDatesToCurrent = function() {
+    dateFrom = new Date();
+    dateTo = new Date();
+    dateFrom.setHours(dateFrom.getHours() - 24);
 
     dateFrom.setHours(0,0,0,0);
     dateTo.setHours(0,0,0,0);
@@ -155,6 +192,12 @@ BDQueimadas.components.Filter = (function() {
       satellite = $('#filter-satellite').val();
 
       if((_dateFrom.length > 0 && _dateTo.length > 0) || (_dateFrom.length === 0 && _dateTo.length === 0)) {
+        if(_dateFrom.length === 0 && _dateTo.length === 0) {
+          updateDatesToCurrent();
+          _dateTo = getFormattedDateTo('DD/MM/YYYY');
+          _dateFrom = getFormattedDateFrom('DD/MM/YYYY');
+        }
+
         applyFilter(_dateFrom, _dateTo, satellite);
       } else {
         if(_dateFrom.length === 0) {
@@ -175,13 +218,7 @@ BDQueimadas.components.Filter = (function() {
 
   var init = function() {
     $(document).ready(function() {
-      dateFrom = new Date();
-      dateTo = new Date();
-      dateFrom.setHours(dateFrom.getHours() - 24);
-
-      dateFrom.setHours(0,0,0,0);
-      dateTo.setHours(0,0,0,0);
-
+      updateDatesToCurrent();
       loadEvents();
     });
   };

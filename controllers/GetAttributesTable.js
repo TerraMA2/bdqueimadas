@@ -10,9 +10,11 @@ module.exports = function(app) {
     var order = [];
 
     if(request.body.satellite !== '') {
-      options = {
-        satellite: request.body.satellite
-      };
+      options.satellite = request.body.satellite;
+    }
+
+    if(request.body.extent !== '') {
+      options.extent = request.body.extent;
     }
 
     var arrayFound = request.body.columns.filter(function(item) {

@@ -32,6 +32,10 @@ Filter.getAttributesTablePage = function(numberOfRegisters, initialRegister, ord
         params.push(options.satellite);
       }
 
+      if(options.extent !== undefined) {
+        query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+      }
+
       if(search !== '') {
         var searchText = " and (";
         for(var i = 0; i < firesTableConfiguration.Columns.length; i++) {
@@ -79,6 +83,10 @@ Filter.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
         params.push(options.satellite);
       }
 
+      if(options.extent !== undefined) {
+        query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+      }
+
       db.query(query, params, function(err, result) {
         if(!err) {
           db.end();
@@ -101,6 +109,10 @@ Filter.getAttributesTableCountWithSearch = function(dateFrom, dateTo, search, op
       if(options.satellite !== undefined) {
         query += " and " + firesTableConfiguration.SatelliteFieldName + " = $" + (parameter++);
         params.push(options.satellite);
+      }
+
+      if(options.extent !== undefined) {
+        query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
       }
 
       if(search !== '') {

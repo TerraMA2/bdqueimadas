@@ -40,8 +40,6 @@ BDQueimadas.components.AttributesTable = (function() {
       .empty()
       .append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
-    activeColumnNames.push();
-
     table = $('#attributes-table').DataTable(
       {
         "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
@@ -51,9 +49,10 @@ BDQueimadas.components.AttributesTable = (function() {
           "url": "/get-attributes-table",
           "type": "POST",
           "data": function(data) {
-            data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom();
-            data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo();
+            data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
+            data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
             data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
+            data.extent = BDQueimadas.components.Map.getCurrentExtent() !== null ? BDQueimadas.components.Map.getCurrentExtent() : '';
           }
         },
         "columns": activeColumnNames

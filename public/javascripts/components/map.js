@@ -1,10 +1,25 @@
 BDQueimadas.components.Map = (function() {
 
+  var currentExtent = null;
+
+  var getCurrentExtent = function() {
+    return currentExtent;
+  }
+
   var init = function() {
     $(document).ready(function() {
       TerraMA2WebComponents.webcomponents.MapDisplay.setDragBoxEnd(function() {
-        var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getDragBoxExtent();
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extent);
+        currentExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getDragBoxExtent();
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(currentExtent);
+      });
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getView().on('propertychange', function(e) {
+        switch (e.key) {
+          case 'resolution':
+            currentExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtension();
+            BDQueimadas.components.AttributesTable.updateTable();
+            break;
+        }
       });
 
       $('#dragbox').on('click', function() {
@@ -28,6 +43,7 @@ BDQueimadas.components.Map = (function() {
   };
 
   return {
+    getCurrentExtent: getCurrentExtent,
     init: init
   };
 })();
