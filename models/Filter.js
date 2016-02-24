@@ -1,7 +1,8 @@
 var path = require('path'),
-    pgConnector = require(path.join(__dirname, '../modules/PgConnector.js')),
+    pgConnectionString = require(path.join(__dirname, '../modules/PgConnectionString.js')),
     firesTableConfiguration = require(path.join(__dirname, '../configurations/attributestable.json')),
-    db = pgConnector.getDb();
+    conString = pgConnectionString.getConnectionString(),
+    pg = require('pg');
 
 var Filter = function() {};
 
@@ -21,9 +22,9 @@ Filter.getAttributesTablePage = function(numberOfRegisters, initialRegister, ord
   for(var i = 0; i < order.length; i++) orderText += order[i].column + " " + order[i].dir + ", ";
   orderText = orderText.substring(0, (orderText.length - 2));
 
-  db.connect(function(err) {
+  pg.connect(conString, function(err, client, done) {
     if(!err) {
-      var query = "select " + columns + " from " + pgConnector.getSchema() + "." + firesTableConfiguration.Name + " where (" +
+      var query = "select " + columns + " from " + pgConnectionString.getSchema() + "." + firesTableConfiguration.Name + " where (" +
                   firesTableConfiguration.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
           params = [dateFrom, dateTo];
 
@@ -59,9 +60,9 @@ Filter.getAttributesTablePage = function(numberOfRegisters, initialRegister, ord
       //console.log(query);
       //console.log(params);
 
-      db.query(query, params, function(err, result) {
+      client.query(query, params, function(err, result) {
+        done();
         if(!err) {
-          db.end();
           return callback(null, result);
         } else return callback(err);
       });
@@ -72,9 +73,9 @@ Filter.getAttributesTablePage = function(numberOfRegisters, initialRegister, ord
 Filter.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
   var parameter = 1;
 
-  db.connect(function(err) {
+  pg.connect(conString, function(err, client, done) {
     if(!err) {
-      var query = "select count(*) from " + pgConnector.getSchema() + "." + firesTableConfiguration.Name + " where " +
+      var query = "select count(*) from " + pgConnectionString.getSchema() + "." + firesTableConfiguration.Name + " where " +
                   firesTableConfiguration.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
           params = [dateFrom, dateTo];
 
@@ -87,9 +88,9 @@ Filter.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
         query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
       }
 
-      db.query(query, params, function(err, result) {
+      client.query(query, params, function(err, result) {
+        done();
         if(!err) {
-          db.end();
           return callback(null, result);
         } else return callback(err);
       });
@@ -100,9 +101,9 @@ Filter.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
 Filter.getAttributesTableCountWithSearch = function(dateFrom, dateTo, search, options, callback) {
   var parameter = 1;
 
-  db.connect(function(err) {
+  pg.connect(conString, function(err, client, done) {
     if(!err) {
-      var query = "select count(*) from " + pgConnector.getSchema() + "." + firesTableConfiguration.Name + " where " +
+      var query = "select count(*) from " + pgConnectionString.getSchema() + "." + firesTableConfiguration.Name + " where " +
       firesTableConfiguration.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
           params = [dateFrom, dateTo];
 
@@ -132,9 +133,9 @@ Filter.getAttributesTableCountWithSearch = function(dateFrom, dateTo, search, op
         query += searchText;
       }
 
-      db.query(query, params, function(err, result) {
+      client.query(query, params, function(err, result) {
+        done();
         if(!err) {
-          db.end();
           return callback(null, result);
         } else return callback(err);
       });

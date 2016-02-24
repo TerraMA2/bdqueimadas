@@ -52,7 +52,7 @@ BDQueimadas.components.AttributesTable = (function() {
             data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
             data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
             data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
-            data.extent = BDQueimadas.components.Map.getCurrentExtent() !== null ? BDQueimadas.components.Map.getCurrentExtent() : '';
+            data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtension();
           }
         },
         "columns": activeColumnNames
@@ -68,6 +68,10 @@ BDQueimadas.components.AttributesTable = (function() {
   };
 
   var init = function() {
+    $('#filterTableToExtent').on('click', function() {
+      BDQueimadas.components.AttributesTable.updateTable();
+    });
+
     interval = window.setInterval(verifiesOutsideVars, 3000);
   };
 

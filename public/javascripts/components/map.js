@@ -1,26 +1,20 @@
 BDQueimadas.components.Map = (function() {
 
-  var currentExtent = null;
-
-  var getCurrentExtent = function() {
-    return currentExtent;
-  }
-
   var init = function() {
     $(document).ready(function() {
       TerraMA2WebComponents.webcomponents.MapDisplay.setDragBoxEnd(function() {
-        currentExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getDragBoxExtent();
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(currentExtent);
+        var dragboxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getDragBoxExtent();
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragboxExtent);
+        BDQueimadas.components.AttributesTable.updateTable();
       });
 
-      TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getView().on('propertychange', function(e) {
+      /*TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getView().on('propertychange', function(e) {
         switch (e.key) {
           case 'resolution':
-            currentExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtension();
-            BDQueimadas.components.AttributesTable.updateTable();
+
             break;
         }
-      });
+      });*/
 
       $('#dragbox').on('click', function() {
         if($(this).hasClass('active')) {
@@ -38,12 +32,12 @@ BDQueimadas.components.Map = (function() {
 
       $('#initialExtent').on('click', function() {
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
+        BDQueimadas.components.AttributesTable.updateTable();
       });
     });
   };
 
   return {
-    getCurrentExtent: getCurrentExtent,
     init: init
   };
 })();
