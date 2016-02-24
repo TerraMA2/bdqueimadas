@@ -2,7 +2,7 @@ window.BDQueimadas = {
   components: {}
 };
 
-/** Main class of the BDQueimadas. */
+/** @class BDQueimadas - Main class of the BDQueimadas. */
 BDQueimadas.obj = (function() {
 
   var filterConfig = null;

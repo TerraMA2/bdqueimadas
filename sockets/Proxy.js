@@ -1,20 +1,32 @@
-module.exports = function(io) {
+"use strict";
+
+/** @class Proxy - Socket responsible for doing cross-domain requests. */
+var Proxy = function(io) {
+
   var sockets = io.sockets,
       http = require('http');
 
+  // Socket connection event
   sockets.on('connection', function(client) {
+
+    // Proxy request event
     client.on('proxyRequest', function(json) {
+
+      // Http request to the received url
       http.get(json.url, function(resp){
         var xml = '';
 
+        // Data receiving event
         resp.on('data', function(chunk) {
           xml += chunk;
         });
 
+        // End of request event
         resp.on('end', function() {
           xml = xml.replace(/>\s*/g, '>');
           xml = xml.replace(/\s*</g, '<');
 
+          // Socket response
           sockets.emit('proxyResponse', { msg: xml, requestId: json.requestId });
         });
 
@@ -23,4 +35,6 @@ module.exports = function(io) {
       });
     });
   });
-}
+};
+
+module.exports = Proxy;

@@ -1,7 +1,7 @@
 "use strict";
 
 /** @class IndexController - Controller of the system index. */
-module.exports = function(app) {
+var IndexController = function(app) {
   var path = require('path'),
       fs = require('fs');
 
@@ -31,3 +31,5 @@ module.exports = function(app) {
 
   return indexController;
 };
+
+module.exports = IndexController;

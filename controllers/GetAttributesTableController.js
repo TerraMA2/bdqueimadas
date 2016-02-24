@@ -1,9 +1,10 @@
 "use strict";
 
 /** @class GetAttributesTableController - Controller responsible for returning the attributes table data accordingly with the received parameters. */
-module.exports = function(app) {
+var GetAttributesTableController = function(app) {
+
   var path = require('path'),
-      filter = require(path.join(__dirname, '../models/Filter.js'));
+      filter = new (require(path.join(__dirname, '../models/Filter.js')))();
 
   /**
    * Processes the request and returns a response
@@ -66,3 +67,5 @@ module.exports = function(app) {
 
   return getAttributesTableController;
 };
+
+module.exports = GetAttributesTableController;
