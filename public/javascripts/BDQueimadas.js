@@ -192,18 +192,22 @@ BDQueimadas.obj = (function() {
    * @function loadEvents
    */
   var loadEvents = function() {
+    // Sidebar buttons click event
     $(".sidebar-menu > li").on('click', function(event) {
       event.preventDefault();
 
       var box = $(this).attr('box');
       var id = $(this).attr('id');
 
+      // Checks if the left content box to be open is set in the button
       if(box !== "" && box !== undefined) {
         var active = $("#" + box).hasClass('active');
 
+        // Closes any open left content box and the left content box background
         closeAllLeftContentBoxes();
         closeLeftContentBoxBackground();
 
+        // Opens the left content box corresponding to the button and the left content box background, if the box is not already open
         if(!active) {
           openLeftContentBoxBackground(id, box);
           openLeftContentBox(box, $(this).text().trim());
@@ -212,33 +216,41 @@ BDQueimadas.obj = (function() {
         var active = $("#left-content-box-background").hasClass('active');
         var buttonBoxActive = $("#left-content-box-background").attr('leftContentBoxButton');
 
+        // Closes any open left content box and the left content box background
         closeAllLeftContentBoxes();
         closeLeftContentBoxBackground();
 
+        // Opens the left content box background in case it wasn't already open, or if it was open but not by the same button that was caught in this event
         if(buttonBoxActive !== id || !active) {
           openLeftContentBoxBackground(id, '');
         }
       }
     });
 
+    // Sidebar toggle click event
     $('.sidebar-toggle').on('click', function() {
+      // Updates the variables that keep DOM elements sizes
       updateSizeVars();
 
-      if($(this).hasClass("comecar")) {
+      // Block valid only for the toggle in the initial screen
+      if($(this).hasClass("begin")) {
         $('#welcome').animate({ 'opacity': '0' }, { duration: 300, queue: false });
         window.setTimeout(function() { $('#welcome').css('display', 'none'); }, 300);
         $('#main-sidebar-toggle').css("display", "");
       }
 
+      // If a left content box is open, the size of it is adjusted
       if($(".left-content-box").hasClass('active')) {
         var activeLeftContentBox = $("#" + $("#left-content-box-background").attr('leftContentBoxButton')).attr('box');
         adjustLeftContentBoxSize(activeLeftContentBox);
       }
 
+      // If the left content box background is open, the size of it is adjusted
       if($("#left-content-box-background").hasClass('active')) {
         adjustLeftContentBoxSize("left-content-box-background");
       }
 
+      // Elements sizes adjustments, accordingly with the sidebar width
       if($("body").hasClass('sidebar-collapse')) {
         $("#terrama2-map").removeClass('fullmenu');
         $('.left-content-box').animate({ 'margin-top': '120px' }, { duration: 300, queue: false });
@@ -251,23 +263,30 @@ BDQueimadas.obj = (function() {
         setFullContentSize();
       }
 
+      // Updates the map size
       TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
     });
 
+    // Window resize event
     $(window).resize(function() {
+      // Closes any open left content box and the left content box background
       closeAllLeftContentBoxes();
       closeLeftContentBoxBackground();
 
+      // Updates the variables that keep DOM elements sizes
       updateSizeVars();
 
+      // Elements sizes adjustments, accordingly with the sidebar width
       if($("body").hasClass('sidebar-collapse')) {
         setReducedContentSize();
       } else {
         setFullContentSize();
       }
 
+      // Updates the padding top of the sidebar
       $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
+      // Executes map size updates during 300 milliseconds, with intervals of 10 milliseconds
       var interval = window.setInterval(function() { TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize(); }, 10);
       window.setTimeout(function() { clearInterval(interval); }, 300);
     });
