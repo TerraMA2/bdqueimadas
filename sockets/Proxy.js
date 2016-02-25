@@ -1,10 +1,13 @@
 "use strict";
 
-/** @class Proxy - Socket responsible for doing cross-domain requests. */
+/**
+ * Socket responsible for doing cross-domain requests.
+ * @class Proxy
+ */
 var Proxy = function(io) {
 
-  var sockets = io.sockets,
-      http = require('http');
+  var sockets = io.sockets;
+  var http = require('http');
 
   // Socket connection event
   sockets.on('connection', function(client) {

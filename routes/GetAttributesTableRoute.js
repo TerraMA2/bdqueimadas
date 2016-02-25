@@ -1,6 +1,9 @@
 "use strict";
 
-/** @class GetAttributesTableRoute - Route of the GetAttributesTable controller. */
+/**
+ * Route of the GetAttributesTable controller.
+ * @class GetAttributesTableRoute
+ */
 var GetAttributesTableRoute = function(app) {
   var controller = app.controllers.GetAttributesTableController;
   app.post('/get-attributes-table', controller);

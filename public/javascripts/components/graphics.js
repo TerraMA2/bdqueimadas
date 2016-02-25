@@ -1,3 +1,5 @@
+"use strict";
+
 BDQueimadas.components.Graphics = (function() {
 
   var interval = null;
@@ -17,7 +19,7 @@ BDQueimadas.components.Graphics = (function() {
   };
 
   var strInArr = function(arr, str) {
-    for(i = 0, j = arr.length; i < j; i++) {
+    for(var i = 0, j = arr.length; i < j; i++) {
       if(arr[i] === str) {
         return true;
       }

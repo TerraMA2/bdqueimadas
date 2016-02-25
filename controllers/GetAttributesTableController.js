@@ -1,16 +1,28 @@
 "use strict";
 
-/** @class GetAttributesTableController - Controller responsible for returning the attributes table data accordingly with the received parameters. */
+/**
+ * Controller responsible for returning the attributes table data accordingly with the received parameters.
+ * @class GetAttributesTableController
+ *
+ * @property {object} path - 'path' module.
+ * @property {object} filter - 'Filter' model.
+ */
 var GetAttributesTableController = function(app) {
 
-  var path = require('path'),
-      filter = new (require(path.join(__dirname, '../models/Filter.js')))();
+  // 'path' module
+  var path = require('path');
+  // 'Filter' model
+  var filter = new (require(path.join(__dirname, '../models/Filter.js')))();
 
   /**
-   * Processes the request and returns a response
+   * Processes the request and returns a response.
    * @param {json} request - JSON containing the request data
    * @param {json} response - JSON containing the response data
-   * @returns {function} getAttributesTableController - the controller function
+   * @returns {function} getAttributesTableController - The controller function
+   *
+   * @function getAttributesTableController
+   * @memberof GetAttributesTableController
+   * @inner
    */
   var getAttributesTableController = function(request, response) {
 

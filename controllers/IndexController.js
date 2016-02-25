@@ -1,15 +1,28 @@
 "use strict";
 
-/** @class IndexController - Controller of the system index. */
+/**
+ * Controller of the system index.
+ * @class IndexController
+ *
+ * @property {object} path - 'path' module.
+ * @property {object} fs - 'fs' module.
+ */
 var IndexController = function(app) {
-  var path = require('path'),
-      fs = require('fs');
+
+  // 'path' module
+  var path = require('path');
+  // 'fs' module
+  var fs = require('fs');
 
   /**
-   * Processes the request and returns a response
+   * Processes the request and returns a response.
    * @param {json} request - JSON containing the request data
    * @param {json} response - JSON containing the response data
-   * @returns {function} indexController - the controller function
+   * @returns {function} indexController - The controller function
+   *
+   * @function indexController
+   * @memberof IndexController
+   * @inner
    */
   var indexController = function(request, response) {
 

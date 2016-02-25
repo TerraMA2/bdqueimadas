@@ -1,24 +1,40 @@
 "use strict";
 
-/** @class Filter - Filter model, which contain filter related database manipulations. */
+/**
+ * Filter model, which contains filter related database manipulations.
+ * @class Filter
+ *
+ * @property {object} path - 'path' module.
+ * @property {object} pgConnectionString - 'PgConnectionString' module.
+ * @property {json} attributesTableConfig - Attributes table configuration.
+ * @property {object} pg - 'pg' module.
+ */
 var Filter = function() {
 
-  var path = require('path'),
-      pgConnectionString = new (require(path.join(__dirname, '../modules/PgConnectionString.js')))(),
-      attributesTableConfig = require(path.join(__dirname, '../configurations/AttributesTable.json')),
-      pg = require('pg');
+  // 'path' module
+  var path = require('path');
+  // 'PgConnectionString' module
+  var pgConnectionString = new (require(path.join(__dirname, '../modules/PgConnectionString.js')))();
+  // Attributes table configuration
+  var attributesTableConfig = require(path.join(__dirname, '../configurations/AttributesTable.json'));
+  // 'pg' module
+  var pg = require('pg');
 
   /**
-   * Returns data of the attributes table accordingly with the received parameters
-   * @param {number} numberOfRegisters - desired number of records
-   * @param {number} initialRegister - initial record
+   * Returns data of the attributes table accordingly with the received parameters.
+   * @param {number} numberOfRegisters - Desired number of records
+   * @param {number} initialRegister - Initial record
    * @param {array} order - 'order by' clause parameters
-   * @param {string} search - string of the search
-   * @param {string} dateFrom - initial date
-   * @param {string} dateTo - final date
-   * @param {json} options - filtering options
-   * @param {function} callback - callback function
-   * @returns {function} callback - execution of the callback function
+   * @param {string} search - String of the search
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {json} options - Filtering options
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getAttributesTableData
+   * @memberof Filter
+   * @inner
    */
   this.getAttributesTableData = function(numberOfRegisters, initialRegister, order, search, dateFrom, dateTo, options, callback) {
     // Counter of the query parameters
@@ -96,12 +112,16 @@ var Filter = function() {
   };
 
   /**
-   * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search
-   * @param {string} dateFrom - initial date
-   * @param {string} dateTo - final date
-   * @param {json} options - filtering options
-   * @param {function} callback - callback function
-   * @returns {function} callback - execution of the callback function
+   * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search.
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {json} options - Filtering options
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getAttributesTableCount
+   * @memberof Filter
+   * @inner
    */
   this.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
     // Counter of the query parameters
@@ -138,13 +158,17 @@ var Filter = function() {
   };
 
   /**
-   * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search
-   * @param {string} dateFrom - initial date
-   * @param {string} dateTo - final date
-   * @param {string} search - string of the search
-   * @param {json} options - filtering options
-   * @param {function} callback - callback function
-   * @returns {function} callback - execution of the callback function
+   * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search.
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {string} search - String of the search
+   * @param {json} options - Filtering options
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getAttributesTableCountWithSearch
+   * @memberof Filter
+   * @inner
    */
   this.getAttributesTableCountWithSearch = function(dateFrom, dateTo, search, options, callback) {
     // Counter of the query parameters

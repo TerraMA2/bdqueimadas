@@ -1,3 +1,5 @@
+"use strict";
+
 window.BDQueimadas = {
   components: {}
 };
@@ -102,7 +104,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Load the components configurations.
+   * Loads the components configurations.
    * @param {json} _filterConfig - Filter configuration
    * @param {json} _serverConfig - Mapping server configuration
    * @param {json} _attributesTableConfig - Attributes table configuration
@@ -117,19 +119,19 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Load the components.
+   * Loads the components.
    *
    * @private
    * @function loadComponents
    */
   var loadComponents = function() {
-    $.ajax({ url: "/javascripts/components/filter.js", dataType: "script", success: function() {
+    $.ajax({ url: "/javascripts/components/Filter.js", dataType: "script", success: function() {
       BDQueimadas.components.Filter.init();
-      $.ajax({ url: "/javascripts/components/attributestable.js", dataType: "script", success: function() {
+      $.ajax({ url: "/javascripts/components/AttributesTable.js", dataType: "script", success: function() {
         BDQueimadas.components.AttributesTable.init();
         $.ajax({ url: "/javascripts/components/graphics.js", dataType: "script", success: function() {
           BDQueimadas.components.Graphics.init();
-          $.ajax({ url: "/javascripts/components/map.js", dataType: "script", success: function() {
+          $.ajax({ url: "/javascripts/components/Map.js", dataType: "script", success: function() {
             BDQueimadas.components.Map.init();
           }});
         }});
@@ -138,7 +140,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Load the fires layer feature description.
+   * Loads the fires layer feature description.
    *
    * @private
    * @function loadFeatureDescription
@@ -161,7 +163,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Load the fires layer features.
+   * Loads the fires layer features.
    *
    * @private
    * @function loadFeatures
@@ -184,7 +186,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Load the DOM events.
+   * Loads the DOM events.
    *
    * @private
    * @function loadEvents
@@ -272,7 +274,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Load external plugins.
+   * Loads external plugins.
    *
    * @private
    * @function loadPlugins
@@ -284,7 +286,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Open the left content box background.
+   * Opens the left content box background.
    * @param {string} leftContentBoxButton - Id of the left content box button corresponding to the active box
    * @param {string} leftContentBox - Id of the active left content box
    *
@@ -313,7 +315,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Close the left content box background.
+   * Closes the left content box background.
    *
    * @private
    * @function closeLeftContentBoxBackground
@@ -325,7 +327,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Open the left content box corresponding to the received id.
+   * Opens the left content box corresponding to the received id.
    * @param {string} leftContentBox - Id of the left content box to be opened
    * @param {string} headerText - Content header text
    *
@@ -346,7 +348,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Adjust the left content box size corresponding to the received id, accordingly with the left menu width.
+   * Adjusts the left content box size corresponding to the received id, accordingly with the left menu width.
    * @param {string} id - Left content box id
    *
    * @private
@@ -369,7 +371,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Close all the left content boxes.
+   * Closes all the left content boxes.
    *
    * @private
    * @function closeAllLeftContentBoxes
@@ -382,7 +384,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Update the variables that keep DOM elements sizes.
+   * Updates the variables that keep DOM elements sizes.
    *
    * @private
    * @function updateSizeVars
@@ -395,7 +397,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Update content to full size.
+   * Updates content to full size.
    *
    * @private
    * @function setFullContentSize
@@ -407,7 +409,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Update content to reduced size.
+   * Updates content to reduced size.
    *
    * @private
    * @function setReducedContentSize
@@ -419,7 +421,7 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Initialization function.
+   * Initializes the necessary features.
    * @param {json} _filterConfig - Filter configuration
    * @param {json} _serverConfig - Mapping server configuration
    * @param {json} _attributesTableConfig - Attributes table configuration
