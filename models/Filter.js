@@ -68,32 +68,15 @@ var Filter = function() {
         }
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
-        if(options.extent !== undefined) {
+        if(options.extent !== undefined)
           query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
-        }
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
-          var searchText = " and (";
-
-          // Loop through the columns configuration
-          for(var i = 0; i < attributesTableConfig.Columns.length; i++) {
-
-            // If the column is set to be shown in the table, it's included in the search, otherwise it's not
-            if(attributesTableConfig.Columns[i].Show) {
-
-              // Verification of the type of the column (numeric or not numeric)
-              if(!attributesTableConfig.Columns[i].Number) {
-                searchText += attributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
-                params.push('%' + search + '%');
-              } else if(attributesTableConfig.Columns[i].Number && !isNaN(search)) {
-                searchText += attributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
-                params.push(parseInt(search));
-              }
-            }
-          }
-          searchText = searchText.substring(0, (searchText.length - 4)) + ")";
-          query += searchText;
+          var searchResult = createSearch(search, parameter);
+          query += searchResult.search;
+          parameter = searchResult.parameter;
+          params = params.concat(searchResult.params);
         }
 
         // Order and pagination clauses
@@ -103,9 +86,8 @@ var Filter = function() {
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
-          if(!err) {
-            return callback(null, result);
-          } else return callback(err);
+          if(!err) return callback(null, result);
+          else return callback(err);
         });
       } else return callback(err);
     });
@@ -142,16 +124,14 @@ var Filter = function() {
         }
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
-        if(options.extent !== undefined) {
+        if(options.extent !== undefined)
           query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
-        }
 
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
-          if(!err) {
-            return callback(null, result);
-          } else return callback(err);
+          if(!err) return callback(null, result);
+          else return callback(err);
         });
       } else return callback(err);
     });
@@ -189,32 +169,15 @@ var Filter = function() {
         }
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
-        if(options.extent !== undefined) {
+        if(options.extent !== undefined)
           query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
-        }
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
-          var searchText = " and (";
-
-          // Loop through the columns configuration
-          for(var i = 0; i < attributesTableConfig.Columns.length; i++) {
-
-            // If the column is set to be shown in the table, it's included in the search, otherwise it's not
-            if(attributesTableConfig.Columns[i].Show) {
-
-              // Verification of the type of the column (numeric or not numeric)
-              if(!attributesTableConfig.Columns[i].Number) {
-                searchText += attributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
-                params.push('%' + search + '%');
-              } else if(attributesTableConfig.Columns[i].Number && !isNaN(search)) {
-                searchText += attributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
-                params.push(parseInt(search));
-              }
-            }
-          }
-          searchText = searchText.substring(0, (searchText.length - 4)) + ")";
-          query += searchText;
+          var searchResult = createSearch(search, parameter);
+          query += searchResult.search;
+          parameter = searchResult.parameter;
+          params = params.concat(searchResult.params);
         }
 
         // Execution of the query
@@ -226,6 +189,42 @@ var Filter = function() {
         });
       } else return callback(err);
     });
+  };
+
+  /**
+   * Creates and returns the search 'where' clauses.
+   * @param {string} search - Search text
+   * @param {int} parameter - Parater counter
+   * @returns {json} {} - JSON object with the search text, the parameter counter and the parameters array
+   *
+   * @private
+   * @function createSearch
+   * @memberof Filter
+   * @inner
+   */
+  var createSearch = function(search, parameter) {
+    var searchText = " and (";
+    var params = [];
+
+    // Loop through the columns configuration
+    for(var i = 0; i < attributesTableConfig.Columns.length; i++) {
+
+      // If the column is set to be shown in the table, it's included in the search, otherwise it's not
+      if(attributesTableConfig.Columns[i].Show) {
+
+        // Verification of the type of the column (numeric or not numeric)
+        if(!attributesTableConfig.Columns[i].Number) {
+          searchText += attributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
+          params.push('%' + search + '%');
+        } else if(attributesTableConfig.Columns[i].Number && !isNaN(search)) {
+          searchText += attributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
+          params.push(Number(search));
+        }
+      }
+    }
+    searchText = searchText.substring(0, (searchText.length - 4)) + ")";
+
+    return { "search": searchText, "parameter": parameter, "params": params };
   };
 };
 
