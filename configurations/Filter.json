@@ -3,6 +3,23 @@
   "DateFieldName": "Data",
   "DateFormat": "YYYYMMDD",
   "SatelliteFieldName": "Satelite",
+  "SpatialFilter": {
+    "Continents": {
+      "TableName": "paises",
+      "IdFieldName": "unregion1",
+      "NameFieldName": "unregion1"
+    },
+    "Countries": {
+      "TableName": "paises",
+      "IdFieldName": "id_0",
+      "NameFieldName": "name_0"
+    },
+    "States": {
+      "TableName": "estados",
+      "IdFieldName": "gid",
+      "NameFieldName": "name_1"
+    }
+  },
   "SatellitesList": [
     {
       "Name": "NOAA-12 Noite",

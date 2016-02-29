@@ -7,6 +7,7 @@
  * @property {object} path - 'path' module.
  * @property {object} pgConnectionString - 'PgConnectionString' module.
  * @property {json} attributesTableConfig - Attributes table configuration.
+ * @property {json} filterConfig - Filter configuration.
  * @property {object} pg - 'pg' module.
  */
 var Filter = function() {
@@ -17,6 +18,8 @@ var Filter = function() {
   var pgConnectionString = new (require(path.join(__dirname, '../modules/PgConnectionString.js')))();
   // Attributes table configuration
   var attributesTableConfig = require(path.join(__dirname, '../configurations/AttributesTable.json'));
+  // Filter configuration
+  var filterConfig = require(path.join(__dirname, '../configurations/Filter.json'));
   // 'pg' module
   var pg = require('pg');
 
@@ -183,9 +186,8 @@ var Filter = function() {
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
-          if(!err) {
-            return callback(null, result);
-          } else return callback(err);
+          if(!err) return callback(null, result);
+          else return callback(err);
         });
       } else return callback(err);
     });
@@ -225,6 +227,150 @@ var Filter = function() {
     searchText = searchText.substring(0, (searchText.length - 4)) + ")";
 
     return { "search": searchText, "parameter": parameter, "params": params };
+  };
+
+  /**
+   * Returns the center cordinates of the country correspondent to the received id.
+   * @param {number} countryId - Country id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCountryCenter
+   * @memberof Filter
+   * @inner
+   */
+  this.getCountryCenter = function(countryId, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select ST_AsText(ST_Centroid(geom)) from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Countries.TableName + " where " + filterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+            params = [countryId];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the center cordinates of the state correspondent to the received id.
+   * @param {number} stateId - State id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getStateCenter
+   * @memberof Filter
+   * @inner
+   */
+  this.getStateCenter = function(stateId, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select ST_AsText(ST_Centroid(geom)) from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+            params = [stateId];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns a list of continents.
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getContinents
+   * @memberof Filter
+   * @inner
+   */
+  this.getContinents = function(callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select distinct " + filterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + filterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Continents.TableName + " order by " +
+        filterConfig.SpatialFilter.Continents.NameFieldName + " asc;";
+
+        // Execution of the query
+        client.query(query, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns a list of countries filtered by the received continent id.
+   * @param {string} continent - Continent id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCountriesByContinent
+   * @memberof Filter
+   * @inner
+   */
+  this.getCountriesByContinent = function(continent, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select " + filterConfig.SpatialFilter.Countries.IdFieldName + " as id, " + filterConfig.SpatialFilter.Countries.NameFieldName + " as name from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Countries.TableName + " where " + filterConfig.SpatialFilter.Continents.IdFieldName + " = $1 order by " + filterConfig.SpatialFilter.Countries.NameFieldName + " asc;",
+            params = [continent];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns a list of states filtered by the received country id.
+   * @param {number} country - Country id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getStatesByCountry
+   * @memberof Filter
+   * @inner
+   */
+  this.getStatesByCountry = function(country, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select " + filterConfig.SpatialFilter.States.IdFieldName + " as id, " + filterConfig.SpatialFilter.States.NameFieldName + " as name from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.Countries.IdFieldName + " = $1 order by " + filterConfig.SpatialFilter.States.NameFieldName + " asc;",
+            params = [country];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
   };
 };
 
