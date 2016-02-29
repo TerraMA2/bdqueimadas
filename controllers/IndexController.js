@@ -6,6 +6,7 @@
  *
  * @property {object} path - 'path' module.
  * @property {object} fs - 'fs' module.
+ * @property {object} filter - Filter model.
  */
 var IndexController = function(app) {
 
@@ -13,6 +14,8 @@ var IndexController = function(app) {
   var path = require('path');
   // 'fs' module
   var fs = require('fs');
+  // Filter model
+  var filter = new (require(path.join(__dirname, '../models/Filter.js')))();
 
   /**
    * Processes the request and returns a response.
@@ -31,15 +34,20 @@ var IndexController = function(app) {
         serverConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/Server.json'), 'utf8')),
         attributesTableConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/AttributesTable.json'), 'utf8'));
 
-    // Response parameters
-    var params = {
-      filterConfig: filterConfig,
-      serverConfig: serverConfig,
-      attributesTableConfig: attributesTableConfig
-    };
+    filter.getContinents(function(err, result) {
+      if(err) return console.error(err);
 
-    // Response (page rendering)
-    response.render('index', params);
+      // Response parameters
+      var params = {
+        filterConfig: filterConfig,
+        serverConfig: serverConfig,
+        attributesTableConfig: attributesTableConfig,
+        continents: result
+      };
+
+      // Response (page rendering)
+      response.render('index', params);
+    });
   };
 
   return indexController;

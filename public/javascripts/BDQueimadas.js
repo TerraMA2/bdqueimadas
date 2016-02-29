@@ -13,7 +13,7 @@ window.BDQueimadas = {
  * @property {json} attributesTableConfig - Fires layer attributes table configuration.
  * @property {string} featureDescription - Fires layer feature description.
  * @property {string} features - Fires layer features.
- * @property {io} socket - Socket object.
+ * @property {object} socket - Socket object.
  * @property {number} height - Window height.
  * @property {number} headerHeight - Header height.
  * @property {number} navbarHeight - Navbar height.
@@ -63,6 +63,16 @@ BDQueimadas.obj = (function() {
    */
   var getFeatures = function() {
     return features;
+  };
+
+  /**
+   * Returns the socket object.
+   * @returns {object} socket - Socket object
+   *
+   * @function getSocket
+   */
+  var getSocket = function() {
+    return socket;
   };
 
   /**
@@ -471,6 +481,7 @@ BDQueimadas.obj = (function() {
   return {
   	getFeatureDescription: getFeatureDescription,
     getFeatures: getFeatures,
+    getSocket: getSocket,
   	getFilterConfig: getFilterConfig,
     getAttributesTableConfig: getAttributesTableConfig,
   	randomText: randomText,

@@ -226,10 +226,58 @@ BDQueimadas.components.Filter = (function() {
       }
     });
 
+    $('.continent-item').on('click', function() {
+      BDQueimadas.obj.getSocket().emit('continentFilterRequest', { continent: $(this).attr('id') });
+      $('#continents-title').empty().html($(this).text());
+      $('#countries-title').empty().html('Países');
+      $('#states-title').empty().html('Estados');
+    });
+
+    $(document).on('click', '.country-item', function() {
+      BDQueimadas.obj.getSocket().emit('countryFilterRequest', { country: $(this).attr('id') });
+      $('#countries-title').empty().html($(this).text());
+      $('#states-title').empty().html('Estados');
+    });
+
+    $(document).on('click', '.state-item', function() {
+      BDQueimadas.obj.getSocket().emit('stateFilterRequest', { state: $(this).attr('id') });
+      $('#states-title').empty().html($(this).text());
+    });
+
     $('.filter-date').on('focus', function(el) {
       if($(this).parent().hasClass('has-error')) {
         $(this).parent().removeClass('has-error');
       }
+    });
+  };
+
+  /**
+   * Loads the sockets listeners.
+   *
+   * @private
+   * @function loadSocketsListeners
+   */
+  var loadSocketsListeners = function() {
+    BDQueimadas.obj.getSocket().on('continentFilterResponse', function(msg) {
+
+      var html = "";
+
+      for(var i = 0; i < msg.msg.rowCount; i++) {
+        html += "<li class='country-item' id='" + msg.msg.rows[i].id + "'><a href='#'>" + msg.msg.rows[i].name + "</a></li>";
+      }
+
+      $('#countries').empty().html(html);
+    });
+
+    BDQueimadas.obj.getSocket().on('countryFilterResponse', function(msg) {
+
+      var html = "";
+
+      for(var i = 0; i < msg.msg.rowCount; i++) {
+        html += "<li class='state-item' id='" + msg.msg.rows[i].id + "'><a href='#'>" + msg.msg.rows[i].name + "</a></li>";
+      }
+
+      $('#states').empty().html(html);
     });
   };
 
@@ -242,6 +290,7 @@ BDQueimadas.components.Filter = (function() {
     $(document).ready(function() {
       updateDatesToCurrent();
       loadEvents();
+      loadSocketsListeners();
     });
   };
 

@@ -231,13 +231,13 @@
   }
 }
 
-@media only screen and (max-height: 724px) and (min-width: 1120px) {
+@media only screen and (max-height: 1012px) and (min-width: 1301px) {
   #welcome > img {
     width: 100%;
   }
 }
 
-@media only screen and (max-height: 724px) and (max-width: 1119px), (min-height: 725px) {
+@media only screen and (max-height: 1012px) and (max-width: 1300px), (min-height: 1013px) {
   #welcome > img {
     height: 100%;
   }
@@ -281,6 +281,13 @@
     height: 50px !important;
     font-size: 17px !important;
   }
+}
+
+.nav > .sparator {
+  padding: 9px 4px;
+  height: 50px;
+  font-weight: 900;
+  font-size: 22px;
 }
 
 /* TerraMA2Components styles */

@@ -9,8 +9,7 @@ var express = require('express'),
     methodOverride = require('method-override'),
     //error = require('./middlewares/error'),
     app = express(),
-    server = require('http').Server(app),
-    io = require('socket.io')(server);
+    server = require('http').Server(app);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

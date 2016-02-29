@@ -30,7 +30,7 @@ var Proxy = function(io) {
           xml = xml.replace(/\s*</g, '<');
 
           // Socket response
-          sockets.emit('proxyResponse', { msg: xml, requestId: json.requestId });
+          client.emit('proxyResponse', { msg: xml, requestId: json.requestId });
         });
 
       }).on("error", function(e){
