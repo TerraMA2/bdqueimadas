@@ -372,6 +372,94 @@ var Filter = function() {
       } else return callback(err);
     });
   };
+
+  /**
+   * Returns the continent extent correspondent to the received id.
+   * @param {number} continent - Continent id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getContinentExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getContinentExtent = function(continent, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Continents.TableName + " where " + filterConfig.SpatialFilter.Continents.IdFieldName + " = $1;",
+            params = [continent];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the country extent correspondent to the received id.
+   * @param {number} country - Country id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCountryExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getCountryExtent = function(country, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Countries.TableName + " where " + filterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+            params = [country];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+
+  /**
+   * Returns the state extent correspondent to the received id.
+   * @param {number} state - State id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getStateExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getStateExtent = function(state, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+            params = [state];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
 };
 
 module.exports = Filter;

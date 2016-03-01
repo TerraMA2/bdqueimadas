@@ -258,26 +258,49 @@ BDQueimadas.components.Filter = (function() {
    * @function loadSocketsListeners
    */
   var loadSocketsListeners = function() {
-    BDQueimadas.obj.getSocket().on('continentFilterResponse', function(msg) {
+    BDQueimadas.obj.getSocket().on('continentFilterResponse', function(result) {
+      var html = "",
+          countriesCount = result.countries.rowCount;
 
-      var html = "";
-
-      for(var i = 0; i < msg.msg.rowCount; i++) {
-        html += "<li class='country-item' id='" + msg.msg.rows[i].id + "'><a href='#'>" + msg.msg.rows[i].name + "</a></li>";
+      for(var i = 0; i < countriesCount; i++) {
+        html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
       }
 
+      var extent = result.continentExtent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+
+      var extentArray = extent[0].split(' ');
+      extentArray = extentArray.concat(extent[1].split(' '));
+
+      console.log(extentArray);
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
       $('#countries').empty().html(html);
     });
 
-    BDQueimadas.obj.getSocket().on('countryFilterResponse', function(msg) {
+    BDQueimadas.obj.getSocket().on('countryFilterResponse', function(result) {
+      var html = "",
+          statesCount = result.states.rowCount;
 
-      var html = "";
-
-      for(var i = 0; i < msg.msg.rowCount; i++) {
-        html += "<li class='state-item' id='" + msg.msg.rows[i].id + "'><a href='#'>" + msg.msg.rows[i].name + "</a></li>";
+      for(var i = 0; i < statesCount; i++) {
+        html += "<li class='state-item' id='" + result.states.rows[i].id + "'><a href='#'>" + result.states.rows[i].name + "</a></li>";
       }
 
+      var extent = result.countryExtent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+
+      var extentArray = extent[0].split(' ');
+      extentArray = extentArray.concat(extent[1].split(' '));
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
       $('#states').empty().html(html);
+    });
+
+    BDQueimadas.obj.getSocket().on('stateFilterResponse', function(result) {
+      var extent = result.stateExtent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+
+      var extentArray = extent[0].split(' ');
+      extentArray = extentArray.concat(extent[1].split(' '));
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
     });
   };
 

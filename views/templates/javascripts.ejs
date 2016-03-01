@@ -68,7 +68,7 @@
 
   var interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-      TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer('http://localhost:9095/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=sde:countries', 'countries', 'countries', true, true);
+      TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer('http://localhost:9095/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=sde:paises', 'countries', 'countries', true, true);
       clearInterval(interval);
     }
   }, 10);
