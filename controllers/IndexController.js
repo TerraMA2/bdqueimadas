@@ -15,7 +15,7 @@ var IndexController = function(app) {
   // 'fs' module
   var fs = require('fs');
   // Filter model
-  var filter = new (require(path.join(__dirname, '../models/Filter.js')))();
+  var filter = new (require('../models/Filter.js'))();
 
   /**
    * Processes the request and returns a response.

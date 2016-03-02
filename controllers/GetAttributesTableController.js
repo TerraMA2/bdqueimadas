@@ -4,15 +4,12 @@
  * Controller responsible for returning the attributes table data accordingly with the received parameters.
  * @class GetAttributesTableController
  *
- * @property {object} path - 'path' module.
  * @property {object} filter - 'Filter' model.
  */
 var GetAttributesTableController = function(app) {
 
-  // 'path' module
-  var path = require('path');
   // 'Filter' model
-  var filter = new (require(path.join(__dirname, '../models/Filter.js')))();
+  var filter = new (require('../models/Filter.js'))();
 
   /**
    * Processes the request and returns a response.

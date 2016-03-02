@@ -64,11 +64,62 @@
   var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
   var attributesTableConfig = JSON.parse('<%- JSON.stringify(attributesTableConfig) %>');
 
+  var fillColors = {
+    "0": "#FFEBCD",
+    "100": "#FFC387",
+    "500": "#FAA046",
+    "1000": "#FA872D",
+    "5000": "#FA5C25",
+    "25000": "#C34231",
+    "50000": "#A21C0D"
+  };
+
+  var strokeColors = {
+    "0": "#000000",
+    "100": "#000000",
+    "500": "#000000",
+    "1000": "#000000",
+    "5000": "#000000",
+    "25000": "#000000",
+    "50000": "#000000"
+  };
+
   BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig);
 
   var interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-      TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer('http://localhost:9095/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=sde:paises', 'countries', 'countries', true, true);
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer(
+        'http://localhost:38000/get-countries-layer-features',
+        'countries',
+        'countries',
+        true,
+        true,
+        fillColors,
+        strokeColors,
+        function(feature, fill, stroke) {
+          var colorSelector = "0";
+
+          if(parseInt(feature.get('fires_count')) > 0 && parseInt(feature.get('fires_count')) <= 100) {
+            colorSelector = "100";
+          } else if(parseInt(feature.get('fires_count')) > 100 && parseInt(feature.get('fires_count')) <= 500) {
+            colorSelector = "500";
+          } else if(parseInt(feature.get('fires_count')) > 500 && parseInt(feature.get('fires_count')) <= 1000) {
+            colorSelector = "1000";
+          } else if(parseInt(feature.get('fires_count')) > 1000 && parseInt(feature.get('fires_count')) <= 5000) {
+            colorSelector = "5000";
+          } else if(parseInt(feature.get('fires_count')) > 5000 && parseInt(feature.get('fires_count')) <= 25000) {
+            colorSelector = "25000";
+          } else if(parseInt(feature.get('fires_count')) > 25000 && parseInt(feature.get('fires_count')) <= 50000) {
+            colorSelector = "50000";
+          }
+
+          return {
+            "fillColor": fill[colorSelector],
+            "strokeColor": stroke[colorSelector]
+          };
+        }
+      );
       clearInterval(interval);
     }
   }, 10);

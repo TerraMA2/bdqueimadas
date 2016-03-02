@@ -431,7 +431,6 @@ var Filter = function() {
     });
   };
 
-
   /**
    * Returns the state extent correspondent to the received id.
    * @param {number} state - State id
@@ -450,6 +449,35 @@ var Filter = function() {
         // Creation of the query
         var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.States.IdFieldName + " = $1;",
             params = [state];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the number of the fires located in the country correspondent to the received id.
+   * @param {number} country - Country id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getFiresCountByCountry
+   * @memberof Filter
+   * @inner
+   */
+  this.getFiresCountByCountry = function(country, callback) {
+    // Connection with the PostgreSQL database
+    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select count(*) as firescount from " + pgConnectionString.getSchema() + ".focos where pais = $1;",
+            params = [country];
 
         // Execution of the query
         client.query(query, params, function(err, result) {
