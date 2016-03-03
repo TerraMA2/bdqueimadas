@@ -11,24 +11,44 @@ BDQueimadas.components.Map = (function() {
       });
 
       $('#dragbox').on('click', function() {
-        if($(this).hasClass('active')) {
-          TerraMA2WebComponents.webcomponents.MapDisplay.removeDragBox();
-          $(this).removeClass('active');
-          $('#terrama2-map').removeClass('cursor-crosshair');
-          $('#terrama2-map').addClass('cursor-move');
-        } else {
-          TerraMA2WebComponents.webcomponents.MapDisplay.addDragBox();
-          $(this).addClass('active');
-          $('#terrama2-map').addClass('cursor-crosshair');
-          $('#terrama2-map').removeClass('cursor-move');
-        }
+        resetMapMouseTools();
+        activeDragboxTool();
+      });
+
+      $('#moveMap').on('click', function() {
+        resetMapMouseTools();
+        activeMoveMapTool();
       });
 
       $('#initialExtent').on('click', function() {
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
+        resetMapMouseTools();
+        initialExtent();
+        activeMoveMapTool();
       });
     });
+  };
+
+  var resetMapMouseTools = function() {
+    TerraMA2WebComponents.webcomponents.MapDisplay.removeDragBox();
+    $('.mouse-function-btn > i').removeClass('active');
+    $('#terrama2-map').removeClass('cursor-crosshair');
+    $('#terrama2-map').removeClass('cursor-move');
+  };
+
+  var activeMoveMapTool = function() {
+    $('#moveMap > i').addClass('active');
+    $('#terrama2-map').addClass('cursor-move');
+  };
+
+  var initialExtent = function() {
+    TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
+    BDQueimadas.components.AttributesTable.updateAttributesTable();
+  };
+
+  var activeDragboxTool = function() {
+    $('#dragbox > i').addClass('active');
+    $('#terrama2-map').addClass('cursor-crosshair');
+    TerraMA2WebComponents.webcomponents.MapDisplay.addDragBox();
   };
 
   var init = function() {

@@ -379,3 +379,18 @@
 }
 
 .skin-queimadas .content-header { z-index: 500 !important; }
+
+.control-sidebar, .control-sidebar-bg {
+  width: 45px !important;
+  height: 100%;
+  overflow: hidden;
+}
+
+.control-sidebar > .tab-content > a > i {
+  color: #B8C7CE;
+  padding: 10px 0;
+}
+
+.control-sidebar > .tab-content > a > i:hover, .control-sidebar > .tab-content > a > i.active {
+  color: #FFFFFF;
+}
