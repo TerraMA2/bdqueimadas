@@ -4,9 +4,9 @@ BDQueimadas.components.Map = (function() {
 
   var loadEvents = function() {
     $(document).ready(function() {
-      TerraMA2WebComponents.webcomponents.MapDisplay.setDragBoxEnd(function() {
-        var dragboxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getDragBoxExtent();
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragboxExtent);
+      TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEnd(function() {
+        var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
         BDQueimadas.components.AttributesTable.updateAttributesTable();
       });
 
@@ -29,7 +29,7 @@ BDQueimadas.components.Map = (function() {
   };
 
   var resetMapMouseTools = function() {
-    TerraMA2WebComponents.webcomponents.MapDisplay.removeDragBox();
+    TerraMA2WebComponents.webcomponents.MapDisplay.removeZoomDragBox();
     $('.mouse-function-btn > i').removeClass('active');
     $('#terrama2-map').removeClass('cursor-crosshair');
     $('#terrama2-map').removeClass('cursor-move');
@@ -48,7 +48,7 @@ BDQueimadas.components.Map = (function() {
   var activeDragboxTool = function() {
     $('#dragbox > i').addClass('active');
     $('#terrama2-map').addClass('cursor-crosshair');
-    TerraMA2WebComponents.webcomponents.MapDisplay.addDragBox();
+    TerraMA2WebComponents.webcomponents.MapDisplay.addZoomDragBox();
   };
 
   var init = function() {
