@@ -252,15 +252,17 @@ BDQueimadas.components.Filter = (function() {
 
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        TerraMA2WebComponents.webcomponents.MapDisplay.onMapResolutionChange(function(event) {
-          if(TerraMA2WebComponents.webcomponents.MapDisplay.getMapResolution() < filterConfig.SpatialFilter.FiresLayerMaximumResolution) {
+        TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChange(function(event) {
+          if(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution() < filterConfig.SpatialFilter.FiresLayerMaximumResolution) {
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, false);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, true);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.StatesLayerName, true);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.CountriesLayerName, true);
           } else {
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, true);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, false);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.StatesLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.CountriesLayerName, false);
           }
         });
 

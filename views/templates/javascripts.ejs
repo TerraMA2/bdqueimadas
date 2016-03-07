@@ -124,8 +124,8 @@
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
-        serverConfig.FiresLayerName,
-        serverConfig.FiresLayerName,
+        serverConfig.StatesLayerName,
+        serverConfig.StatesLayerName,
         false,
         false
       );
@@ -133,8 +133,17 @@
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
-        serverConfig.StatesLayerName,
-        serverConfig.StatesLayerName,
+        serverConfig.CountriesLayerName,
+        serverConfig.CountriesLayerName,
+        false,
+        false
+      );
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.URL,
+        serverConfig.Type,
+        serverConfig.FiresLayerName,
+        serverConfig.FiresLayerName,
         false,
         false
       );

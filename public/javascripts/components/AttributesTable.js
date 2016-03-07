@@ -60,7 +60,7 @@ BDQueimadas.components.AttributesTable = (function() {
             data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
             data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
             data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
-            data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtension();
+            data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
           }
         },
         "columns": getAttributesTableColumnNamesArray()
