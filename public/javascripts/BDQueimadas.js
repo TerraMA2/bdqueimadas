@@ -435,6 +435,7 @@ BDQueimadas.obj = (function() {
     $('.content-wrapper').attr("style", "min-height: " + (height - (headerHeight + reducedFooterHeight)) + "px");
     $('#terrama2-map').attr("style", "height: " + (height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
     $('.left-content-box').attr("style", "height: " + (height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (headerHeight + contentHeaderHeight) + "px;");
+    $('.control-sidebar').animate({ "margin-top": (headerHeight + contentHeaderHeight) + "px" }, { duration: 300, queue: false });
   };
 
   /**
@@ -447,6 +448,7 @@ BDQueimadas.obj = (function() {
     $('.content-wrapper').attr("style", "min-height: " + (height - (navbarHeight + reducedFooterHeight)) + "px");
     $('#terrama2-map').attr("style", "height: " + (height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
     $('.left-content-box').attr("style", "height: " + (height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (navbarHeight + contentHeaderHeight) + "px;");
+    $('.control-sidebar').animate({ "margin-top": (navbarHeight + contentHeaderHeight) + "px" }, { duration: 300, queue: false });
   };
 
   /**

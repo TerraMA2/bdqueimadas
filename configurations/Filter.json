@@ -4,6 +4,7 @@
   "DateFormat": "YYYYMMDD",
   "SatelliteFieldName": "Satelite",
   "SpatialFilter": {
+    "FiresLayerMaximumResolution": 0.025,
     "Continents": {
       "TableName": "paises",
       "IdFieldName": "unregion1",

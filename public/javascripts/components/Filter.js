@@ -249,6 +249,24 @@ BDQueimadas.components.Filter = (function() {
         $(this).parent().removeClass('has-error');
       }
     });
+
+    var interval = window.setInterval(function() {
+      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
+        TerraMA2WebComponents.webcomponents.MapDisplay.onMapResolutionChange(function(event) {
+          if(TerraMA2WebComponents.webcomponents.MapDisplay.getMapResolution() < filterConfig.SpatialFilter.FiresLayerMaximumResolution) {
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, true);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.StatesLayerName, true);
+          } else {
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, true);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.StatesLayerName, false);
+          }
+        });
+
+        clearInterval(interval);
+      }
+    }, 10);
   };
 
   /**
@@ -270,8 +288,6 @@ BDQueimadas.components.Filter = (function() {
 
       var extentArray = extent[0].split(' ');
       extentArray = extentArray.concat(extent[1].split(' '));
-
-      console.log(extentArray);
 
       TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
       $('#countries').empty().html(html);

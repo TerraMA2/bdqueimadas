@@ -121,7 +121,33 @@
         }
       );*/
 
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer('http://localhost:9095/geoserver/ows', 'geoserver', 'sde:Paises_SQL_FOCOS', 'paises_sql', true, true);
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.URL,
+        serverConfig.Type,
+        serverConfig.FiresLayerName,
+        serverConfig.FiresLayerName,
+        false,
+        false
+      );
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.URL,
+        serverConfig.Type,
+        serverConfig.StatesLayerName,
+        serverConfig.StatesLayerName,
+        false,
+        false
+      );
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.URL,
+        serverConfig.Type,
+        serverConfig.FiresChoroplethLayerName,
+        serverConfig.FiresChoroplethLayerName,
+        true,
+        false
+      );
+
       clearInterval(interval);
     }
   }, 10);
