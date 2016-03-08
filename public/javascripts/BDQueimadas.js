@@ -147,6 +147,23 @@ BDQueimadas.obj = (function() {
         }});
       }});
     }});
+
+    // New
+
+    if(i < memberComponentsLength) {
+      $.ajax({
+        url: "/javascripts/components/" + TerraMA2WebComponents.Config.getConfJsonComponents()[memberComponents[i]],
+        dataType: "script",
+        success: function() {
+          TerraMA2WebComponents.webcomponents[memberComponents[i]].init();
+          loadComponents(++i);
+        }
+      });
+    } else {
+      memberComponentsLoaded = true;
+    }
+
+    // New
   };
 
   /**
