@@ -96,7 +96,13 @@ BDQueimadas.components.AttributesTable = (function() {
    */
   var init = function() {
     loadEvents();
-    loadAttributesTable();
+
+    var interval = window.setInterval(function() {
+      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
+        loadAttributesTable();
+        clearInterval(interval);
+      }
+    }, 10);
   };
 
   return {

@@ -1,60 +1,3 @@
-/* AdminLTEQueimadas fonts paths adjustments */
-
-@font-face {
-  font-weight: normal;
-  font-style: normal;
-  font-family: "OpenSans-Bold";
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.eot");
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.woff") format("woff"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.ttf") format("truetype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-700-webfont.svg#open_sansbold") format("svg");
-}
-
-@font-face {
-  font-weight: normal;
-  font-style: normal;
-  font-family: "OpenSans-ExtraBold";
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.eot");
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.woff") format("woff"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.ttf") format("truetype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-800-webfont.svg#open_sansextrabold") format("svg");
-}
-
-@font-face {
-  font-weight: normal;
-  font-style: normal;
-  font-family: "OpenSans-Light";
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.eot");
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.woff") format("woff"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.ttf") format("truetype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-300-webfont.svg#open_sanslight") format("svg");
-}
-
-@font-face {
-  font-weight: normal;
-  font-style: normal;
-  font-family: "OpenSans-Regular";
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.eot");
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.woff") format("woff"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.ttf") format("truetype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-400-webfont.svg#open_sansregular") format("svg");
-}
-
-@font-face {
-  font-weight: normal;
-  font-style: normal;
-  font-family: "OpenSans-Semibold";
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.eot");
-  src: url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.woff") format("woff"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.ttf") format("truetype"),
-       url("../../externals/adminlte/fonts/OpenSans/opensans-600-webfont.svg#open_sanssemibold") format("svg");
-}
-
 @font-face {
   font-family: 'Myriad Pro Regular';
   font-style: normal;
@@ -128,9 +71,7 @@
 
 /* BDQueimadas styles */
 
-#filter-box {
-  color: black;
-}
+#filter-box { color: black; }
 
 .left-content-box {
   -webkit-touch-callout: none;
@@ -164,9 +105,7 @@
   transition: width 0.3s ease-in-out;
 }
 
-.fullmenu {
-  width: calc(100% - 230px) !important;
-}
+.fullmenu { width: calc(100% - 230px) !important; }
 
 #left-content-box-background {
   width: 350px;
@@ -192,9 +131,7 @@
   margin-top: -54px;
 }
 
-#welcome > img {
-  float: left;
-}
+#welcome > img { float: left; }
 
 #welcome > #welcome-text {
   color: white;
@@ -292,9 +229,7 @@
 
 /* TerraMA2Components styles */
 
-#terrama2-layerexplorer {
-  color: black;
-}
+#terrama2-layerexplorer { color: black; }
 
 #terrama2-map {
   position: absolute;
@@ -307,10 +242,7 @@
 
 /* AdminLTEQueimadas general adjustments */
 
-.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
-.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
-  display: none !important;
-}
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu { display: none !important; }
 
 .sidebar-menu > li > a {
   height: 44px;
@@ -325,41 +257,23 @@
   background-size: 14px !important;
 }
 
-#layerexplorer-btn > a {
-  background-image: url('../images/icon_layers.png');
-}
+#layerexplorer-btn > a { background-image: url('../images/icon_layers.png'); }
 
-#layerexplorer-btn > a:hover {
-  background-image: url('../images/icon_layers_hover.png');
-}
+#layerexplorer-btn > a:hover { background-image: url('../images/icon_layers_hover.png'); }
 
-#filters-btn > a {
-  background-image: url('../images/icon_calendar.png');
-}
+#filters-btn > a { background-image: url('../images/icon_calendar.png'); }
 
-#filters-btn > a:hover {
-  background-image: url('../images/icon_calendar_hover.png');
-}
+#filters-btn > a:hover { background-image: url('../images/icon_calendar_hover.png'); }
 
-#tables-btn > a {
-  background-image: url('../images/icon_table.png');
-}
+#tables-btn > a { background-image: url('../images/icon_table.png'); }
 
-#tables-btn > a:hover {
-  background-image: url('../images/icon_table_hover.png');
-}
+#tables-btn > a:hover { background-image: url('../images/icon_table_hover.png'); }
 
-#graphs-btn > a {
-  background-image: url('../images/icon_graphics.png');
-}
+#graphs-btn > a { background-image: url('../images/icon_graphics.png'); }
 
-#graphs-btn > a: {
-  background-image: url('../images/icon_graphics.png');
-}
+#graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
 
-.sidebar-menu > li > a > span {
-  padding-left: 22px;
-}
+.sidebar-menu > li > a > span { padding-left: 22px; }
 
 .skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../../externals/adminlte/img/sprite.png") 0 2px;}
 
