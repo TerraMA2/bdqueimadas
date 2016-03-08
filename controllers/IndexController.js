@@ -4,18 +4,18 @@
  * Controller of the system index.
  * @class IndexController
  *
- * @property {object} path - 'path' module.
- * @property {object} fs - 'fs' module.
- * @property {object} filter - Filter model.
+ * @property {object} memberPath - 'path' module.
+ * @property {object} memberFs - 'fs' module.
+ * @property {object} memberFilter - Filter model.
  */
 var IndexController = function(app) {
 
   // 'path' module
-  var path = require('path');
+  var memberPath = require('path');
   // 'fs' module
-  var fs = require('fs');
+  var memberFs = require('fs');
   // Filter model
-  var filter = new (require('../models/Filter.js'))();
+  var memberFilter = new (require('../models/Filter.js'))();
 
   /**
    * Processes the request and returns a response.
@@ -30,11 +30,11 @@ var IndexController = function(app) {
   var indexController = function(request, response) {
 
     // Load of the configuration files to be sent to the front end
-    var filterConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/Filter.json'), 'utf8')),
-        serverConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/Server.json'), 'utf8')),
-        attributesTableConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/AttributesTable.json'), 'utf8'));
+    var filterConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Filter.json'), 'utf8')),
+        serverConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Server.json'), 'utf8')),
+        attributesTableConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8'));
 
-    filter.getContinents(function(err, result) {
+    memberFilter.getContinents(function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters

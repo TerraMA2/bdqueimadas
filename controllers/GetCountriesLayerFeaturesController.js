@@ -4,15 +4,15 @@
  * Controller responsible for returning the countries layer features.
  * @class GetCountriesLayerFeaturesController
  *
- * @property {object} fs - 'fs' module.
- * @property {object} filter - Filter model.
+ * @property {object} memberFs - 'fs' module.
+ * @property {object} memberFilter - Filter model.
  */
 var GetCountriesLayerFeaturesController = function(app) {
 
   // 'fs' module
-  var fs = require('fs');
+  var memberFs = require('fs');
   // Filter model
-  var filter = new (require('../models/Filter.js'))();
+  var memberFilter = new (require('../models/Filter.js'))();
 
   /**
    * Processes the request and returns a response.
@@ -37,7 +37,7 @@ var GetCountriesLayerFeaturesController = function(app) {
 
       var count = 0;
       body.features.forEach(function(feature) {
-        filter.getFiresCountByCountry(feature.properties.name, function(err, firesCount) {
+        memberFilter.getFiresCountByCountry(feature.properties.name, function(err, firesCount) {
           if(err) return callback(err);
           count++;
 

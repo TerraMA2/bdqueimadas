@@ -4,12 +4,12 @@
  * Attributes table class of the BDQueimadas.
  * @module AttributesTable
  *
- * @property {object} attributesTable - Attributes table object (DataTables).
+ * @property {object} memberAttributesTable - Attributes table object (DataTables).
  */
 BDQueimadas.components.AttributesTable = (function() {
 
   // Attributes table object (DataTables)
-  var attributesTable = null;
+  var memberAttributesTable = null;
 
   /**
    * Creates and returns an array with the attributes table columns names.
@@ -48,7 +48,7 @@ BDQueimadas.components.AttributesTable = (function() {
       .empty()
       .append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
-    attributesTable = $('#attributes-table').DataTable(
+    memberAttributesTable = $('#attributes-table').DataTable(
       {
         "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
         "processing": true,
@@ -74,7 +74,7 @@ BDQueimadas.components.AttributesTable = (function() {
    * @function updateAttributesTable
    */
   var updateAttributesTable = function() {
-    attributesTable.ajax.reload();
+    memberAttributesTable.ajax.reload();
   };
 
   /**

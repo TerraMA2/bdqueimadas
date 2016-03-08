@@ -4,12 +4,12 @@
  * Controller responsible for returning the attributes table data accordingly with the received parameters.
  * @class GetAttributesTableController
  *
- * @property {object} filter - 'Filter' model.
+ * @property {object} memberFilter - 'Filter' model.
  */
 var GetAttributesTableController = function(app) {
 
   // 'Filter' model
-  var filter = new (require('../models/Filter.js'))();
+  var memberFilter = new (require('../models/Filter.js'))();
 
   /**
    * Processes the request and returns a response.
@@ -41,15 +41,15 @@ var GetAttributesTableController = function(app) {
     });
 
     // Call of the method 'getAttributesTableData', responsible for returning data of the attributes table accordingly with the request parameters
-    filter.getAttributesTableData(request.body.length, request.body.start, order, request.body.search.value, request.body.dateFrom, request.body.dateTo, options, function(err, result) {
+    memberFilter.getAttributesTableData(request.body.length, request.body.start, order, request.body.search.value, request.body.dateFrom, request.body.dateTo, options, function(err, result) {
       if(err) return console.error(err);
 
       // Call of the method 'getAttributesTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, not considering the table search
-      filter.getAttributesTableCount(request.body.dateFrom, request.body.dateTo, options, function(err, resultCount) {
+      memberFilter.getAttributesTableCount(request.body.dateFrom, request.body.dateTo, options, function(err, resultCount) {
         if(err) return console.error(err);
 
         // Call of the method 'getAttributesTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, considering the table search
-        filter.getAttributesTableCountWithSearch(request.body.dateFrom, request.body.dateTo, request.body.search.value, options, function(err, resultCountWithSearch) {
+        memberFilter.getAttributesTableCountWithSearch(request.body.dateFrom, request.body.dateTo, request.body.search.value, options, function(err, resultCountWithSearch) {
           if(err) return console.error(err);
 
           // Array responsible for keep the data obtained by the method 'getAttributesTableData'

@@ -4,24 +4,24 @@
  * Filter model, which contains filter related database manipulations.
  * @class Filter
  *
- * @property {object} path - 'path' module.
- * @property {object} pgConnectionString - 'PgConnectionString' module.
- * @property {json} attributesTableConfig - Attributes table configuration.
- * @property {json} filterConfig - Filter configuration.
- * @property {object} pg - 'pg' module.
+ * @property {object} memberPath - 'path' module.
+ * @property {object} memberPgConnectionString - 'PgConnectionString' module.
+ * @property {json} memberAttributesTableConfig - Attributes table configuration.
+ * @property {json} memberFilterConfig - Filter configuration.
+ * @property {object} memberPg - 'pg' module.
  */
 var Filter = function() {
 
   // 'path' module
-  var path = require('path');
+  var memberPath = require('path');
   // 'PgConnectionString' module
-  var pgConnectionString = new (require(path.join(__dirname, '../modules/PgConnectionString.js')))();
+  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString.js')))();
   // Attributes table configuration
-  var attributesTableConfig = require(path.join(__dirname, '../configurations/AttributesTable.json'));
+  var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
   // Filter configuration
-  var filterConfig = require(path.join(__dirname, '../configurations/Filter.json'));
+  var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter.json'));
   // 'pg' module
-  var pg = require('pg');
+  var memberPg = require('pg');
 
   /**
    * Returns data of the attributes table accordingly with the received parameters.
@@ -45,9 +45,9 @@ var Filter = function() {
 
     // Setting of the query columns string
     var columns = "";
-    for(var i = 0; i < attributesTableConfig.Columns.length; i++) {
-      if(attributesTableConfig.Columns[i].Show)
-        columns += attributesTableConfig.Columns[i].Name + ", ";
+    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
+      if(memberAttributesTableConfig.Columns[i].Show)
+        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -57,16 +57,16 @@ var Filter = function() {
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + pgConnectionString.getSchema() + "." + attributesTableConfig.Name + " where (" + attributesTableConfig.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        var query = "select " + columns + " from " + memberPgConnectionString.getSchema() + "." + memberAttributesTableConfig.Name + " where (" + memberAttributesTableConfig.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 
         // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
         if(options.satellite !== undefined) {
-          query += " and " + attributesTableConfig.SatelliteFieldName + " = $" + (parameter++);
+          query += " and " + memberAttributesTableConfig.SatelliteFieldName + " = $" + (parameter++);
           params.push(options.satellite);
         }
 
@@ -113,16 +113,16 @@ var Filter = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + pgConnectionString.getSchema() + "." + attributesTableConfig.Name + " where " + attributesTableConfig.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberPgConnectionString.getSchema() + "." + memberAttributesTableConfig.Name + " where " + memberAttributesTableConfig.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateFrom, dateTo];
 
         // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
         if(options.satellite !== undefined) {
-          query += " and " + attributesTableConfig.SatelliteFieldName + " = $" + (parameter++);
+          query += " and " + memberAttributesTableConfig.SatelliteFieldName + " = $" + (parameter++);
           params.push(options.satellite);
         }
 
@@ -158,16 +158,16 @@ var Filter = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + pgConnectionString.getSchema() + "." + attributesTableConfig.Name + " where " + attributesTableConfig.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberPgConnectionString.getSchema() + "." + memberAttributesTableConfig.Name + " where " + memberAttributesTableConfig.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateFrom, dateTo];
 
         // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
         if(options.satellite !== undefined) {
-          query += " and " + attributesTableConfig.SatelliteFieldName + " = $" + (parameter++);
+          query += " and " + memberAttributesTableConfig.SatelliteFieldName + " = $" + (parameter++);
           params.push(options.satellite);
         }
 
@@ -209,17 +209,17 @@ var Filter = function() {
     var params = [];
 
     // Loop through the columns configuration
-    for(var i = 0; i < attributesTableConfig.Columns.length; i++) {
+    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
 
       // If the column is set to be shown in the table, it's included in the search, otherwise it's not
-      if(attributesTableConfig.Columns[i].Show) {
+      if(memberAttributesTableConfig.Columns[i].Show) {
 
         // Verification of the type of the column (numeric or not numeric)
-        if(!attributesTableConfig.Columns[i].Number) {
-          searchText += attributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
+        if(!memberAttributesTableConfig.Columns[i].Number) {
+          searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
           params.push('%' + search + '%');
-        } else if(attributesTableConfig.Columns[i].Number && !isNaN(search)) {
-          searchText += attributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
+        } else if(memberAttributesTableConfig.Columns[i].Number && !isNaN(search)) {
+          searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
           params.push(Number(search));
         }
       }
@@ -241,11 +241,11 @@ var Filter = function() {
    */
   this.getCountryCenter = function(countryId, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(geom)) from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Countries.TableName + " where " + filterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select ST_AsText(ST_Centroid(geom)) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
             params = [countryId];
 
         // Execution of the query
@@ -270,11 +270,11 @@ var Filter = function() {
    */
   this.getStateCenter = function(stateId, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(geom)) from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select ST_AsText(ST_Centroid(geom)) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
             params = [stateId];
 
         // Execution of the query
@@ -298,12 +298,12 @@ var Filter = function() {
    */
   this.getContinents = function(callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + filterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + filterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Continents.TableName + " order by " +
-        filterConfig.SpatialFilter.Continents.NameFieldName + " asc;";
+        var query = "select distinct " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " order by " +
+        memberFilterConfig.SpatialFilter.Continents.NameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, function(err, result) {
@@ -327,11 +327,11 @@ var Filter = function() {
    */
   this.getCountriesByContinent = function(continent, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + filterConfig.SpatialFilter.Countries.IdFieldName + " as id, " + filterConfig.SpatialFilter.Countries.NameFieldName + " as name from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Countries.TableName + " where " + filterConfig.SpatialFilter.Continents.IdFieldName + " = $1 order by " + filterConfig.SpatialFilter.Countries.NameFieldName + " asc;",
+        var query = "select " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Countries.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " = $1 order by " + memberFilterConfig.SpatialFilter.Countries.NameFieldName + " asc;",
             params = [continent];
 
         // Execution of the query
@@ -356,11 +356,11 @@ var Filter = function() {
    */
   this.getStatesByCountry = function(country, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + filterConfig.SpatialFilter.States.IdFieldName + " as id, " + filterConfig.SpatialFilter.States.NameFieldName + " as name from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.Countries.IdFieldName + " = $1 order by " + filterConfig.SpatialFilter.States.NameFieldName + " asc;",
+        var query = "select " + memberFilterConfig.SpatialFilter.States.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.States.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1 order by " + memberFilterConfig.SpatialFilter.States.NameFieldName + " asc;",
             params = [country];
 
         // Execution of the query
@@ -385,11 +385,11 @@ var Filter = function() {
    */
   this.getContinentExtent = function(continent, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Continents.TableName + " where " + filterConfig.SpatialFilter.Continents.IdFieldName + " = $1;",
+        var query = "select ST_Extent(geom) as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " = $1;",
             params = [continent];
 
         // Execution of the query
@@ -414,11 +414,11 @@ var Filter = function() {
    */
   this.getCountryExtent = function(country, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.Countries.TableName + " where " + filterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select ST_Extent(geom) as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -443,11 +443,11 @@ var Filter = function() {
    */
   this.getStateExtent = function(state, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(geom) as extent from " + pgConnectionString.getSchema() + "." + filterConfig.SpatialFilter.States.TableName + " where " + filterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select ST_Extent(geom) as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -472,11 +472,11 @@ var Filter = function() {
    */
   this.getFiresCountByCountry = function(country, callback) {
     // Connection with the PostgreSQL database
-    pg.connect(pgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) as firescount from " + pgConnectionString.getSchema() + ".focos where pais = $1;",
+        var query = "select count(*) as firescount from " + memberPgConnectionString.getSchema() + ".focos where pais = $1;",
             params = [country];
 
         // Execution of the query

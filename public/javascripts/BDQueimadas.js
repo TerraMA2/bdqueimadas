@@ -8,91 +8,91 @@ window.BDQueimadas = {
  * Main class of the BDQueimadas.
  * @module BDQueimadas
  *
- * @property {json} filterConfig - Filter configuration.
- * @property {json} serverConfig - Mapping server configuration.
- * @property {json} attributesTableConfig - Fires layer attributes table configuration.
- * @property {string} featureDescription - Fires layer feature description.
- * @property {string} features - Fires layer features.
- * @property {object} socket - Socket object.
- * @property {number} height - Window height.
- * @property {number} headerHeight - Header height.
- * @property {number} navbarHeight - Navbar height.
- * @property {number} contentHeaderHeight - Content header height.
- * @property {number} reducedFooterHeight - Reduced footer height.
+ * @property {json} memberFilterConfig - Filter configuration.
+ * @property {json} memberServerConfig - Mapping server configuration.
+ * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
+ * @property {string} memberFeatureDescription - Fires layer feature description.
+ * @property {string} memberFeatures - Fires layer features.
+ * @property {object} memberSocket - Socket object.
+ * @property {number} memberHeight - Window height.
+ * @property {number} memberHeaderHeight - Header height.
+ * @property {number} memberNavbarHeight - Navbar height.
+ * @property {number} memberContentHeaderHeight - Content header height.
+ * @property {number} memberReducedFooterHeight - Reduced footer height.
  */
 BDQueimadas.obj = (function() {
 
   // Filter configuration
-  var filterConfig = null;
+  var memberFilterConfig = null;
   // Mapping server configuration
-  var serverConfig = null;
+  var memberServerConfig = null;
   // Fires layer attributes table configuration
-  var attributesTableConfig = null;
+  var memberAttributesTableConfig = null;
   // Fires layer feature description
-  var featureDescription = null;
+  var memberFeatureDescription = null;
   // Fires layer features
-  var features = null;
+  var memberFeatures = null;
   // Socket object
-  var socket = null;
+  var memberSocket = null;
   // Window height
-  var height = null;
+  var memberHeight = null;
   // Header height
-  var headerHeight = null;
+  var memberHeaderHeight = null;
   // Navbar height
-  var navbarHeight = null;
+  var memberNavbarHeight = null;
   // Content header height
-  var contentHeaderHeight = null;
+  var memberContentHeaderHeight = null;
   // Reduced footer height
-  var reducedFooterHeight = 12;
+  var memberReducedFooterHeight = 12;
 
   /**
    * Returns the fires layer feature description.
-   * @returns {string} featureDescription - Feature description
+   * @returns {string} memberFeatureDescription - Feature description
    *
    * @function getFeatureDescription
    */
   var getFeatureDescription = function() {
-    return featureDescription;
+    return memberFeatureDescription;
   };
 
   /**
    * Returns the fires layer features.
-   * @returns {string} features - Features
+   * @returns {string} memberFeatures - Features
    *
    * @function getFeatures
    */
   var getFeatures = function() {
-    return features;
+    return memberFeatures;
   };
 
   /**
    * Returns the socket object.
-   * @returns {object} socket - Socket object
+   * @returns {object} memberSocket - Socket object
    *
    * @function getSocket
    */
   var getSocket = function() {
-    return socket;
+    return memberSocket;
   };
 
   /**
    * Returns the filter configuration.
-   * @returns {json} filterConfig - Filter configuration
+   * @returns {json} memberFilterConfig - Filter configuration
    *
    * @function getFilterConfig
    */
   var getFilterConfig = function() {
-    return filterConfig;
+    return memberFilterConfig;
   };
 
   /**
    * Returns the fires layer attributes table configuration.
-   * @returns {json} attributesTableConfig - Attributes table configuration
+   * @returns {json} memberAttributesTableConfig - Attributes table configuration
    *
    * @function getAttributesTableConfig
    */
   var getAttributesTableConfig = function() {
-    return attributesTableConfig;
+    return memberAttributesTableConfig;
   };
 
   /**
@@ -115,17 +115,17 @@ BDQueimadas.obj = (function() {
 
   /**
    * Loads the components configurations.
-   * @param {json} _filterConfig - Filter configuration
-   * @param {json} _serverConfig - Mapping server configuration
-   * @param {json} _attributesTableConfig - Attributes table configuration
+   * @param {json} filterConfig - Filter configuration
+   * @param {json} serverConfig - Mapping server configuration
+   * @param {json} attributesTableConfig - Attributes table configuration
    *
    * @private
    * @function loadConfigurations
    */
-  var loadConfigurations = function(_filterConfig, _serverConfig, _attributesTableConfig) {
-    filterConfig = _filterConfig;
-    serverConfig = _serverConfig;
-    attributesTableConfig = _attributesTableConfig;
+  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig) {
+    memberFilterConfig = filterConfig;
+    memberServerConfig = serverConfig;
+    memberAttributesTableConfig = attributesTableConfig;
   };
 
   /**
@@ -158,16 +158,16 @@ BDQueimadas.obj = (function() {
   var loadFeatureDescription = function() {
     var requestId = randomText();
 
-    socket.emit(
+    memberSocket.emit(
       'proxyRequest',
       {
-        url: serverConfig.URL + serverConfig.DescribeFeatureTypeParams + filterConfig.LayerToFilter,
+        url: memberServerConfig.URL + memberServerConfig.DescribeFeatureTypeParams + memberFilterConfig.LayerToFilter,
         requestId: requestId
       }
     );
-    socket.on('proxyResponse', function(msg) {
+    memberSocket.on('proxyResponse', function(msg) {
       if(msg.requestId === requestId) {
-        featureDescription = msg.msg;
+        memberFeatureDescription = msg.msg;
       }
     });
   };
@@ -181,16 +181,16 @@ BDQueimadas.obj = (function() {
   var loadFeatures = function() {
     var requestId = randomText();
 
-    socket.emit(
+    memberSocket.emit(
       'proxyRequest',
       {
-        url: serverConfig.URL + serverConfig.GetFeatureParams + filterConfig.LayerToFilter,
+        url: memberServerConfig.URL + memberServerConfig.GetFeatureParams + memberFilterConfig.LayerToFilter,
         requestId: requestId
       }
     );
-    socket.on('proxyResponse', function(msg) {
+    memberSocket.on('proxyResponse', function(msg) {
       if(msg.requestId === requestId) {
-        features = msg.msg;
+        memberFeatures = msg.msg;
       }
     });
   };
@@ -419,10 +419,10 @@ BDQueimadas.obj = (function() {
    * @function updateSizeVars
    */
   var updateSizeVars = function() {
-    height = $(window).outerHeight();
-    headerHeight = $(".main-header").outerHeight();
-    navbarHeight = $('.navbar').outerHeight();
-    contentHeaderHeight = $(".content-wrapper > .content-header").outerHeight();
+    memberHeight = $(window).outerHeight();
+    memberHeaderHeight = $(".main-header").outerHeight();
+    memberNavbarHeight = $('.navbar').outerHeight();
+    memberContentHeaderHeight = $(".content-wrapper > .content-header").outerHeight();
   };
 
   /**
@@ -432,10 +432,10 @@ BDQueimadas.obj = (function() {
    * @function setFullContentSize
    */
   var setFullContentSize = function() {
-    $('.content-wrapper').attr("style", "min-height: " + (height - (headerHeight + reducedFooterHeight)) + "px");
-    $('#terrama2-map').attr("style", "height: " + (height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
-    $('.left-content-box').attr("style", "height: " + (height - ((headerHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (headerHeight + contentHeaderHeight) + "px;");
-    $('.control-sidebar').animate({ "padding-top": (headerHeight + contentHeaderHeight) + "px" }, { duration: 300, queue: false });
+    $('.content-wrapper').attr("style", "min-height: " + (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px");
+    $('#terrama2-map').attr("style", "height: " + (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px");
+    $('.left-content-box').attr("style", "height: " + (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px; margin-top: " + (memberHeaderHeight + memberContentHeaderHeight) + "px;");
+    $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
   };
 
   /**
@@ -445,31 +445,31 @@ BDQueimadas.obj = (function() {
    * @function setReducedContentSize
    */
   var setReducedContentSize = function() {
-    $('.content-wrapper').attr("style", "min-height: " + (height - (navbarHeight + reducedFooterHeight)) + "px");
-    $('#terrama2-map').attr("style", "height: " + (height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight)) + "px");
-    $('.left-content-box').attr("style", "height: " + (height - ((navbarHeight + contentHeaderHeight) + reducedFooterHeight + 20)) + "px; margin-top: " + (navbarHeight + contentHeaderHeight) + "px;");
-    $('.control-sidebar').animate({ "padding-top": (navbarHeight + contentHeaderHeight) + "px" }, { duration: 300, queue: false });
+    $('.content-wrapper').attr("style", "min-height: " + (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px");
+    $('#terrama2-map').attr("style", "height: " + (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px");
+    $('.left-content-box').attr("style", "height: " + (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px; margin-top: " + (memberNavbarHeight + memberContentHeaderHeight) + "px;");
+    $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
   };
 
   /**
    * Initializes the necessary features.
-   * @param {json} _filterConfig - Filter configuration
-   * @param {json} _serverConfig - Mapping server configuration
-   * @param {json} _attributesTableConfig - Attributes table configuration
+   * @param {json} filterConfig - Filter configuration
+   * @param {json} serverConfig - Mapping server configuration
+   * @param {json} attributesTableConfig - Attributes table configuration
    *
    * @function init
    */
-  var init = function(_filterConfig, _serverConfig, _attributesTableConfig) {
+  var init = function(filterConfig, serverConfig, attributesTableConfig) {
     $(document).ready(function() {
       updateSizeVars();
       setFullContentSize();
       loadEvents();
-      loadConfigurations(_filterConfig, _serverConfig, _attributesTableConfig);
+      loadConfigurations(filterConfig, serverConfig, attributesTableConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
         success: function() {
-          socket = io(window.location.origin);
+          memberSocket = io(window.location.origin);
           loadFeatures();
           loadFeatureDescription();
           loadComponents();

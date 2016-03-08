@@ -4,18 +4,18 @@
  * Filter class of the BDQueimadas.
  * @module Filter
  *
- * @property {date} dateFrom - Current initial date.
- * @property {date} dateTo - Current final date.
- * @property {string} satellite - Current satellite.
+ * @property {date} memberDateFrom - Current initial date.
+ * @property {date} memberDateTo - Current final date.
+ * @property {string} memberSatellite - Current satellite.
  */
 BDQueimadas.components.Filter = (function() {
 
   // Current initial date
-  var dateFrom = null;
+  var memberDateFrom = null;
   // Current final date
-  var dateTo = null;
+  var memberDateTo = null;
   // Current satellite
-  var satellite = "all";
+  var memberSatellite = "all";
 
   /**
    * Returns the initial date formatted with the received format.
@@ -25,7 +25,7 @@ BDQueimadas.components.Filter = (function() {
    * @function getFormattedDateFrom
    */
   var getFormattedDateFrom = function(format) {
-    return dateToString(dateFrom, format);
+    return dateToString(memberDateFrom, format);
   };
 
   /**
@@ -36,17 +36,17 @@ BDQueimadas.components.Filter = (function() {
    * @function getFormattedDateTo
    */
   var getFormattedDateTo = function(format) {
-    return dateToString(dateTo, format);
+    return dateToString(memberDateTo, format);
   };
 
   /**
    * Returns the satellite.
-   * @returns {string} satellite - Satellite
+   * @returns {string} memberSatellite - Satellite
    *
    * @function getSatellite
    */
   var getSatellite = function() {
-    return satellite;
+    return memberSatellite;
   };
 
   /**
@@ -80,9 +80,9 @@ BDQueimadas.components.Filter = (function() {
    * @function createDateFilter
    */
   var createDateFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + dateToString(dateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
+    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
     cql += " and ";
-    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + dateToString(dateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
+    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + dateToString(memberDateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
 
     return cql;
   };
@@ -99,11 +99,11 @@ BDQueimadas.components.Filter = (function() {
     var dateFromSplited = newDateFrom.split("/");
     var dateToSplited = newDateTo.split("/");
 
-    dateFrom = new Date(dateFromSplited[2] + '-' + dateFromSplited[1] + '-' + dateFromSplited[0] + ' UTC-03:00');
-    dateTo = new Date(dateToSplited[2] + '-' + dateToSplited[1] + '-' + dateToSplited[0] + ' UTC-03:00');
+    memberDateFrom = new Date(dateFromSplited[2] + '-' + dateFromSplited[1] + '-' + dateFromSplited[0] + ' UTC-03:00');
+    memberDateTo = new Date(dateToSplited[2] + '-' + dateToSplited[1] + '-' + dateToSplited[0] + ' UTC-03:00');
 
-    dateFrom.setHours(0,0,0,0);
-    dateTo.setHours(0,0,0,0);
+    memberDateFrom.setHours(0,0,0,0);
+    memberDateTo.setHours(0,0,0,0);
   };
 
   /**
@@ -113,12 +113,12 @@ BDQueimadas.components.Filter = (function() {
    * @function updateDatesToCurrent
    */
   var updateDatesToCurrent = function() {
-    dateFrom = new Date();
-    dateTo = new Date();
-    dateFrom.setHours(dateFrom.getHours() - 24);
+    memberDateFrom = new Date();
+    memberDateTo = new Date();
+    memberDateFrom.setHours(memberDateFrom.getHours() - 24);
 
-    dateFrom.setHours(0,0,0,0);
-    dateTo.setHours(0,0,0,0);
+    memberDateFrom.setHours(0,0,0,0);
+    memberDateTo.setHours(0,0,0,0);
   };
 
   /**
@@ -129,7 +129,7 @@ BDQueimadas.components.Filter = (function() {
    * @function createSatelliteFilter
    */
   var createSatelliteFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().SatelliteFieldName + "='" + satellite + "'";
+    var cql = BDQueimadas.obj.getFilterConfig().SatelliteFieldName + "='" + memberSatellite + "'";
     return cql;
   };
 
@@ -175,21 +175,21 @@ BDQueimadas.components.Filter = (function() {
     var elem = "<option value=\"all\">TODOS</option>";
     var satellitesList = BDQueimadas.obj.getFilterConfig().SatellitesList;
 
-    $.each(satellitesList, function(i, _satellite) {
-      var satelliteBegin = new Date(_satellite.Begin + ' UTC-03:00');
-      var satelliteEnd = new Date(_satellite.End + ' UTC-03:00');
+    $.each(satellitesList, function(i, satelliteItem) {
+      var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
+      var satelliteEnd = new Date(satelliteItem.End + ' UTC-03:00');
 
       satelliteBegin.setHours(0,0,0,0);
       satelliteEnd.setHours(0,0,0,0);
 
-      if((satelliteBegin <= dateFrom && satelliteEnd >= dateTo) || (satelliteBegin <= dateFrom && _satellite.Current)) {
-        if(satellite === _satellite.Name) {
-          elem += "<option value=\"" + _satellite.Name + "\" selected>" + _satellite.Name + "</option>";
+      if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
+        if(memberSatellite === satelliteItem.Name) {
+          elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
         } else {
-          elem += "<option value=\"" + _satellite.Name + "\">" + _satellite.Name + "</option>";
+          elem += "<option value=\"" + satelliteItem.Name + "\">" + satelliteItem.Name + "</option>";
         }
-      } else if(satellite === _satellite.Name) {
-        elem += "<option value=\"" + _satellite.Name + "\" selected>" + _satellite.Name + "</option>";
+      } else if(memberSatellite === satelliteItem.Name) {
+        elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
       }
     });
 
@@ -206,7 +206,7 @@ BDQueimadas.components.Filter = (function() {
     $('#filter-button').on('click', function(el) {
       var filterDateFrom = $('#filter-date-from').val();
       var filterDateTo = $('#filter-date-to').val();
-      satellite = $('#filter-satellite').val();
+      memberSatellite = $('#filter-satellite').val();
 
       if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
         if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
@@ -215,7 +215,7 @@ BDQueimadas.components.Filter = (function() {
           filterDateFrom = getFormattedDateFrom('DD/MM/YYYY');
         }
 
-        applyFilter(filterDateFrom, filterDateTo, satellite);
+        applyFilter(filterDateFrom, filterDateTo, memberSatellite);
       } else {
         if(filterDateFrom.length === 0) {
           $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');

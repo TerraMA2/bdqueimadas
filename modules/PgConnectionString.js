@@ -4,26 +4,26 @@
  * Module responsible for set the PostgreSQL connection string.
  * @class PgConnectionString
  *
- * @property {object} path - 'path' module.
- * @property {json} databaseConfigurations - Database configurations.
+ * @property {object} memberPath - 'path' module.
+ * @property {json} memberDatabaseConfigurations - Database configurations.
  */
 var PgConnectionString = function() {
 
   // 'path' module
-  var path = require('path');
+  var memberPath = require('path');
   // Database configurations
-  var databaseConfigurations = require(path.join(__dirname, '../configurations/Database.json'));
+  var memberDatabaseConfigurations = require(memberPath.join(__dirname, '../configurations/Database.json'));
 
   /**
    * Returns the schema.
-   * @returns {string} databaseConfigurations.Schema - Schema
+   * @returns {string} memberDatabaseConfigurations.Schema - Schema
    *
    * @function getSchema
    * @memberof PgConnectionString
    * @inner
    */
   this.getSchema = function() {
-    return databaseConfigurations.Schema;
+    return memberDatabaseConfigurations.Schema;
   };
 
   /**
@@ -35,7 +35,7 @@ var PgConnectionString = function() {
    * @inner
    */
   this.getConnectionString = function() {
-    var connectionString = "postgres://" + databaseConfigurations.User + ":" + databaseConfigurations.Password + "@" + databaseConfigurations.Host + ":" + databaseConfigurations.Port + "/" + databaseConfigurations.Database;
+    var connectionString = "postgres://" + memberDatabaseConfigurations.User + ":" + memberDatabaseConfigurations.Password + "@" + memberDatabaseConfigurations.Host + ":" + memberDatabaseConfigurations.Port + "/" + memberDatabaseConfigurations.Database;
     return connectionString;
   };
 };
