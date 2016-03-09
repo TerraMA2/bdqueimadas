@@ -72,7 +72,7 @@ var Filter = function() {
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
         if(options.extent !== undefined)
-          query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
@@ -128,7 +128,7 @@ var Filter = function() {
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
         if(options.extent !== undefined)
-          query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -173,7 +173,7 @@ var Filter = function() {
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
         if(options.extent !== undefined)
-          query += " and ST_Intersects(geom, ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
@@ -245,7 +245,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(geom)) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select ST_AsText(ST_Centroid(" + memberFilterConfig.SpatialFilter.Countries.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
             params = [countryId];
 
         // Execution of the query
@@ -274,7 +274,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(geom)) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select ST_AsText(ST_Centroid(" + memberFilterConfig.SpatialFilter.States.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
             params = [stateId];
 
         // Execution of the query
@@ -389,7 +389,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(geom) as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberFilterConfig.SpatialFilter.Continents.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " = $1;",
             params = [continent];
 
         // Execution of the query
@@ -418,7 +418,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(geom) as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberFilterConfig.SpatialFilter.Countries.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -447,7 +447,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(geom) as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberFilterConfig.SpatialFilter.States.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -481,6 +481,48 @@ var Filter = function() {
 
         // Execution of the query
         client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the extent of the polygon that intersects with the received point.
+   * @param {string} longitude - Longitude of the point
+   * @param {string} latitude - Latitude of the point
+   * @param {float} resolution - Current map resolution
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getExtentByIntersection
+   * @memberof Filter
+   * @inner
+   */
+  this.getExtentByIntersection = function(longitude, latitude, resolution, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        var key = "States";
+
+        if(resolution >= memberFilterConfig.SpatialFilter.Continents.DoubleclickMinimumResolution) {
+          key = "Continents";
+        } else if(resolution >= memberFilterConfig.SpatialFilter.Countries.DoubleclickMinimumResolution && resolution < memberFilterConfig.SpatialFilter.Countries.DoubleclickMaximumResolution) {
+          key = "Countries";
+        }
+
+        // Creation of the query
+        var query = "SELECT ST_Extent(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName +
+                    ") as extent FROM " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter[key].TableName +
+                    " WHERE ST_Intersects(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName +
+                    ", ST_PointFromText('POINT(" + longitude + " " + latitude + ")', 4326));",
+            params = [longitude, latitude];
+
+        // Execution of the query
+        client.query(query, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);

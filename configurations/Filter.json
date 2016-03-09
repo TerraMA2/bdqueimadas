@@ -8,17 +8,26 @@
     "Continents": {
       "TableName": "paises",
       "IdFieldName": "unregion1",
-      "NameFieldName": "unregion1"
+      "NameFieldName": "unregion1",
+      "GeometryFieldName": "geom",
+      "DoubleclickMinimumResolution": 0.35,
+      "DoubleclickMaximumResolution": 0
     },
     "Countries": {
       "TableName": "paises",
       "IdFieldName": "id_0",
-      "NameFieldName": "name_0"
+      "NameFieldName": "name_0",
+      "GeometryFieldName": "geom",
+      "DoubleclickMinimumResolution": 0.080,
+      "DoubleclickMaximumResolution": 0.35
     },
     "States": {
       "TableName": "estados",
       "IdFieldName": "gid",
-      "NameFieldName": "name_1"
+      "NameFieldName": "name_1",
+      "GeometryFieldName": "geom",
+      "DoubleclickMinimumResolution": 0,
+      "DoubleclickMaximumResolution": 0.080
     }
   },
   "SatellitesList": [

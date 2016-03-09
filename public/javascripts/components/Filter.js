@@ -266,6 +266,18 @@ BDQueimadas.components.Filter = (function() {
           }
         });
 
+        // new
+
+        TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleclick(function(e) {
+          BDQueimadas.obj.getSocket().emit('extentByIntersectionRequest', {
+            longitude: e.coordinate[0],
+            latitude: e.coordinate[1],
+            resolution: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution()
+          });
+        });
+
+        // new
+
         clearInterval(interval);
       }
     }, 10);
@@ -319,6 +331,18 @@ BDQueimadas.components.Filter = (function() {
       extentArray = extentArray.concat(extent[1].split(' '));
 
       TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+    });
+
+    BDQueimadas.obj.getSocket().on('extentByIntersectionResponse', function(result) {
+      if(result.extent.rows[0].extent !== null) {
+        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+        var extentArray = extent[0].split(' ');
+        extentArray = extentArray.concat(extent[1].split(' '));
+
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+      } else {
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
+      }
     });
   };
 

@@ -49,6 +49,15 @@ var SpatialFilter = function(io) {
         client.emit('stateFilterResponse', { stateExtent: stateExtent });
       });
     });
+
+    // Extent by intersection event
+    client.on('extentByIntersectionRequest', function(json) {
+      filter.getExtentByIntersection(json.longitude, json.latitude, json.resolution, function(err, extent) {
+        if(err) return console.error(err);
+
+        client.emit('extentByIntersectionResponse', { extent: extent });
+      });
+    });
   });
 };
 
