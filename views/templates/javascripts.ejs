@@ -63,6 +63,7 @@
   var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
   var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
   var attributesTableConfig = JSON.parse('<%- JSON.stringify(attributesTableConfig) %>');
+  var componentsConfig = JSON.parse('<%- JSON.stringify(componentsConfig) %>');
 
   var fillColors = {
     "0": "#FFEBCD",
@@ -84,7 +85,7 @@
     "50000": "#000000"
   };
 
-  BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig);
+  BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig, componentsConfig);
 
   var interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {

@@ -11,6 +11,7 @@ window.BDQueimadas = {
  * @property {json} memberFilterConfig - Filter configuration.
  * @property {json} memberServerConfig - Mapping server configuration.
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
+ * @property {json} memberComponentsConfig - Components configuration.
  * @property {string} memberFeatureDescription - Fires layer feature description.
  * @property {string} memberFeatures - Fires layer features.
  * @property {object} memberSocket - Socket object.
@@ -19,6 +20,7 @@ window.BDQueimadas = {
  * @property {number} memberNavbarHeight - Navbar height.
  * @property {number} memberContentHeaderHeight - Content header height.
  * @property {number} memberReducedFooterHeight - Reduced footer height.
+ * @property {boolean} memberComponentsLoaded - Flag that indicates if all the components have been loaded.
  */
 BDQueimadas.obj = (function() {
 
@@ -28,6 +30,8 @@ BDQueimadas.obj = (function() {
   var memberServerConfig = null;
   // Fires layer attributes table configuration
   var memberAttributesTableConfig = null;
+  // Components configuration
+  var memberComponentsConfig = null;
   // Fires layer feature description
   var memberFeatureDescription = null;
   // Fires layer features
@@ -44,6 +48,8 @@ BDQueimadas.obj = (function() {
   var memberContentHeaderHeight = null;
   // Reduced footer height
   var memberReducedFooterHeight = 12;
+  // Flag that indicates if all the components have been loaded
+  var memberComponentsLoaded = false;
 
   /**
    * Returns the fires layer feature description.
@@ -118,52 +124,38 @@ BDQueimadas.obj = (function() {
    * @param {json} filterConfig - Filter configuration
    * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
+   * @param {json} componentsConfig - Components configuration
    *
    * @private
    * @function loadConfigurations
    */
-  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig) {
+  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig) {
     memberFilterConfig = filterConfig;
     memberServerConfig = serverConfig;
     memberAttributesTableConfig = attributesTableConfig;
+    memberComponentsConfig = componentsConfig;
   };
 
   /**
-   * Loads the components.
+   * Loads the components present in the components configuration file.
+   * @param {int} i - Current array index
    *
    * @private
    * @function loadComponents
    */
-  var loadComponents = function() {
-    $.ajax({ url: "/javascripts/components/Filter.js", dataType: "script", success: function() {
-      BDQueimadas.components.Filter.init();
-      $.ajax({ url: "/javascripts/components/AttributesTable.js", dataType: "script", success: function() {
-        BDQueimadas.components.AttributesTable.init();
-        $.ajax({ url: "/javascripts/components/graphics.js", dataType: "script", success: function() {
-          BDQueimadas.components.Graphics.init();
-          $.ajax({ url: "/javascripts/components/Map.js", dataType: "script", success: function() {
-            BDQueimadas.components.Map.init();
-          }});
-        }});
-      }});
-    }});
-
-    // New
-
-    if(i < memberComponentsLength) {
+  var loadComponents = function(i) {
+    if(i < componentsConfig.Components.length) {
       $.ajax({
-        url: "/javascripts/components/" + TerraMA2WebComponents.Config.getConfJsonComponents()[memberComponents[i]],
+        url: "/javascripts/components/" + componentsConfig[componentsConfig.Components[i]],
         dataType: "script",
         success: function() {
-          TerraMA2WebComponents.webcomponents[memberComponents[i]].init();
+          BDQueimadas.components[componentsConfig.Components[i]].init();
           loadComponents(++i);
         }
       });
     } else {
       memberComponentsLoaded = true;
     }
-
-    // New
   };
 
   /**
@@ -473,15 +465,16 @@ BDQueimadas.obj = (function() {
    * @param {json} filterConfig - Filter configuration
    * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
+   * @param {json} componentsConfig - Components configuration
    *
    * @function init
    */
-  var init = function(filterConfig, serverConfig, attributesTableConfig) {
+  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig) {
     $(document).ready(function() {
       updateSizeVars();
       setFullContentSize();
       loadEvents();
-      loadConfigurations(filterConfig, serverConfig, attributesTableConfig);
+      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -489,7 +482,7 @@ BDQueimadas.obj = (function() {
           memberSocket = io(window.location.origin);
           loadFeatures();
           loadFeatureDescription();
-          loadComponents();
+          loadComponents(0);
         }
       });
 
