@@ -308,3 +308,7 @@
 .control-sidebar > .tab-content > a > i:hover, .control-sidebar > .tab-content > a > i.active {
   color: #FFFFFF;
 }
+
+.dropdown-closed > .dropdown-menu {
+  display: none !important;
+}

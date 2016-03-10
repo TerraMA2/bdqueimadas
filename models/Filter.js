@@ -55,7 +55,21 @@ var Filter = function() {
 
     // Setting of the query 'order by' clause string
     var orderText = "";
-    for(var i = 0; i < order.length; i++) orderText += order[i].column + " " + order[i].dir + ", ";
+    for(var i = 0; i < order.length; i++) {
+
+      var direction = "asc";
+      if(order[i].dir === "desc") direction = "desc";
+
+      var column = memberAttributesTableConfig.Columns[0].Name;
+      for(var j = 0; j < memberAttributesTableConfig.Columns.length; j++) {
+        if(memberAttributesTableConfig.Columns[j].Name === order[i].column) {
+          column = memberAttributesTableConfig.Columns[j].Name;
+          break;
+        }
+      }
+
+      orderText += column + " " + direction + ", ";
+    }
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
@@ -73,8 +87,10 @@ var Filter = function() {
         }
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
-        if(options.extent !== undefined)
-          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+        if(options.extent !== undefined) {
+          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
+          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
+        }
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
@@ -129,8 +145,10 @@ var Filter = function() {
         }
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
-        if(options.extent !== undefined)
-          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+        if(options.extent !== undefined) {
+          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
+          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
+        }
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -174,8 +192,10 @@ var Filter = function() {
         }
 
         // If the 'options.extent' parameter exists, a satellite 'where' clause is created
-        if(options.extent !== undefined)
-          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope(" + options.extent[0] + ", " + options.extent[1] + ", " + options.extent[2] + ", " + options.extent[3] + ", 4326))";
+        if(options.extent !== undefined) {
+          query += " and ST_Intersects(" + memberAttributesTableConfig.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
+          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
+        }
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
@@ -510,21 +530,17 @@ var Filter = function() {
 
         var key = "States";
 
-        if(resolution >= memberFilterConfig.SpatialFilter.Continents.DoubleclickMinimumResolution) {
+        if(resolution >= memberFilterConfig.SpatialFilter.Continents.DoubleclickMinimumResolution)
           key = "Continents";
-        } else if(resolution >= memberFilterConfig.SpatialFilter.Countries.DoubleclickMinimumResolution && resolution < memberFilterConfig.SpatialFilter.Countries.DoubleclickMaximumResolution) {
+        else if(resolution >= memberFilterConfig.SpatialFilter.Countries.DoubleclickMinimumResolution && resolution < memberFilterConfig.SpatialFilter.Countries.DoubleclickMaximumResolution)
           key = "Countries";
-        }
 
         // Creation of the query
-        var query = "SELECT ST_Extent(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName +
-                    ") as extent FROM " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter[key].TableName +
-                    " WHERE ST_Intersects(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName +
-                    ", ST_PointFromText('POINT(" + longitude + " " + latitude + ")', 4326));",
+        var query = "SELECT ST_Extent(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName + ") as extent FROM " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter[key].TableName + " WHERE ST_Intersects(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));",
             params = [longitude, latitude];
 
         // Execution of the query
-        client.query(query, function(err, result) {
+        client.query(query, params, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);

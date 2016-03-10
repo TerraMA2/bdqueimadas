@@ -230,20 +230,36 @@ BDQueimadas.components.Filter = (function() {
 
     $('.continent-item').on('click', function() {
       BDQueimadas.obj.getSocket().emit('continentFilterRequest', { continent: $(this).attr('id') });
+
       $('#continents-title').empty().html($(this).text());
+
       $('#countries-title').empty().html('Países');
+      $('#countries-dropdown').removeClass('open');
+      $('#countries-dropdown').removeClass('dropdown-closed');
+
       $('#states-title').empty().html('Estados');
+      $('#states-dropdown').removeClass('open');
+      if(!$('#states-dropdown').hasClass('dropdown-closed')) $('#states-dropdown').addClass('dropdown-closed');
     });
 
     $(document).on('click', '.country-item', function() {
       BDQueimadas.obj.getSocket().emit('countryFilterRequest', { country: $(this).attr('id') });
+
       $('#countries-title').empty().html($(this).text());
+      $('#countries-dropdown').removeClass('open');
+      $('#countries-dropdown').removeClass('dropdown-closed');
+
       $('#states-title').empty().html('Estados');
+      $('#states-dropdown').removeClass('open');
+      $('#states-dropdown').removeClass('dropdown-closed');
     });
 
     $(document).on('click', '.state-item', function() {
       BDQueimadas.obj.getSocket().emit('stateFilterRequest', { state: $(this).attr('id') });
+
       $('#states-title').empty().html($(this).text());
+      $('#states-dropdown').removeClass('open');
+      $('#states-dropdown').removeClass('dropdown-closed');
     });
 
     $('.filter-date').on('focus', function(el) {
