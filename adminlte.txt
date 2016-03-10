@@ -1,6 +1,0 @@
-adminlte contents:
-
- - public/bootstrap;
- - public/build;
- - public/dist;
- - public/plugins;

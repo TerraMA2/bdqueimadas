@@ -1,44 +1,77 @@
-.footer-text {
-  text-align: center;
+@font-face {
+  font-family: 'Myriad Pro Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Regular'), url('../fonts/MyriadPro/MYRIADPRO-REGULAR.woff') format('woff');
 }
 
-.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
-.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
-  display: none !important;
+
+@font-face {
+  font-family: 'Myriad Pro Condensed';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Condensed'), url('../fonts/MyriadPro/MYRIADPRO-COND.woff') format('woff');
 }
 
-.main-sidebar {
-  padding-top: 83px !important;
+
+@font-face {
+  font-family: 'Myriad Pro Semibold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Semibold Italic'), url('../fonts/MyriadPro/MYRIADPRO-SEMIBOLDIT.woff') format('woff');
 }
 
-.sidebar-menu > li > a {
-  height: 44px;
-  background-repeat: no-repeat;
-  background-position: 14px;
-  background-size: 14px;
+
+@font-face {
+  font-family: 'Myriad Pro Semibold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Semibold'), url('../fonts/MyriadPro/MYRIADPRO-SEMIBOLD.woff') format('woff');
 }
 
-.sidebar-menu > li > a:hover {
-  background-repeat: no-repeat !important;
-  background-position: 14px !important;
-  background-size: 14px !important;
+
+@font-face {
+  font-family: 'Myriad Pro Condensed Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Condensed Italic'), url('../fonts/MyriadPro/MYRIADPRO-CONDIT.woff') format('woff');
 }
 
-.sidebar-menu > li > a > span {
-  padding-left: 22px;
+
+@font-face {
+  font-family: 'Myriad Pro Bold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold Italic'), url('../fonts/MyriadPro/MYRIADPRO-BOLDIT.woff') format('woff');
 }
 
-.content-header {
-  margin-top: 30px;
+
+@font-face {
+  font-family: 'Myriad Pro Bold Condensed Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold Condensed Italic'), url('../fonts/MyriadPro/MYRIADPRO-BOLDCONDIT.woff') format('woff');
 }
 
-.content {
-  min-height: 0px !important;
+
+@font-face {
+  font-family: 'Myriad Pro Bold Condensed';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold Condensed'), url('../fonts/MyriadPro/MYRIADPRO-BOLDCOND.woff') format('woff');
 }
 
-#filter-box {
-  color: white;
+
+@font-face {
+  font-family: 'Myriad Pro Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Myriad Pro Bold'), url('../fonts/MyriadPro/MYRIADPRO-BOLD.woff') format('woff');
 }
+
+/* BDQueimadas styles */
+
+#filter-box { color: black; }
 
 .left-content-box {
   -webkit-touch-callout: none;
@@ -57,14 +90,14 @@
   top: 0;
   bottom: 0;
   width: 350px;
-  height: calc(100% - 83px);
   left: -350px;
+  margin-top: 286px;
+  height: calc(100% - 318px);
   overflow: auto;
-  margin-top: 83px;
 }
 
 .fullscreen {
-  width: calc(100% - 50px) !important;
+  width: calc(100% - 50px);
   left: -100%;
   -webkit-transition: width 0.3s ease-in-out;
   -moz-transition: width 0.3s ease-in-out;
@@ -72,63 +105,210 @@
   transition: width 0.3s ease-in-out;
 }
 
-.fullmenu {
-  width: calc(100% - 230px) !important;
-}
+.fullmenu { width: calc(100% - 230px) !important; }
 
 #left-content-box-background {
   width: 350px;
   position: fixed;
   height: 100%;
-  z-index: 500;
-  background: rgba(34,45,50,0.85);
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
   left: -350px;
   top: 0;
   bottom: 0;
 }
 
-#terrama2-layerexplorer {
+.cursor-crosshair { cursor: crosshair !important; }
+
+.cursor-move { cursor: move !important; }
+
+#welcome {
+  position: absolute;
+  left: 0;
+  z-index: 99999;
+  width: 100%;
+  height: 720px;
+  margin-top: -54px;
+}
+
+#welcome > img { float: left; }
+
+#welcome > #welcome-text {
   color: white;
+  position: absolute;
+  right: 170px;
+  font-family: 'Myriad Pro Regular';
+  margin-top: 75px;
+  text-align: right;
+  width: 600px;
 }
 
-#filters-btn > a {
-  background-image: url('../images/icon_calendar.png');
+#welcome > #welcome-text > p.title {
+  font-size: 76px;
+  line-height: 76px;
 }
 
-#tables-btn > a {
-  background-image: url('../images/icon_table.png');
+#welcome > #welcome-text > p.text {
+  font-size: 23px;
+  line-height: 40px;
 }
 
-#graphs-btn > a {
-  background-image: url('../images/icon_graphics.png');
+#welcome > #welcome-text > button {
+  width: 200px;
+  height: 70px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-size: 20px;
+  outline: none;
 }
 
-#layerexplorer-btn > a {
-  background-image: url('../images/icon_layers.png');
+@media only screen and (max-width: 991px) {
+  #welcome {
+    margin-top: -90px !important;
+  }
 }
 
-.logo-mini {
-  height: 100%;
-  background-image: url('../images/lit.png');
-  background-repeat: no-repeat;
-  background-position: center;
+@media only screen and (max-height: 1012px) and (min-width: 1301px) {
+  #welcome > img {
+    width: 100%;
+  }
 }
 
-.logo-lg {
-  height: 100%;
-  background-image: url('../images/big.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-left: -15px;
+@media only screen and (max-height: 1012px) and (max-width: 1300px), (min-height: 1013px) {
+  #welcome > img {
+    height: 100%;
+  }
 }
+
+@media only screen and (max-height: 600px) {
+  #welcome > #welcome-text {
+    margin-top: 30px;
+  }
+
+  #welcome > #welcome-text > p.title {
+    font-size: 40px !important;
+    line-height: 40px !important;
+  }
+
+  #welcome > #welcome-text > p.text {
+    font-size: 18px !important;
+    line-height: 30px !important;
+  }
+
+  #welcome > #welcome-text > button {
+    width: 130px !important;
+    height: 45px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media only screen and (min-height: 601px) and (max-height: 830px) {
+  #welcome > #welcome-text > p.title {
+    font-size: 50px !important;
+    line-height: 50px !important;
+  }
+
+  #welcome > #welcome-text > p.text {
+    font-size: 20px !important;
+    line-height: 35px !important;
+  }
+
+  #welcome > #welcome-text > button {
+    width: 150px !important;
+    height: 50px !important;
+    font-size: 17px !important;
+  }
+}
+
+.nav > .separator {
+  padding: 10px 4px;
+  height: 50px;
+  font-weight: 900;
+  font-size: 22px;
+}
+
+/* TerraMA2Components styles */
+
+#terrama2-layerexplorer { color: black; }
 
 #terrama2-map {
+  position: absolute;
   width: calc(100% - 50px);
-  height: calc(100% - 210px) !important;
-  min-height: calc(100% - 210px) !important;
-  max-height: calc(100% - 210px) !important;
   -webkit-transition: width 0.3s ease-in-out;
   -moz-transition: width 0.3s ease-in-out;
   -o-transition: width 0.3s ease-in-out;
   transition: width 0.3s ease-in-out;
+}
+
+/* AdminLTEQueimadas general adjustments */
+
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu { display: none !important; }
+
+.sidebar-menu > li > a {
+  height: 44px;
+  background-repeat: no-repeat;
+  background-position: 14px;
+  background-size: 14px;
+}
+
+.sidebar-menu > li > a:hover {
+  background-repeat: no-repeat !important;
+  background-position: 14px !important;
+  background-size: 14px !important;
+}
+
+#layerexplorer-btn > a { background-image: url('../images/icon_layers.png'); }
+
+#layerexplorer-btn > a:hover { background-image: url('../images/icon_layers_hover.png'); }
+
+#filters-btn > a { background-image: url('../images/icon_calendar.png'); }
+
+#filters-btn > a:hover { background-image: url('../images/icon_calendar_hover.png'); }
+
+#tables-btn > a { background-image: url('../images/icon_table.png'); }
+
+#tables-btn > a:hover { background-image: url('../images/icon_table_hover.png'); }
+
+#graphs-btn > a { background-image: url('../images/icon_graphics.png'); }
+
+#graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
+
+.sidebar-menu > li > a > span { padding-left: 22px; }
+
+.skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../../externals/adminlte/img/sprite.png") 0 2px;}
+
+.skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../../externals/adminlte/img/sprite.png");}
+
+.skin-queimadas .main-header #gov-header #header #logo #portal-title {
+  background: url("../../externals/adminlte/img/logo_queimadas.png");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../../externals/adminlte/img/logo_bd.png");}
+
+.content {
+  min-height: 0px !important;
+  padding-top: 0px !important;
+}
+
+.skin-queimadas .content-header { z-index: 1011 !important; }
+
+.control-sidebar, .control-sidebar-bg {
+  width: 45px !important;
+  height: 100%;
+  overflow: hidden;
+}
+
+.control-sidebar > .tab-content > a > i {
+  color: #B8C7CE;
+  padding: 10px 0;
+}
+
+.control-sidebar > .tab-content > a > i:hover, .control-sidebar > .tab-content > a > i.active {
+  color: #FFFFFF;
+}
+
+.dropdown-closed > .dropdown-menu {
+  display: none !important;
 }

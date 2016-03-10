@@ -4,44 +4,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="<%= terrama2Path %>/stylesheets/terrama2.css">
+    <link rel="favicon" href="favicon.ico" type="image/x-icon">
     <% include templates/stylesheets %>
     <title>Banco de Dados de Queimadas</title>
   </head>
-  <body class="skin-blue sidebar-mini wysihtml5-supported sidebar-collapse fixed">
+  <body class="skin-queimadas sidebar-mini wysihtml5-supported">
     <div class="wrapper">
       <% include templates/header %>
       <% include templates/leftbar %>
-      <% include templates/left-content-boxes %>
-
-      <!-- Content Wrapper. Contains page content -->
+      <% include templates/leftContentBoxes %>
       <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
+        <section class="content-header logo-bdqueimadas">
           <h1>Banco de Dados de Queimadas</h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Banco de Dados de Queimadas</li>
           </ol>
         </section>
-
-        <!-- Main content -->
         <section class="content">
-          <!-- Small boxes (Stat box) -->
-          <div class="row">
-            <div id="terrama2-map" class="terrama2-map"></div>
+          <div id="welcome">
+            <img src="images/welcome.jpg">
+            <div id="welcome-text">
+              <p class="title">Bem-Vindo ao BDQueimadas</p>
+              <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+              <button class="sidebar-toggle begin" data-toggle="offcanvas" role="button">Começar</button>
+            </div>
           </div>
-
-        </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
-    </div><!-- ./wrapper -->
-
-
-
-    <div id="terrama2-layerexplorer" class="terrama2-leftbox terrama2-resizable-horizontal"></div>
-
+          <div class="row">
+            <div id="terrama2-map" class="terrama2-map fullmenu cursor-move"></div>
+          </div>
+        </section>
+      </div>
+    </div>
     <% include templates/footer %>
-    <script src="<%= terrama2Path %>/javascripts/terrama2.js" type="text/javascript"></script>
+    <% include templates/toolbar %>
     <% include templates/javascripts %>
   </body>
 </html>

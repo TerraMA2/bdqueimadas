@@ -1,0 +1,123 @@
+{
+  "Name": "focos",
+  "DateFieldName": "data",
+  "TimeFieldName": "horagmt",
+  "SatelliteFieldName": "satelite",
+  "GeometryFieldName": "geom",
+  "Columns": [
+    {
+      "Name": "gid",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "id",
+      "Alias": "",
+      "Show": false,
+      "Number": false
+    },
+    {
+      "Name": "lat",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "lon",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "latgms",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "longms",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "data",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "horagmt",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "satelite",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "municipio",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "uf",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "regiao",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "pais",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "prec",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "ndiasschuv",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "risco",
+      "Alias": "",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "bioma",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "wrs_tm",
+      "Alias": "",
+      "Show": true,
+      "Number": false
+    },
+    {
+      "Name": "geom",
+      "Alias": "",
+      "Show": false,
+      "Number": false
+    }
+  ]
+}

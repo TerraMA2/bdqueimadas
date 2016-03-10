@@ -1,0 +1,46 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": ["."],
+    "exclude": [
+      ".git",
+      "configurations",
+      "docs",
+      "node_modules",
+      "public/externals",
+      "public/fonts",
+      "public/images",
+      "public/stylesheets",
+      "views",
+      ".gitignore",
+      "LICENSE",
+      "makedocs",
+      "npm-debug.log",
+      "package.json",
+      "README.md"
+    ],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "docs"
+  },
+  "plugins": [],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": true,
+    "systemName": "BDQueimadas",
+    "footer": "BDQueimadas",
+    "copyright": "2015",
+    "navType": "vertical",
+    "linenums": true,
+    "collapseSymbols": true,
+    "inverseNav": false
+  },
+  "opts": {
+    "template": "configurations/jsdoc/templates/bdqueimadas",
+    "encoding": "utf8",
+    "destination": "docs",
+    "recurse": true,
+    "private": true
+  }
+}

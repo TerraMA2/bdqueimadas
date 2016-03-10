@@ -1,6 +1,8 @@
-var Graphics = function(bdqueimadas) {
+"use strict";
 
-  var _this = this;
+BDQueimadas.components.Graphics = (function() {
+
+  var interval = null;
 
   var SortArr = function (j) {
     var arr = [];
@@ -17,16 +19,16 @@ var Graphics = function(bdqueimadas) {
   };
 
   var strInArr = function(arr, str) {
-    for(i = 0, j = arr.length; i < j; i++) {
+    for(var i = 0, j = arr.length; i < j; i++) {
       if(arr[i] === str) {
         return true;
       }
     }
     return false;
-  }
+  };
 
-  _this.loadGraphics = function() {
-    var features = JSON.parse(bdqueimadas.getFeatures());
+  var loadGraphics = function() {
+    var features = JSON.parse(BDQueimadas.obj.getFeatures());
 
     var groupedData = {};
     var groupedDataBioma = {};
@@ -121,14 +123,21 @@ var Graphics = function(bdqueimadas) {
       $("#canvas").css("display", "none");
       $("#chart-area").css("display", "");
     });
-  }
+  };
 
   var verifiesOutsideVars = function() {
-    if(bdqueimadas.getFeatures() !== null) {
-      _this.loadGraphics();
+    if(BDQueimadas.obj.getFeatures() !== null) {
+      loadGraphics();
       clearInterval(interval);
     }
-  }
+  };
 
-  var interval = window.setInterval(verifiesOutsideVars, 3000);
-};
+  var init = function() {
+    interval = window.setInterval(verifiesOutsideVars, 3000);
+  };
+
+  return {
+    loadGraphics: loadGraphics,
+    init: init
+  };
+})();
