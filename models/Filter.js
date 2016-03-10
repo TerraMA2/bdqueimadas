@@ -109,6 +109,35 @@ var Filter = function() {
   };
 
   /**
+   * Returns a continent filtered by the received country id.
+   * @param {string} country - Country id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getContinentByCountry
+   * @memberof Filter
+   * @inner
+   */
+  this.getContinentByCountry = function(country, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1 order by " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " asc;",
+            params = [country];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns a list of countries filtered by the received continent id.
    * @param {string} continent - Continent id
    * @param {function} callback - Callback function
@@ -307,7 +336,12 @@ var Filter = function() {
           key = "Countries";
 
         // Creation of the query
-        var query = "SELECT ST_Extent(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName + ") as extent FROM " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter[key].TableName + " WHERE ST_Intersects(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));",
+        var query = "SELECT ST_Extent(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName + ") as extent, " +
+                    memberFilterConfig.SpatialFilter[key].IdFieldName + " as id, " +
+                    memberFilterConfig.SpatialFilter[key].NameFieldName + " as name, '" + key + "' as key FROM " +
+                    memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter[key].TableName + " WHERE ST_Intersects(" +
+                    memberFilterConfig.SpatialFilter[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326)) group by " +
+                    memberFilterConfig.SpatialFilter[key].IdFieldName + ", " + memberFilterConfig.SpatialFilter[key].NameFieldName + ";",
             params = [longitude, latitude];
 
         // Execution of the query
