@@ -4,6 +4,8 @@
  * Filter class of the BDQueimadas.
  * @module Filter
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
  * @property {string} memberSatellite - Current satellite.
@@ -252,7 +254,7 @@ BDQueimadas.components.Filter = (function() {
 
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChange(function(event) {
+        TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
           if(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution() < filterConfig.SpatialFilter.FiresLayerMaximumResolution) {
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, false);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, true);
@@ -268,7 +270,7 @@ BDQueimadas.components.Filter = (function() {
 
         // new
 
-        TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleclick(function(e) {
+        TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(e) {
           BDQueimadas.obj.getSocket().emit('extentByIntersectionRequest', {
             longitude: e.coordinate[0],
             latitude: e.coordinate[1],

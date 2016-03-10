@@ -4,6 +4,8 @@
  * Attributes table class of the BDQueimadas.
  * @module AttributesTable
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
  */
 BDQueimadas.components.AttributesTable = (function() {

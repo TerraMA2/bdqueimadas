@@ -4,7 +4,7 @@ BDQueimadas.components.Map = (function() {
 
   var loadEvents = function() {
     $(document).ready(function() {
-      TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEnd(function() {
+      TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function() {
         var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
         BDQueimadas.components.AttributesTable.updateAttributesTable();

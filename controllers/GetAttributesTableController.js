@@ -4,6 +4,8 @@
  * Controller responsible for returning the attributes table data accordingly with the received parameters.
  * @class GetAttributesTableController
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {object} memberFilter - 'Filter' model.
  */
 var GetAttributesTableController = function(app) {

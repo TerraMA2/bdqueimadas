@@ -4,6 +4,8 @@
  * Controller responsible for returning the countries layer features.
  * @class GetCountriesLayerFeaturesController
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberFilter - Filter model.
  */

@@ -4,6 +4,8 @@
  * Filter model, which contains filter related database manipulations.
  * @class Filter
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {object} memberPath - 'path' module.
  * @property {object} memberPgConnectionString - 'PgConnectionString' module.
  * @property {json} memberAttributesTableConfig - Attributes table configuration.

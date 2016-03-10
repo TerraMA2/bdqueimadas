@@ -4,6 +4,8 @@
  * Controller of the system index.
  * @class IndexController
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberFilter - Filter model.

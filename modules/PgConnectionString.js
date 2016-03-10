@@ -4,6 +4,8 @@
  * Module responsible for set the PostgreSQL connection string.
  * @class PgConnectionString
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {object} memberPath - 'path' module.
  * @property {json} memberDatabaseConfigurations - Database configurations.
  */

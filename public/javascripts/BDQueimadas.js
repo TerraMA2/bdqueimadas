@@ -8,6 +8,8 @@ window.BDQueimadas = {
  * Main class of the BDQueimadas.
  * @module BDQueimadas
  *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
  * @property {json} memberFilterConfig - Filter configuration.
  * @property {json} memberServerConfig - Mapping server configuration.
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.

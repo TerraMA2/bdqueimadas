@@ -3,20 +3,27 @@
 /**
  * Socket responsible for doing cross-domain requests.
  * @class Proxy
+ *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ *
+ * @property {object} memberSockets - Sockets object.
+ * @property {object} memberHttp - 'http' module.
  */
 var Proxy = function(io) {
 
-  var sockets = io.sockets;
-  var http = require('http');
+  // Sockets object
+  var memberSockets = io.sockets;
+  // 'http' module
+  var memberHttp = require('http');
 
   // Socket connection event
-  sockets.on('connection', function(client) {
+  memberSockets.on('connection', function(client) {
 
     // Proxy request event
     client.on('proxyRequest', function(json) {
 
       // Http request to the received url
-      http.get(json.url, function(resp){
+      memberHttp.get(json.url, function(resp){
         var xml = '';
 
         // Data receiving event
