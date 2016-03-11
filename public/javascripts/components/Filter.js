@@ -400,7 +400,7 @@ BDQueimadas.components.Filter = (function() {
     });
 
     BDQueimadas.obj.getSocket().on('extentByIntersectionResponse', function(result) {
-      if(result.extent.rows[0].extent !== null) {
+      if(result.extent.rowCount > 0 && result.extent.rows[0].extent !== null) {
         var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
         var extentArray = extent[0].split(' ');
         extentArray = extentArray.concat(extent[1].split(' '));

@@ -305,10 +305,8 @@
   padding: 10px 0;
 }
 
-.control-sidebar > .tab-content > a > i:hover, .control-sidebar > .tab-content > a > i.active {
-  color: #FFFFFF;
-}
+.control-sidebar > .tab-content > a > i:hover, .control-sidebar > .tab-content > a > i.active { color: #FFFFFF; }
 
-.dropdown-closed > .dropdown-menu {
-  display: none !important;
-}
+.dropdown-closed > .dropdown-menu { display: none !important; }
+
+.control-sidebar > .tab-content { text-align: center; }
