@@ -274,13 +274,9 @@ BDQueimadas.obj = (function() {
       // Elements sizes adjustments, accordingly with the sidebar width
       if($("body").hasClass('sidebar-collapse')) {
         $("#terrama2-map").removeClass('fullmenu');
-        $('.left-content-box').animate({ 'margin-top': '120px' }, { duration: 300, queue: false });
-
         setReducedContentSize();
       } else {
         $("#terrama2-map").addClass('fullmenu');
-        $('.left-content-box').animate({ 'margin-top': '300px' }, { duration: 300, queue: false });
-
         setFullContentSize();
       }
 
@@ -431,7 +427,7 @@ BDQueimadas.obj = (function() {
    */
   var updateSizeVars = function() {
     memberHeight = $(window).outerHeight();
-    memberHeaderHeight = $(".main-header").outerHeight();
+    memberHeaderHeight = $('.main-header').outerHeight();
     memberNavbarHeight = $('.navbar').outerHeight();
     memberContentHeaderHeight = $(".content-wrapper > .content-header").outerHeight();
   };
@@ -443,9 +439,10 @@ BDQueimadas.obj = (function() {
    * @function setFullContentSize
    */
   var setFullContentSize = function() {
-    $('.content-wrapper').attr("style", "min-height: " + (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px");
-    $('#terrama2-map').attr("style", "height: " + (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px");
-    $('.left-content-box').attr("style", "height: " + (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px; margin-top: " + (memberHeaderHeight + memberContentHeaderHeight) + "px;");
+    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+    $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+
+    $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
     $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
   };
 
@@ -456,9 +453,10 @@ BDQueimadas.obj = (function() {
    * @function setReducedContentSize
    */
   var setReducedContentSize = function() {
-    $('.content-wrapper').attr("style", "min-height: " + (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px");
-    $('#terrama2-map').attr("style", "height: " + (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px");
-    $('.left-content-box').attr("style", "height: " + (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px; margin-top: " + (memberNavbarHeight + memberContentHeaderHeight) + "px;");
+    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+    $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+
+    $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
     $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
   };
 
