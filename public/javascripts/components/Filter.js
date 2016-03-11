@@ -314,20 +314,40 @@ BDQueimadas.components.Filter = (function() {
     BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
   };
 
-  // new
-
+  /**
+   * Enables a dropdown.
+   * @param {string} id - Item id
+   * @param {string} text - Item name
+   *
+   * @private
+   * @function enableDropdown
+   */
   var enableDropdown = function(id, text) {
     $('#' + id + '-title').empty().html(text);
     $('#' + id + '-dropdown').removeClass('open');
     $('#' + id + '-dropdown').removeClass('dropdown-closed');
   };
 
+  /**
+   * Disables a dropdown.
+   * @param {string} id - Item id
+   * @param {string} text - Item name
+   *
+   * @private
+   * @function disableDropdown
+   */
   var disableDropdown = function(id, text) {
     $('#' + id + '-title').empty().html(text);
     $('#' + id + '-dropdown').removeClass('open');
     if(!$('#' + id + '-dropdown').hasClass('dropdown-closed')) $('#' + id + '-dropdown').addClass('dropdown-closed');
   };
 
+  /**
+   * Resets the three dropdowns to its initial states.
+   *
+   * @private
+   * @function resetDropdowns
+   */
   var resetDropdowns = function() {
     enableDropdown('continents', "Continentes");
     disableDropdown('countries', 'Pa&iacute;ses');
@@ -335,8 +355,6 @@ BDQueimadas.components.Filter = (function() {
     disableDropdown('states', 'Estados');
     $('#states').empty();
   };
-
-  // new
 
   /**
    * Loads the sockets listeners.
