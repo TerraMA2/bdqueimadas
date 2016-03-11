@@ -19,40 +19,13 @@ var SpatialFilter = function(io) {
   // Socket connection event
   memberSockets.on('connection', function(client) {
 
-    // Continent filter request event
-    client.on('continentFilterRequest', function(json) {
-
-      memberFilter.getCountriesByContinent(json.continent, function(err, countries) {
+    // Spatial filter request event
+    client.on('spatialFilterRequest', function(json) {
+      var functionName = "get" + json.key + "Extent";
+      memberFilter[functionName](json.id, function(err, extent) {
         if(err) return console.error(err);
 
-        memberFilter.getContinentExtent(json.continent, function(err, continentExtent) {
-          if(err) return console.error(err);
-
-          client.emit('continentFilterResponse', { countries: countries, continentExtent: continentExtent });
-        });
-      });
-    });
-
-    // Country filter request event
-    client.on('countryFilterRequest', function(json) {
-
-      memberFilter.getStatesByCountry(json.country, function(err, states) {
-        if(err) return console.error(err);
-
-        memberFilter.getCountryExtent(json.country, function(err, countryExtent) {
-          if(err) return console.error(err);
-
-          client.emit('countryFilterResponse', { states: states, countryExtent: countryExtent });
-        });
-      });
-    });
-
-    // State filter request event
-    client.on('stateFilterRequest', function(json) {
-      memberFilter.getStateExtent(json.state, function(err, stateExtent) {
-        if(err) return console.error(err);
-
-        client.emit('stateFilterResponse', { stateExtent: stateExtent });
+        client.emit('spatialFilterResponse', { key: json.key, id: json.id, text: json.text, extent: extent });
       });
     });
 

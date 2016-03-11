@@ -229,37 +229,15 @@ BDQueimadas.components.Filter = (function() {
     });
 
     $('.continent-item').on('click', function() {
-      BDQueimadas.obj.getSocket().emit('continentFilterRequest', { continent: $(this).attr('id') });
-
-      $('#continents-title').empty().html($(this).text());
-
-      $('#countries-title').empty().html('Países');
-      $('#countries-dropdown').removeClass('open');
-      $('#countries-dropdown').removeClass('dropdown-closed');
-
-      $('#states-title').empty().html('Estados');
-      $('#states-dropdown').removeClass('open');
-      if(!$('#states-dropdown').hasClass('dropdown-closed')) $('#states-dropdown').addClass('dropdown-closed');
+      BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'Continent' });
     });
 
     $(document).on('click', '.country-item', function() {
-      BDQueimadas.obj.getSocket().emit('countryFilterRequest', { country: $(this).attr('id') });
-
-      $('#countries-title').empty().html($(this).text());
-      $('#countries-dropdown').removeClass('open');
-      $('#countries-dropdown').removeClass('dropdown-closed');
-
-      $('#states-title').empty().html('Estados');
-      $('#states-dropdown').removeClass('open');
-      $('#states-dropdown').removeClass('dropdown-closed');
+      BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'Country' });
     });
 
     $(document).on('click', '.state-item', function() {
-      BDQueimadas.obj.getSocket().emit('stateFilterRequest', { state: $(this).attr('id') });
-
-      $('#states-title').empty().html($(this).text());
-      $('#states-dropdown').removeClass('open');
-      $('#states-dropdown').removeClass('dropdown-closed');
+      BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'State' });
     });
 
     $('.filter-date').on('focus', function(el) {
@@ -306,17 +284,7 @@ BDQueimadas.components.Filter = (function() {
    * @function selectContinentItem
    */
   var selectContinentItem = function(id, text) {
-    BDQueimadas.obj.getSocket().emit('continentFilterRequest', { continent: id });
-
-    $('#continents-title').empty().html(text);
-
-    $('#countries-title').empty().html('Países');
-    $('#countries-dropdown').removeClass('open');
-    $('#countries-dropdown').removeClass('dropdown-closed');
-
-    $('#states-title').empty().html('Estados');
-    $('#states-dropdown').removeClass('open');
-    if(!$('#states-dropdown').hasClass('dropdown-closed')) $('#states-dropdown').addClass('dropdown-closed');
+    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
   };
 
   /**
@@ -329,15 +297,7 @@ BDQueimadas.components.Filter = (function() {
    */
   var selectCountryItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('continentByCountryRequest', { country: id });
-    BDQueimadas.obj.getSocket().emit('countryFilterRequest', { country: id });
-
-    $('#countries-title').empty().html(text);
-    $('#countries-dropdown').removeClass('open');
-    $('#countries-dropdown').removeClass('dropdown-closed');
-
-    $('#states-title').empty().html('Estados');
-    $('#states-dropdown').removeClass('open');
-    $('#states-dropdown').removeClass('dropdown-closed');
+    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
   };
 
   /**
@@ -351,12 +311,32 @@ BDQueimadas.components.Filter = (function() {
   var selectStateItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('continentByStateRequest', { state: id });
     BDQueimadas.obj.getSocket().emit('countryByStateRequest', { state: id });
-    BDQueimadas.obj.getSocket().emit('stateFilterRequest', { state: id });
-
-    $('#states-title').empty().html(text);
-    $('#states-dropdown').removeClass('open');
-    $('#states-dropdown').removeClass('dropdown-closed');
+    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
   };
+
+  // new
+
+  var enableDropdown = function(id, text) {
+    $('#' + id + '-title').empty().html(text);
+    $('#' + id + '-dropdown').removeClass('open');
+    $('#' + id + '-dropdown').removeClass('dropdown-closed');
+  };
+
+  var disableDropdown = function(id, text) {
+    $('#' + id + '-title').empty().html(text);
+    $('#' + id + '-dropdown').removeClass('open');
+    if(!$('#' + id + '-dropdown').hasClass('dropdown-closed')) $('#' + id + '-dropdown').addClass('dropdown-closed');
+  };
+
+  var resetDropdowns = function() {
+    enableDropdown('continents', "Continentes");
+    disableDropdown('countries', 'Pa&iacute;ses');
+    $('#countries').empty();
+    disableDropdown('states', 'Estados');
+    $('#states').empty();
+  };
+
+  // new
 
   /**
    * Loads the sockets listeners.
@@ -365,53 +345,40 @@ BDQueimadas.components.Filter = (function() {
    * @function loadSocketsListeners
    */
   var loadSocketsListeners = function() {
-    BDQueimadas.obj.getSocket().on('continentFilterResponse', function(result) {
-      var html = "",
-          countriesCount = result.countries.rowCount;
+    BDQueimadas.obj.getSocket().on('spatialFilterResponse', function(result) {
+      if(result.key === 'Continent') {
+        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+        var extentArray = extent[0].split(' ');
+        extentArray = extentArray.concat(extent[1].split(' '));
 
-      for(var i = 0; i < countriesCount; i++) {
-        html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+        BDQueimadas.components.AttributesTable.updateAttributesTable();
+        BDQueimadas.obj.getSocket().emit('countriesByContinentRequest', { continent: result.id });
+
+        enableDropdown('continents', result.text);
+        enableDropdown('countries', 'Pa&iacute;ses');
+        disableDropdown('states', 'Estados');
+      } else if(result.key === 'Country') {
+        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+        var extentArray = extent[0].split(' ');
+        extentArray = extentArray.concat(extent[1].split(' '));
+
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+        BDQueimadas.components.AttributesTable.updateAttributesTable();
+        BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.id });
+
+        enableDropdown('countries', result.text);
+        enableDropdown('states', 'Estados');
+      } else {
+        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+        var extentArray = extent[0].split(' ');
+        extentArray = extentArray.concat(extent[1].split(' '));
+
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+        BDQueimadas.components.AttributesTable.updateAttributesTable();
+
+        enableDropdown('states', result.text);
       }
-
-      var extent = result.continentExtent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-
-      var extentArray = extent[0].split(' ');
-      extentArray = extentArray.concat(extent[1].split(' '));
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-      $('#countries').empty().html(html);
-
-      BDQueimadas.components.AttributesTable.updateAttributesTable();
-    });
-
-    BDQueimadas.obj.getSocket().on('countryFilterResponse', function(result) {
-      var html = "",
-          statesCount = result.states.rowCount;
-
-      for(var i = 0; i < statesCount; i++) {
-        html += "<li class='state-item' id='" + result.states.rows[i].id + "'><a href='#'>" + result.states.rows[i].name + "</a></li>";
-      }
-
-      var extent = result.countryExtent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-
-      var extentArray = extent[0].split(' ');
-      extentArray = extentArray.concat(extent[1].split(' '));
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-      $('#states').empty().html(html);
-
-      BDQueimadas.components.AttributesTable.updateAttributesTable();
-    });
-
-    BDQueimadas.obj.getSocket().on('stateFilterResponse', function(result) {
-      var extent = result.stateExtent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-
-      var extentArray = extent[0].split(' ');
-      extentArray = extentArray.concat(extent[1].split(' '));
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-
-      BDQueimadas.components.AttributesTable.updateAttributesTable();
     });
 
     BDQueimadas.obj.getSocket().on('extentByIntersectionResponse', function(result) {
@@ -492,6 +459,7 @@ BDQueimadas.components.Filter = (function() {
     getFormattedDateFrom: getFormattedDateFrom,
     getFormattedDateTo: getFormattedDateTo,
     getSatellite: getSatellite,
+    resetDropdowns: resetDropdowns,
     init: init
   };
 })();
