@@ -56,12 +56,57 @@ var SpatialFilter = function(io) {
       });
     });
 
-    // Extent by intersection event
+    // Extent by intersection request event
     client.on('extentByIntersectionRequest', function(json) {
       memberFilter.getExtentByIntersection(json.longitude, json.latitude, json.resolution, function(err, extent) {
         if(err) return console.error(err);
 
         client.emit('extentByIntersectionResponse', { extent: extent });
+      });
+    });
+
+    // Continent by country request event
+    client.on('continentByCountryRequest', function(json) {
+      memberFilter.getContinentByCountry(json.country, function(err, continent) {
+        if(err) return console.error(err);
+
+        client.emit('continentByCountryResponse', { continent: continent });
+      });
+    });
+
+    // Continent by state request event
+    client.on('continentByStateRequest', function(json) {
+      memberFilter.getContinentByState(json.state, function(err, continent) {
+        if(err) return console.error(err);
+
+        client.emit('continentByStateResponse', { continent: continent });
+      });
+    });
+
+    // Country by state request event
+    client.on('countryByStateRequest', function(json) {
+      memberFilter.getCountryByState(json.state, function(err, country) {
+        if(err) return console.error(err);
+
+        client.emit('countryByStateResponse', { country: country });
+      });
+    });
+
+    // Countries by continent request event
+    client.on('countriesByContinentRequest', function(json) {
+      memberFilter.getCountriesByContinent(json.continent, function(err, countries) {
+        if(err) return console.error(err);
+
+        client.emit('countriesByContinentResponse', { countries: countries });
+      });
+    });
+
+    // States by country request event
+    client.on('statesByCountryRequest', function(json) {
+      memberFilter.getStatesByCountry(json.country, function(err, states) {
+        if(err) return console.error(err);
+
+        client.emit('statesByCountryResponse', { states: states });
       });
     });
   });

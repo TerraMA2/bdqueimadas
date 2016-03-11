@@ -124,8 +124,78 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1 order by " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " asc;",
+        var query = "select " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
             params = [country];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns a continent filtered by the received state id.
+   * @param {string} state - State id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getContinentByState
+   * @memberof Filter
+   * @inner
+   */
+  this.getContinentByState = function(state, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select a." + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, a." +
+        memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " +
+        memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName +
+        " a inner join " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName +
+        " b on (a." + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = b." +
+        memberFilterConfig.SpatialFilter.Countries.IdFieldName + ") where b." +
+        memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+            params = [state];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns a country filtered by the received state id.
+   * @param {string} state - State id
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCountryByState
+   * @memberof Filter
+   * @inner
+   */
+  this.getCountryByState = function(state, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select a." + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " as id, a." +
+        memberFilterConfig.SpatialFilter.Countries.NameFieldName + " as name from " +
+        memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName +
+        " a inner join " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName +
+        " b on (a." + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = b." +
+        memberFilterConfig.SpatialFilter.Countries.IdFieldName + ") where b." +
+        memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+            params = [state];
 
         // Execution of the query
         client.query(query, params, function(err, result) {
