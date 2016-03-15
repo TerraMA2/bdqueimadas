@@ -60,11 +60,6 @@
     ]
   );
 
-  var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
-  var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
-  var attributesTableConfig = JSON.parse('<%- JSON.stringify(attributesTableConfig) %>');
-  var componentsConfig = JSON.parse('<%- JSON.stringify(componentsConfig) %>');
-
   var fillColors = {
     "0": "#FFEBCD",
     "100": "#FFC387",
@@ -85,7 +80,12 @@
     "50000": "#000000"
   };
 
-  BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig, componentsConfig);
+  BDQueimadas.obj.init(
+    JSON.parse('<%- JSON.stringify(filterConfig) %>'),
+    JSON.parse('<%- JSON.stringify(serverConfig) %>'),
+    JSON.parse('<%- JSON.stringify(attributesTableConfig) %>'),
+    JSON.parse('<%- JSON.stringify(componentsConfig) %>')
+  );
 
   var interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
@@ -121,6 +121,8 @@
           };
         }
       );*/
+
+      var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,

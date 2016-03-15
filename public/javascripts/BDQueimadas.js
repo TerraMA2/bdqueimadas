@@ -94,6 +94,16 @@ BDQueimadas.obj = (function() {
   };
 
   /**
+   * Returns the map server configuration.
+   * @returns {json} memberServerConfig - Map server configuration
+   *
+   * @function getServerConfig
+   */
+  var getServerConfig = function() {
+    return memberServerConfig;
+  };
+
+  /**
    * Returns the fires layer attributes table configuration.
    * @returns {json} memberAttributesTableConfig - Attributes table configuration
    *
@@ -146,12 +156,12 @@ BDQueimadas.obj = (function() {
    * @function loadComponents
    */
   var loadComponents = function(i) {
-    if(i < componentsConfig.Components.length) {
+    if(i < memberComponentsConfig.Components.length) {
       $.ajax({
-        url: "/javascripts/components/" + componentsConfig[componentsConfig.Components[i]],
+        url: "/javascripts/components/" + memberComponentsConfig[memberComponentsConfig.Components[i]],
         dataType: "script",
         success: function() {
-          BDQueimadas.components[componentsConfig.Components[i]].init();
+          BDQueimadas.components[memberComponentsConfig.Components[i]].init();
           loadComponents(++i);
         }
       });
@@ -495,6 +505,7 @@ BDQueimadas.obj = (function() {
     getFeatures: getFeatures,
     getSocket: getSocket,
   	getFilterConfig: getFilterConfig,
+    getServerConfig: getServerConfig,
     getAttributesTableConfig: getAttributesTableConfig,
   	randomText: randomText,
   	init: init

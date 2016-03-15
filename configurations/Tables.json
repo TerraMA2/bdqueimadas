@@ -1,0 +1,29 @@
+{
+  "Continents": {
+    "TableName": "paises",
+    "IdFieldName": "unregion1",
+    "NameFieldName": "unregion1",
+    "GeometryFieldName": "geom"
+  },
+  "Countries": {
+    "TableName": "paises",
+    "IdFieldName": "id_0",
+    "NameFieldName": "name_0",
+    "GeometryFieldName": "geom"
+  },
+  "States": {
+    "TableName": "estados",
+    "IdFieldName": "gid",
+    "NameFieldName": "name_1",
+    "GeometryFieldName": "geom"
+  },
+  "Fires": {
+    "TableName": "focos",
+    "IdFieldName": "gid",
+    "DateFieldName": "data",
+    "TimeFieldName": "horagmt",
+    "SatelliteFieldName": "satelite",
+    "CountryFieldName": "pais",
+    "GeometryFieldName": "geom"
+  }
+}

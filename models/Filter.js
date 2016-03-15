@@ -9,6 +9,7 @@
  * @property {object} memberPath - 'path' module.
  * @property {object} memberPgConnectionString - 'PgConnectionString' module.
  * @property {json} memberFilterConfig - Filter configuration.
+ * @property {json} memberTablesConfig - Tables configuration.
  * @property {object} memberPg - 'pg' module.
  */
 var Filter = function() {
@@ -19,6 +20,8 @@ var Filter = function() {
   var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString.js')))();
   // Filter configuration
   var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter.json'));
+  // Tables configuration
+  var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // 'pg' module
   var memberPg = require('pg');
 
@@ -38,7 +41,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberFilterConfig.SpatialFilter.Countries.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.Countries.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
             params = [countryId];
 
         // Execution of the query
@@ -67,7 +70,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberFilterConfig.SpatialFilter.States.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.States.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [stateId];
 
         // Execution of the query
@@ -95,8 +98,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " order by " +
-        memberFilterConfig.SpatialFilter.Continents.NameFieldName + " asc;";
+        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, function(err, result) {
@@ -124,7 +126,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -153,13 +155,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " as id, a." +
-        memberFilterConfig.SpatialFilter.Continents.NameFieldName + " as name from " +
-        memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName +
-        " a inner join " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName +
-        " b on (a." + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = b." +
-        memberFilterConfig.SpatialFilter.Countries.IdFieldName + ") where b." +
-        memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Continents.IdFieldName + " as id, a." + memberTablesConfig.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " a inner join " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -188,13 +184,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " as id, a." +
-        memberFilterConfig.SpatialFilter.Countries.NameFieldName + " as name from " +
-        memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName +
-        " a inner join " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName +
-        " b on (a." + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = b." +
-        memberFilterConfig.SpatialFilter.Countries.IdFieldName + ") where b." +
-        memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -223,7 +213,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.Countries.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " = $1 order by " + memberFilterConfig.SpatialFilter.Countries.NameFieldName + " asc;",
+        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
             params = [continent];
 
         // Execution of the query
@@ -252,7 +242,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberFilterConfig.SpatialFilter.States.IdFieldName + " as id, " + memberFilterConfig.SpatialFilter.States.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1 order by " + memberFilterConfig.SpatialFilter.States.NameFieldName + " asc;",
+        var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 order by " + memberTablesConfig.States.NameFieldName + " asc;",
             params = [country];
 
         // Execution of the query
@@ -281,7 +271,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberFilterConfig.SpatialFilter.Continents.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Continents.TableName + " where " + memberFilterConfig.SpatialFilter.Continents.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
             params = [continent];
 
         // Execution of the query
@@ -310,7 +300,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberFilterConfig.SpatialFilter.Countries.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.Countries.TableName + " where " + memberFilterConfig.SpatialFilter.Countries.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -339,7 +329,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberFilterConfig.SpatialFilter.States.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter.States.TableName + " where " + memberFilterConfig.SpatialFilter.States.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -368,7 +358,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) as firescount from " + memberPgConnectionString.getSchema() + ".focos where pais = $1;",
+        var query = "select count(*) as firescount from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.CountryFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -400,18 +390,13 @@ var Filter = function() {
 
         var key = "States";
 
-        if(resolution >= memberFilterConfig.SpatialFilter.Continents.DoubleclickMinimumResolution)
+        if(resolution >= memberFilterConfig.SpatialFilter.ContinentsDoubleclickMinimumResolution)
           key = "Continents";
-        else if(resolution >= memberFilterConfig.SpatialFilter.Countries.DoubleclickMinimumResolution && resolution < memberFilterConfig.SpatialFilter.Countries.DoubleclickMaximumResolution)
+        else if(resolution >= memberFilterConfig.SpatialFilter.CountriesDoubleclickMinimumResolution && resolution < memberFilterConfig.SpatialFilter.CountriesDoubleclickMaximumResolution)
           key = "Countries";
 
         // Creation of the query
-        var query = "SELECT ST_Extent(" + memberFilterConfig.SpatialFilter[key].GeometryFieldName + ") as extent, " +
-                    memberFilterConfig.SpatialFilter[key].IdFieldName + " as id, " +
-                    memberFilterConfig.SpatialFilter[key].NameFieldName + " as name, '" + key + "' as key FROM " +
-                    memberPgConnectionString.getSchema() + "." + memberFilterConfig.SpatialFilter[key].TableName + " WHERE ST_Intersects(" +
-                    memberFilterConfig.SpatialFilter[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326)) group by " +
-                    memberFilterConfig.SpatialFilter[key].IdFieldName + ", " + memberFilterConfig.SpatialFilter[key].NameFieldName + ";",
+        var query = "SELECT ST_Extent(" + memberTablesConfig[key].GeometryFieldName + ") as extent, " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key FROM " + memberPgConnectionString.getSchema() + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326)) group by " + memberTablesConfig[key].IdFieldName + ", " + memberTablesConfig[key].NameFieldName + ";",
             params = [longitude, latitude];
 
         // Execution of the query

@@ -249,16 +249,16 @@ BDQueimadas.components.Filter = (function() {
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
         TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
-          if(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution() < filterConfig.SpatialFilter.FiresLayerMaximumResolution) {
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, false);
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, true);
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.StatesLayerName, true);
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.CountriesLayerName, true);
+          if(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution() < BDQueimadas.obj.getFilterConfig().SpatialFilter.FiresLayerMaximumResolution) {
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresLayerName, true);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().StatesLayerName, true);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().CountriesLayerName, true);
           } else {
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresChoroplethLayerName, true);
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.FiresLayerName, false);
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.StatesLayerName, false);
-            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(serverConfig.CountriesLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerName, true);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().StatesLayerName, false);
+            TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().CountriesLayerName, false);
           }
         });
 

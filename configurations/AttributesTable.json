@@ -1,9 +1,4 @@
 {
-  "Name": "focos",
-  "DateFieldName": "data",
-  "TimeFieldName": "horagmt",
-  "SatelliteFieldName": "satelite",
-  "GeometryFieldName": "geom",
   "Columns": [
     {
       "Name": "gid",
