@@ -84,10 +84,13 @@
     JSON.parse('<%- JSON.stringify(filterConfig) %>'),
     JSON.parse('<%- JSON.stringify(serverConfig) %>'),
     JSON.parse('<%- JSON.stringify(attributesTableConfig) %>'),
-    JSON.parse('<%- JSON.stringify(componentsConfig) %>')
+    JSON.parse('<%- JSON.stringify(componentsConfig) %>'),
+    JSON.parse('<%- JSON.stringify(mapSubtitleConfig) %>')
   );
 
-  var interval = window.setInterval(function() {
+  var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
+
+  var terrama2Interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
 
       /*TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer(
@@ -122,8 +125,6 @@
         }
       );*/
 
-      var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
-
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
@@ -160,7 +161,15 @@
         false
       );
 
-      clearInterval(interval);
+      clearInterval(terrama2Interval);
+    }
+  }, 10);
+
+  var bdqueimadasInterval = window.setInterval(function() {
+    if(BDQueimadas.obj.isComponentsLoaded()) {
+      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.FiresChoroplethLayerName);
+
+      clearInterval(bdqueimadasInterval);
     }
   }, 10);
 </script>

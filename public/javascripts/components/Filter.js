@@ -249,16 +249,20 @@ BDQueimadas.components.Filter = (function() {
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
         TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
-          if(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution() < BDQueimadas.obj.getFilterConfig().SpatialFilter.FiresLayerMaximumResolution) {
+          if(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution() < BDQueimadas.obj.getFilterConfig().SpatialFilter.FiresLayerMaximumResolution && TerraMA2WebComponents.webcomponents.MapDisplay.isLayerVisible(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerName)) {
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerName, false);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresLayerName, true);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().StatesLayerName, true);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().CountriesLayerName, true);
-          } else {
+
+            BDQueimadas.components.MapSubtitle.removeSubtitle(serverConfig.FiresChoroplethLayerName);
+          } else if(!TerraMA2WebComponents.webcomponents.MapDisplay.isLayerVisible(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerName)) {
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerName, true);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().FiresLayerName, false);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().StatesLayerName, false);
             TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityByName(BDQueimadas.obj.getServerConfig().CountriesLayerName, false);
+
+            BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.FiresChoroplethLayerName);
           }
         });
 

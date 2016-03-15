@@ -14,6 +14,7 @@ window.BDQueimadas = {
  * @property {json} memberServerConfig - Mapping server configuration.
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
  * @property {json} memberComponentsConfig - Components configuration.
+ * @property {json} memberMapSubtitleConfig - Map subtitle configuration.
  * @property {string} memberFeatureDescription - Fires layer feature description.
  * @property {string} memberFeatures - Fires layer features.
  * @property {object} memberSocket - Socket object.
@@ -34,6 +35,8 @@ BDQueimadas.obj = (function() {
   var memberAttributesTableConfig = null;
   // Components configuration
   var memberComponentsConfig = null;
+  // Map subtitle configuration
+  var memberMapSubtitleConfig = null;
   // Fires layer feature description
   var memberFeatureDescription = null;
   // Fires layer features
@@ -114,6 +117,16 @@ BDQueimadas.obj = (function() {
   };
 
   /**
+   * Returns the map subtitle configuration.
+   * @returns {json} memberMapSubtitleConfig - Map subtitle configuration
+   *
+   * @function getMapSubtitleConfig
+   */
+  var getMapSubtitleConfig = function() {
+    return memberMapSubtitleConfig;
+  };
+
+  /**
    * Generates a random text.
    * @returns {string} random - Random text
    *
@@ -137,15 +150,17 @@ BDQueimadas.obj = (function() {
    * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
+   * @param {json} mapSubtitleConfig - Map subtitle configuration
    *
    * @private
    * @function loadConfigurations
    */
-  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig) {
+  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
     memberFilterConfig = filterConfig;
     memberServerConfig = serverConfig;
     memberAttributesTableConfig = attributesTableConfig;
     memberComponentsConfig = componentsConfig;
+    memberMapSubtitleConfig = mapSubtitleConfig;
   };
 
   /**
@@ -486,20 +501,31 @@ BDQueimadas.obj = (function() {
   };
 
   /**
+   * Returns the flag that indicates if all the components have been loaded.
+   * @returns {boolean} memberComponentsLoaded - Flag that indicates if all the components have been loaded
+   *
+   * @function isComponentsLoaded
+   */
+  var isComponentsLoaded = function() {
+    return memberComponentsLoaded;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {json} filterConfig - Filter configuration
    * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
+   * @param {json} mapSubtitleConfig - Map subtitle configuration
    *
    * @function init
    */
-  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig) {
+  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
     $(document).ready(function() {
       updateSizeVars();
       setFullContentSize();
       loadEvents();
-      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig);
+      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -522,7 +548,9 @@ BDQueimadas.obj = (function() {
   	getFilterConfig: getFilterConfig,
     getServerConfig: getServerConfig,
     getAttributesTableConfig: getAttributesTableConfig,
+    getMapSubtitleConfig: getMapSubtitleConfig,
   	randomText: randomText,
+    isComponentsLoaded: isComponentsLoaded,
   	init: init
   };
 })();
