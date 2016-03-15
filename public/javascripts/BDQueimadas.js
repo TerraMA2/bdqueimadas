@@ -23,6 +23,7 @@ window.BDQueimadas = {
  * @property {number} memberNavbarHeight - Navbar height.
  * @property {number} memberContentHeaderHeight - Content header height.
  * @property {number} memberReducedFooterHeight - Reduced footer height.
+ * @property {number} memberMapSubtitleHeight - Map subtitle height.
  * @property {boolean} memberComponentsLoaded - Flag that indicates if all the components have been loaded.
  */
 BDQueimadas.obj = (function() {
@@ -53,6 +54,8 @@ BDQueimadas.obj = (function() {
   var memberContentHeaderHeight = null;
   // Reduced footer height
   var memberReducedFooterHeight = 12;
+  // Map subtitle height
+  var memberMapSubtitleHeight = null;
   // Flag that indicates if all the components have been loaded
   var memberComponentsLoaded = false;
 
@@ -470,6 +473,7 @@ BDQueimadas.obj = (function() {
     memberHeaderHeight = $('.main-header').outerHeight();
     memberNavbarHeight = $('.navbar').outerHeight();
     memberContentHeaderHeight = $(".content-wrapper > .content-header").outerHeight();
+    memberMapSubtitleHeight = $('#map-subtitle').outerHeight();
   };
 
   /**
