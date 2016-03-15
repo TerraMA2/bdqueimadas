@@ -317,6 +317,21 @@ BDQueimadas.obj = (function() {
       var interval = window.setInterval(function() { TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize(); }, 10);
       window.setTimeout(function() { clearInterval(interval); }, 300);
     });
+
+    // Control sidebar toggle click event
+    $('#control-sidebar-btn').on('click', function() {
+
+      // Adjusts the position of the zoom control, attribution button and subtitle when the control sidebar opens or closes
+      if($('.control-sidebar').hasClass('control-sidebar-open')) {
+        $('.ol-zoom').animate({ 'right': '60px' }, { duration: 300, queue: false });
+        $('.ol-attribution').animate({ 'right': '60px' }, { duration: 300, queue: false });
+        $('#map-subtitle').animate({ 'right': '45px' }, { duration: 300, queue: false });
+      } else {
+        $('.ol-zoom').animate({ 'right': '15px' }, { duration: 300, queue: false });
+        $('.ol-attribution').animate({ 'right': '15px' }, { duration: 300, queue: false });
+        $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
+      }
+    });
   };
 
   /**
