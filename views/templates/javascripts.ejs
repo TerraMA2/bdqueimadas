@@ -156,6 +156,13 @@
         true
       );
 
+      TerraMA2WebComponents.webcomponents.LayerExplorer.addCapabilitiesLayers(
+        serverConfig.URL + serverConfig.CapabilitiesParams,
+        serverConfig.URL,
+        'geoserver',
+        'Local'
+      );
+
       clearInterval(terrama2Interval);
     }
   }, 10);
