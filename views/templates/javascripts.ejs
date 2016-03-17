@@ -89,6 +89,7 @@
   );
 
   var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
+  var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
 
   var terrama2Interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
@@ -127,40 +128,54 @@
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
-        serverConfig.StatesLayerName,
-        serverConfig.StatesLayerName,
-        false
+        serverConfig.StatesLayerId,
+        serverConfig.StatesLayerId,
+        true,
+        filterConfig.SpatialFilter.StatesMinimumResolution,
+        filterConfig.SpatialFilter.StatesMaximumResolution
       );
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
-        serverConfig.CountriesLayerName,
-        serverConfig.CountriesLayerName,
-        false
+        serverConfig.CountriesLayerId,
+        serverConfig.CountriesLayerId,
+        true,
+        filterConfig.SpatialFilter.CountriesMinimumResolution,
+        filterConfig.SpatialFilter.CountriesMaximumResolution
       );
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
-        serverConfig.FiresLayerName,
-        serverConfig.FiresLayerName,
-        false
+        serverConfig.FiresLayerId,
+        serverConfig.FiresLayerId,
+        true,
+        filterConfig.SpatialFilter.FiresMinimumResolution,
+        filterConfig.SpatialFilter.FiresMaximumResolution
       );
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.URL,
         serverConfig.Type,
-        serverConfig.FiresChoroplethLayerName,
-        serverConfig.FiresChoroplethLayerName,
-        true
+        serverConfig.FiresChoroplethLayerId,
+        serverConfig.FiresChoroplethLayerId,
+        true,
+        filterConfig.SpatialFilter.FiresChoroplethMinimumResolution,
+        filterConfig.SpatialFilter.FiresChoroplethMaximumResolution
       );
 
-      TerraMA2WebComponents.webcomponents.LayerExplorer.addCapabilitiesLayers(
+      TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addCapabilitiesLayers(
         serverConfig.URL + serverConfig.CapabilitiesParams,
         serverConfig.URL,
         'geoserver',
-        'Local'
+        'local',
+        'Local Server',
+        function() {
+          TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('local');
+        }
       );
 
       clearInterval(terrama2Interval);
@@ -169,7 +184,7 @@
 
   var bdqueimadasInterval = window.setInterval(function() {
     if(BDQueimadas.obj.isComponentsLoaded()) {
-      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.FiresChoroplethLayerName);
+      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.FiresChoroplethLayerId);
 
       clearInterval(bdqueimadasInterval);
     }

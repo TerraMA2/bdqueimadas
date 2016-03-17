@@ -10,8 +10,8 @@
   "Name": "Geoserver Local",
   "GetFeatureParams": "?service=WFS&version=1.0.0&request=getfeature&outputFormat=application/json&typename=",
   "DescribeFeatureTypeParams": "?service=WFS&request=describeFeatureType&outputformat=application/json&typename=",
-  "FiresChoroplethLayerName": "sde:Paises_SQL_FOCOS",
-  "FiresLayerName": "focos:focos_20151210-14",
-  "CountriesLayerName": "sde:countries",
-  "StatesLayerName": "sde:estados"
+  "FiresChoroplethLayerId": "sde:Paises_SQL_FOCOS",
+  "FiresLayerId": "focos:focos_20151210-14",
+  "CountriesLayerId": "sde:countries",
+  "StatesLayerId": "sde:estados"
 }

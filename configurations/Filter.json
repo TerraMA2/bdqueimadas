@@ -4,13 +4,20 @@
   "DateFormat": "YYYYMMDD",
   "SatelliteFieldName": "Satelite",
   "SpatialFilter": {
-    "FiresLayerMaximumResolution": 0.025,
-    "ContinentsDoubleclickMinimumResolution": 0.35,
-    "ContinentsDoubleclickMaximumResolution": 0,
-    "CountriesDoubleclickMinimumResolution": 0.080,
-    "CountriesDoubleclickMaximumResolution": 0.35,
-    "StatesDoubleclickMinimumResolution": 0,
-    "StatesDoubleclickMaximumResolution": 0.080
+    "FiresChoroplethMinimumResolution": 0.025,
+    "FiresChoroplethMaximumResolution": "Infinity",
+
+    "ContinentsMinimumResolution": 0.35,
+    "ContinentsMaximumResolution": "Infinity",
+
+    "CountriesMinimumResolution": 0.080,
+    "CountriesMaximumResolution": 0.35,
+
+    "StatesMinimumResolution": 0,
+    "StatesMaximumResolution": 0.080,
+
+    "FiresMinimumResolution": 0,
+    "FiresMaximumResolution": 0.025
   },
   "SatellitesList": [
     {
