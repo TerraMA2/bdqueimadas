@@ -2,19 +2,19 @@
 
 BDQueimadas.components.MapSubtitle = (function() {
 
-  var addSubtitle = function(layerName) {
+  var addSubtitle = function(layerId) {
     var elem = "";
 
     $.each(BDQueimadas.obj.getMapSubtitleConfig().MapSubtitle, function(i, mapSubtitleItem) {
-      if(mapSubtitleItem.LayerName === layerName)
-        elem += "<li class=\"" + layerName.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
+      if(mapSubtitleItem.Layer === layerId)
+        elem += "<li class=\"" + layerId.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
     });
 
     $('#map-subtitle-items').append(elem);
   };
 
-  var removeSubtitle = function(layerName) {
-    $("#map-subtitle-items > li." + layerName.replace(':', '')).remove();
+  var removeSubtitle = function(layerId) {
+    $("#map-subtitle-items > li." + layerId.replace(':', '')).remove();
   };
 
   var init = function() {};
