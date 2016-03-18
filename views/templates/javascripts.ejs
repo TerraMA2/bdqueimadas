@@ -125,6 +125,9 @@
         }
       );*/
 
+      TerraMA2WebComponents.webcomponents.MapDisplay.addBaseLayers('bases', 'Camadas Bases');
+      TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
+
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
         serverConfig.Servers.Local.URL,
         serverConfig.Servers.Local.Type,
@@ -164,8 +167,6 @@
         filterConfig.SpatialFilter.FiresChoroplethMinimumResolution,
         filterConfig.SpatialFilter.FiresChoroplethMaximumResolution
       );
-
-      TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addCapabilitiesLayers(
         serverConfig.Servers.Local.URL + serverConfig.Servers.Local.CapabilitiesParams,
