@@ -60,11 +60,6 @@
     ]
   );
 
-  var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
-  var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
-  var attributesTableConfig = JSON.parse('<%- JSON.stringify(attributesTableConfig) %>');
-  var componentsConfig = JSON.parse('<%- JSON.stringify(componentsConfig) %>');
-
   var fillColors = {
     "0": "#FFEBCD",
     "100": "#FFC387",
@@ -85,16 +80,24 @@
     "50000": "#000000"
   };
 
-  BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig, componentsConfig);
+  BDQueimadas.obj.init(
+    JSON.parse('<%- JSON.stringify(filterConfig) %>'),
+    JSON.parse('<%- JSON.stringify(serverConfig) %>'),
+    JSON.parse('<%- JSON.stringify(attributesTableConfig) %>'),
+    JSON.parse('<%- JSON.stringify(componentsConfig) %>'),
+    JSON.parse('<%- JSON.stringify(mapSubtitleConfig) %>')
+  );
 
-  var interval = window.setInterval(function() {
+  var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
+  var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
+
+  var terrama2Interval = window.setInterval(function() {
     if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
 
       /*TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer(
         'http://localhost:38000/get-countries-layer-features',
         'countries',
         'countries',
-        true,
         true,
         fillColors,
         strokeColors,
@@ -123,42 +126,67 @@
       );*/
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.StatesLayerName,
-        serverConfig.StatesLayerName,
-        false,
-        false
-      );
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.CountriesLayerName,
-        serverConfig.CountriesLayerName,
-        false,
-        false
-      );
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.FiresLayerName,
-        serverConfig.FiresLayerName,
-        false,
-        false
-      );
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.FiresChoroplethLayerName,
-        serverConfig.FiresChoroplethLayerName,
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.StatesLayerId,
+        serverConfig.Servers.Local.StatesLayerId,
         true,
-        false
+        filterConfig.SpatialFilter.StatesMinimumResolution,
+        filterConfig.SpatialFilter.StatesMaximumResolution
       );
 
-      clearInterval(interval);
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.CountriesLayerId,
+        serverConfig.Servers.Local.CountriesLayerId,
+        true,
+        filterConfig.SpatialFilter.CountriesMinimumResolution,
+        filterConfig.SpatialFilter.CountriesMaximumResolution
+      );
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.FiresLayerId,
+        serverConfig.Servers.Local.FiresLayerId,
+        true,
+        filterConfig.SpatialFilter.FiresMinimumResolution,
+        filterConfig.SpatialFilter.FiresMaximumResolution
+      );
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.FiresChoroplethLayerId,
+        serverConfig.Servers.Local.FiresChoroplethLayerId,
+        true,
+        filterConfig.SpatialFilter.FiresChoroplethMinimumResolution,
+        filterConfig.SpatialFilter.FiresChoroplethMaximumResolution
+      );
+
+      TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
+
+      TerraMA2WebComponents.webcomponents.MapDisplay.addCapabilitiesLayers(
+        serverConfig.Servers.Local.URL + serverConfig.Servers.Local.CapabilitiesParams,
+        serverConfig.Servers.Local.URL,
+        'geoserver',
+        'local',
+        'Local Server',
+        function() {
+          TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('local');
+        }
+      );
+
+      clearInterval(terrama2Interval);
+    }
+  }, 10);
+
+  var bdqueimadasInterval = window.setInterval(function() {
+    if(BDQueimadas.obj.isComponentsLoaded()) {
+      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.Servers.Local.FiresChoroplethLayerId);
+
+      clearInterval(bdqueimadasInterval);
     }
   }, 10);
 </script>

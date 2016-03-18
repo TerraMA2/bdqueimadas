@@ -1,7 +1,8 @@
 {
-  "Components": ["Filter", "AttributesTable", "Graphics", "Map"],
+  "Components": ["Filter", "AttributesTable", "Graphics", "Map", "MapSubtitle"],
   "Filter": "Filter.js",
   "AttributesTable": "AttributesTable.js",
   "Graphics": "graphics.js",
-  "Map": "Map.js"
+  "Map": "Map.js",
+  "MapSubtitle": "MapSubtitle.js"
 }

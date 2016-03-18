@@ -14,13 +14,7 @@
       <% include templates/leftbar %>
       <% include templates/leftContentBoxes %>
       <div class="content-wrapper">
-        <section class="content-header logo-bdqueimadas">
-          <h1>Banco de Dados de Queimadas</h1>
-          <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Banco de Dados de Queimadas</li>
-          </ol>
-        </section>
+        <section class="content-header logo-bdqueimadas"><h1>Banco de Dados de Queimadas</h1></section>
         <section class="content">
           <div id="welcome">
             <img src="images/welcome.jpg">
@@ -31,7 +25,21 @@
             </div>
           </div>
           <div class="row">
-            <div id="terrama2-map" class="terrama2-map fullmenu cursor-move"></div>
+            <div id="terrama2-map" class="terrama2-map fullmenu cursor-move">
+              <div id="map-subtitle" class="col-md-3">
+                <div class="box box-solid">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Legendas</h3>
+                    <div class="box-tools">
+                      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                  </div>
+                  <div class="box-body no-padding">
+                    <ul class="nav nav-pills nav-stacked" id="map-subtitle-items"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>

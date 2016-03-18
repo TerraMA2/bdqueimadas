@@ -24,6 +24,7 @@ BDQueimadas.components.Map = (function() {
         resetMapMouseTools();
         initialExtent();
         activeMoveMapTool();
+        BDQueimadas.components.Filter.resetDropdowns();
       });
     });
   };

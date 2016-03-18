@@ -4,31 +4,20 @@
   "DateFormat": "YYYYMMDD",
   "SatelliteFieldName": "Satelite",
   "SpatialFilter": {
-    "FiresLayerMaximumResolution": 0.025,
-    "Continents": {
-      "TableName": "paises",
-      "IdFieldName": "unregion1",
-      "NameFieldName": "unregion1",
-      "GeometryFieldName": "geom",
-      "DoubleclickMinimumResolution": 0.35,
-      "DoubleclickMaximumResolution": 0
-    },
-    "Countries": {
-      "TableName": "paises",
-      "IdFieldName": "id_0",
-      "NameFieldName": "name_0",
-      "GeometryFieldName": "geom",
-      "DoubleclickMinimumResolution": 0.080,
-      "DoubleclickMaximumResolution": 0.35
-    },
-    "States": {
-      "TableName": "estados",
-      "IdFieldName": "gid",
-      "NameFieldName": "name_1",
-      "GeometryFieldName": "geom",
-      "DoubleclickMinimumResolution": 0,
-      "DoubleclickMaximumResolution": 0.080
-    }
+    "FiresChoroplethMinimumResolution": 0.025,
+    "FiresChoroplethMaximumResolution": "Infinity",
+
+    "ContinentsMinimumResolution": 0.35,
+    "ContinentsMaximumResolution": "Infinity",
+
+    "CountriesMinimumResolution": 0.080,
+    "CountriesMaximumResolution": 0.35,
+
+    "StatesMinimumResolution": 0,
+    "StatesMaximumResolution": 0.080,
+
+    "FiresMinimumResolution": 0,
+    "FiresMaximumResolution": 0.025
   },
   "SatellitesList": [
     {
