@@ -17,11 +17,23 @@ BDQueimadas.components.MapSubtitle = (function() {
     $("#map-subtitle-items > li." + layerId.replace(':', '')).remove();
   };
 
+  var showSubtitle = function(layerId) {
+    if(!$("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
+      $("#map-subtitle-items > li." + layerId.replace(':', '')).show();
+  };
+
+  var hideSubtitle = function(layerId) {
+    if($("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
+      $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
+  };
+
   var init = function() {};
 
   return {
     init: init,
     addSubtitle: addSubtitle,
-    removeSubtitle: removeSubtitle
+    removeSubtitle: removeSubtitle,
+    showSubtitle: showSubtitle,
+    hideSubtitle: hideSubtitle
   };
 })();

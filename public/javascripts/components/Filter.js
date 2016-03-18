@@ -249,10 +249,10 @@ BDQueimadas.components.Filter = (function() {
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
         TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
-          if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(BDQueimadas.obj.getServerConfig().FiresChoroplethLayerId)) {
-            BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.FiresChoroplethLayerId);
+          if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId)) {
+            BDQueimadas.components.MapSubtitle.showSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
           } else {
-            BDQueimadas.components.MapSubtitle.removeSubtitle(serverConfig.FiresChoroplethLayerId);
+            BDQueimadas.components.MapSubtitle.hideSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
           }
         });
 

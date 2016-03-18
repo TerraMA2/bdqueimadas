@@ -200,7 +200,7 @@ BDQueimadas.obj = (function() {
     memberSocket.emit(
       'proxyRequest',
       {
-        url: memberServerConfig.URL + memberServerConfig.DescribeFeatureTypeParams + memberFilterConfig.LayerToFilter,
+        url: memberServerConfig.Servers.Local.URL + memberServerConfig.Servers.Local.DescribeFeatureTypeParams + memberFilterConfig.LayerToFilter,
         requestId: requestId
       }
     );
@@ -223,7 +223,7 @@ BDQueimadas.obj = (function() {
     memberSocket.emit(
       'proxyRequest',
       {
-        url: memberServerConfig.URL + memberServerConfig.GetFeatureParams + memberFilterConfig.LayerToFilter,
+        url: memberServerConfig.Servers.Local.URL + memberServerConfig.Servers.Local.GetFeatureParams + memberFilterConfig.LayerToFilter,
         requestId: requestId
       }
     );

@@ -126,40 +126,40 @@
       );*/
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.StatesLayerId,
-        serverConfig.StatesLayerId,
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.StatesLayerId,
+        serverConfig.Servers.Local.StatesLayerId,
         true,
         filterConfig.SpatialFilter.StatesMinimumResolution,
         filterConfig.SpatialFilter.StatesMaximumResolution
       );
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.CountriesLayerId,
-        serverConfig.CountriesLayerId,
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.CountriesLayerId,
+        serverConfig.Servers.Local.CountriesLayerId,
         true,
         filterConfig.SpatialFilter.CountriesMinimumResolution,
         filterConfig.SpatialFilter.CountriesMaximumResolution
       );
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.FiresLayerId,
-        serverConfig.FiresLayerId,
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.FiresLayerId,
+        serverConfig.Servers.Local.FiresLayerId,
         true,
         filterConfig.SpatialFilter.FiresMinimumResolution,
         filterConfig.SpatialFilter.FiresMaximumResolution
       );
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.URL,
-        serverConfig.Type,
-        serverConfig.FiresChoroplethLayerId,
-        serverConfig.FiresChoroplethLayerId,
+        serverConfig.Servers.Local.URL,
+        serverConfig.Servers.Local.Type,
+        serverConfig.Servers.Local.FiresChoroplethLayerId,
+        serverConfig.Servers.Local.FiresChoroplethLayerId,
         true,
         filterConfig.SpatialFilter.FiresChoroplethMinimumResolution,
         filterConfig.SpatialFilter.FiresChoroplethMaximumResolution
@@ -168,8 +168,8 @@
       TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
 
       TerraMA2WebComponents.webcomponents.MapDisplay.addCapabilitiesLayers(
-        serverConfig.URL + serverConfig.CapabilitiesParams,
-        serverConfig.URL,
+        serverConfig.Servers.Local.URL + serverConfig.Servers.Local.CapabilitiesParams,
+        serverConfig.Servers.Local.URL,
         'geoserver',
         'local',
         'Local Server',
@@ -184,7 +184,7 @@
 
   var bdqueimadasInterval = window.setInterval(function() {
     if(BDQueimadas.obj.isComponentsLoaded()) {
-      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.FiresChoroplethLayerId);
+      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.Servers.Local.FiresChoroplethLayerId);
 
       clearInterval(bdqueimadasInterval);
     }
