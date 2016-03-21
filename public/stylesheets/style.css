@@ -93,7 +93,7 @@
   left: -350px;
   margin-top: 286px;
   height: calc(100% - 318px);
-  overflow: auto;
+  overflow: auto !important;
 }
 
 .fullscreen {
