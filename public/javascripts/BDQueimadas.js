@@ -302,10 +302,10 @@ BDQueimadas.obj = (function() {
       // Elements sizes adjustments, accordingly with the sidebar width
       if($("body").hasClass('sidebar-collapse')) {
         $("#terrama2-map").removeClass('fullmenu');
-        setReducedContentSize();
+        setReducedContentSize(300);
       } else {
         $("#terrama2-map").addClass('fullmenu');
-        setFullContentSize();
+        setFullContentSize(300);
       }
 
       // Updates the map size
@@ -318,21 +318,22 @@ BDQueimadas.obj = (function() {
       closeAllLeftContentBoxes();
       closeLeftContentBoxBackground();
 
-      // Updates the variables that keep DOM elements sizes
-      updateSizeVars();
+      // Executes map / DOM elements size updates during 300 milliseconds, with intervals of 10 milliseconds
+      var interval = window.setInterval(function() {
+        // Updates the variables that keep DOM elements sizes
+        updateSizeVars();
 
-      // Elements sizes adjustments, accordingly with the sidebar width
-      if($("body").hasClass('sidebar-collapse')) {
-        setReducedContentSize();
-      } else {
-        setFullContentSize();
-      }
+        // Elements sizes adjustments, accordingly with the sidebar width
+        if($("body").hasClass('sidebar-collapse'))
+          setReducedContentSize(0);
+        else
+          setFullContentSize(0);
 
-      // Updates the padding top of the sidebar
-      $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+        // Updates the padding top of the sidebar
+        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
-      // Executes map size updates during 300 milliseconds, with intervals of 10 milliseconds
-      var interval = window.setInterval(function() { TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize(); }, 10);
+        TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
+      }, 10);
       window.setTimeout(function() { clearInterval(interval); }, 300);
     });
 
@@ -478,30 +479,32 @@ BDQueimadas.obj = (function() {
 
   /**
    * Updates content to full size.
+   * @param {int} duration - Duration of the animation
    *
    * @private
    * @function setFullContentSize
    */
-  var setFullContentSize = function() {
-    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
-    $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+  var setFullContentSize = function(duration) {
+    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
+    $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-    $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
-    $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
+    $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+    $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
   };
 
   /**
    * Updates content to reduced size.
+   * @param {int} duration - Duration of the animation
    *
    * @private
    * @function setReducedContentSize
    */
-  var setReducedContentSize = function() {
-    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
-    $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+  var setReducedContentSize = function(duration) {
+    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
+    $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-    $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
-    $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
+    $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+    $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
   };
 
   /**
@@ -526,8 +529,12 @@ BDQueimadas.obj = (function() {
    */
   var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
     $(document).ready(function() {
-      updateSizeVars();
-      setFullContentSize();
+      var interval = window.setInterval(function() {
+        updateSizeVars();
+        setFullContentSize(300);
+      }, 10);
+      window.setTimeout(function() { clearInterval(interval); }, 300);
+
       loadEvents();
       loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig);
       loadPlugins();
