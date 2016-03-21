@@ -263,8 +263,6 @@
   transition: width 0.3s ease-in-out;
 }
 
-#terrama2-map .ol-zoom { top: 230px !important; }
-
 /* AdminLTEQueimadas general adjustments */
 
 .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu { display: none !important; }
