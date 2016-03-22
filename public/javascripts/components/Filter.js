@@ -250,9 +250,9 @@ BDQueimadas.components.Filter = (function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
         TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
           if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId)) {
-            BDQueimadas.components.MapSubtitle.showSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
+            BDQueimadas.components.Map.showSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
           } else {
-            BDQueimadas.components.MapSubtitle.hideSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
+            BDQueimadas.components.Map.hideSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
           }
         });
 
