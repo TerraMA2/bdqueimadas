@@ -24,14 +24,14 @@ var terrama2Interval = window.setInterval(function() {
     */
 
     TerraMA2WebComponents.webcomponents.MapDisplay.addBaseLayers('bases', 'Camadas Bases');
-    TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
-    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.StatesLayerId, serverConfig.Servers.Local.StatesLayerId, true, filterConfig.SpatialFilter.StatesMinimumResolution, filterConfig.SpatialFilter.StatesMaximumResolution);
-    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.CountriesLayerId, serverConfig.Servers.Local.CountriesLayerId, true, filterConfig.SpatialFilter.CountriesMinimumResolution, filterConfig.SpatialFilter.CountriesMaximumResolution);
-    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.FiresLayerId, serverConfig.Servers.Local.FiresLayerId, true, filterConfig.SpatialFilter.FiresMinimumResolution, filterConfig.SpatialFilter.FiresMaximumResolution);
-    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.FiresChoroplethLayerId, serverConfig.Servers.Local.FiresChoroplethLayerId, true, filterConfig.SpatialFilter.FiresChoroplethMinimumResolution, filterConfig.SpatialFilter.FiresChoroplethMaximumResolution);
+
+    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.StatesLayerId, serverConfig.Servers.Local.StatesLayerId, true, filterConfig.SpatialFilter.StatesMinimumResolution, filterConfig.SpatialFilter.StatesMaximumResolution, 'root');
+    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.CountriesLayerId, serverConfig.Servers.Local.CountriesLayerId, true, filterConfig.SpatialFilter.CountriesMinimumResolution, filterConfig.SpatialFilter.CountriesMaximumResolution, 'root');
+    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.FiresLayerId, serverConfig.Servers.Local.FiresLayerId, true, filterConfig.SpatialFilter.FiresMinimumResolution, filterConfig.SpatialFilter.FiresMaximumResolution, 'root');
+    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(serverConfig.Servers.Local.URL, serverConfig.Servers.Local.Type, serverConfig.Servers.Local.FiresChoroplethLayerId, serverConfig.Servers.Local.FiresChoroplethLayerId, true, filterConfig.SpatialFilter.FiresChoroplethMinimumResolution, filterConfig.SpatialFilter.FiresChoroplethMaximumResolution, 'root');
     TerraMA2WebComponents.webcomponents.MapDisplay.addCapabilitiesLayers(serverConfig.Servers.Local.URL + serverConfig.Servers.Local.CapabilitiesParams, serverConfig.Servers.Local.URL, 'geoserver', 'local', 'Local Server',
       function() {
-        TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('local');
+        TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('local', 'root', 'terrama2-layerexplorer');
       }
     );
 
