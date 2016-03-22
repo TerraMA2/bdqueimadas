@@ -3,7 +3,7 @@ TerraMA2WebComponents.obj.init(terrama2Path, ["MapDisplay", "LayerExplorer"]);
 var fillColors = { "0": "#FFEBCD", "100": "#FFC387", "500": "#FAA046", "1000": "#FA872D", "5000": "#FA5C25", "25000": "#C34231", "50000": "#A21C0D" };
 var strokeColors = { "0": "#000000", "100": "#000000", "500": "#000000", "1000": "#000000", "5000": "#000000", "25000": "#000000", "50000": "#000000" };
 
-BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig);
+BDQueimadas.obj.init(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig);
 
 var terrama2Interval = window.setInterval(function() {
   if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
@@ -41,7 +41,7 @@ var terrama2Interval = window.setInterval(function() {
 
 var bdqueimadasInterval = window.setInterval(function() {
   if(BDQueimadas.obj.isComponentsLoaded()) {
-    BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.Servers.Local.FiresChoroplethLayerId);
+    BDQueimadas.components.Map.addSubtitle(serverConfig.Servers.Local.FiresChoroplethLayerId);
     clearInterval(bdqueimadasInterval);
   }
 }, 10);

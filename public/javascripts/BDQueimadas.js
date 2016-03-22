@@ -14,7 +14,7 @@ window.BDQueimadas = {
  * @property {json} memberServerConfig - Mapping server configuration.
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
  * @property {json} memberComponentsConfig - Components configuration.
- * @property {json} memberMapSubtitleConfig - Map subtitle configuration.
+ * @property {json} memberMapConfig - Map configuration.
  * @property {string} memberFeatureDescription - Fires layer feature description.
  * @property {string} memberFeatures - Fires layer features.
  * @property {object} memberSocket - Socket object.
@@ -36,8 +36,8 @@ BDQueimadas.obj = (function() {
   var memberAttributesTableConfig = null;
   // Components configuration
   var memberComponentsConfig = null;
-  // Map subtitle configuration
-  var memberMapSubtitleConfig = null;
+  // Map configuration
+  var memberMapConfig = null;
   // Fires layer feature description
   var memberFeatureDescription = null;
   // Fires layer features
@@ -120,13 +120,13 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Returns the map subtitle configuration.
-   * @returns {json} memberMapSubtitleConfig - Map subtitle configuration
+   * Returns the map configuration.
+   * @returns {json} memberMapConfig - Map configuration
    *
-   * @function getMapSubtitleConfig
+   * @function getMapConfig
    */
-  var getMapSubtitleConfig = function() {
-    return memberMapSubtitleConfig;
+  var getMapConfig = function() {
+    return memberMapConfig;
   };
 
   /**
@@ -153,17 +153,17 @@ BDQueimadas.obj = (function() {
    * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
-   * @param {json} mapSubtitleConfig - Map subtitle configuration
+   * @param {json} mapConfig - Map configuration
    *
    * @private
    * @function loadConfigurations
    */
-  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
+  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig) {
     memberFilterConfig = filterConfig;
     memberServerConfig = serverConfig;
     memberAttributesTableConfig = attributesTableConfig;
     memberComponentsConfig = componentsConfig;
-    memberMapSubtitleConfig = mapSubtitleConfig;
+    memberMapConfig = mapConfig;
   };
 
   /**
@@ -361,8 +361,6 @@ BDQueimadas.obj = (function() {
    */
   var loadPlugins = function() {
     $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
-
-    //window.setTimeout(function() { $('.left-content-box').mCustomScrollbar({ axis:"yx" }); }, 3000);
   };
 
   /**
@@ -523,11 +521,11 @@ BDQueimadas.obj = (function() {
    * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
-   * @param {json} mapSubtitleConfig - Map subtitle configuration
+   * @param {json} mapConfig - Map configuration
    *
    * @function init
    */
-  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
+  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig) {
     $(document).ready(function() {
       var interval = window.setInterval(function() {
         updateSizeVars();
@@ -536,7 +534,7 @@ BDQueimadas.obj = (function() {
       window.setTimeout(function() { clearInterval(interval); }, 300);
 
       loadEvents();
-      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig);
+      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -559,7 +557,7 @@ BDQueimadas.obj = (function() {
   	getFilterConfig: getFilterConfig,
     getServerConfig: getServerConfig,
     getAttributesTableConfig: getAttributesTableConfig,
-    getMapSubtitleConfig: getMapSubtitleConfig,
+    getMapConfig: getMapConfig,
   	randomText: randomText,
     isComponentsLoaded: isComponentsLoaded,
   	init: init
