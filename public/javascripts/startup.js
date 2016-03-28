@@ -35,6 +35,18 @@ var terrama2Interval = window.setInterval(function() {
       }
     );
 
+    TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
+      'https://queimadas.dgi.inpe.br/wms/queimadas/',
+      'mapserver',
+      'npp_250m_truecolor',
+      'npp_250m_truecolor',
+      true,
+      null,
+      null,
+      'root',
+      '2016-01-01'
+    );
+
     clearInterval(terrama2Interval);
   }
 }, 10);
