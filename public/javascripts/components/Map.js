@@ -8,9 +8,13 @@
  */
 BDQueimadas.components.Map = (function() {
 
-  // new
-
-  var addLayers = function() {
+  /**
+   * Adds the layers from the map configuration file to the map.
+   *
+   * @private
+   * @function addLayersToMap
+   */
+  var addLayersToMap = function() {
     var configuration = BDQueimadas.obj.getMapConfig();
 
     $.each(configuration.LayerGroups, function(i, layerGroup) {
@@ -21,8 +25,6 @@ BDQueimadas.components.Map = (function() {
       });
     });
   };
-
-  // new
 
   /**
    * Resets the map tools to its initial state.
@@ -187,7 +189,7 @@ BDQueimadas.components.Map = (function() {
    */
   var init = function() {
     loadEvents();
-    addLayers();
+    addLayersToMap();
   };
 
   return {

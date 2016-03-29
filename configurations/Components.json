@@ -2,6 +2,6 @@
   "Components": ["Filter", "AttributesTable", "Graphics", "Map"],
   "Filter": "Filter.js",
   "AttributesTable": "AttributesTable.js",
-  "Graphics": "graphics.js",
+  "Graphics": "Graphics.js",
   "Map": "Map.js"
 }
