@@ -8,6 +8,22 @@
  */
 BDQueimadas.components.Map = (function() {
 
+  // new
+
+  var addLayers = function() {
+    var configuration = BDQueimadas.obj.getMapConfig();
+
+    $.each(configuration.LayerGroups, function(i, layerGroup) {
+      TerraMA2WebComponents.webcomponents.MapDisplay.addLayerGroup(layerGroup.Id, layerGroup.Name);
+
+      $.each(layerGroup.Layers, function(j, layer) {
+        TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layer.Name, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layer.Time);
+      });
+    });
+  };
+
+  // new
+
   /**
    * Resets the map tools to its initial state.
    *
@@ -63,8 +79,9 @@ BDQueimadas.components.Map = (function() {
    */
   var addSubtitle = function(layerId) {
     var elem = "";
+    var configuration = BDQueimadas.obj.getMapConfig();
 
-    $.each(BDQueimadas.obj.getMapConfig().Subtitle, function(i, mapSubtitleItem) {
+    $.each(configuration.Subtitle, function(i, mapSubtitleItem) {
       if(mapSubtitleItem.Layer === layerId)
         elem += "<li class=\"" + layerId.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
     });
@@ -170,6 +187,7 @@ BDQueimadas.components.Map = (function() {
    */
   var init = function() {
     loadEvents();
+    addLayers();
   };
 
   return {

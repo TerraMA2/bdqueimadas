@@ -22,22 +22,7 @@
       "FiresChoroplethLayerId": "sde:Paises_SQL_FOCOS",
       "FiresLayerId": "focos:focos_20151210-14",
       "CountriesLayerId": "sde:countries",
-      "StatesLayerId": "sde:estados",
-      "LayerGroups": [
-        {
-          "Id": "camadas_base",
-          "Name": "Camadas Base",
-          "Layers": [
-            {
-              "Id": "camadas_base",
-              "Name": "Camadas Base",
-              "Visible": false,
-              "MinResolution": 0,
-              "MaxResolution": "Infinite"
-            }
-          ]
-        }
-      ]
+      "StatesLayerId": "sde:estados"
     }
   }
 }
