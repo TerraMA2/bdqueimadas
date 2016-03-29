@@ -4,22 +4,33 @@
   "DateFormat": "YYYYMMDD",
   "SatelliteFieldName": "Satelite",
   "SpatialFilter": {
-    "FiresChoroplethMinimumResolution": 0.025,
-    "FiresChoroplethMaximumResolution": "Infinity",
-
-    "ContinentsMinimumResolution": 0.35,
-    "ContinentsMaximumResolution": "Infinity",
-
-    "CountriesMinimumResolution": 0.080,
-    "CountriesMaximumResolution": 0.35,
-
-    "StatesMinimumResolution": 0,
-    "StatesMaximumResolution": 0.080,
-
-    "FiresMinimumResolution": 0,
-    "FiresMaximumResolution": 0.025
+    "Continents": {
+      "LayerId": "",
+      "MinResolution": 0.35,
+      "MaxResolution": "Infinity"
+    },
+    "Countries": {
+      "LayerId": "sde:countries",
+      "MinResolution": 0.080,
+      "MaxResolution": 0.35
+    },
+    "States": {
+      "LayerId": "sde:estados",
+      "MinResolution": 0,
+      "MaxResolution": 0.080
+    },
+    "Fires": {
+      "LayerId": "focos:focos_20151210-14",
+      "MinResolution": 0,
+      "MaxResolution": 0.025
+    },
+    "FiresCurrentSituation": {
+      "LayerId": "sde:Paises_SQL_FOCOS",
+      "MinResolution": 0.025,
+      "MaxResolution": "Infinity"
+    }
   },
-  "SatellitesList": [
+  "Satellites": [
     {
       "Name": "NOAA-12 Noite",
       "Begin": "1998-06-01",

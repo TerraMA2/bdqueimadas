@@ -74,24 +74,25 @@ BDQueimadas.components.Map = (function() {
   };
 
   /**
-   * Adds the subtitles of a given layer to the map.
-   * @param {string} layerId - Layer id
+   * Adds the layers subtitles from the map configuration file to the map.
    *
-   * @function addSubtitle
+   * @private
+   * @function addSubtitles
    */
-  var addSubtitle = function(layerId) {
+  var addSubtitles = function() {
     var elem = "";
     var configuration = BDQueimadas.obj.getMapConfig();
 
-    $.each(configuration.Subtitle, function(i, mapSubtitleItem) {
-      if(mapSubtitleItem.Layer === layerId)
-        elem += "<li class=\"" + layerId.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
+    $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
+      elem += "<li class=\"" + mapSubtitleItem.Layer.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
     });
 
     $('#map-subtitle-items').append(elem);
 
     updateZoomTop(false);
   };
+
+  // remove
 
   /**
    * Removes the subtitles of a given layer from the map.
@@ -104,6 +105,8 @@ BDQueimadas.components.Map = (function() {
 
     updateZoomTop(false);
   };
+
+  // remove
 
   /**
    * Shows the subtitles of a given layer.
@@ -190,10 +193,10 @@ BDQueimadas.components.Map = (function() {
   var init = function() {
     loadEvents();
     addLayersToMap();
+    addSubtitles();
   };
 
   return {
-    addSubtitle: addSubtitle,
     removeSubtitle: removeSubtitle,
     showSubtitle: showSubtitle,
     hideSubtitle: hideSubtitle,

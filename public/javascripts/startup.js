@@ -14,7 +14,6 @@ var terrama2Interval = window.setInterval(function() {
 
 var bdqueimadasInterval = window.setInterval(function() {
   if(BDQueimadas.obj.isComponentsLoaded()) {
-    BDQueimadas.components.Map.addSubtitle(serverConfig.Servers.Local.FiresChoroplethLayerId);
     clearInterval(bdqueimadasInterval);
   }
 }, 10);

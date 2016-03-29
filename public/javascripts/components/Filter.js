@@ -175,7 +175,7 @@ BDQueimadas.components.Filter = (function() {
     var selectedOption = $('#filter-satellite').value;
 
     var elem = "<option value=\"all\">TODOS</option>";
-    var satellitesList = BDQueimadas.obj.getFilterConfig().SatellitesList;
+    var satellitesList = BDQueimadas.obj.getFilterConfig().Satellites;
 
     $.each(satellitesList, function(i, satelliteItem) {
       var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
@@ -249,10 +249,10 @@ BDQueimadas.components.Filter = (function() {
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
         TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
-          if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId)) {
-            BDQueimadas.components.Map.showSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
+          if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(BDQueimadas.obj.getFilterConfig().SpatialFilter.FiresCurrentSituation.LayerId)) {
+            BDQueimadas.components.Map.showSubtitle(BDQueimadas.obj.getFilterConfig().SpatialFilter.FiresCurrentSituation.LayerId);
           } else {
-            BDQueimadas.components.Map.hideSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
+            BDQueimadas.components.Map.hideSubtitle(BDQueimadas.obj.getFilterConfig().SpatialFilter.FiresCurrentSituation.LayerId);
           }
         });
 

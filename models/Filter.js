@@ -390,9 +390,9 @@ var Filter = function() {
 
         var key = "States";
 
-        if(resolution >= memberFilterConfig.SpatialFilter.ContinentsMinimumResolution)
+        if(resolution >= memberFilterConfig.SpatialFilter.Continents.MinResolution)
           key = "Continents";
-        else if(resolution >= memberFilterConfig.SpatialFilter.CountriesMinimumResolution && resolution < memberFilterConfig.SpatialFilter.CountriesMaximumResolution)
+        else if(resolution >= memberFilterConfig.SpatialFilter.Countries.MinResolution && resolution < memberFilterConfig.SpatialFilter.Countries.MaxResolution)
           key = "Countries";
 
         // Creation of the query
