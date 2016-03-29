@@ -12,5 +12,89 @@
       "Css": "background-color: #A21C0D; border: solid 2px black;",
       "Image": ""
     }
+  ],
+  "LayerGroups": [
+    {
+      "Id": "imagens_satelite",
+      "Name": "Imagens de Satélite",
+      "Layers": [
+        {
+          "Id": "aqua_250m_truecolor",
+          "Name": "Modis Aqua 01/01/2016",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "2016-01-01"
+        },
+        {
+          "Id": "terra_250m_truecolor",
+          "Name": "Modis Terra 01/01/2016",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "2016-01-01"
+        },
+        {
+          "Id": "npp_250m_truecolor",
+          "Name": "Modis NPP 01/01/2016",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "2016-01-01"
+        }
+      ]
+    },
+    {
+      "Id": "principais",
+      "Name": "Camadas Principais",
+      "Layers": [
+        {
+          "Id": "sde:estados",
+          "Name": "Estados",
+          "Url": "http://localhost:9095/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": 0.080,
+          "Time": null
+        },
+        {
+          "Id": "sde:countries",
+          "Name": "Países",
+          "Url": "http://localhost:9095/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0.080,
+          "MaxResolution": 0.35,
+          "Time": null
+        },
+        {
+          "Id": "focos:focos_20151210-14",
+          "Name": "Focos",
+          "Url": "http://localhost:9095/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": 0.025,
+          "Time": null
+        },
+        {
+          "Id": "sde:Paises_SQL_FOCOS",
+          "Name": "Situação Atual",
+          "Url": "http://localhost:9095/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity",
+          "Time": null
+        }
+      ]
+    }
   ]
 }
