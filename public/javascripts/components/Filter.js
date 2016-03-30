@@ -22,23 +22,23 @@ BDQueimadas.components.Filter = (function() {
   /**
    * Returns the initial date formatted with the received format.
    * @param {string} format - Format
-   * @returns {string} dateToString() - Formatted initial date (string)
+   * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted initial date (string)
    *
    * @function getFormattedDateFrom
    */
   var getFormattedDateFrom = function(format) {
-    return dateToString(memberDateFrom, format);
+    return BDQueimadas.components.Utils.dateToString(memberDateFrom, format);
   };
 
   /**
    * Returns the final date formatted with the received format.
    * @param {string} format - Format
-   * @returns {string} dateToString() - Formatted final date (string)
+   * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted final date (string)
    *
    * @function getFormattedDateTo
    */
   var getFormattedDateTo = function(format) {
-    return dateToString(memberDateTo, format);
+    return BDQueimadas.components.Utils.dateToString(memberDateTo, format);
   };
 
   /**
@@ -52,29 +52,6 @@ BDQueimadas.components.Filter = (function() {
   };
 
   /**
-   * Converts a date into a string date formatted accordingly with the received format.
-   * @param {date} date - Date to be formatted
-   * @param {string} format - Format
-   * @returns {string} stringDate - Formatted string date
-   *
-   * @private
-   * @function dateToString
-   */
-  var dateToString = function(date, format) {
-    var stringDate = format;
-
-    var dd = ('0' + date.getDate()).slice(-2);
-    var mm = ('0' + (date.getMonth() + 1)).slice(-2);
-    var yyyy = date.getFullYear().toString();
-
-    if(format.match(/YYYY/)) stringDate = stringDate.replace("YYYY", yyyy);
-    if(format.match(/MM/)) stringDate = stringDate.replace("MM", mm);
-    if(format.match(/DD/)) stringDate = stringDate.replace("DD", dd);
-
-    return stringDate;
-  };
-
-  /**
    * Creates the date filter.
    * @returns {string} cql - Date cql filter
    *
@@ -82,9 +59,9 @@ BDQueimadas.components.Filter = (function() {
    * @function createDateFilter
    */
   var createDateFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
+    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + BDQueimadas.components.Utils.dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
     cql += " and ";
-    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + dateToString(memberDateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
+    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + BDQueimadas.components.Utils.dateToString(memberDateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
 
     return cql;
   };

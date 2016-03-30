@@ -21,7 +21,10 @@ BDQueimadas.components.Map = (function() {
       TerraMA2WebComponents.webcomponents.MapDisplay.addLayerGroup(layerGroup.Id, layerGroup.Name);
 
       $.each(layerGroup.Layers, function(j, layer) {
-        TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layer.Name, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layer.Time);
+        var layerName = BDQueimadas.components.Utils.processStringWithDatePattern(layer.Name);
+        var layerTime = BDQueimadas.components.Utils.processStringWithDatePattern(layer.Time);
+
+        TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layerTime);
       });
     });
   };
