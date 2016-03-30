@@ -82,8 +82,16 @@ BDQueimadas.components.Utils = (function() {
     return finalString;
   };
 
+  /**
+   * Initializes the necessary features.
+   *
+   * @function init
+   */
+  var init = function() {};
+
   return {
     dateToString: dateToString,
-    processStringWithDatePattern: processStringWithDatePattern
+    processStringWithDatePattern: processStringWithDatePattern,
+    init: init
   };
 })();
