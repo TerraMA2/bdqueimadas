@@ -84,34 +84,47 @@ BDQueimadas.components.Map = (function() {
     var configuration = BDQueimadas.obj.getMapConfig();
 
     $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-      elem += "<li class=\"" + mapSubtitleItem.Layer.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
+      elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
     });
 
     $('#map-subtitle-items').append(elem);
 
+    setSubtitlesVisibility();
     updateZoomTop(false);
   };
-
-  // remove
 
   /**
-   * Removes the subtitles of a given layer from the map.
-   * @param {string} layerId - Layer id
+   * Sets the visibility of the subtitles, accordingly with its respective layers. If a layer id is passed, the function is executed only for the subtitles of this layer.
+   * @param {string} [layerId] - Layer id
    *
-   * @function removeSubtitle
+   * @private
+   * @function setSubtitlesVisibility
    */
-  var removeSubtitle = function(layerId) {
-    $("#map-subtitle-items > li." + layerId.replace(':', '')).remove();
+  var setSubtitlesVisibility = function(layerId) {
+    var interval = window.setInterval(function() {
+      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
+        var configuration = BDQueimadas.obj.getMapConfig();
 
-    updateZoomTop(false);
+        $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
+          if(layerId === undefined || layerId === mapSubtitleItem.LayerId) {
+            if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(mapSubtitleItem.LayerId) && TerraMA2WebComponents.webcomponents.MapDisplay.isLayerVisible(mapSubtitleItem.LayerId)) {
+              showSubtitle(mapSubtitleItem.LayerId);
+            } else {
+              hideSubtitle(mapSubtitleItem.LayerId);
+            }
+          }
+        });
+
+        clearInterval(interval);
+      }
+    }, 10);
   };
-
-  // remove
 
   /**
    * Shows the subtitles of a given layer.
    * @param {string} layerId - Layer id
    *
+   * @private
    * @function showSubtitle
    */
   var showSubtitle = function(layerId) {
@@ -125,6 +138,7 @@ BDQueimadas.components.Map = (function() {
    * Hides the subtitles of a given layer.
    * @param {string} layerId - Layer id
    *
+   * @private
    * @function hideSubtitle
    */
   var hideSubtitle = function(layerId) {
@@ -156,12 +170,6 @@ BDQueimadas.components.Map = (function() {
    */
   var loadEvents = function() {
     $(document).ready(function() {
-      TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function() {
-        var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
-      });
-
       $('#dragbox').on('click', function() {
         resetMapMouseTools();
         activateDragboxTool();
@@ -182,6 +190,34 @@ BDQueimadas.components.Map = (function() {
       $('.map-subtitle-toggle').on('click', function() {
         updateZoomTop(true);
       });
+
+      var interval = window.setInterval(function() {
+        if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
+          TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function(e) {
+            var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
+            TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
+            BDQueimadas.components.AttributesTable.updateAttributesTable();
+          });
+
+          TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(e) {
+            setSubtitlesVisibility();
+          });
+
+          TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(e) {
+            BDQueimadas.obj.getSocket().emit('extentByIntersectionRequest', {
+              longitude: e.coordinate[0],
+              latitude: e.coordinate[1],
+              resolution: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution()
+            });
+          });
+
+          TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityChangeEvent(function(e, layerId) {
+            setSubtitlesVisibility(layerId);
+          });
+
+          clearInterval(interval);
+        }
+      }, 10);
     });
   };
 
@@ -197,9 +233,6 @@ BDQueimadas.components.Map = (function() {
   };
 
   return {
-    removeSubtitle: removeSubtitle,
-    showSubtitle: showSubtitle,
-    hideSubtitle: hideSubtitle,
     init: init
   };
 })();

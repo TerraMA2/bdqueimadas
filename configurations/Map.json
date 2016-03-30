@@ -1,7 +1,7 @@
 {
   "Subtitles": [
     {
-      "Layer": "sde:Paises_SQL_FOCOS",
+      "LayerId": "sde:Paises_SQL_FOCOS",
       "SubtitleText": "0 focos",
       "Css": "background-color: #FFEBCD; border: solid 2px black;",
       "Image": "",
@@ -9,7 +9,7 @@
       "MaxResolution": "Infinity"
     },
     {
-      "Layer": "sde:Paises_SQL_FOCOS",
+      "LayerId": "sde:Paises_SQL_FOCOS",
       "SubtitleText": "De 25001 a 50000 focos",
       "Css": "background-color: #A21C0D; border: solid 2px black;",
       "Image": "",
