@@ -11,20 +11,11 @@ BDQueimadas.components.Graphics = (function() {
     }
     arr.sort(function (a, b) {
       var intA = parseInt(a.val), intB = parseInt(b.val);
-      if (intA > intB) return -1;
-      if (intA < intB) return 1;
+      if(intA > intB) return -1;
+      if(intA < intB) return 1;
       return 0;
     });
     return arr;
-  };
-
-  var strInArr = function(arr, str) {
-    for(var i = 0, j = arr.length; i < j; i++) {
-      if(arr[i] === str) {
-        return true;
-      }
-    }
-    return false;
   };
 
   var loadGraphics = function() {
@@ -39,14 +30,14 @@ BDQueimadas.components.Graphics = (function() {
       var itemUf = features.features[i].properties.Uf;
       var itemBioma = features.features[i].properties.Bioma;
 
-      if(strInArr(states, itemUf)) {
+      if(BDQueimadas.components.Utils.stringInArray(states, itemUf)) {
         groupedData[itemUf]++;
       } else {
         groupedData[itemUf] = 1;
         states.push(itemUf);
       }
 
-      if(strInArr(biomas, itemBioma)) {
+      if(BDQueimadas.components.Utils.stringInArray(biomas, itemBioma)) {
         groupedDataBioma[itemBioma]++;
       } else {
         groupedDataBioma[itemBioma] = 1;

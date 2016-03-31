@@ -108,6 +108,22 @@ BDQueimadas.components.Utils = (function() {
   };
 
   /**
+   * Verifies if a string exists in an array.
+   * @param {array} array - Array where the search will be performed
+   * @param {string} string - String to be searched
+   * @returns {boolean} boolean - Flag that indicates if the string exists in the array
+   *
+   * @function stringInArray
+   */
+  var stringInArray = function(array, string) {
+    $.each(array, function(i, item) {
+      if(item === string)
+        return true;
+    });
+    return false;
+  };
+
+  /**
    * Initializes the necessary features.
    *
    * @function init
@@ -118,6 +134,7 @@ BDQueimadas.components.Utils = (function() {
     dateToString: dateToString,
     stringToDate: stringToDate,
     processStringWithDatePattern: processStringWithDatePattern,
+    stringInArray: stringInArray,
     init: init
   };
 })();
