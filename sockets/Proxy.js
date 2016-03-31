@@ -27,7 +27,9 @@ var Proxy = function(io) {
         var xml = '';
 
         // Data receiving event
-        resp.on('data', function(chunk) { xml += chunk; });
+        resp.on('data', function(chunk) {
+          xml += chunk;
+        });
 
         // End of request event
         resp.on('end', function() {

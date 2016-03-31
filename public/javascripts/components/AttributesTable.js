@@ -46,9 +46,7 @@ BDQueimadas.components.AttributesTable = (function() {
     for(var i = 0; i < columnsLength; i++)
       titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
 
-    $('#attributes-table')
-      .empty()
-      .append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
+    $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
     memberAttributesTable = $('#attributes-table').DataTable(
       {

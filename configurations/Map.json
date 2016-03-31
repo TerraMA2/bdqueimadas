@@ -3,18 +3,29 @@
     {
       "LayerId": "sde:Paises_SQL_FOCOS",
       "SubtitleText": "0 focos",
-      "Css": "background-color: #FFEBCD; border: solid 2px black;",
-      "Image": "",
+      "FillColor": "#FFEBCD",
+      "BorderColor": "black",
+      "Image": null,
       "MinResolution": 0.025,
       "MaxResolution": "Infinity"
     },
     {
       "LayerId": "sde:Paises_SQL_FOCOS",
       "SubtitleText": "De 25001 a 50000 focos",
-      "Css": "background-color: #A21C0D; border: solid 2px black;",
-      "Image": "",
+      "FillColor": "#A21C0D",
+      "BorderColor": "black",
+      "Image": null,
       "MinResolution": 0.025,
       "MaxResolution": "Infinity"
+    },
+    {
+      "LayerId": "focos:focos_20151210-14",
+      "SubtitleText": "Focos",
+      "FillColor": null,
+      "BorderColor": null,
+      "Image": "images/subtitles/fire.png",
+      "MinResolution": 0,
+      "MaxResolution": 0.025
     }
   ],
   "LayerGroups": [

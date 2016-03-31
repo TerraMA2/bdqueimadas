@@ -30,14 +30,11 @@ BDQueimadas.components.Map = (function() {
 
           var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getFilterConfig().LayerToFilter.InitialDate);
           var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getFilterConfig().LayerToFilter.FinalDate);
-
-          var filter = BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + ">=" + initialDate + " and " +
-                       BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + "<=" + finalDate;
+          var filter = BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + ">=" + initialDate + " and " + BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + "<=" + finalDate;
 
           TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(filter, layer.Id);
 
           BDQueimadas.components.Filter.updateDates(initialDate, finalDate, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
-
           BDQueimadas.components.AttributesTable.updateAttributesTable();
         }
       });
@@ -102,7 +99,18 @@ BDQueimadas.components.Map = (function() {
     var configuration = BDQueimadas.obj.getMapConfig();
 
     $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-      elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + mapSubtitleItem.Css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
+      var css = "";
+
+      if(mapSubtitleItem.FillColor !== null)
+        css += "background-color: " + mapSubtitleItem.FillColor + ";";
+
+      if(mapSubtitleItem.BorderColor !== null)
+        css += "border: solid 2px " + mapSubtitleItem.BorderColor + ";";
+
+      if(mapSubtitleItem.Image !== null)
+        css += "background: url(" + mapSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
+
+      elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
     });
 
     $('#map-subtitle-items').append(elem);
