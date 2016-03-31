@@ -80,6 +80,9 @@ BDQueimadas.components.Filter = (function() {
 
     memberDateFrom.setHours(0,0,0,0);
     memberDateTo.setHours(0,0,0,0);
+
+    $('#filter-date-from').val(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
+    $('#filter-date-to').val(BDQueimadas.components.Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
   };
 
   /**
