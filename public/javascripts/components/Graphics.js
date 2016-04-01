@@ -9,6 +9,19 @@
  */
 BDQueimadas.components.Graphics = (function() {
 
+  // New
+
+  var updateFiresCountBySatelliteGraphic = function() {
+    var dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
+    var dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
+    var satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
+    var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+
+    BDQueimadas.obj.getSocket().emit('graphicsFiresCountBySatelliteRequest', { dateFrom: dateFrom, dateTo: dateTo, satellite: satellite, extent: extent });
+  };
+
+  // new
+
   /**
    * Loads the sockets listeners.
    * @param {json} firesCountBySatellite - Format
@@ -40,7 +53,7 @@ BDQueimadas.components.Graphics = (function() {
       ]
     }
 
-    var htmlElement = document.getElementById("fires-count-by-satellite-graphic").getContext("2d");
+    var htmlElement = $("#fires-count-by-satellite-graphic").get(0).getContext("2d");
     window.firesCountBySatelliteGraphic = new Chart(htmlElement).Bar(firesCountBySatelliteGraphic, { responsive : true, maintainAspectRatio: false });
   };
 
@@ -67,10 +80,12 @@ BDQueimadas.components.Graphics = (function() {
    */
   var init = function() {
     loadSocketsListeners();
-    BDQueimadas.obj.getSocket().emit('graphicsFiresCountBySatelliteRequest');
+
+    updateFiresCountBySatelliteGraphic();
   };
 
   return {
+    updateFiresCountBySatelliteGraphic: updateFiresCountBySatelliteGraphic,
     init: init
   };
 })();

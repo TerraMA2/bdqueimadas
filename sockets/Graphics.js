@@ -21,8 +21,15 @@ var Graphics = function(io) {
   memberSockets.on('connection', function(client) {
 
     // Graphics request event
-    client.on('graphicsFiresCountBySatelliteRequest', function() {
-      memberGraphics.getFiresCountBySatellite(function(err, firesCountBySatellite) {
+    client.on('graphicsFiresCountBySatelliteRequest', function(json) {
+      // Object responsible for keep several information to be used in the database query
+      var options = {};
+
+      // Verifications of the 'options' object items
+      if(json.satellite !== '') options.satellite = json.satellite;
+      if(json.extent !== '') options.extent = json.extent;
+
+      memberGraphics.getFiresCountBySatellite(json.dateFrom, json.dateTo, options, function(err, firesCountBySatellite) {
         if(err) return console.error(err);
 
         client.emit('graphicsFiresCountBySatelliteResponse', { firesCountBySatellite: firesCountBySatellite });

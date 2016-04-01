@@ -157,6 +157,8 @@ BDQueimadas.components.Filter = (function() {
     BDQueimadas.components.AttributesTable.updateAttributesTable();
 
     TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter.LayerId);
+
+    BDQueimadas.components.Graphics.updateFiresCountBySatelliteGraphic();
   };
 
   /**
@@ -381,6 +383,8 @@ BDQueimadas.components.Filter = (function() {
 
         enableDropdown('states', result.text);
       }
+
+      BDQueimadas.components.Graphics.updateFiresCountBySatelliteGraphic();
     });
 
     BDQueimadas.obj.getSocket().on('extentByIntersectionResponse', function(result) {
@@ -403,6 +407,8 @@ BDQueimadas.components.Filter = (function() {
       }
 
       BDQueimadas.components.AttributesTable.updateAttributesTable();
+
+      BDQueimadas.components.Graphics.updateFiresCountBySatelliteGraphic();
     });
 
     BDQueimadas.obj.getSocket().on('continentByCountryResponse', function(result) {
