@@ -14,20 +14,6 @@
 </script>
 <!-- Bootstrap 3.3.5 -->
 <script type="text/javascript" src="/externals/bootstrap/js/bootstrap.min.js"></script>
-<!-- Sparkline -->
-<script type="text/javascript" src="/externals/sparkline/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script type="text/javascript" src="/externals/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script type="text/javascript" src="/externals/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script type="text/javascript" src="/externals/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
-<script type="text/javascript" src="/externals/daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="/externals/daterangepicker/daterangepicker.js"></script>
-<!-- datepicker -->
-<script type="text/javascript" src="/externals/datepicker/bootstrap-datepicker.js"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script type="text/javascript" src="/externals/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <!-- Slimscroll -->
 <script type="text/javascript" src="/externals/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -47,8 +33,11 @@
 <script type="text/javascript" src="/externals/adminlte/js/queimadas.js"></script>
 <!-- OpenLayers  -->
 <script type="text/javascript" src="/externals/openlayers/ol.js"></script>
+<!-- BDQueimadas -->
 <script type="text/javascript" src="/javascripts/BDQueimadas.js"></script>
+<!-- TerraMA² -->
 <script type="text/javascript" src="<%= terrama2Path %>/javascripts/TerraMA2WebComponents.js"></script>
+<!-- Variables used in TerraMA² and BDQueimadas -->
 <script type="text/javascript">
   var terrama2Path = "<%= terrama2Path %>";
 
@@ -57,4 +46,5 @@
   var componentsConfig = JSON.parse('<%- JSON.stringify(componentsConfig) %>');
   var mapConfig = JSON.parse('<%- JSON.stringify(mapConfig) %>');
 </script>
-<script type="text/javascript" src="/javascripts/startup.js"></script>
+<!-- Startup Script -->
+<script type="text/javascript" src="/javascripts/Startup.js"></script>

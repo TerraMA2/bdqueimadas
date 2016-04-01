@@ -15,8 +15,21 @@ BDQueimadas.components.Graphics = (function() {
   var firesCountBySatelliteGraphic = null;
 
   /**
+   * Updates all the graphics.
+   *
+   * @private
+   * @function updateGraphics
+   * @memberof Graphics(2)
+   * @inner
+   */
+  var updateGraphics = function() {
+    updateFiresCountBySatelliteGraphic();
+  };
+
+  /**
    * Updates the graphic of fires count by satellite.
    *
+   * @private
    * @function updateFiresCountBySatelliteGraphic
    * @memberof Graphics(2)
    * @inner
@@ -89,13 +102,14 @@ BDQueimadas.components.Graphics = (function() {
    * @inner
    */
   var init = function() {
-    loadSocketsListeners();
-
-    updateFiresCountBySatelliteGraphic();
+    $(document).ready(function() {
+      loadSocketsListeners();
+      updateGraphics();
+    });
   };
 
   return {
-    updateFiresCountBySatelliteGraphic: updateFiresCountBySatelliteGraphic,
+    updateGraphics: updateGraphics,
     init: init
   };
 })();

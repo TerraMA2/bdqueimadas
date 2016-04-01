@@ -153,12 +153,26 @@ BDQueimadas.components.Filter = (function() {
       cql += createSatelliteFilter();
 
     updateSatelliteSelect();
-
-    BDQueimadas.components.AttributesTable.updateAttributesTable();
-
     TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter.LayerId);
+    updateComponents();
+  };
 
-    BDQueimadas.components.Graphics.updateFiresCountBySatelliteGraphic();
+  /**
+   * Updates the necessary components.
+   *
+   * @function updateComponents
+   * @memberof Filter(2)
+   * @inner
+   */
+  var updateComponents = function() {
+    var bdqueimadasInterval = window.setInterval(function() {
+      if(BDQueimadas.obj.isComponentsLoaded()) {
+        BDQueimadas.components.AttributesTable.updateAttributesTable();
+        BDQueimadas.components.Graphics.updateGraphics();
+
+        clearInterval(bdqueimadasInterval);
+      }
+    }, 10);
   };
 
   /**
@@ -244,6 +258,10 @@ BDQueimadas.components.Filter = (function() {
       if($(this).parent().hasClass('has-error')) {
         $(this).parent().removeClass('has-error');
       }
+    });
+
+    $('#updateComponents').on('click', function() {
+      updateComponents();
     });
   };
 
@@ -350,41 +368,26 @@ BDQueimadas.components.Filter = (function() {
    */
   var loadSocketsListeners = function() {
     BDQueimadas.obj.getSocket().on('spatialFilterResponse', function(result) {
-      if(result.key === 'Continent') {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
+      var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+      var extentArray = extent[0].split(' ');
+      extentArray = extentArray.concat(extent[1].split(' '));
+      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+      updateComponents();
 
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
+      if(result.key === 'Continent') {
         BDQueimadas.obj.getSocket().emit('countriesByContinentRequest', { continent: result.id });
 
         enableDropdown('continents', result.text);
         enableDropdown('countries', 'Pa&iacute;ses');
         disableDropdown('states', 'Estados');
       } else if(result.key === 'Country') {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
         BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.id });
 
         enableDropdown('countries', result.text);
         enableDropdown('states', 'Estados');
       } else {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
-
         enableDropdown('states', result.text);
       }
-
-      BDQueimadas.components.Graphics.updateFiresCountBySatelliteGraphic();
     });
 
     BDQueimadas.obj.getSocket().on('extentByIntersectionResponse', function(result) {
@@ -406,9 +409,7 @@ BDQueimadas.components.Filter = (function() {
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
       }
 
-      BDQueimadas.components.AttributesTable.updateAttributesTable();
-
-      BDQueimadas.components.Graphics.updateFiresCountBySatelliteGraphic();
+      updateComponents();
     });
 
     BDQueimadas.obj.getSocket().on('continentByCountryResponse', function(result) {
@@ -462,6 +463,8 @@ BDQueimadas.components.Filter = (function() {
       updateDatesToCurrent();
       loadEvents();
       loadSocketsListeners();
+
+      window.setInterval(function() { updateComponents(); }, 60000);
     });
   };
 
@@ -471,6 +474,7 @@ BDQueimadas.components.Filter = (function() {
     getSatellite: getSatellite,
     resetDropdowns: resetDropdowns,
     updateDates: updateDates,
+    updateComponents: updateComponents,
     init: init
   };
 })();

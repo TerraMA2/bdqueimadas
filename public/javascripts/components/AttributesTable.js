@@ -44,33 +44,39 @@ BDQueimadas.components.AttributesTable = (function() {
    * @inner
    */
   var loadAttributesTable = function() {
-    var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
-    var columnsLength = columns.length;
-    var titles = "";
+    var interval = window.setInterval(function() {
+      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
+        var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
+        var columnsLength = columns.length;
+        var titles = "";
 
-    for(var i = 0; i < columnsLength; i++)
-      titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
+        for(var i = 0; i < columnsLength; i++)
+          titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
 
-    $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
+        $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
-    memberAttributesTable = $('#attributes-table').DataTable(
-      {
-        "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
-        "processing": true,
-        "serverSide": true,
-        "ajax": {
-          "url": "/get-attributes-table",
-          "type": "POST",
-          "data": function(data) {
-            data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
-            data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
-            data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
-            data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+        memberAttributesTable = $('#attributes-table').DataTable(
+          {
+            "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+              "url": "/get-attributes-table",
+              "type": "POST",
+              "data": function(data) {
+                data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
+                data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
+                data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
+                data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+              }
+            },
+            "columns": getAttributesTableColumnNamesArray()
           }
-        },
-        "columns": getAttributesTableColumnNamesArray()
+        );
+
+        clearInterval(interval);
       }
-    );
+    }, 10);
   };
 
   /**
@@ -85,20 +91,6 @@ BDQueimadas.components.AttributesTable = (function() {
   };
 
   /**
-   * Loads the DOM events.
-   *
-   * @private
-   * @function loadEvents
-   * @memberof AttributesTable(2)
-   * @inner
-   */
-  var loadEvents = function() {
-    $('#filterTableToExtent').on('click', function() {
-      updateAttributesTable();
-    });
-  };
-
-  /**
    * Initializes the necessary features.
    *
    * @function init
@@ -106,14 +98,9 @@ BDQueimadas.components.AttributesTable = (function() {
    * @inner
    */
   var init = function() {
-    loadEvents();
-
-    var interval = window.setInterval(function() {
-      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        loadAttributesTable();
-        clearInterval(interval);
-      }
-    }, 10);
+    $(document).ready(function() {
+      loadAttributesTable();
+    });
   };
 
   return {

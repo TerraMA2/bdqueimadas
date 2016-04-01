@@ -37,7 +37,7 @@ BDQueimadas.components.Map = (function() {
           TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(filter, layer.Id);
 
           BDQueimadas.components.Filter.updateDates(initialDate, finalDate, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
-          BDQueimadas.components.AttributesTable.updateAttributesTable();
+          BDQueimadas.components.Filter.updateComponents();
         }
       });
     });
@@ -81,7 +81,7 @@ BDQueimadas.components.Map = (function() {
    */
   var initialExtent = function() {
     TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
-    BDQueimadas.components.AttributesTable.updateAttributesTable();
+    BDQueimadas.components.Filter.updateComponents();
   };
 
   /**
@@ -244,7 +244,7 @@ BDQueimadas.components.Map = (function() {
           TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function(e) {
             var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
             TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
-            BDQueimadas.components.AttributesTable.updateAttributesTable();
+            BDQueimadas.components.Filter.updateComponents();
           });
 
           TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(e) {

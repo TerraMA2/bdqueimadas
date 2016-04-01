@@ -99,26 +99,6 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Generates a random text.
-   * @returns {string} random - Random text
-   *
-   * @function randomText
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var randomText = function() {
-    var characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var random = '';
-
-    for(var i = 0; i < 25; i++) {
-      var rnum = Math.floor(Math.random() * characters.length);
-      random += characters.substring(rnum, rnum + 1);
-    }
-
-    return random;
-  };
-
-  /**
    * Loads the components configurations.
    * @param {json} filterConfig - Filter configuration
    * @param {json} attributesTableConfig - Attributes table configuration
@@ -292,6 +272,16 @@ BDQueimadas.obj = (function() {
    */
   var loadPlugins = function() {
     $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
+    $(".date").datepicker({
+      dateFormat: 'dd/mm/yyyy',
+      dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+      dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+      dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+      monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+      monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      nextText: 'Próximo',
+      prevText: 'Anterior'
+    });
   };
 
   /**
@@ -503,7 +493,6 @@ BDQueimadas.obj = (function() {
   	getFilterConfig: getFilterConfig,
     getAttributesTableConfig: getAttributesTableConfig,
     getMapConfig: getMapConfig,
-  	randomText: randomText,
     isComponentsLoaded: isComponentsLoaded,
   	init: init
   };
