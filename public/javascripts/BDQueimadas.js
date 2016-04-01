@@ -11,12 +11,9 @@ window.BDQueimadas = {
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {json} memberFilterConfig - Filter configuration.
- * @property {json} memberServerConfig - Mapping server configuration.
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
  * @property {json} memberComponentsConfig - Components configuration.
  * @property {json} memberMapConfig - Map configuration.
- * @property {string} memberFeatureDescription - Fires layer feature description.
- * @property {string} memberFeatures - Fires layer features.
  * @property {object} memberSocket - Socket object.
  * @property {number} memberHeight - Window height.
  * @property {number} memberHeaderHeight - Header height.
@@ -30,18 +27,12 @@ BDQueimadas.obj = (function() {
 
   // Filter configuration
   var memberFilterConfig = null;
-  // Mapping server configuration
-  var memberServerConfig = null;
   // Fires layer attributes table configuration
   var memberAttributesTableConfig = null;
   // Components configuration
   var memberComponentsConfig = null;
   // Map configuration
   var memberMapConfig = null;
-  // Fires layer feature description
-  var memberFeatureDescription = null;
-  // Fires layer features
-  var memberFeatures = null;
   // Socket object
   var memberSocket = null;
   // Window height
@@ -58,30 +49,6 @@ BDQueimadas.obj = (function() {
   var memberMapSubtitleHeight = null;
   // Flag that indicates if all the components have been loaded
   var memberComponentsLoaded = false;
-
-  /**
-   * Returns the fires layer feature description.
-   * @returns {string} memberFeatureDescription - Feature description
-   *
-   * @function getFeatureDescription
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var getFeatureDescription = function() {
-    return memberFeatureDescription;
-  };
-
-  /**
-   * Returns the fires layer features.
-   * @returns {string} memberFeatures - Features
-   *
-   * @function getFeatures
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var getFeatures = function() {
-    return memberFeatures;
-  };
 
   /**
    * Returns the socket object.
@@ -105,18 +72,6 @@ BDQueimadas.obj = (function() {
    */
   var getFilterConfig = function() {
     return memberFilterConfig;
-  };
-
-  /**
-   * Returns the map server configuration.
-   * @returns {json} memberServerConfig - Map server configuration
-   *
-   * @function getServerConfig
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var getServerConfig = function() {
-    return memberServerConfig;
   };
 
   /**
@@ -166,7 +121,6 @@ BDQueimadas.obj = (function() {
   /**
    * Loads the components configurations.
    * @param {json} filterConfig - Filter configuration
-   * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
    * @param {json} mapConfig - Map configuration
@@ -176,9 +130,8 @@ BDQueimadas.obj = (function() {
    * @memberof BDQueimadas
    * @inner
    */
-  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig) {
+  var loadConfigurations = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
     memberFilterConfig = filterConfig;
-    memberServerConfig = serverConfig;
     memberAttributesTableConfig = attributesTableConfig;
     memberComponentsConfig = componentsConfig;
     memberMapConfig = mapConfig;
@@ -206,56 +159,6 @@ BDQueimadas.obj = (function() {
     } else {
       memberComponentsLoaded = true;
     }
-  };
-
-  /**
-   * Loads the fires layer feature description.
-   *
-   * @private
-   * @function loadFeatureDescription
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var loadFeatureDescription = function() {
-    var requestId = randomText();
-
-    memberSocket.emit(
-      'proxyRequest',
-      {
-        url: memberServerConfig.Servers.Local.URL + memberServerConfig.Servers.Local.DescribeFeatureTypeParams + memberFilterConfig.LayerToFilter.LayerId,
-        requestId: requestId
-      }
-    );
-    memberSocket.on('proxyResponse', function(msg) {
-      if(msg.requestId === requestId) {
-        memberFeatureDescription = msg.msg;
-      }
-    });
-  };
-
-  /**
-   * Loads the fires layer features.
-   *
-   * @private
-   * @function loadFeatures
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var loadFeatures = function() {
-    var requestId = randomText();
-
-    memberSocket.emit(
-      'proxyRequest',
-      {
-        url: memberServerConfig.Servers.Local.URL + memberServerConfig.Servers.Local.GetFeatureParams + memberFilterConfig.LayerToFilter.LayerId,
-        requestId: requestId
-      }
-    );
-    memberSocket.on('proxyResponse', function(msg) {
-      if(msg.requestId === requestId) {
-        memberFeatures = msg.msg;
-      }
-    });
   };
 
   /**
@@ -564,7 +467,6 @@ BDQueimadas.obj = (function() {
   /**
    * Initializes the necessary features.
    * @param {json} filterConfig - Filter configuration
-   * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
    * @param {json} mapConfig - Map configuration
@@ -573,7 +475,7 @@ BDQueimadas.obj = (function() {
    * @memberof BDQueimadas
    * @inner
    */
-  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig) {
+  var init = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
     $(document).ready(function() {
       var interval = window.setInterval(function() {
         updateSizeVars();
@@ -582,14 +484,12 @@ BDQueimadas.obj = (function() {
       window.setTimeout(function() { clearInterval(interval); }, 300);
 
       loadEvents();
-      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig);
+      loadConfigurations(filterConfig, attributesTableConfig, componentsConfig, mapConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
         success: function() {
           memberSocket = io(window.location.origin);
-          loadFeatures();
-          loadFeatureDescription();
           loadComponents(0);
         }
       });
@@ -599,11 +499,8 @@ BDQueimadas.obj = (function() {
   };
 
   return {
-  	getFeatureDescription: getFeatureDescription,
-    getFeatures: getFeatures,
     getSocket: getSocket,
   	getFilterConfig: getFilterConfig,
-    getServerConfig: getServerConfig,
     getAttributesTableConfig: getAttributesTableConfig,
     getMapConfig: getMapConfig,
   	randomText: randomText,
