@@ -2,7 +2,8 @@
 
 /**
  * Filter class of the BDQueimadas.
- * @module Filter
+ * @class Filter
+ * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
@@ -25,6 +26,8 @@ BDQueimadas.components.Filter = (function() {
    * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted initial date (string)
    *
    * @function getFormattedDateFrom
+   * @memberof Filter(2)
+   * @inner
    */
   var getFormattedDateFrom = function(format) {
     return BDQueimadas.components.Utils.dateToString(memberDateFrom, format);
@@ -36,6 +39,8 @@ BDQueimadas.components.Filter = (function() {
    * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted final date (string)
    *
    * @function getFormattedDateTo
+   * @memberof Filter(2)
+   * @inner
    */
   var getFormattedDateTo = function(format) {
     return BDQueimadas.components.Utils.dateToString(memberDateTo, format);
@@ -46,6 +51,8 @@ BDQueimadas.components.Filter = (function() {
    * @returns {string} memberSatellite - Satellite
    *
    * @function getSatellite
+   * @memberof Filter(2)
+   * @inner
    */
   var getSatellite = function() {
     return memberSatellite;
@@ -57,6 +64,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function createDateFilter
+   * @memberof Filter(2)
+   * @inner
    */
   var createDateFilter = function() {
     var cql = BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + ">=" + BDQueimadas.components.Utils.dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
@@ -73,6 +82,8 @@ BDQueimadas.components.Filter = (function() {
    * @param {string} format - Dates format
    *
    * @function updateDates
+   * @memberof Filter(2)
+   * @inner
    */
   var updateDates = function(newDateFrom, newDateTo, format) {
     memberDateFrom = BDQueimadas.components.Utils.stringToDate(newDateFrom, format);
@@ -90,6 +101,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function updateDatesToCurrent
+   * @memberof Filter(2)
+   * @inner
    */
   var updateDatesToCurrent = function() {
     memberDateFrom = new Date();
@@ -106,6 +119,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function createSatelliteFilter
+   * @memberof Filter(2)
+   * @inner
    */
   var createSatelliteFilter = function() {
     var cql = BDQueimadas.obj.getFilterConfig().LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
@@ -120,6 +135,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function applyFilter
+   * @memberof Filter(2)
+   * @inner
    */
   var applyFilter = function(filterDateFrom, filterDateTo, filterSatellite) {
     var cql = "";
@@ -147,6 +164,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function updateSatelliteSelect
+   * @memberof Filter(2)
+   * @inner
    */
   var updateSatelliteSelect = function() {
     var selectedOption = $('#filter-satellite').value;
@@ -180,6 +199,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function loadEvents
+   * @memberof Filter(2)
+   * @inner
    */
   var loadEvents = function() {
     $('#filter-button').on('click', function(el) {
@@ -231,6 +252,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function selectContinentItem
+   * @memberof Filter(2)
+   * @inner
    */
   var selectContinentItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
@@ -243,6 +266,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function selectCountryItem
+   * @memberof Filter(2)
+   * @inner
    */
   var selectCountryItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('continentByCountryRequest', { country: id });
@@ -256,6 +281,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function selectStateItem
+   * @memberof Filter(2)
+   * @inner
    */
   var selectStateItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('continentByStateRequest', { state: id });
@@ -270,6 +297,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function enableDropdown
+   * @memberof Filter(2)
+   * @inner
    */
   var enableDropdown = function(id, text) {
     $('#' + id + '-title').empty().html(text);
@@ -284,6 +313,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function disableDropdown
+   * @memberof Filter(2)
+   * @inner
    */
   var disableDropdown = function(id, text) {
     $('#' + id + '-title').empty().html(text);
@@ -296,6 +327,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function resetDropdowns
+   * @memberof Filter(2)
+   * @inner
    */
   var resetDropdowns = function() {
     enableDropdown('continents', "Continentes");
@@ -310,6 +343,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function loadSocketsListeners
+   * @memberof Filter(2)
+   * @inner
    */
   var loadSocketsListeners = function() {
     BDQueimadas.obj.getSocket().on('spatialFilterResponse', function(result) {
@@ -413,6 +448,8 @@ BDQueimadas.components.Filter = (function() {
    * Initializes the necessary features.
    *
    * @function init
+   * @memberof Filter(2)
+   * @inner
    */
   var init = function() {
     $(document).ready(function() {

@@ -2,7 +2,7 @@
 
 /**
  * Map class of the BDQueimadas.
- * @module Map
+ * @class Map
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
@@ -13,6 +13,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function addLayersToMap
+   * @memberof Map
+   * @inner
    */
   var addLayersToMap = function() {
     var configuration = BDQueimadas.obj.getMapConfig();
@@ -46,6 +48,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function resetMapMouseTools
+   * @memberof Map
+   * @inner
    */
   var resetMapMouseTools = function() {
     TerraMA2WebComponents.webcomponents.MapDisplay.removeZoomDragBox();
@@ -59,6 +63,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function activateMoveMapTool
+   * @memberof Map
+   * @inner
    */
   var activateMoveMapTool = function() {
     $('#moveMap > i').addClass('active');
@@ -70,6 +76,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function initialExtent
+   * @memberof Map
+   * @inner
    */
   var initialExtent = function() {
     TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
@@ -81,6 +89,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function activateDragboxTool
+   * @memberof Map
+   * @inner
    */
   var activateDragboxTool = function() {
     $('#dragbox > i').addClass('active');
@@ -93,6 +103,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function addSubtitles
+   * @memberof Map
+   * @inner
    */
   var addSubtitles = function() {
     var elem = "";
@@ -125,6 +137,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function setSubtitlesVisibility
+   * @memberof Map
+   * @inner
    */
   var setSubtitlesVisibility = function(layerId) {
     var interval = window.setInterval(function() {
@@ -152,6 +166,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function showSubtitle
+   * @memberof Map
+   * @inner
    */
   var showSubtitle = function(layerId) {
     if(!$("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
@@ -166,6 +182,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function hideSubtitle
+   * @memberof Map
+   * @inner
    */
   var hideSubtitle = function(layerId) {
     if($("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
@@ -180,6 +198,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function updateZoomTop
+   * @memberof Map
+   * @inner
    */
   var updateZoomTop = function(toggle) {
     if($('.map-subtitle-toggle').parent().parent().parent().hasClass('collapsed-box') || !toggle)
@@ -193,6 +213,8 @@ BDQueimadas.components.Map = (function() {
    *
    * @private
    * @function loadEvents
+   * @memberof Map
+   * @inner
    */
   var loadEvents = function() {
     $(document).ready(function() {
@@ -251,6 +273,8 @@ BDQueimadas.components.Map = (function() {
    * Initializes the necessary features.
    *
    * @function init
+   * @memberof Map
+   * @inner
    */
   var init = function() {
     loadEvents();

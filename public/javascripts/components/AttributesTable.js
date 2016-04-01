@@ -2,7 +2,8 @@
 
 /**
  * Attributes table class of the BDQueimadas.
- * @module AttributesTable
+ * @class AttributesTable
+ * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
@@ -19,6 +20,8 @@ BDQueimadas.components.AttributesTable = (function() {
    *
    * @private
    * @function getAttributesTableColumnNamesArray
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var getAttributesTableColumnNamesArray = function() {
     var columnsJson = BDQueimadas.obj.getAttributesTableConfig().Columns;
@@ -37,6 +40,8 @@ BDQueimadas.components.AttributesTable = (function() {
    *
    * @private
    * @function loadAttributesTable
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var loadAttributesTable = function() {
     var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
@@ -72,6 +77,8 @@ BDQueimadas.components.AttributesTable = (function() {
    * Updates the attributes table.
    *
    * @function updateAttributesTable
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var updateAttributesTable = function() {
     memberAttributesTable.ajax.reload();
@@ -82,6 +89,8 @@ BDQueimadas.components.AttributesTable = (function() {
    *
    * @private
    * @function loadEvents
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var loadEvents = function() {
     $('#filterTableToExtent').on('click', function() {
@@ -93,6 +102,8 @@ BDQueimadas.components.AttributesTable = (function() {
    * Initializes the necessary features.
    *
    * @function init
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var init = function() {
     loadEvents();

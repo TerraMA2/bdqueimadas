@@ -6,7 +6,7 @@ window.BDQueimadas = {
 
 /**
  * Main class of the BDQueimadas.
- * @module BDQueimadas
+ * @class BDQueimadas
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
@@ -64,6 +64,8 @@ BDQueimadas.obj = (function() {
    * @returns {string} memberFeatureDescription - Feature description
    *
    * @function getFeatureDescription
+   * @memberof BDQueimadas
+   * @inner
    */
   var getFeatureDescription = function() {
     return memberFeatureDescription;
@@ -74,6 +76,8 @@ BDQueimadas.obj = (function() {
    * @returns {string} memberFeatures - Features
    *
    * @function getFeatures
+   * @memberof BDQueimadas
+   * @inner
    */
   var getFeatures = function() {
     return memberFeatures;
@@ -84,6 +88,8 @@ BDQueimadas.obj = (function() {
    * @returns {object} memberSocket - Socket object
    *
    * @function getSocket
+   * @memberof BDQueimadas
+   * @inner
    */
   var getSocket = function() {
     return memberSocket;
@@ -94,6 +100,8 @@ BDQueimadas.obj = (function() {
    * @returns {json} memberFilterConfig - Filter configuration
    *
    * @function getFilterConfig
+   * @memberof BDQueimadas
+   * @inner
    */
   var getFilterConfig = function() {
     return memberFilterConfig;
@@ -104,6 +112,8 @@ BDQueimadas.obj = (function() {
    * @returns {json} memberServerConfig - Map server configuration
    *
    * @function getServerConfig
+   * @memberof BDQueimadas
+   * @inner
    */
   var getServerConfig = function() {
     return memberServerConfig;
@@ -114,6 +124,8 @@ BDQueimadas.obj = (function() {
    * @returns {json} memberAttributesTableConfig - Attributes table configuration
    *
    * @function getAttributesTableConfig
+   * @memberof BDQueimadas
+   * @inner
    */
   var getAttributesTableConfig = function() {
     return memberAttributesTableConfig;
@@ -124,6 +136,8 @@ BDQueimadas.obj = (function() {
    * @returns {json} memberMapConfig - Map configuration
    *
    * @function getMapConfig
+   * @memberof BDQueimadas
+   * @inner
    */
   var getMapConfig = function() {
     return memberMapConfig;
@@ -134,6 +148,8 @@ BDQueimadas.obj = (function() {
    * @returns {string} random - Random text
    *
    * @function randomText
+   * @memberof BDQueimadas
+   * @inner
    */
   var randomText = function() {
     var characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -157,6 +173,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadConfigurations
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig) {
     memberFilterConfig = filterConfig;
@@ -172,6 +190,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadComponents
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadComponents = function(i) {
     if(i < memberComponentsConfig.Components.length) {
@@ -193,6 +213,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadFeatureDescription
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadFeatureDescription = function() {
     var requestId = randomText();
@@ -216,6 +238,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadFeatures
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadFeatures = function() {
     var requestId = randomText();
@@ -239,6 +263,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadEvents
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadEvents = function() {
     // Sidebar buttons click event
@@ -358,6 +384,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadPlugins
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadPlugins = function() {
     $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
@@ -370,6 +398,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function openLeftContentBoxBackground
+   * @memberof BDQueimadas
+   * @inner
    */
   var openLeftContentBoxBackground = function(leftContentBoxButton, leftContentBox) {
     var width = '';
@@ -397,6 +427,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function closeLeftContentBoxBackground
+   * @memberof BDQueimadas
+   * @inner
    */
   var closeLeftContentBoxBackground = function() {
     $("#left-content-box-background").removeClass('active');
@@ -411,6 +443,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function openLeftContentBox
+   * @memberof BDQueimadas
+   * @inner
    */
   var openLeftContentBox = function(leftContentBox, headerText) {
     $("#" + leftContentBox).addClass('active');
@@ -431,6 +465,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function adjustLeftContentBoxSize
+   * @memberof BDQueimadas
+   * @inner
    */
   var adjustLeftContentBoxSize = function(id) {
     if($("#" + id).css('left') === '230px') {
@@ -453,6 +489,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function closeAllLeftContentBoxes
+   * @memberof BDQueimadas
+   * @inner
    */
   var closeAllLeftContentBoxes = function() {
     $(".content-header > h1").html("Banco de Dados de Queimadas");
@@ -466,6 +504,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function updateSizeVars
+   * @memberof BDQueimadas
+   * @inner
    */
   var updateSizeVars = function() {
     memberHeight = $(window).outerHeight();
@@ -481,6 +521,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function setFullContentSize
+   * @memberof BDQueimadas
+   * @inner
    */
   var setFullContentSize = function(duration) {
     $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
@@ -496,6 +538,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function setReducedContentSize
+   * @memberof BDQueimadas
+   * @inner
    */
   var setReducedContentSize = function(duration) {
     $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
@@ -510,6 +554,8 @@ BDQueimadas.obj = (function() {
    * @returns {boolean} memberComponentsLoaded - Flag that indicates if all the components have been loaded
    *
    * @function isComponentsLoaded
+   * @memberof BDQueimadas
+   * @inner
    */
   var isComponentsLoaded = function() {
     return memberComponentsLoaded;
@@ -524,6 +570,8 @@ BDQueimadas.obj = (function() {
    * @param {json} mapConfig - Map configuration
    *
    * @function init
+   * @memberof BDQueimadas
+   * @inner
    */
   var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapConfig) {
     $(document).ready(function() {

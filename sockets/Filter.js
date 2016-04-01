@@ -1,15 +1,16 @@
 "use strict";
 
 /**
- * Socket responsible for processing spatial filter related requests.
- * @class SpatialFilter
+ * Socket responsible for processing filter related requests.
+ * @class Filter
+ * @variation 3
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberSockets - Sockets object.
  * @property {object} memberFilter - Filter model.
  */
-var SpatialFilter = function(io) {
+var Filter = function(io) {
 
   // Sockets object
   var memberSockets = io.sockets;
@@ -85,4 +86,4 @@ var SpatialFilter = function(io) {
   });
 };
 
-module.exports = SpatialFilter;
+module.exports = Filter;

@@ -3,6 +3,7 @@
 /**
  * Socket responsible for processing graphics related requests.
  * @class Graphics
+ * @variation 3
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
@@ -20,11 +21,11 @@ var Graphics = function(io) {
   memberSockets.on('connection', function(client) {
 
     // Graphics request event
-    client.on('graphicsRequest', function(json) {
-      memberGraphics.method(json.id, function(err, extent) {
+    client.on('graphicsFiresCountBySatelliteRequest', function() {
+      memberGraphics.getFiresCountBySatellite(function(err, firesCountBySatellite) {
         if(err) return console.error(err);
 
-        client.emit('graphicsResponse', { key: json.key, id: json.id, text: json.text, extent: extent });
+        client.emit('graphicsFiresCountBySatelliteResponse', { firesCountBySatellite: firesCountBySatellite });
       });
     });
   });

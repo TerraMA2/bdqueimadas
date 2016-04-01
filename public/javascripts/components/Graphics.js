@@ -1,22 +1,15 @@
 "use strict";
 
+/**
+ * Graphics class of the BDQueimadas.
+ * @class Graphics
+ * @variation 2
+ *
+ * @author Jean Souza [jean.souza@funcate.org.br]
+ */
 BDQueimadas.components.Graphics = (function() {
 
   var interval = null;
-
-  var SortArr = function (j) {
-    var arr = [];
-    for (var key in j) {
-      arr.push({ key: key, val: j[key] });
-    }
-    arr.sort(function (a, b) {
-      var intA = parseInt(a.val), intB = parseInt(b.val);
-      if(intA > intB) return -1;
-      if(intA < intB) return 1;
-      return 0;
-    });
-    return arr;
-  };
 
   var loadGraphics = function() {
     var features = JSON.parse(BDQueimadas.obj.getFeatures());
@@ -45,8 +38,8 @@ BDQueimadas.components.Graphics = (function() {
       }
     }
 
-    groupedData = SortArr(groupedData);
-    groupedDataBioma = SortArr(groupedDataBioma);
+    groupedData = BDQueimadas.components.Utils.sortIntegerArray(groupedData);
+    groupedDataBioma = BDQueimadas.components.Utils.sortIntegerArray(groupedDataBioma);
 
     var labels = [];
     var values = [];
@@ -123,8 +116,31 @@ BDQueimadas.components.Graphics = (function() {
     }
   };
 
+  /**
+   * Loads the sockets listeners.
+   *
+   * @private
+   * @function loadSocketsListeners
+   * @memberof Graphics(2)
+   * @inner
+   */
+  var loadSocketsListeners = function() {
+    BDQueimadas.obj.getSocket().on('graphicsFiresCountBySatelliteResponse', function(result) {
+      console.log(result);
+    });
+  };
+
+  /**
+   * Initializes the necessary features.
+   *
+   * @function init
+   * @memberof Graphics(2)
+   * @inner
+   */
   var init = function() {
     interval = window.setInterval(verifiesOutsideVars, 3000);
+    loadSocketsListeners();
+    BDQueimadas.obj.getSocket().emit('graphicsFiresCountBySatelliteRequest');
   };
 
   return {

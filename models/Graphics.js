@@ -23,26 +23,33 @@ var Graphics = function() {
   var memberPg = require('pg');
 
   /**
-   * Returns the center cordinates of the country correspondent to the received id.
-   * @param {number} countryId - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
+   * Callback of the database operations.
+   * @callback Graphics~databaseOperationCallback
+   * @param {error} err - Error
+   * @param {json} result - Result of the operation
+   */
+
+  /**
+   * Returns the count of the fires grouped by satellites.
+   * @param {databaseOperationCallback} callback - Callback function
+   * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
    *
-   * @function getCountryCenter
+   * @function getFiresCountBySatellite
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountBySatellite = function(countryId, callback) {
+  this.getFiresCountBySatellite = function(callback) {
     // Connection with the PostgreSQL database
     memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.Countries.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
-            params = [countryId];
+        var query = "select " + memberTablesConfig.Fires.SatelliteFieldName + ", count(*) as " + memberTablesConfig.Fires.CountAlias + " from " +
+        memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName + " group by " + memberTablesConfig.Fires.SatelliteFieldName +
+        " order by " + memberTablesConfig.Fires.CountAlias + " desc;";
 
         // Execution of the query
-        client.query(query, params, function(err, result) {
+        client.query(query, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);

@@ -2,7 +2,7 @@
 
 /**
  * Utilities class of the BDQueimadas.
- * @module Utils
+ * @class Utils
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
@@ -15,6 +15,8 @@ BDQueimadas.components.Utils = (function() {
    * @returns {string} stringDate - Formatted string date
    *
    * @function dateToString
+   * @memberof Utils
+   * @inner
    */
   var dateToString = function(date, format) {
     var stringDate = format;
@@ -37,6 +39,8 @@ BDQueimadas.components.Utils = (function() {
    * @returns {date} finalDate - Date
    *
    * @function stringToDate
+   * @memberof Utils
+   * @inner
    */
   var stringToDate = function(date, format) {
     var yearPosition = format.indexOf("YYYY");
@@ -58,6 +62,8 @@ BDQueimadas.components.Utils = (function() {
    * @returns {string} finalString - Processed string
    *
    * @function processStringWithDatePattern
+   * @memberof Utils
+   * @inner
    */
   var processStringWithDatePattern = function(string) {
     var finalString = string;
@@ -114,6 +120,8 @@ BDQueimadas.components.Utils = (function() {
    * @returns {boolean} boolean - Flag that indicates if the string exists in the array
    *
    * @function stringInArray
+   * @memberof Utils
+   * @inner
    */
   var stringInArray = function(array, string) {
     $.each(array, function(i, item) {
@@ -124,9 +132,43 @@ BDQueimadas.components.Utils = (function() {
   };
 
   /**
+   * Sorts an array of integers and returns it in JSON format, along with the original index of each value.
+   * @param {array} array - Array of integers to be sorted
+   * @param {string} [order=asc] - Sorting order
+   * @returns {json} json - JSON containing the result
+   *
+   * @function sortIntegerArray
+   * @memberof Utils
+   * @inner
+   */
+  var sortIntegerArray = function(array, order) {
+    var json = [];
+
+    order = (order !== null && order !== undefined && (order === 'asc' || order === 'desc')) ? order : 'asc';
+
+    for(var key in array) {
+      json.push({ key: key, value: array[key] });
+    }
+
+    json.sort(function(a, b) {
+      var intA = parseInt(a.value),
+          intB = parseInt(b.value);
+
+      if(intA > intB) return (order === 'asc') ? 1 : -1;
+      if(intA < intB) return (order === 'asc') ? -1 : 1;
+
+      return 0;
+    });
+
+    return json;
+  };
+
+  /**
    * Initializes the necessary features.
    *
    * @function init
+   * @memberof Utils
+   * @inner
    */
   var init = function() {};
 
@@ -135,6 +177,7 @@ BDQueimadas.components.Utils = (function() {
     stringToDate: stringToDate,
     processStringWithDatePattern: processStringWithDatePattern,
     stringInArray: stringInArray,
+    sortIntegerArray: sortIntegerArray,
     init: init
   };
 })();
