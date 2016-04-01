@@ -6,11 +6,21 @@
  * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
+ *
+ * @property {object} firesCountBySatelliteGraphic - Graphic of fires count by satellite.
  */
 BDQueimadas.components.Graphics = (function() {
 
-  // New
+  // Graphic of fires count by satellite
+  var firesCountBySatelliteGraphic = null;
 
+  /**
+   * Updates the graphic of fires count by satellite.
+   *
+   * @function updateFiresCountBySatelliteGraphic
+   * @memberof Graphics(2)
+   * @inner
+   */
   var updateFiresCountBySatelliteGraphic = function() {
     var dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
     var dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
@@ -20,11 +30,9 @@ BDQueimadas.components.Graphics = (function() {
     BDQueimadas.obj.getSocket().emit('graphicsFiresCountBySatelliteRequest', { dateFrom: dateFrom, dateTo: dateTo, satellite: satellite, extent: extent });
   };
 
-  // new
-
   /**
-   * Loads the sockets listeners.
-   * @param {json} firesCountBySatellite - Format
+   * Loads the graphic of fires count by satellite.
+   * @param {json} firesCountBySatellite - Data to be used in the graphic
    *
    * @private
    * @function loadFiresCountBySatelliteGraphic
@@ -40,7 +48,7 @@ BDQueimadas.components.Graphics = (function() {
       values.push(countBySatellite.count);
     });
 
-    var firesCountBySatelliteGraphic = {
+    var firesCountBySatelliteGraphicData = {
       labels : labels,
       datasets : [
         {
@@ -51,10 +59,12 @@ BDQueimadas.components.Graphics = (function() {
           data : values
         }
       ]
-    }
+    };
+
+    if(firesCountBySatelliteGraphic !== null) firesCountBySatelliteGraphic.destroy();
 
     var htmlElement = $("#fires-count-by-satellite-graphic").get(0).getContext("2d");
-    window.firesCountBySatelliteGraphic = new Chart(htmlElement).Bar(firesCountBySatelliteGraphic, { responsive : true, maintainAspectRatio: false });
+    firesCountBySatelliteGraphic = new Chart(htmlElement).Bar(firesCountBySatelliteGraphicData, { responsive : true, maintainAspectRatio: false });
   };
 
   /**
