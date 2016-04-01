@@ -14,20 +14,6 @@
 </script>
 <!-- Bootstrap 3.3.5 -->
 <script type="text/javascript" src="/externals/bootstrap/js/bootstrap.min.js"></script>
-<!-- Sparkline -->
-<script type="text/javascript" src="/externals/sparkline/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script type="text/javascript" src="/externals/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script type="text/javascript" src="/externals/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script type="text/javascript" src="/externals/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
-<script type="text/javascript" src="/externals/daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="/externals/daterangepicker/daterangepicker.js"></script>
-<!-- datepicker -->
-<script type="text/javascript" src="/externals/datepicker/bootstrap-datepicker.js"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script type="text/javascript" src="/externals/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <!-- Slimscroll -->
 <script type="text/javascript" src="/externals/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -43,150 +29,22 @@
 <script type="text/javascript" src="/externals/input-mask/jquery.inputmask.js"></script>
 <script type="text/javascript" src="/externals/input-mask/jquery.inputmask.date.extensions.js"></script>
 <script type="text/javascript" src="/externals/input-mask/jquery.inputmask.extensions.js"></script>
-<!-- Malihu custom scrollbar plugin -->
-<script type="text/javascript" src="/externals/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
 <!-- Queimadas -->
 <script type="text/javascript" src="/externals/adminlte/js/queimadas.js"></script>
 <!-- OpenLayers  -->
 <script type="text/javascript" src="/externals/openlayers/ol.js"></script>
+<!-- BDQueimadas -->
 <script type="text/javascript" src="/javascripts/BDQueimadas.js"></script>
+<!-- TerraMA² -->
 <script type="text/javascript" src="<%= terrama2Path %>/javascripts/TerraMA2WebComponents.js"></script>
+<!-- Variables used in TerraMA² and BDQueimadas -->
 <script type="text/javascript">
-  TerraMA2WebComponents.obj.init(
-    "<%= terrama2Path %>",
-    [
-      "MapDisplay",
-      "LayerExplorer"
-    ]
-  );
+  var terrama2Path = "<%= terrama2Path %>";
 
-  var fillColors = {
-    "0": "#FFEBCD",
-    "100": "#FFC387",
-    "500": "#FAA046",
-    "1000": "#FA872D",
-    "5000": "#FA5C25",
-    "25000": "#C34231",
-    "50000": "#A21C0D"
-  };
-
-  var strokeColors = {
-    "0": "#000000",
-    "100": "#000000",
-    "500": "#000000",
-    "1000": "#000000",
-    "5000": "#000000",
-    "25000": "#000000",
-    "50000": "#000000"
-  };
-
-  BDQueimadas.obj.init(
-    JSON.parse('<%- JSON.stringify(filterConfig) %>'),
-    JSON.parse('<%- JSON.stringify(serverConfig) %>'),
-    JSON.parse('<%- JSON.stringify(attributesTableConfig) %>'),
-    JSON.parse('<%- JSON.stringify(componentsConfig) %>'),
-    JSON.parse('<%- JSON.stringify(mapSubtitleConfig) %>')
-  );
-
-  var serverConfig = JSON.parse('<%- JSON.stringify(serverConfig) %>');
   var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
-
-  var terrama2Interval = window.setInterval(function() {
-    if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-
-      /*TerraMA2WebComponents.webcomponents.MapDisplay.addGeoJSONVectorLayer(
-        'http://localhost:38000/get-countries-layer-features',
-        'countries',
-        'countries',
-        true,
-        fillColors,
-        strokeColors,
-        function(feature, fill, stroke) {
-          var colorSelector = "0";
-
-          if(parseInt(feature.get('fires_count')) > 0 && parseInt(feature.get('fires_count')) <= 100) {
-            colorSelector = "100";
-          } else if(parseInt(feature.get('fires_count')) > 100 && parseInt(feature.get('fires_count')) <= 500) {
-            colorSelector = "500";
-          } else if(parseInt(feature.get('fires_count')) > 500 && parseInt(feature.get('fires_count')) <= 1000) {
-            colorSelector = "1000";
-          } else if(parseInt(feature.get('fires_count')) > 1000 && parseInt(feature.get('fires_count')) <= 5000) {
-            colorSelector = "5000";
-          } else if(parseInt(feature.get('fires_count')) > 5000 && parseInt(feature.get('fires_count')) <= 25000) {
-            colorSelector = "25000";
-          } else if(parseInt(feature.get('fires_count')) > 25000 && parseInt(feature.get('fires_count')) <= 50000) {
-            colorSelector = "50000";
-          }
-
-          return {
-            "fillColor": fill[colorSelector],
-            "strokeColor": stroke[colorSelector]
-          };
-        }
-      );*/
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.Servers.Local.URL,
-        serverConfig.Servers.Local.Type,
-        serverConfig.Servers.Local.StatesLayerId,
-        serverConfig.Servers.Local.StatesLayerId,
-        true,
-        filterConfig.SpatialFilter.StatesMinimumResolution,
-        filterConfig.SpatialFilter.StatesMaximumResolution
-      );
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.Servers.Local.URL,
-        serverConfig.Servers.Local.Type,
-        serverConfig.Servers.Local.CountriesLayerId,
-        serverConfig.Servers.Local.CountriesLayerId,
-        true,
-        filterConfig.SpatialFilter.CountriesMinimumResolution,
-        filterConfig.SpatialFilter.CountriesMaximumResolution
-      );
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.Servers.Local.URL,
-        serverConfig.Servers.Local.Type,
-        serverConfig.Servers.Local.FiresLayerId,
-        serverConfig.Servers.Local.FiresLayerId,
-        true,
-        filterConfig.SpatialFilter.FiresMinimumResolution,
-        filterConfig.SpatialFilter.FiresMaximumResolution
-      );
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(
-        serverConfig.Servers.Local.URL,
-        serverConfig.Servers.Local.Type,
-        serverConfig.Servers.Local.FiresChoroplethLayerId,
-        serverConfig.Servers.Local.FiresChoroplethLayerId,
-        true,
-        filterConfig.SpatialFilter.FiresChoroplethMinimumResolution,
-        filterConfig.SpatialFilter.FiresChoroplethMaximumResolution
-      );
-
-      TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('bases');
-
-      TerraMA2WebComponents.webcomponents.MapDisplay.addCapabilitiesLayers(
-        serverConfig.Servers.Local.URL + serverConfig.Servers.Local.CapabilitiesParams,
-        serverConfig.Servers.Local.URL,
-        'geoserver',
-        'local',
-        'Local Server',
-        function() {
-          TerraMA2WebComponents.webcomponents.LayerExplorer.addLayersFromMap('local');
-        }
-      );
-
-      clearInterval(terrama2Interval);
-    }
-  }, 10);
-
-  var bdqueimadasInterval = window.setInterval(function() {
-    if(BDQueimadas.obj.isComponentsLoaded()) {
-      BDQueimadas.components.MapSubtitle.addSubtitle(serverConfig.Servers.Local.FiresChoroplethLayerId);
-
-      clearInterval(bdqueimadasInterval);
-    }
-  }, 10);
+  var attributesTableConfig = JSON.parse('<%- JSON.stringify(attributesTableConfig) %>');
+  var componentsConfig = JSON.parse('<%- JSON.stringify(componentsConfig) %>');
+  var mapConfig = JSON.parse('<%- JSON.stringify(mapConfig) %>');
 </script>
+<!-- Startup Script -->
+<script type="text/javascript" src="/javascripts/Startup.js"></script>

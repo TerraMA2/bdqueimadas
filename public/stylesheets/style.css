@@ -93,7 +93,7 @@
   left: -350px;
   margin-top: 286px;
   height: calc(100% - 318px);
-  overflow: auto;
+  overflow: auto !important;
 }
 
 .fullscreen {
@@ -250,6 +250,8 @@
 
 #map-subtitle > .box > .box-body > ul > li > a > span { margin-left: 15px; }
 
+#box-attributes-table > div.box-body { overflow: auto; }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
@@ -262,8 +264,6 @@
   -o-transition: width 0.3s ease-in-out;
   transition: width 0.3s ease-in-out;
 }
-
-#terrama2-map .ol-zoom { top: 230px !important; }
 
 /* AdminLTEQueimadas general adjustments */
 

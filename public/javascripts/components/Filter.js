@@ -2,7 +2,8 @@
 
 /**
  * Filter class of the BDQueimadas.
- * @module Filter
+ * @class Filter
+ * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
@@ -22,23 +23,27 @@ BDQueimadas.components.Filter = (function() {
   /**
    * Returns the initial date formatted with the received format.
    * @param {string} format - Format
-   * @returns {string} dateToString() - Formatted initial date (string)
+   * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted initial date (string)
    *
    * @function getFormattedDateFrom
+   * @memberof Filter(2)
+   * @inner
    */
   var getFormattedDateFrom = function(format) {
-    return dateToString(memberDateFrom, format);
+    return BDQueimadas.components.Utils.dateToString(memberDateFrom, format);
   };
 
   /**
    * Returns the final date formatted with the received format.
    * @param {string} format - Format
-   * @returns {string} dateToString() - Formatted final date (string)
+   * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted final date (string)
    *
    * @function getFormattedDateTo
+   * @memberof Filter(2)
+   * @inner
    */
   var getFormattedDateTo = function(format) {
-    return dateToString(memberDateTo, format);
+    return BDQueimadas.components.Utils.dateToString(memberDateTo, format);
   };
 
   /**
@@ -46,32 +51,11 @@ BDQueimadas.components.Filter = (function() {
    * @returns {string} memberSatellite - Satellite
    *
    * @function getSatellite
+   * @memberof Filter(2)
+   * @inner
    */
   var getSatellite = function() {
     return memberSatellite;
-  };
-
-  /**
-   * Converts a date into a string date formatted accordingly with the received format.
-   * @param {date} date - Date to be formatted
-   * @param {string} format - Format
-   * @returns {string} stringDate - Formatted string date
-   *
-   * @private
-   * @function dateToString
-   */
-  var dateToString = function(date, format) {
-    var stringDate = format;
-
-    var dd = ('0' + date.getDate()).slice(-2);
-    var mm = ('0' + (date.getMonth() + 1)).slice(-2);
-    var yyyy = date.getFullYear().toString();
-
-    if(format.match(/YYYY/)) stringDate = stringDate.replace("YYYY", yyyy);
-    if(format.match(/MM/)) stringDate = stringDate.replace("MM", mm);
-    if(format.match(/DD/)) stringDate = stringDate.replace("DD", dd);
-
-    return stringDate;
   };
 
   /**
@@ -80,11 +64,13 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function createDateFilter
+   * @memberof Filter(2)
+   * @inner
    */
   var createDateFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().DateFieldName + ">=" + dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().DateFormat);
+    var cql = BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + ">=" + BDQueimadas.components.Utils.dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
     cql += " and ";
-    cql += BDQueimadas.obj.getFilterConfig().DateFieldName + "<=" + dateToString(memberDateTo, BDQueimadas.obj.getFilterConfig().DateFormat);
+    cql += BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + "<=" + BDQueimadas.components.Utils.dateToString(memberDateTo, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
 
     return cql;
   };
@@ -93,19 +79,21 @@ BDQueimadas.components.Filter = (function() {
    * Updates the initial and the final date.
    * @param {string} newDateFrom - New initial date (string)
    * @param {string} newDateTo - New final date (string)
+   * @param {string} format - Dates format
    *
-   * @private
    * @function updateDates
+   * @memberof Filter(2)
+   * @inner
    */
-  var updateDates = function(newDateFrom, newDateTo) {
-    var dateFromSplited = newDateFrom.split("/");
-    var dateToSplited = newDateTo.split("/");
-
-    memberDateFrom = new Date(dateFromSplited[2] + '-' + dateFromSplited[1] + '-' + dateFromSplited[0] + ' UTC-03:00');
-    memberDateTo = new Date(dateToSplited[2] + '-' + dateToSplited[1] + '-' + dateToSplited[0] + ' UTC-03:00');
+  var updateDates = function(newDateFrom, newDateTo, format) {
+    memberDateFrom = BDQueimadas.components.Utils.stringToDate(newDateFrom, format);
+    memberDateTo = BDQueimadas.components.Utils.stringToDate(newDateTo, format);
 
     memberDateFrom.setHours(0,0,0,0);
     memberDateTo.setHours(0,0,0,0);
+
+    $('#filter-date-from').val(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
+    $('#filter-date-to').val(BDQueimadas.components.Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
   };
 
   /**
@@ -113,6 +101,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function updateDatesToCurrent
+   * @memberof Filter(2)
+   * @inner
    */
   var updateDatesToCurrent = function() {
     memberDateFrom = new Date();
@@ -129,9 +119,11 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function createSatelliteFilter
+   * @memberof Filter(2)
+   * @inner
    */
   var createSatelliteFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().SatelliteFieldName + "='" + memberSatellite + "'";
+    var cql = BDQueimadas.obj.getFilterConfig().LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
     return cql;
   };
 
@@ -143,12 +135,14 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function applyFilter
+   * @memberof Filter(2)
+   * @inner
    */
   var applyFilter = function(filterDateFrom, filterDateTo, filterSatellite) {
     var cql = "";
 
     if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
-      updateDates(filterDateFrom, filterDateTo);
+      updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
       cql += createDateFilter();
     }
 
@@ -159,10 +153,26 @@ BDQueimadas.components.Filter = (function() {
       cql += createSatelliteFilter();
 
     updateSatelliteSelect();
+    TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter.LayerId);
+    updateComponents();
+  };
 
-    BDQueimadas.components.AttributesTable.updateAttributesTable();
+  /**
+   * Updates the necessary components.
+   *
+   * @function updateComponents
+   * @memberof Filter(2)
+   * @inner
+   */
+  var updateComponents = function() {
+    var bdqueimadasInterval = window.setInterval(function() {
+      if(BDQueimadas.obj.isComponentsLoaded()) {
+        BDQueimadas.components.AttributesTable.updateAttributesTable();
+        BDQueimadas.components.Graphics.updateGraphics();
 
-    TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter);
+        clearInterval(bdqueimadasInterval);
+      }
+    }, 10);
   };
 
   /**
@@ -170,12 +180,14 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function updateSatelliteSelect
+   * @memberof Filter(2)
+   * @inner
    */
   var updateSatelliteSelect = function() {
     var selectedOption = $('#filter-satellite').value;
 
     var elem = "<option value=\"all\">TODOS</option>";
-    var satellitesList = BDQueimadas.obj.getFilterConfig().SatellitesList;
+    var satellitesList = BDQueimadas.obj.getFilterConfig().Satellites;
 
     $.each(satellitesList, function(i, satelliteItem) {
       var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
@@ -203,6 +215,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function loadEvents
+   * @memberof Filter(2)
+   * @inner
    */
   var loadEvents = function() {
     $('#filter-button').on('click', function(el) {
@@ -246,27 +260,9 @@ BDQueimadas.components.Filter = (function() {
       }
     });
 
-    var interval = window.setInterval(function() {
-      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(event) {
-          if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId)) {
-            BDQueimadas.components.MapSubtitle.showSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
-          } else {
-            BDQueimadas.components.MapSubtitle.hideSubtitle(BDQueimadas.obj.getServerConfig().Servers.Local.FiresChoroplethLayerId);
-          }
-        });
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(e) {
-          BDQueimadas.obj.getSocket().emit('extentByIntersectionRequest', {
-            longitude: e.coordinate[0],
-            latitude: e.coordinate[1],
-            resolution: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution()
-          });
-        });
-
-        clearInterval(interval);
-      }
-    }, 10);
+    $('#updateComponents').on('click', function() {
+      updateComponents();
+    });
   };
 
   /**
@@ -276,6 +272,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function selectContinentItem
+   * @memberof Filter(2)
+   * @inner
    */
   var selectContinentItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
@@ -288,6 +286,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function selectCountryItem
+   * @memberof Filter(2)
+   * @inner
    */
   var selectCountryItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('continentByCountryRequest', { country: id });
@@ -301,6 +301,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function selectStateItem
+   * @memberof Filter(2)
+   * @inner
    */
   var selectStateItem = function(id, text) {
     BDQueimadas.obj.getSocket().emit('continentByStateRequest', { state: id });
@@ -315,6 +317,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function enableDropdown
+   * @memberof Filter(2)
+   * @inner
    */
   var enableDropdown = function(id, text) {
     $('#' + id + '-title').empty().html(text);
@@ -329,6 +333,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function disableDropdown
+   * @memberof Filter(2)
+   * @inner
    */
   var disableDropdown = function(id, text) {
     $('#' + id + '-title').empty().html(text);
@@ -341,6 +347,8 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function resetDropdowns
+   * @memberof Filter(2)
+   * @inner
    */
   var resetDropdowns = function() {
     enableDropdown('continents', "Continentes");
@@ -355,40 +363,29 @@ BDQueimadas.components.Filter = (function() {
    *
    * @private
    * @function loadSocketsListeners
+   * @memberof Filter(2)
+   * @inner
    */
   var loadSocketsListeners = function() {
     BDQueimadas.obj.getSocket().on('spatialFilterResponse', function(result) {
-      if(result.key === 'Continent') {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
+      var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
+      var extentArray = extent[0].split(' ');
+      extentArray = extentArray.concat(extent[1].split(' '));
+      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
+      updateComponents();
 
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
+      if(result.key === 'Continent') {
         BDQueimadas.obj.getSocket().emit('countriesByContinentRequest', { continent: result.id });
 
         enableDropdown('continents', result.text);
         enableDropdown('countries', 'Pa&iacute;ses');
         disableDropdown('states', 'Estados');
       } else if(result.key === 'Country') {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
         BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.id });
 
         enableDropdown('countries', result.text);
         enableDropdown('states', 'Estados');
       } else {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
-
         enableDropdown('states', result.text);
       }
     });
@@ -412,7 +409,7 @@ BDQueimadas.components.Filter = (function() {
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
       }
 
-      BDQueimadas.components.AttributesTable.updateAttributesTable();
+      updateComponents();
     });
 
     BDQueimadas.obj.getSocket().on('continentByCountryResponse', function(result) {
@@ -458,12 +455,16 @@ BDQueimadas.components.Filter = (function() {
    * Initializes the necessary features.
    *
    * @function init
+   * @memberof Filter(2)
+   * @inner
    */
   var init = function() {
     $(document).ready(function() {
       updateDatesToCurrent();
       loadEvents();
       loadSocketsListeners();
+
+      window.setInterval(function() { updateComponents(); }, 60000);
     });
   };
 
@@ -472,6 +473,8 @@ BDQueimadas.components.Filter = (function() {
     getFormattedDateTo: getFormattedDateTo,
     getSatellite: getSatellite,
     resetDropdowns: resetDropdowns,
+    updateDates: updateDates,
+    updateComponents: updateComponents,
     init: init
   };
 })();

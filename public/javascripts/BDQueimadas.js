@@ -6,17 +6,14 @@ window.BDQueimadas = {
 
 /**
  * Main class of the BDQueimadas.
- * @module BDQueimadas
+ * @class BDQueimadas
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {json} memberFilterConfig - Filter configuration.
- * @property {json} memberServerConfig - Mapping server configuration.
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
  * @property {json} memberComponentsConfig - Components configuration.
- * @property {json} memberMapSubtitleConfig - Map subtitle configuration.
- * @property {string} memberFeatureDescription - Fires layer feature description.
- * @property {string} memberFeatures - Fires layer features.
+ * @property {json} memberMapConfig - Map configuration.
  * @property {object} memberSocket - Socket object.
  * @property {number} memberHeight - Window height.
  * @property {number} memberHeaderHeight - Header height.
@@ -30,18 +27,12 @@ BDQueimadas.obj = (function() {
 
   // Filter configuration
   var memberFilterConfig = null;
-  // Mapping server configuration
-  var memberServerConfig = null;
   // Fires layer attributes table configuration
   var memberAttributesTableConfig = null;
   // Components configuration
   var memberComponentsConfig = null;
-  // Map subtitle configuration
-  var memberMapSubtitleConfig = null;
-  // Fires layer feature description
-  var memberFeatureDescription = null;
-  // Fires layer features
-  var memberFeatures = null;
+  // Map configuration
+  var memberMapConfig = null;
   // Socket object
   var memberSocket = null;
   // Window height
@@ -60,30 +51,12 @@ BDQueimadas.obj = (function() {
   var memberComponentsLoaded = false;
 
   /**
-   * Returns the fires layer feature description.
-   * @returns {string} memberFeatureDescription - Feature description
-   *
-   * @function getFeatureDescription
-   */
-  var getFeatureDescription = function() {
-    return memberFeatureDescription;
-  };
-
-  /**
-   * Returns the fires layer features.
-   * @returns {string} memberFeatures - Features
-   *
-   * @function getFeatures
-   */
-  var getFeatures = function() {
-    return memberFeatures;
-  };
-
-  /**
    * Returns the socket object.
    * @returns {object} memberSocket - Socket object
    *
    * @function getSocket
+   * @memberof BDQueimadas
+   * @inner
    */
   var getSocket = function() {
     return memberSocket;
@@ -94,19 +67,11 @@ BDQueimadas.obj = (function() {
    * @returns {json} memberFilterConfig - Filter configuration
    *
    * @function getFilterConfig
+   * @memberof BDQueimadas
+   * @inner
    */
   var getFilterConfig = function() {
     return memberFilterConfig;
-  };
-
-  /**
-   * Returns the map server configuration.
-   * @returns {json} memberServerConfig - Map server configuration
-   *
-   * @function getServerConfig
-   */
-  var getServerConfig = function() {
-    return memberServerConfig;
   };
 
   /**
@@ -114,56 +79,42 @@ BDQueimadas.obj = (function() {
    * @returns {json} memberAttributesTableConfig - Attributes table configuration
    *
    * @function getAttributesTableConfig
+   * @memberof BDQueimadas
+   * @inner
    */
   var getAttributesTableConfig = function() {
     return memberAttributesTableConfig;
   };
 
   /**
-   * Returns the map subtitle configuration.
-   * @returns {json} memberMapSubtitleConfig - Map subtitle configuration
+   * Returns the map configuration.
+   * @returns {json} memberMapConfig - Map configuration
    *
-   * @function getMapSubtitleConfig
+   * @function getMapConfig
+   * @memberof BDQueimadas
+   * @inner
    */
-  var getMapSubtitleConfig = function() {
-    return memberMapSubtitleConfig;
-  };
-
-  /**
-   * Generates a random text.
-   * @returns {string} random - Random text
-   *
-   * @function randomText
-   */
-  var randomText = function() {
-    var characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var random = '';
-
-    for(var i = 0; i < 25; i++) {
-      var rnum = Math.floor(Math.random() * characters.length);
-      random += characters.substring(rnum, rnum + 1);
-    }
-
-    return random;
+  var getMapConfig = function() {
+    return memberMapConfig;
   };
 
   /**
    * Loads the components configurations.
    * @param {json} filterConfig - Filter configuration
-   * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
-   * @param {json} mapSubtitleConfig - Map subtitle configuration
+   * @param {json} mapConfig - Map configuration
    *
    * @private
    * @function loadConfigurations
+   * @memberof BDQueimadas
+   * @inner
    */
-  var loadConfigurations = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
+  var loadConfigurations = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
     memberFilterConfig = filterConfig;
-    memberServerConfig = serverConfig;
     memberAttributesTableConfig = attributesTableConfig;
     memberComponentsConfig = componentsConfig;
-    memberMapSubtitleConfig = mapSubtitleConfig;
+    memberMapConfig = mapConfig;
   };
 
   /**
@@ -172,6 +123,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadComponents
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadComponents = function(i) {
     if(i < memberComponentsConfig.Components.length) {
@@ -189,56 +142,12 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Loads the fires layer feature description.
-   *
-   * @private
-   * @function loadFeatureDescription
-   */
-  var loadFeatureDescription = function() {
-    var requestId = randomText();
-
-    memberSocket.emit(
-      'proxyRequest',
-      {
-        url: memberServerConfig.Servers.Local.URL + memberServerConfig.Servers.Local.DescribeFeatureTypeParams + memberFilterConfig.LayerToFilter,
-        requestId: requestId
-      }
-    );
-    memberSocket.on('proxyResponse', function(msg) {
-      if(msg.requestId === requestId) {
-        memberFeatureDescription = msg.msg;
-      }
-    });
-  };
-
-  /**
-   * Loads the fires layer features.
-   *
-   * @private
-   * @function loadFeatures
-   */
-  var loadFeatures = function() {
-    var requestId = randomText();
-
-    memberSocket.emit(
-      'proxyRequest',
-      {
-        url: memberServerConfig.Servers.Local.URL + memberServerConfig.Servers.Local.GetFeatureParams + memberFilterConfig.LayerToFilter,
-        requestId: requestId
-      }
-    );
-    memberSocket.on('proxyResponse', function(msg) {
-      if(msg.requestId === requestId) {
-        memberFeatures = msg.msg;
-      }
-    });
-  };
-
-  /**
    * Loads the DOM events.
    *
    * @private
    * @function loadEvents
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadEvents = function() {
     // Sidebar buttons click event
@@ -302,10 +211,10 @@ BDQueimadas.obj = (function() {
       // Elements sizes adjustments, accordingly with the sidebar width
       if($("body").hasClass('sidebar-collapse')) {
         $("#terrama2-map").removeClass('fullmenu');
-        setReducedContentSize();
+        setReducedContentSize(300);
       } else {
         $("#terrama2-map").addClass('fullmenu');
-        setFullContentSize();
+        setFullContentSize(300);
       }
 
       // Updates the map size
@@ -318,21 +227,22 @@ BDQueimadas.obj = (function() {
       closeAllLeftContentBoxes();
       closeLeftContentBoxBackground();
 
-      // Updates the variables that keep DOM elements sizes
-      updateSizeVars();
+      // Executes map / DOM elements size updates during 300 milliseconds, with intervals of 10 milliseconds
+      var interval = window.setInterval(function() {
+        // Updates the variables that keep DOM elements sizes
+        updateSizeVars();
 
-      // Elements sizes adjustments, accordingly with the sidebar width
-      if($("body").hasClass('sidebar-collapse')) {
-        setReducedContentSize();
-      } else {
-        setFullContentSize();
-      }
+        // Elements sizes adjustments, accordingly with the sidebar width
+        if($("body").hasClass('sidebar-collapse'))
+          setReducedContentSize(0);
+        else
+          setFullContentSize(0);
 
-      // Updates the padding top of the sidebar
-      $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+        // Updates the padding top of the sidebar
+        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
-      // Executes map size updates during 300 milliseconds, with intervals of 10 milliseconds
-      var interval = window.setInterval(function() { TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize(); }, 10);
+        TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
+      }, 10);
       window.setTimeout(function() { clearInterval(interval); }, 300);
     });
 
@@ -357,11 +267,21 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function loadPlugins
+   * @memberof BDQueimadas
+   * @inner
    */
   var loadPlugins = function() {
     $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
-
-    //window.setTimeout(function() { $('.left-content-box').mCustomScrollbar({ axis:"yx" }); }, 3000);
+    $(".date").datepicker({
+      dateFormat: 'dd/mm/yyyy',
+      dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+      dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+      dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+      monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+      monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      nextText: 'Próximo',
+      prevText: 'Anterior'
+    });
   };
 
   /**
@@ -371,6 +291,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function openLeftContentBoxBackground
+   * @memberof BDQueimadas
+   * @inner
    */
   var openLeftContentBoxBackground = function(leftContentBoxButton, leftContentBox) {
     var width = '';
@@ -398,6 +320,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function closeLeftContentBoxBackground
+   * @memberof BDQueimadas
+   * @inner
    */
   var closeLeftContentBoxBackground = function() {
     $("#left-content-box-background").removeClass('active');
@@ -412,6 +336,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function openLeftContentBox
+   * @memberof BDQueimadas
+   * @inner
    */
   var openLeftContentBox = function(leftContentBox, headerText) {
     $("#" + leftContentBox).addClass('active');
@@ -432,6 +358,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function adjustLeftContentBoxSize
+   * @memberof BDQueimadas
+   * @inner
    */
   var adjustLeftContentBoxSize = function(id) {
     if($("#" + id).css('left') === '230px') {
@@ -454,6 +382,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function closeAllLeftContentBoxes
+   * @memberof BDQueimadas
+   * @inner
    */
   var closeAllLeftContentBoxes = function() {
     $(".content-header > h1").html("Banco de Dados de Queimadas");
@@ -467,6 +397,8 @@ BDQueimadas.obj = (function() {
    *
    * @private
    * @function updateSizeVars
+   * @memberof BDQueimadas
+   * @inner
    */
   var updateSizeVars = function() {
     memberHeight = $(window).outerHeight();
@@ -478,30 +410,36 @@ BDQueimadas.obj = (function() {
 
   /**
    * Updates content to full size.
+   * @param {int} duration - Duration of the animation
    *
    * @private
    * @function setFullContentSize
+   * @memberof BDQueimadas
+   * @inner
    */
-  var setFullContentSize = function() {
-    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
-    $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+  var setFullContentSize = function(duration) {
+    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
+    $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-    $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
-    $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
+    $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+    $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
   };
 
   /**
    * Updates content to reduced size.
+   * @param {int} duration - Duration of the animation
    *
    * @private
    * @function setReducedContentSize
+   * @memberof BDQueimadas
+   * @inner
    */
-  var setReducedContentSize = function() {
-    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
-    $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: 300, queue: false });
+  var setReducedContentSize = function(duration) {
+    $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
+    $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-    $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 20)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
-    $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: 300, queue: false });
+    $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+    $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
   };
 
   /**
@@ -509,6 +447,8 @@ BDQueimadas.obj = (function() {
    * @returns {boolean} memberComponentsLoaded - Flag that indicates if all the components have been loaded
    *
    * @function isComponentsLoaded
+   * @memberof BDQueimadas
+   * @inner
    */
   var isComponentsLoaded = function() {
     return memberComponentsLoaded;
@@ -517,26 +457,29 @@ BDQueimadas.obj = (function() {
   /**
    * Initializes the necessary features.
    * @param {json} filterConfig - Filter configuration
-   * @param {json} serverConfig - Mapping server configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
-   * @param {json} mapSubtitleConfig - Map subtitle configuration
+   * @param {json} mapConfig - Map configuration
    *
    * @function init
+   * @memberof BDQueimadas
+   * @inner
    */
-  var init = function(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig) {
+  var init = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
     $(document).ready(function() {
-      updateSizeVars();
-      setFullContentSize();
+      var interval = window.setInterval(function() {
+        updateSizeVars();
+        setFullContentSize(300);
+      }, 10);
+      window.setTimeout(function() { clearInterval(interval); }, 300);
+
       loadEvents();
-      loadConfigurations(filterConfig, serverConfig, attributesTableConfig, componentsConfig, mapSubtitleConfig);
+      loadConfigurations(filterConfig, attributesTableConfig, componentsConfig, mapConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
         success: function() {
           memberSocket = io(window.location.origin);
-          loadFeatures();
-          loadFeatureDescription();
           loadComponents(0);
         }
       });
@@ -546,14 +489,10 @@ BDQueimadas.obj = (function() {
   };
 
   return {
-  	getFeatureDescription: getFeatureDescription,
-    getFeatures: getFeatures,
     getSocket: getSocket,
   	getFilterConfig: getFilterConfig,
-    getServerConfig: getServerConfig,
     getAttributesTableConfig: getAttributesTableConfig,
-    getMapSubtitleConfig: getMapSubtitleConfig,
-  	randomText: randomText,
+    getMapConfig: getMapConfig,
     isComponentsLoaded: isComponentsLoaded,
   	init: init
   };

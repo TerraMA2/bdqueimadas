@@ -33,10 +33,9 @@ var IndexController = function(app) {
 
     // Load of the configuration files to be sent to the front end
     var filterConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Filter.json'), 'utf8')),
-        serverConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Servers.json'), 'utf8')),
         attributesTableConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8')),
         componentsConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Components.json'), 'utf8')),
-        mapSubtitleConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/MapSubtitle.json'), 'utf8'));
+        mapConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8'));
 
     memberFilter.getContinents(function(err, result) {
       if(err) return console.error(err);
@@ -44,10 +43,9 @@ var IndexController = function(app) {
       // Response parameters
       var params = {
         filterConfig: filterConfig,
-        serverConfig: serverConfig,
         attributesTableConfig: attributesTableConfig,
         componentsConfig: componentsConfig,
-        mapSubtitleConfig: mapSubtitleConfig,
+        mapConfig: mapConfig,
         continents: result
       };
 

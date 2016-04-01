@@ -2,7 +2,8 @@
 
 /**
  * Attributes table class of the BDQueimadas.
- * @module AttributesTable
+ * @class AttributesTable
+ * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
@@ -19,6 +20,8 @@ BDQueimadas.components.AttributesTable = (function() {
    *
    * @private
    * @function getAttributesTableColumnNamesArray
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var getAttributesTableColumnNamesArray = function() {
     var columnsJson = BDQueimadas.obj.getAttributesTableConfig().Columns;
@@ -37,74 +40,67 @@ BDQueimadas.components.AttributesTable = (function() {
    *
    * @private
    * @function loadAttributesTable
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var loadAttributesTable = function() {
-    var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
-    var columnsLength = columns.length;
-    var titles = "";
+    var interval = window.setInterval(function() {
+      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
+        var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
+        var columnsLength = columns.length;
+        var titles = "";
 
-    for(var i = 0; i < columnsLength; i++)
-      titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
+        for(var i = 0; i < columnsLength; i++)
+          titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
 
-    $('#attributes-table')
-      .empty()
-      .append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
+        $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
-    memberAttributesTable = $('#attributes-table').DataTable(
-      {
-        "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
-        "processing": true,
-        "serverSide": true,
-        "ajax": {
-          "url": "/get-attributes-table",
-          "type": "POST",
-          "data": function(data) {
-            data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
-            data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
-            data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
-            data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+        memberAttributesTable = $('#attributes-table').DataTable(
+          {
+            "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+              "url": "/get-attributes-table",
+              "type": "POST",
+              "data": function(data) {
+                data.dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
+                data.dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
+                data.satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
+                data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+              }
+            },
+            "columns": getAttributesTableColumnNamesArray()
           }
-        },
-        "columns": getAttributesTableColumnNamesArray()
+        );
+
+        clearInterval(interval);
       }
-    );
+    }, 10);
   };
 
   /**
    * Updates the attributes table.
    *
    * @function updateAttributesTable
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var updateAttributesTable = function() {
     memberAttributesTable.ajax.reload();
   };
 
   /**
-   * Loads the DOM events.
-   *
-   * @private
-   * @function loadEvents
-   */
-  var loadEvents = function() {
-    $('#filterTableToExtent').on('click', function() {
-      updateAttributesTable();
-    });
-  };
-
-  /**
    * Initializes the necessary features.
    *
    * @function init
+   * @memberof AttributesTable(2)
+   * @inner
    */
   var init = function() {
-    loadEvents();
-
-    var interval = window.setInterval(function() {
-      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        loadAttributesTable();
-        clearInterval(interval);
-      }
-    }, 10);
+    $(document).ready(function() {
+      loadAttributesTable();
+    });
   };
 
   return {
