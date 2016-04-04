@@ -23,7 +23,6 @@ var IndexController = function(app) {
    * Processes the request and returns a response.
    * @param {json} request - JSON containing the request data
    * @param {json} response - JSON containing the response data
-   * @returns {function} indexController - The controller function
    *
    * @function indexController
    * @memberof IndexController
