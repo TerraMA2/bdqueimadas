@@ -20,7 +20,6 @@ var GetCountriesLayerFeaturesController = function(app) {
    * Processes the request and returns a response.
    * @param {json} request - JSON containing the request data
    * @param {json} response - JSON containing the response data
-   * @returns {function} getCountriesLayerFeaturesController - The controller function
    *
    * @function getCountriesLayerFeaturesController
    * @memberof GetCountriesLayerFeaturesController
