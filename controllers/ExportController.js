@@ -8,6 +8,7 @@
  *
  * @property {object} memberExportation - 'Exportation' model.
  * @property {object} memberFs - 'fs' module.
+ * @property {function} memberExec - Exec function.
  */
 var ExportController = function(app) {
 
@@ -15,6 +16,8 @@ var ExportController = function(app) {
   var memberExportation = new (require('../models/Exportation.js'))();
   // 'fs' module
   var memberFs = require('fs');
+  // Exec function
+  var memberExec = require('child_process').exec;
 
   /**
    * Processes the request and returns a response.
@@ -64,9 +67,9 @@ var ExportController = function(app) {
             if(e.code != 'EEXIST') throw e;
           }
 
-          require('child_process').exec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
+          memberExec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
             if(err) return console.error(err);
-            require('child_process').exec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
+            memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
               if(err) return console.error(err);
 
               response.download(ZipPath, 'BDQueimadas-Shapefile.zip', function(err) {
