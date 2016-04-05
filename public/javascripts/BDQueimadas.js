@@ -261,6 +261,20 @@ BDQueimadas.obj = (function() {
       }
     });
 
+    // Exportation type click event
+    $(document).on('change', '#exportation-type', function() {
+      if($(this).val() !== "") {
+        var exportLink = "/export?dateFrom=" + BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD') +
+                         "&dateTo=" + BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD') +
+                         "&extent=" + TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString() +
+                         "&format=" + $(this).val();
+
+        location.href = exportLink;
+
+        vex.close();
+      }
+    });
+
     // Export click event
     $('#export').on('click', function() {
       $.ajax({
@@ -273,11 +287,18 @@ BDQueimadas.obj = (function() {
         },
         success: function(existsDataToExport) {
           if(existsDataToExport.existsDataToExport) {
-            var exportLink = "/export?dateFrom=" + BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD') +
-                             "&dateTo=" + BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD') +
-                             "&extent=" + TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString();
-
-            location.href = exportLink;
+            vex.dialog.alert({
+              message: '<select id="exportation-type" class="form-control">' +
+              '<option value="">Selecione o formato</option>' +
+              '<option value="geojson">GeoJSON</option>' +
+              '<option value="shapefile">Shapefile</option>' +
+              '</select>',
+              buttons: [{
+                type: 'submit',
+                text: 'Cancelar',
+                className: 'bdqueimadas-btn'
+              }]
+            });
           } else {
             vex.dialog.alert({
               message: 'Não existem dados para exportar!',

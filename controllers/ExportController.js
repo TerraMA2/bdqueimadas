@@ -7,11 +7,14 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberExportation - 'Exportation' model.
+ * @property {object} memberFs - 'fs' module.
  */
 var ExportController = function(app) {
 
   // 'Exportation' model
   var memberExportation = new (require('../models/Exportation.js'))();
+  // 'fs' module
+  var memberFs = require('fs');
 
   /**
    * Processes the request and returns a response.
@@ -37,20 +40,50 @@ var ExportController = function(app) {
 
       var GeoJSON = createFeatureCollection(GeoJSONData);
 
-      var fs = require('fs');
       var path = require('path');
       var jsonfile = require('jsonfile');
 
       require('crypto').randomBytes(24, function(err, buffer) {
-        var file = path.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
+        var GeoJSONPath = path.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
 
-        jsonfile.writeFileSync(file, GeoJSON);
+        jsonfile.writeFileSync(GeoJSONPath, GeoJSON);
 
-        response.download(file, 'BDQueimadas-GeoJSON.json', function(err) {
-          if(err) return console.error(err);
+        if(request.query.format === 'shapefile') {
+          var ShapefileFolderName = 'Shapefile-' + buffer.toString('hex');
+          var ShapefileFolderPath = path.join(__dirname, '../tmp/' + ShapefileFolderName);
+          var ShapefilePath = path.join(__dirname, '../tmp/' + ShapefileFolderName + '/BDQueimadas-Shapefile.shp');
 
-          fs.unlink(file);
-        });
+          var ZipPath = path.join(__dirname, '../tmp/' + ShapefileFolderName) + "/BDQueimadas-Shapefile.zip";
+
+          var shapefileGenerationCommand = "ogr2ogr -F \"ESRI Shapefile\" " + ShapefilePath + " " + GeoJSONPath + " OGRGeoJSON";
+          var zipGenerationCommand = "zip -r -j " + ZipPath + " " + ShapefileFolderPath;
+
+          try {
+            memberFs.mkdirSync(ShapefileFolderPath);
+          } catch(e) {
+            if(e.code != 'EEXIST') throw e;
+          }
+
+          require('child_process').exec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
+            if(err) return console.error(err);
+            require('child_process').exec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
+              if(err) return console.error(err);
+
+              response.download(ZipPath, 'BDQueimadas-Shapefile.zip', function(err) {
+                if(err) return console.error(err);
+
+                memberFs.unlink(GeoJSONPath);
+                deleteFolderRecursively(ShapefileFolderPath);
+              });
+            });
+          });
+        } else {
+          response.download(GeoJSONPath, 'BDQueimadas-GeoJSON.json', function(err) {
+            if(err) return console.error(err);
+
+            memberFs.unlink(GeoJSONPath);
+          });
+        }
       });
     });
   };
@@ -80,6 +113,29 @@ var ExportController = function(app) {
     });
 
     return GeoJSON;
+  };
+
+  /**
+   * Deletes a folder and all its content.
+   * @param {string} path - Path to the folder
+   *
+   * @private
+   * @function deleteFolderRecursively
+   * @memberof ExportController
+   * @inner
+   */
+  var deleteFolderRecursively = function(path) {
+    if(memberFs.existsSync(path)) {
+      memberFs.readdirSync(path).forEach(function(file, index) {
+        var currentPath = path + "/" + file;
+        if(memberFs.lstatSync(currentPath).isDirectory()) {
+          deleteFolderRecursively(currentPath);
+        } else {
+          memberFs.unlinkSync(currentPath);
+        }
+      });
+      memberFs.rmdirSync(path);
+    }
   };
 
   return exportController;
