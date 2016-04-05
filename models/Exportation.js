@@ -79,6 +79,11 @@ var Exportation = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
+        // If the 'options.limit' parameter exists, a limit clause is created
+        if(options.limit !== undefined) {
+          query += " limit " + options.limit;
+        }
+
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();

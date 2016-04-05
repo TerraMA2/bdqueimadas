@@ -252,6 +252,18 @@
 
 #box-attributes-table > div.box-body { overflow: auto; }
 
+.bdqueimadas-btn {
+  color: #fff;
+  background-color: #f39c12;
+  border-color: #e08e0b;
+}
+
+.bdqueimadas-btn:hover {
+  color: #fff;
+  background-color: #ec971f;
+  border-color: #d58512;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }

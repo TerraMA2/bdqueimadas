@@ -55,8 +55,6 @@ BDQueimadas.components.AttributesTable = (function() {
 
         $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
-        console.log(TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString());
-
         memberAttributesTable = $('#attributes-table').DataTable(
           {
             "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
