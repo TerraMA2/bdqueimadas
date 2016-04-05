@@ -260,6 +260,37 @@ BDQueimadas.obj = (function() {
         $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
       }
     });
+
+    // Export click event
+    $('#export').on('click', function() {
+      $.ajax({
+        url: "/exists-data-to-export",
+        type: "GET",
+        data: {
+          dateFrom: BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD'),
+          dateTo: BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD'),
+          extent: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString()
+        },
+        success: function(existsDataToExport) {
+          if(existsDataToExport.existsDataToExport) {
+            var exportLink = "/export?dateFrom=" + BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD') +
+                             "&dateTo=" + BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD') +
+                             "&extent=" + TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString();
+
+            location.href = exportLink;
+          } else {
+            vex.dialog.alert({
+              message: 'Não existem dados para exportar!',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+        }
+      });
+    });
   };
 
   /**
