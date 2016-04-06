@@ -30,15 +30,15 @@ var Graphics = function() {
    */
 
   /**
-   * Returns the count of the fires grouped by satellites.
+   * Returns the count of the fires grouped by the received key.
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
    *
-   * @function getFiresCountBySatellite
+   * @function getFiresCount
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountBySatellite = function(dateFrom, dateTo, options, callback) {
+  this.getFiresCount = function(dateFrom, dateTo, key, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -47,7 +47,7 @@ var Graphics = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Fires.SatelliteFieldName + ", count(*) as " + memberTablesConfig.Fires.CountAlias + " from " +
+        var query = "select " + key + ", count(*) as " + memberTablesConfig.Fires.CountAlias + " from " +
         memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName +
         " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
@@ -64,7 +64,7 @@ var Graphics = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
-        query += " group by " + memberTablesConfig.Fires.SatelliteFieldName + " order by " + memberTablesConfig.Fires.CountAlias + " desc;"
+        query += " group by " + key + " order by " + memberTablesConfig.Fires.CountAlias + " desc;"
 
         // Execution of the query
         client.query(query, params, function(err, result) {
