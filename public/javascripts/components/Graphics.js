@@ -48,31 +48,39 @@ BDQueimadas.components.Graphics = (function() {
    * @inner
    */
   var loadFiresCountBySatelliteGraphic = function(firesCountBySatellite) {
-    var labels = [];
-    var values = [];
+    if(firesCountBySatellite.firesCount.rowCount > 0) {
+      var labels = [];
+      var values = [];
 
-    $.each(firesCountBySatellite.firesCount.rows, function(i, countBySatellite) {
-      labels.push(countBySatellite.satelite);
-      values.push(countBySatellite.count);
-    });
+      $.each(firesCountBySatellite.firesCount.rows, function(i, countBySatellite) {
+        labels.push(countBySatellite.satelite);
+        values.push(countBySatellite.count);
+      });
 
-    var firesCountBySatelliteGraphicData = {
-      labels : labels,
-      datasets : [
-        {
-          fillColor : "rgba(151,187,205,0.5)",
-          strokeColor : "rgba(151,187,205,0.8)",
-          highlightFill : "rgba(151,187,205,0.75)",
-          highlightStroke : "rgba(151,187,205,1)",
-          data : values
-        }
-      ]
-    };
+      var firesCountBySatelliteGraphicData = {
+        labels : labels,
+        datasets : [
+          {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,0.8)",
+            highlightFill : "rgba(151,187,205,0.75)",
+            highlightStroke : "rgba(151,187,205,1)",
+            data : values
+          }
+        ]
+      };
 
-    if(firesCountBySatelliteGraphic !== null) firesCountBySatelliteGraphic.destroy();
+      if(firesCountBySatelliteGraphic !== null) firesCountBySatelliteGraphic.destroy();
 
-    var htmlElement = $("#fires-count-by-satellite-graphic").get(0).getContext("2d");
-    firesCountBySatelliteGraphic = new Chart(htmlElement).Bar(firesCountBySatelliteGraphicData, { responsive : true, maintainAspectRatio: false });
+      $("#fires-count-by-satellite-graphic-message-container").hide();
+      $("#fires-count-by-satellite-graphic").show();
+      var htmlElement = $("#fires-count-by-satellite-graphic").get(0).getContext("2d");
+      firesCountBySatelliteGraphic = new Chart(htmlElement).Bar(firesCountBySatelliteGraphicData, { responsive : true, maintainAspectRatio: false });
+    } else {
+      $("#fires-count-by-satellite-graphic").hide();
+      $("#fires-count-by-satellite-graphic-message-container").show();
+      $("#fires-count-by-satellite-graphic-message-container").html("Não existem dados a serem exibidos!");
+    }
   };
 
   /**
@@ -85,31 +93,39 @@ BDQueimadas.components.Graphics = (function() {
    * @inner
    */
   var loadFiresCountByStateGraphic = function(firesCountByState) {
-    var labels = [];
-    var values = [];
+    if(firesCountByState.firesCount.rowCount > 0) {
+      var labels = [];
+      var values = [];
 
-    $.each(firesCountByState.firesCount.rows, function(i, countByState) {
-      labels.push(countByState.uf);
-      values.push(countByState.count);
-    });
+      $.each(firesCountByState.firesCount.rows, function(i, countByState) {
+        labels.push(countByState.uf);
+        values.push(countByState.count);
+      });
 
-    var firesCountByStateGraphicData = {
-      labels : labels,
-      datasets : [
-        {
-          fillColor : "rgba(151,187,205,0.5)",
-          strokeColor : "rgba(151,187,205,0.8)",
-          highlightFill : "rgba(151,187,205,0.75)",
-          highlightStroke : "rgba(151,187,205,1)",
-          data : values
-        }
-      ]
-    };
+      var firesCountByStateGraphicData = {
+        labels : labels,
+        datasets : [
+          {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,0.8)",
+            highlightFill : "rgba(151,187,205,0.75)",
+            highlightStroke : "rgba(151,187,205,1)",
+            data : values
+          }
+        ]
+      };
 
-    if(firesCountByStateGraphic !== null) firesCountByStateGraphic.destroy();
+      if(firesCountByStateGraphic !== null) firesCountByStateGraphic.destroy();
 
-    var htmlElement = $("#fires-count-by-state-graphic").get(0).getContext("2d");
-    firesCountByStateGraphic = new Chart(htmlElement).Bar(firesCountByStateGraphicData, { responsive : true, maintainAspectRatio: false });
+      $("#fires-count-by-state-graphic-message-container").hide();
+      $("#fires-count-by-state-graphic").show();
+      var htmlElement = $("#fires-count-by-state-graphic").get(0).getContext("2d");
+      firesCountByStateGraphic = new Chart(htmlElement).Bar(firesCountByStateGraphicData, { responsive : true, maintainAspectRatio: false });
+    } else {
+      $("#fires-count-by-state-graphic").hide();
+      $("#fires-count-by-state-graphic-message-container").show();
+      $("#fires-count-by-state-graphic-message-container").html("Não existem dados a serem exibidos!");
+    }
   };
 
   /**
@@ -122,31 +138,39 @@ BDQueimadas.components.Graphics = (function() {
    * @inner
    */
   var loadFiresCountByBiomeGraphic = function(firesCountByBiome) {
-    var labels = [];
-    var values = [];
+    if(firesCountByBiome.firesCount.rowCount > 0) {
+      var labels = [];
+      var values = [];
 
-    $.each(firesCountByBiome.firesCount.rows, function(i, countByBiome) {
-      labels.push(countByBiome.bioma);
-      values.push(countByBiome.count);
-    });
+      $.each(firesCountByBiome.firesCount.rows, function(i, countByBiome) {
+        labels.push(countByBiome.bioma);
+        values.push(countByBiome.count);
+      });
 
-    var firesCountByBiomeGraphicData = {
-      labels : labels,
-      datasets : [
-        {
-          fillColor : "rgba(151,187,205,0.5)",
-          strokeColor : "rgba(151,187,205,0.8)",
-          highlightFill : "rgba(151,187,205,0.75)",
-          highlightStroke : "rgba(151,187,205,1)",
-          data : values
-        }
-      ]
-    };
+      var firesCountByBiomeGraphicData = {
+        labels : labels,
+        datasets : [
+          {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,0.8)",
+            highlightFill : "rgba(151,187,205,0.75)",
+            highlightStroke : "rgba(151,187,205,1)",
+            data : values
+          }
+        ]
+      };
 
-    if(firesCountByBiomeGraphic !== null) firesCountByBiomeGraphic.destroy();
+      if(firesCountByBiomeGraphic !== null) firesCountByBiomeGraphic.destroy();
 
-    var htmlElement = $("#fires-count-by-biome-graphic").get(0).getContext("2d");
-    firesCountByBiomeGraphic = new Chart(htmlElement).Bar(firesCountByBiomeGraphicData, { responsive : true, maintainAspectRatio: false });
+      $("#fires-count-by-biome-graphic-message-container").hide();
+      $("#fires-count-by-biome-graphic").show();
+      var htmlElement = $("#fires-count-by-biome-graphic").get(0).getContext("2d");
+      firesCountByBiomeGraphic = new Chart(htmlElement).Bar(firesCountByBiomeGraphicData, { responsive : true, maintainAspectRatio: false });
+    } else {
+      $("#fires-count-by-biome-graphic").hide();
+      $("#fires-count-by-biome-graphic-message-container").show();
+      $("#fires-count-by-biome-graphic-message-container").html("Não existem dados a serem exibidos!");
+    }
   };
 
   /**
