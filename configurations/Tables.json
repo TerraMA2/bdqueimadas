@@ -3,22 +3,19 @@
     "TableName": "paises",
     "IdFieldName": "unregion1",
     "NameFieldName": "unregion1",
-    "GeometryFieldName": "geom",
-    "CountAlias": "count"
+    "GeometryFieldName": "geom"
   },
   "Countries": {
     "TableName": "paises",
     "IdFieldName": "id_0",
     "NameFieldName": "name_0",
-    "GeometryFieldName": "geom",
-    "CountAlias": "count"
+    "GeometryFieldName": "geom"
   },
   "States": {
     "TableName": "estados",
     "IdFieldName": "gid",
     "NameFieldName": "name_1",
-    "GeometryFieldName": "geom",
-    "CountAlias": "count"
+    "GeometryFieldName": "geom"
   },
   "Fires": {
     "TableName": "focos",
@@ -27,7 +24,6 @@
     "TimeFieldName": "horagmt",
     "SatelliteFieldName": "satelite",
     "CountryFieldName": "pais",
-    "GeometryFieldName": "geom",
-    "CountAlias": "count"
+    "GeometryFieldName": "geom"
   }
 }

@@ -10,10 +10,7 @@ window.BDQueimadas = {
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
- * @property {json} memberFilterConfig - Filter configuration.
- * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
- * @property {json} memberComponentsConfig - Components configuration.
- * @property {json} memberMapConfig - Map configuration.
+ * @property {json} memberConfigurations - Configurations object.
  * @property {object} memberSocket - Socket object.
  * @property {number} memberHeight - Window height.
  * @property {number} memberHeaderHeight - Header height.
@@ -25,14 +22,8 @@ window.BDQueimadas = {
  */
 BDQueimadas.obj = (function() {
 
-  // Filter configuration
-  var memberFilterConfig = null;
-  // Fires layer attributes table configuration
-  var memberAttributesTableConfig = null;
-  // Components configuration
-  var memberComponentsConfig = null;
-  // Map configuration
-  var memberMapConfig = null;
+  // Configurations object
+  var memberConfigurations = null;
   // Socket object
   var memberSocket = null;
   // Window height
@@ -51,6 +42,18 @@ BDQueimadas.obj = (function() {
   var memberComponentsLoaded = false;
 
   /**
+   * Returns the configurations object.
+   * @returns {json} memberConfigurations - Configurations object
+   *
+   * @function getConfigurations
+   * @memberof BDQueimadas
+   * @inner
+   */
+  var getConfigurations = function() {
+    return memberConfigurations;
+  };
+
+  /**
    * Returns the socket object.
    * @returns {object} memberSocket - Socket object
    *
@@ -63,61 +66,6 @@ BDQueimadas.obj = (function() {
   };
 
   /**
-   * Returns the filter configuration.
-   * @returns {json} memberFilterConfig - Filter configuration
-   *
-   * @function getFilterConfig
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var getFilterConfig = function() {
-    return memberFilterConfig;
-  };
-
-  /**
-   * Returns the fires layer attributes table configuration.
-   * @returns {json} memberAttributesTableConfig - Attributes table configuration
-   *
-   * @function getAttributesTableConfig
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var getAttributesTableConfig = function() {
-    return memberAttributesTableConfig;
-  };
-
-  /**
-   * Returns the map configuration.
-   * @returns {json} memberMapConfig - Map configuration
-   *
-   * @function getMapConfig
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var getMapConfig = function() {
-    return memberMapConfig;
-  };
-
-  /**
-   * Loads the components configurations.
-   * @param {json} filterConfig - Filter configuration
-   * @param {json} attributesTableConfig - Attributes table configuration
-   * @param {json} componentsConfig - Components configuration
-   * @param {json} mapConfig - Map configuration
-   *
-   * @private
-   * @function loadConfigurations
-   * @memberof BDQueimadas
-   * @inner
-   */
-  var loadConfigurations = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
-    memberFilterConfig = filterConfig;
-    memberAttributesTableConfig = attributesTableConfig;
-    memberComponentsConfig = componentsConfig;
-    memberMapConfig = mapConfig;
-  };
-
-  /**
    * Loads the components present in the components configuration file.
    * @param {int} i - Current array index
    *
@@ -127,12 +75,12 @@ BDQueimadas.obj = (function() {
    * @inner
    */
   var loadComponents = function(i) {
-    if(i < memberComponentsConfig.Components.length) {
+    if(i < memberConfigurations.componentsConfigurations.Components.length) {
       $.ajax({
-        url: "/javascripts/components/" + memberComponentsConfig[memberComponentsConfig.Components[i]],
+        url: "/javascripts/components/" + memberConfigurations.componentsConfigurations[memberConfigurations.componentsConfigurations.Components[i]],
         dataType: "script",
         success: function() {
-          BDQueimadas.components[memberComponentsConfig.Components[i]].init();
+          BDQueimadas.components[memberConfigurations.componentsConfigurations.Components[i]].init();
           loadComponents(++i);
         }
       });
@@ -259,6 +207,58 @@ BDQueimadas.obj = (function() {
         $('.ol-attribution').animate({ 'right': '15px' }, { duration: 300, queue: false });
         $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
       }
+    });
+
+    // Exportation type click event
+    $(document).on('change', '#exportation-type', function() {
+      if($(this).val() !== "") {
+        var exportLink = "/export?dateFrom=" + BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD') +
+                         "&dateTo=" + BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD') +
+                         "&extent=" + TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString() +
+                         "&format=" + $(this).val();
+
+        location.href = exportLink;
+
+        vex.close();
+      }
+    });
+
+    // Export click event
+    $('#export').on('click', function() {
+      $.ajax({
+        url: "/exists-data-to-export",
+        type: "GET",
+        data: {
+          dateFrom: BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD'),
+          dateTo: BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD'),
+          extent: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent().toString()
+        },
+        success: function(existsDataToExport) {
+          if(existsDataToExport.existsDataToExport) {
+            vex.dialog.alert({
+              message: '<select id="exportation-type" class="form-control">' +
+              '<option value="">Selecione o formato</option>' +
+              '<option value="geojson">GeoJSON</option>' +
+              '<option value="shapefile">Shapefile</option>' +
+              '</select>',
+              buttons: [{
+                type: 'submit',
+                text: 'Cancelar',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          } else {
+            vex.dialog.alert({
+              message: '<p class="text-center">Não existem dados para exportar!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+        }
+      });
     });
   };
 
@@ -456,16 +456,13 @@ BDQueimadas.obj = (function() {
 
   /**
    * Initializes the necessary features.
-   * @param {json} filterConfig - Filter configuration
-   * @param {json} attributesTableConfig - Attributes table configuration
-   * @param {json} componentsConfig - Components configuration
-   * @param {json} mapConfig - Map configuration
+   * @param {json} configurations - Configurations object
    *
    * @function init
    * @memberof BDQueimadas
    * @inner
    */
-  var init = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
+  var init = function(configurations) {
     $(document).ready(function() {
       var interval = window.setInterval(function() {
         updateSizeVars();
@@ -474,7 +471,7 @@ BDQueimadas.obj = (function() {
       window.setTimeout(function() { clearInterval(interval); }, 300);
 
       loadEvents();
-      loadConfigurations(filterConfig, attributesTableConfig, componentsConfig, mapConfig);
+      memberConfigurations = configurations;
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -490,9 +487,7 @@ BDQueimadas.obj = (function() {
 
   return {
     getSocket: getSocket,
-  	getFilterConfig: getFilterConfig,
-    getAttributesTableConfig: getAttributesTableConfig,
-    getMapConfig: getMapConfig,
+  	getConfigurations: getConfigurations,
     isComponentsLoaded: isComponentsLoaded,
   	init: init
   };

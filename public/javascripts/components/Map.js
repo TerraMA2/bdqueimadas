@@ -17,7 +17,7 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var addLayersToMap = function() {
-    var configuration = BDQueimadas.obj.getMapConfig();
+    var configuration = BDQueimadas.obj.getConfigurations().mapConfigurations;
 
     $.each(configuration.LayerGroups, function(i, layerGroup) {
       TerraMA2WebComponents.webcomponents.MapDisplay.addLayerGroup(layerGroup.Id, layerGroup.Name);
@@ -28,15 +28,15 @@ BDQueimadas.components.Map = (function() {
 
         TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layerTime);
 
-        if(layer.Id === BDQueimadas.obj.getFilterConfig().LayerToFilter.LayerId) {
+        if(layer.Id === BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
 
-          var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getFilterConfig().LayerToFilter.InitialDate);
-          var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getFilterConfig().LayerToFilter.FinalDate);
-          var filter = BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + ">=" + initialDate + " and " + BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + "<=" + finalDate;
+          var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
+          var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
+          var filter = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;
 
           TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(filter, layer.Id);
 
-          BDQueimadas.components.Filter.updateDates(initialDate, finalDate, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
+          BDQueimadas.components.Filter.updateDates(initialDate, finalDate, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
           BDQueimadas.components.Filter.updateComponents();
         }
       });
@@ -108,7 +108,7 @@ BDQueimadas.components.Map = (function() {
    */
   var addSubtitles = function() {
     var elem = "";
-    var configuration = BDQueimadas.obj.getMapConfig();
+    var configuration = BDQueimadas.obj.getConfigurations().mapConfigurations;
 
     $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
       var css = "";
@@ -143,7 +143,7 @@ BDQueimadas.components.Map = (function() {
   var setSubtitlesVisibility = function(layerId) {
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        var configuration = BDQueimadas.obj.getMapConfig();
+        var configuration = BDQueimadas.obj.getConfigurations().mapConfigurations;
 
         $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
           if(layerId === undefined || layerId === mapSubtitleItem.LayerId) {
@@ -277,9 +277,11 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var init = function() {
-    loadEvents();
-    addLayersToMap();
-    addSubtitles();
+    $(document).ready(function() {
+      loadEvents();
+      addLayersToMap();
+      addSubtitles();
+    });
   };
 
   return {

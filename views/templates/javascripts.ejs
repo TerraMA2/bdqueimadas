@@ -29,9 +29,12 @@
 <script type="text/javascript" src="/externals/input-mask/jquery.inputmask.js"></script>
 <script type="text/javascript" src="/externals/input-mask/jquery.inputmask.date.extensions.js"></script>
 <script type="text/javascript" src="/externals/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- Vex 2.2.1 -->
+<script type="text/javascript" src="/externals/vex/vex.combined.min.js"></script>
+<script>vex.defaultOptions.className = 'vex-theme-default';</script>
 <!-- Queimadas -->
 <script type="text/javascript" src="/externals/adminlte/js/queimadas.js"></script>
-<!-- OpenLayers  -->
+<!-- OpenLayers 3.15.0 -->
 <script type="text/javascript" src="/externals/openlayers/ol.js"></script>
 <!-- BDQueimadas -->
 <script type="text/javascript" src="/javascripts/BDQueimadas.js"></script>
@@ -40,11 +43,7 @@
 <!-- Variables used in TerraMA² and BDQueimadas -->
 <script type="text/javascript">
   var terrama2Path = "<%= terrama2Path %>";
-
-  var filterConfig = JSON.parse('<%- JSON.stringify(filterConfig) %>');
-  var attributesTableConfig = JSON.parse('<%- JSON.stringify(attributesTableConfig) %>');
-  var componentsConfig = JSON.parse('<%- JSON.stringify(componentsConfig) %>');
-  var mapConfig = JSON.parse('<%- JSON.stringify(mapConfig) %>');
+  var configurations = JSON.parse('<%- JSON.stringify(configurations) %>');
 </script>
 <!-- Startup Script -->
 <script type="text/javascript" src="/javascripts/Startup.js"></script>

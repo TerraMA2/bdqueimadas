@@ -20,8 +20,8 @@ var Graphics = function(io) {
   // Socket connection event
   memberSockets.on('connection', function(client) {
 
-    // Graphics request event
-    client.on('graphicsFiresCountBySatelliteRequest', function(json) {
+    // Fires count graphics request event
+    client.on('graphicsFiresCountRequest', function(json) {
       // Object responsible for keep several information to be used in the database query
       var options = {};
 
@@ -29,10 +29,10 @@ var Graphics = function(io) {
       if(json.satellite !== '') options.satellite = json.satellite;
       if(json.extent !== '') options.extent = json.extent;
 
-      memberGraphics.getFiresCountBySatellite(json.dateFrom, json.dateTo, options, function(err, firesCountBySatellite) {
+      memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
         if(err) return console.error(err);
 
-        client.emit('graphicsFiresCountBySatelliteResponse', { firesCountBySatellite: firesCountBySatellite });
+        client.emit('graphicsFiresCountResponse', { firesCount: firesCount, key: json.key, title: json.title });
       });
     });
   });

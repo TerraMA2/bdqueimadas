@@ -1,6 +1,6 @@
 TerraMA2WebComponents.obj.init(terrama2Path, ["MapDisplay", "LayerExplorer"]);
 
-BDQueimadas.obj.init(filterConfig, attributesTableConfig, componentsConfig, mapConfig);
+BDQueimadas.obj.init(configurations);
 
 var terrama2Interval = window.setInterval(function() {
   if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
