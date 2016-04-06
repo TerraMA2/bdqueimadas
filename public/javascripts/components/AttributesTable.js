@@ -87,7 +87,8 @@ BDQueimadas.components.AttributesTable = (function() {
    * @inner
    */
   var updateAttributesTable = function() {
-    memberAttributesTable.ajax.reload();
+    if($("#table-box").css('left') < '0px')
+      memberAttributesTable.ajax.reload();
   };
 
   /**

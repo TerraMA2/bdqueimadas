@@ -28,14 +28,16 @@ BDQueimadas.components.Graphics = (function() {
    * @inner
    */
   var updateGraphics = function() {
-    var dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
-    var dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
-    var satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
-    var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+    if($("#graph-box").css('left') < '0px') {
+      var dateFrom = BDQueimadas.components.Filter.getFormattedDateFrom('YYYYMMDD');
+      var dateTo = BDQueimadas.components.Filter.getFormattedDateTo('YYYYMMDD');
+      var satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
+      var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
 
-    BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "satelite", satellite: satellite, extent: extent });
-    BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "uf", satellite: satellite, extent: extent });
-    BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "bioma", satellite: satellite, extent: extent });
+      BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "satelite", satellite: satellite, extent: extent });
+      BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "uf", satellite: satellite, extent: extent });
+      BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "bioma", satellite: satellite, extent: extent });
+    }
   };
 
   /**
