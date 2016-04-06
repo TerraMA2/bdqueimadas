@@ -277,9 +277,11 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var init = function() {
-    loadEvents();
-    addLayersToMap();
-    addSubtitles();
+    $(document).ready(function() {
+      loadEvents();
+      addLayersToMap();
+      addSubtitles();
+    });
   };
 
   return {
