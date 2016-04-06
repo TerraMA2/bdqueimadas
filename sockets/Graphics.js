@@ -32,7 +32,7 @@ var Graphics = function(io) {
       memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
         if(err) return console.error(err);
 
-        client.emit('graphicsFiresCountResponse', { firesCount: firesCount, key: json.key });
+        client.emit('graphicsFiresCountResponse', { firesCount: firesCount, key: json.key, title: json.title });
       });
     });
   });

@@ -1,0 +1,16 @@
+{
+  "FiresCount": [
+    {
+      "Key": "satelite",
+      "Title": "Focos por Satélite"
+    },
+    {
+      "Key": "uf",
+      "Title": "Focos por Estado"
+    },
+    {
+      "Key": "bioma",
+      "Title": "Focos por Bioma"
+    }
+  ]
+}

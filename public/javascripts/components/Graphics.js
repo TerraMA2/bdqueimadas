@@ -7,18 +7,12 @@
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
- * @property {object} firesCountBySatelliteGraphic - Graphic of fires count by satellite.
- * @property {object} firesCountByStateGraphic - Graphic of fires count by state.
- * @property {object} firesCountByBiomeGraphic - Graphic of fires count by biome.
+ * @property {object} memberFiresCountGraphics - Graphics of fires count.
  */
 BDQueimadas.components.Graphics = (function() {
 
-  // Graphic of fires count by satellite
-  var firesCountBySatelliteGraphic = null;
-  // Graphic of fires count by state
-  var firesCountByStateGraphic = null;
-  // Graphic of fires count by biome
-  var firesCountByBiomeGraphic = null;
+  // Graphics of fires count
+  var memberFiresCountGraphics = {};
 
   /**
    * Updates all the graphics.
@@ -34,32 +28,44 @@ BDQueimadas.components.Graphics = (function() {
       var satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
       var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
 
-      BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "satelite", satellite: satellite, extent: extent });
-      BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "uf", satellite: satellite, extent: extent });
-      BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: "bioma", satellite: satellite, extent: extent });
+      $.each(BDQueimadas.obj.getGraphicsConfig().FiresCount, function(i, firesCountGraphicsConfig) {
+        BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: firesCountGraphicsConfig.Key, title: firesCountGraphicsConfig.Title, satellite: satellite, extent: extent });
+      });
     }
   };
 
   /**
-   * Loads the graphic of fires count by satellite.
-   * @param {json} firesCountBySatellite - Data to be used in the graphic
+   * Loads a given graphic of fires count.
+   * @param {json} firesCount - Data to be used in the graphic
    *
    * @private
-   * @function loadFiresCountBySatelliteGraphic
+   * @function loadFiresCountGraphic
    * @memberof Graphics(2)
    * @inner
    */
-  var loadFiresCountBySatelliteGraphic = function(firesCountBySatellite) {
-    if(firesCountBySatellite.firesCount.rowCount > 0) {
+  var loadFiresCountGraphic = function(firesCount) {
+    if(memberFiresCountGraphics[firesCount.key] === undefined) {
+      var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\">" +
+          "<h3 class=\"box-title\">" + firesCount.title + "</h3><div class=\"box-tools pull-right\">" +
+          "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
+          "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
+          "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\" style=\"height: 300px;\"></canvas>" +
+          "<div id=\"fires-count-by-" + firesCount.key + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
+
+      $("#graphics-container").append(htmlElements);
+      memberFiresCountGraphics[firesCount.key] = null;
+    }
+
+    if(firesCount.firesCount.rowCount > 0) {
       var labels = [];
       var values = [];
 
-      $.each(firesCountBySatellite.firesCount.rows, function(i, countBySatellite) {
-        labels.push(countBySatellite.satelite);
-        values.push(countBySatellite.count);
+      $.each(firesCount.firesCount.rows, function(i, firesCountItem) {
+        labels.push(firesCountItem.key);
+        values.push(firesCountItem.count);
       });
 
-      var firesCountBySatelliteGraphicData = {
+      var firesCountGraphicData = {
         labels : labels,
         datasets : [
           {
@@ -72,106 +78,17 @@ BDQueimadas.components.Graphics = (function() {
         ]
       };
 
-      if(firesCountBySatelliteGraphic !== null) firesCountBySatelliteGraphic.destroy();
+      if(memberFiresCountGraphics[firesCount.key] !== undefined && memberFiresCountGraphics[firesCount.key] !== null)
+        memberFiresCountGraphics[firesCount.key].destroy();
 
-      $("#fires-count-by-satellite-graphic-message-container").hide();
-      $("#fires-count-by-satellite-graphic").show();
-      var htmlElement = $("#fires-count-by-satellite-graphic").get(0).getContext("2d");
-      firesCountBySatelliteGraphic = new Chart(htmlElement).Bar(firesCountBySatelliteGraphicData, { responsive : true, maintainAspectRatio: false });
+      $("#fires-count-by-" + firesCount.key + "-graphic-message-container").hide();
+      $("#fires-count-by-" + firesCount.key + "-graphic").show();
+      var htmlElement = $("#fires-count-by-" + firesCount.key + "-graphic").get(0).getContext("2d");
+      memberFiresCountGraphics[firesCount.key] = new Chart(htmlElement).Bar(firesCountGraphicData, { responsive : true, maintainAspectRatio: false });
     } else {
-      $("#fires-count-by-satellite-graphic").hide();
-      $("#fires-count-by-satellite-graphic-message-container").show();
-      $("#fires-count-by-satellite-graphic-message-container").html("Não existem dados a serem exibidos!");
-    }
-  };
-
-  /**
-   * Loads the graphic of fires count by state.
-   * @param {json} firesCountByState - Data to be used in the graphic
-   *
-   * @private
-   * @function loadFiresCountByStateGraphic
-   * @memberof Graphics(2)
-   * @inner
-   */
-  var loadFiresCountByStateGraphic = function(firesCountByState) {
-    if(firesCountByState.firesCount.rowCount > 0) {
-      var labels = [];
-      var values = [];
-
-      $.each(firesCountByState.firesCount.rows, function(i, countByState) {
-        labels.push(countByState.uf);
-        values.push(countByState.count);
-      });
-
-      var firesCountByStateGraphicData = {
-        labels : labels,
-        datasets : [
-          {
-            fillColor : "rgba(151,187,205,0.5)",
-            strokeColor : "rgba(151,187,205,0.8)",
-            highlightFill : "rgba(151,187,205,0.75)",
-            highlightStroke : "rgba(151,187,205,1)",
-            data : values
-          }
-        ]
-      };
-
-      if(firesCountByStateGraphic !== null) firesCountByStateGraphic.destroy();
-
-      $("#fires-count-by-state-graphic-message-container").hide();
-      $("#fires-count-by-state-graphic").show();
-      var htmlElement = $("#fires-count-by-state-graphic").get(0).getContext("2d");
-      firesCountByStateGraphic = new Chart(htmlElement).Bar(firesCountByStateGraphicData, { responsive : true, maintainAspectRatio: false });
-    } else {
-      $("#fires-count-by-state-graphic").hide();
-      $("#fires-count-by-state-graphic-message-container").show();
-      $("#fires-count-by-state-graphic-message-container").html("Não existem dados a serem exibidos!");
-    }
-  };
-
-  /**
-   * Loads the graphic of fires count by biome.
-   * @param {json} firesCountByBiome - Data to be used in the graphic
-   *
-   * @private
-   * @function loadFiresCountByBiomeGraphic
-   * @memberof Graphics(2)
-   * @inner
-   */
-  var loadFiresCountByBiomeGraphic = function(firesCountByBiome) {
-    if(firesCountByBiome.firesCount.rowCount > 0) {
-      var labels = [];
-      var values = [];
-
-      $.each(firesCountByBiome.firesCount.rows, function(i, countByBiome) {
-        labels.push(countByBiome.bioma);
-        values.push(countByBiome.count);
-      });
-
-      var firesCountByBiomeGraphicData = {
-        labels : labels,
-        datasets : [
-          {
-            fillColor : "rgba(151,187,205,0.5)",
-            strokeColor : "rgba(151,187,205,0.8)",
-            highlightFill : "rgba(151,187,205,0.75)",
-            highlightStroke : "rgba(151,187,205,1)",
-            data : values
-          }
-        ]
-      };
-
-      if(firesCountByBiomeGraphic !== null) firesCountByBiomeGraphic.destroy();
-
-      $("#fires-count-by-biome-graphic-message-container").hide();
-      $("#fires-count-by-biome-graphic").show();
-      var htmlElement = $("#fires-count-by-biome-graphic").get(0).getContext("2d");
-      firesCountByBiomeGraphic = new Chart(htmlElement).Bar(firesCountByBiomeGraphicData, { responsive : true, maintainAspectRatio: false });
-    } else {
-      $("#fires-count-by-biome-graphic").hide();
-      $("#fires-count-by-biome-graphic-message-container").show();
-      $("#fires-count-by-biome-graphic-message-container").html("Não existem dados a serem exibidos!");
+      $("#fires-count-by-" + firesCount.key + "-graphic").hide();
+      $("#fires-count-by-" + firesCount.key + "-graphic-message-container").show();
+      $("#fires-count-by-" + firesCount.key + "-graphic-message-container").html("Não existem dados a serem exibidos!");
     }
   };
 
@@ -185,19 +102,7 @@ BDQueimadas.components.Graphics = (function() {
    */
   var loadSocketsListeners = function() {
     BDQueimadas.obj.getSocket().on('graphicsFiresCountResponse', function(result) {
-      switch(result.key) {
-        case "satelite":
-          loadFiresCountBySatelliteGraphic(result);
-          break;
-        case "uf":
-          loadFiresCountByStateGraphic(result);
-          break;
-        case "bioma":
-          loadFiresCountByBiomeGraphic(result);
-          break;
-        default:
-          break;
-      }
+      loadFiresCountGraphic(result);
     });
   };
 

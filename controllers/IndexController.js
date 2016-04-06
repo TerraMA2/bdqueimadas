@@ -34,7 +34,8 @@ var IndexController = function(app) {
     var filterConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Filter.json'), 'utf8')),
         attributesTableConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8')),
         componentsConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Components.json'), 'utf8')),
-        mapConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8'));
+        mapConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8')),
+        graphicsConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Graphics.json'), 'utf8'));
 
     memberFilter.getContinents(function(err, result) {
       if(err) return console.error(err);
@@ -45,6 +46,7 @@ var IndexController = function(app) {
         attributesTableConfig: attributesTableConfig,
         componentsConfig: componentsConfig,
         mapConfig: mapConfig,
+        graphicsConfig: graphicsConfig,
         continents: result
       };
 
