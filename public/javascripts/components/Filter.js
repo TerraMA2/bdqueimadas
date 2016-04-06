@@ -68,9 +68,9 @@ BDQueimadas.components.Filter = (function() {
    * @inner
    */
   var createDateFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + ">=" + BDQueimadas.components.Utils.dateToString(memberDateFrom, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
+    var cql = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + BDQueimadas.components.Utils.dateToString(memberDateFrom, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
     cql += " and ";
-    cql += BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFieldName + "<=" + BDQueimadas.components.Utils.dateToString(memberDateTo, BDQueimadas.obj.getFilterConfig().LayerToFilter.DateFormat);
+    cql += BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + BDQueimadas.components.Utils.dateToString(memberDateTo, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
 
     return cql;
   };
@@ -123,7 +123,7 @@ BDQueimadas.components.Filter = (function() {
    * @inner
    */
   var createSatelliteFilter = function() {
-    var cql = BDQueimadas.obj.getFilterConfig().LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
+    var cql = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
     return cql;
   };
 
@@ -153,7 +153,7 @@ BDQueimadas.components.Filter = (function() {
       cql += createSatelliteFilter();
 
     updateSatelliteSelect();
-    TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getFilterConfig().LayerToFilter.LayerId);
+    TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
     updateComponents();
   };
 
@@ -187,7 +187,7 @@ BDQueimadas.components.Filter = (function() {
     var selectedOption = $('#filter-satellite').value;
 
     var elem = "<option value=\"all\">TODOS</option>";
-    var satellitesList = BDQueimadas.obj.getFilterConfig().Satellites;
+    var satellitesList = BDQueimadas.obj.getConfigurations().filterConfigurations.Satellites;
 
     $.each(satellitesList, function(i, satelliteItem) {
       var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');

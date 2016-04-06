@@ -11,7 +11,7 @@
     <select class="form-control" id="filter-satellite">
       <option value="all">TODOS</option>
       <%
-      filterConfig.Satellites.forEach(function(satellite, index) {
+      configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
         if(satellite.Current) {
         %>
         <option value="<%- satellite.Name %>"><%- satellite.Name %></option>
