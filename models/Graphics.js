@@ -47,7 +47,7 @@ var Graphics = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + key + ", count(*) as " + memberTablesConfig.Fires.CountAlias + " from " +
+        var query = "select " + key + ", count(*) as count from " +
         memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName +
         " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
@@ -64,7 +64,7 @@ var Graphics = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
-        query += " group by " + key + " order by " + memberTablesConfig.Fires.CountAlias + " desc;"
+        query += " group by " + key + " order by count desc;"
 
         // Execution of the query
         client.query(query, params, function(err, result) {
