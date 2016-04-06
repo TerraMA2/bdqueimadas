@@ -28,6 +28,8 @@
     "SatelliteFieldName": "satelite",
     "CountryFieldName": "pais",
     "GeometryFieldName": "geom",
-    "CountAlias": "count"
+    "CountAlias": "count",
+    "StateFieldName": "uf",
+    "BiomeFieldName": "bioma"
   }
 }
