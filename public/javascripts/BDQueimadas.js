@@ -14,6 +14,7 @@ window.BDQueimadas = {
  * @property {json} memberAttributesTableConfig - Fires layer attributes table configuration.
  * @property {json} memberComponentsConfig - Components configuration.
  * @property {json} memberMapConfig - Map configuration.
+ * @property {json} memberGraphicsConfig - Graphics configuration.
  * @property {object} memberSocket - Socket object.
  * @property {number} memberHeight - Window height.
  * @property {number} memberHeaderHeight - Header height.
@@ -33,6 +34,8 @@ BDQueimadas.obj = (function() {
   var memberComponentsConfig = null;
   // Map configuration
   var memberMapConfig = null;
+  // Graphics configuration
+  var memberGraphicsConfig = null;
   // Socket object
   var memberSocket = null;
   // Window height
@@ -99,22 +102,36 @@ BDQueimadas.obj = (function() {
   };
 
   /**
+   * Returns the graphics configuration.
+   * @returns {json} memberGraphicsConfig - Graphics configuration
+   *
+   * @function getGraphicsConfig
+   * @memberof BDQueimadas
+   * @inner
+   */
+  var getGraphicsConfig = function() {
+    return memberGraphicsConfig;
+  };
+
+  /**
    * Loads the components configurations.
    * @param {json} filterConfig - Filter configuration
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
    * @param {json} mapConfig - Map configuration
+   * @param {json} graphicsConfig - Graphics configuration
    *
    * @private
    * @function loadConfigurations
    * @memberof BDQueimadas
    * @inner
    */
-  var loadConfigurations = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
+  var loadConfigurations = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig, graphicsConfig) {
     memberFilterConfig = filterConfig;
     memberAttributesTableConfig = attributesTableConfig;
     memberComponentsConfig = componentsConfig;
     memberMapConfig = mapConfig;
+    memberGraphicsConfig = graphicsConfig;
   };
 
   /**
@@ -512,12 +529,13 @@ BDQueimadas.obj = (function() {
    * @param {json} attributesTableConfig - Attributes table configuration
    * @param {json} componentsConfig - Components configuration
    * @param {json} mapConfig - Map configuration
+   * @param {json} graphicsConfig - Graphics configuration
    *
    * @function init
    * @memberof BDQueimadas
    * @inner
    */
-  var init = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig) {
+  var init = function(filterConfig, attributesTableConfig, componentsConfig, mapConfig, graphicsConfig) {
     $(document).ready(function() {
       var interval = window.setInterval(function() {
         updateSizeVars();
@@ -526,7 +544,7 @@ BDQueimadas.obj = (function() {
       window.setTimeout(function() { clearInterval(interval); }, 300);
 
       loadEvents();
-      loadConfigurations(filterConfig, attributesTableConfig, componentsConfig, mapConfig);
+      loadConfigurations(filterConfig, attributesTableConfig, componentsConfig, mapConfig, graphicsConfig);
       loadPlugins();
 
       $.ajax({ url: "/socket.io/socket.io.js", dataType: "script", async: true,
@@ -545,6 +563,7 @@ BDQueimadas.obj = (function() {
   	getFilterConfig: getFilterConfig,
     getAttributesTableConfig: getAttributesTableConfig,
     getMapConfig: getMapConfig,
+    getGraphicsConfig: getGraphicsConfig,
     isComponentsLoaded: isComponentsLoaded,
   	init: init
   };
