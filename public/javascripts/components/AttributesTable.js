@@ -24,7 +24,7 @@ BDQueimadas.components.AttributesTable = (function() {
    * @inner
    */
   var getAttributesTableColumnNamesArray = function() {
-    var columnsJson = BDQueimadas.obj.getAttributesTableConfig().Columns;
+    var columnsJson = BDQueimadas.obj.getConfigurations().attributesTableConfigurations.Columns;
     var columnsJsonLength = columnsJson.length;
     var columnsArray = [];
 
@@ -46,7 +46,7 @@ BDQueimadas.components.AttributesTable = (function() {
   var loadAttributesTable = function() {
     var interval = window.setInterval(function() {
       if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        var columns = BDQueimadas.obj.getAttributesTableConfig().Columns;
+        var columns = BDQueimadas.obj.getConfigurations().attributesTableConfigurations.Columns;
         var columnsLength = columns.length;
         var titles = "";
 
@@ -70,7 +70,24 @@ BDQueimadas.components.AttributesTable = (function() {
                 data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
               }
             },
-            "columns": getAttributesTableColumnNamesArray()
+            "columns": getAttributesTableColumnNamesArray(),
+            "language": {
+              "emptyTable": "<p class='text-center'>Nenhum registro a ser exibido</p>",
+              "info": "Exibindo _START_ at&eacute; _END_ de _TOTAL_ registros",
+              "infoEmpty": "Exibindo 0 at&eacute; 0 de 0 registros",
+              "infoFiltered": "(filtrado de _MAX_ registros)",
+              "lengthMenu": "Exibir _MENU_ registros",
+              "loadingRecords": "Carregando...",
+              "processing": "Processando...",
+              "search": "Pesquisa:",
+              "zeroRecords": "<p class='text-center'>Nenhum registro encontrado</p>",
+              "paginate": {
+                "first": "Primeira",
+                "last": "&Uacute;ltima",
+                "next": "Pr&oacute;xima",
+                "previous": "Anterior"
+              }
+            }
           }
         );
 

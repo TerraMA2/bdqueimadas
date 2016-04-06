@@ -31,22 +31,26 @@ var IndexController = function(app) {
   var indexController = function(request, response) {
 
     // Load of the configuration files to be sent to the front end
-    var filterConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Filter.json'), 'utf8')),
-        attributesTableConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8')),
-        componentsConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Components.json'), 'utf8')),
-        mapConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8')),
-        graphicsConfig = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Graphics.json'), 'utf8'));
+    var filterConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Filter.json'), 'utf8')),
+        attributesTableConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8')),
+        componentsConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Components.json'), 'utf8')),
+        mapConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8')),
+        graphicsConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Graphics.json'), 'utf8'));
+
+    var configurations = {
+      filterConfigurations: filterConfigurations,
+      attributesTableConfigurations: attributesTableConfigurations,
+      componentsConfigurations: componentsConfigurations,
+      mapConfigurations: mapConfigurations,
+      graphicsConfigurations: graphicsConfigurations
+    };
 
     memberFilter.getContinents(function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters
       var params = {
-        filterConfig: filterConfig,
-        attributesTableConfig: attributesTableConfig,
-        componentsConfig: componentsConfig,
-        mapConfig: mapConfig,
-        graphicsConfig: graphicsConfig,
+        configurations: configurations,
         continents: result
       };
 

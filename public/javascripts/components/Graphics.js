@@ -28,7 +28,7 @@ BDQueimadas.components.Graphics = (function() {
       var satellite = BDQueimadas.components.Filter.getSatellite() !== "all" ? BDQueimadas.components.Filter.getSatellite() : '';
       var extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
 
-      $.each(BDQueimadas.obj.getGraphicsConfig().FiresCount, function(i, firesCountGraphicsConfig) {
+      $.each(BDQueimadas.obj.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
         BDQueimadas.obj.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: firesCountGraphicsConfig.Key, title: firesCountGraphicsConfig.Title, satellite: satellite, extent: extent });
       });
     }
