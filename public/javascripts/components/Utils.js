@@ -164,6 +164,50 @@ BDQueimadas.components.Utils = (function() {
   };
 
   /**
+   * Sorts an array of integers and returns it in JSON format, along with the original index of each value.
+   * @param {float} longitude - Array of integers to be sorted
+   * @returns {float} correctedLongitude - JSON containing the result
+   *
+   * @function normalizeLongitude
+   * @memberof Utils
+   * @inner
+   */
+  var normalizeLongitude = function(longitude) {
+    var correctedLongitude = longitude;
+    var originalLongitude = longitude;
+
+    if(longitude > 180 || longitude < -180) {
+      longitude = longitude < 0 ? longitude * -1 : parseFloat(longitude);
+
+      var isDivisionResultEven = (parseInt(longitude / 180) % 2) === 0;
+      var divisionResult = isDivisionResultEven ? parseInt(longitude / 180) : Math.ceil(longitude / 180);
+
+      if(divisionResult > 0)
+        correctedLongitude = (originalLongitude < 0) ? originalLongitude + (divisionResult * 180) : longitude - (divisionResult * 180);
+    }
+
+    return correctedLongitude;
+  };
+
+  /*if(e.coordinate[0] > 180 || e.coordinate[0] < -180) {
+    if(e.coordinate[0] < 0) {
+      var isDivisionResultEven = (parseInt((e.coordinate[0] * -1) / 180) % 2) === 0;
+
+      var divisionResult = isDivisionResultEven ? parseInt((e.coordinate[0] * -1) / 180) : Math.ceil((e.coordinate[0] * -1) / 180);
+
+      if(divisionResult > 0)
+        var correctedLongitude = e.coordinate[0] + (divisionResult * 180);
+    } else {
+      var isDivisionResultEven = (parseInt(parseFloat(e.coordinate[0]) / 180) % 2) === 0;
+
+      var divisionResult = isDivisionResultEven ? parseInt(parseFloat(e.coordinate[0]) / 180) : Math.ceil(parseFloat(e.coordinate[0]) / 180);
+
+      if(divisionResult > 0)
+        var correctedLongitude = e.coordinate[0] - (divisionResult * 180);
+    }
+  }*/
+
+  /**
    * Initializes the necessary features.
    *
    * @function init
@@ -178,6 +222,7 @@ BDQueimadas.components.Utils = (function() {
     processStringWithDatePattern: processStringWithDatePattern,
     stringInArray: stringInArray,
     sortIntegerArray: sortIntegerArray,
+    normalizeLongitude: normalizeLongitude,
     init: init
   };
 })();
