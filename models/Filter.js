@@ -372,18 +372,18 @@ var Filter = function() {
   };
 
   /**
-   * Returns the extent of the polygon that intersects with the received point.
+   * Returns the data of the polygon that intersects with the received point.
    * @param {string} longitude - Longitude of the point
    * @param {string} latitude - Latitude of the point
    * @param {float} resolution - Current map resolution
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
-   * @function getExtentByIntersection
+   * @function getDataByIntersection
    * @memberof Filter
    * @inner
    */
-  this.getExtentByIntersection = function(longitude, latitude, resolution, callback) {
+  this.getDataByIntersection = function(longitude, latitude, resolution, callback) {
     // Connection with the PostgreSQL database
     memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
@@ -396,7 +396,7 @@ var Filter = function() {
           key = "Countries";
 
         // Creation of the query
-        var query = "SELECT ST_Extent(" + memberTablesConfig[key].GeometryFieldName + ") as extent, " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key FROM " + memberPgConnectionString.getSchema() + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326)) group by " + memberTablesConfig[key].IdFieldName + ", " + memberTablesConfig[key].NameFieldName + ";",
+        var query = "SELECT " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key FROM " + memberPgConnectionString.getSchema() + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));",
             params = [longitude, latitude];
 
         // Execution of the query

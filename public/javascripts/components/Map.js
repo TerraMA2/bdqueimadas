@@ -252,9 +252,12 @@ BDQueimadas.components.Map = (function() {
           });
 
           TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(e) {
-            BDQueimadas.obj.getSocket().emit('extentByIntersectionRequest', {
-              longitude: e.coordinate[0],
-              latitude: e.coordinate[1],
+            var longitude = BDQueimadas.components.Utils.normalizeLongitude(e.coordinate[0]);
+            var latitude = e.coordinate[1];
+
+            BDQueimadas.obj.getSocket().emit('dataByIntersectionRequest', {
+              longitude: longitude,
+              latitude: latitude,
               resolution: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution()
             });
           });
