@@ -164,48 +164,52 @@ BDQueimadas.components.Utils = (function() {
   };
 
   /**
-   * Sorts an array of integers and returns it in JSON format, along with the original index of each value.
-   * @param {float} longitude - Array of integers to be sorted
-   * @returns {float} correctedLongitude - JSON containing the result
+   * Corrects the longitude of the map, if it's wrong. That's necessary because Openlayers 3 (in the current version) has a bug, when the map is moved to the right or to the left the X coordinate keeps growing.
+   * @param {float} longitude - Original longitude
+   * @returns {float} correctedLongitude - Corrected longitude
    *
-   * @function normalizeLongitude
+   * @function correctLongitude
    * @memberof Utils
    * @inner
    */
-  var normalizeLongitude = function(longitude) {
-    var correctedLongitude = longitude;
-    var originalLongitude = longitude;
+  var correctLongitude = function(longitude) {
+    // Variable that will keep the corrected longitude
+    var correctedLongitude = parseFloat(longitude);
+    // Variable that will keep the original longitude
+    var originalLongitude = parseFloat(longitude);
 
-    if(longitude > 180 || longitude < -180) {
-      longitude = longitude < 0 ? longitude * -1 : parseFloat(longitude);
+    // The correction is executed only if the longitude is incorrect
+    if(originalLongitude > 180 || originalLongitude <= -180) {
+      // If the longitude is negative, it's converted to a positive float, otherwise just to a float
+      longitude = originalLongitude < 0 ? longitude * -1 : parseFloat(longitude);
 
-      var isDivisionResultEven = (parseInt(longitude / 180) % 2) === 0;
-      var divisionResult = isDivisionResultEven ? parseInt(longitude / 180) : Math.ceil(longitude / 180);
+      // Division of the longitude by 180:
+      //   If the result is an even negative integer, nothing is added, subtracted or rounded
+      //   If the result is an odd negative integer, is added 1 to the result
+      //   If the result is a positive integer, is subtracted 1 from the result
+      //   If isn't integer but its integer part is even, it's rounded down
+      //   Otherwise, it's rounded up
+      var divisionResult = 0;
+      if((originalLongitude / 180) % 2 === -0)
+        divisionResult = longitude / 180;
+      else if((originalLongitude / 180) % 2 === -1)
+        divisionResult = (longitude / 180) + 1;
+      else if((longitude / 180) % 1 === 0)
+        divisionResult = (longitude / 180) - 1;
+      else if(parseInt(longitude / 180) % 2 === 0)
+        divisionResult = parseInt(longitude / 180);
+      else
+        divisionResult = Math.ceil(longitude / 180);
 
+      // If the division result is greater than zero, the correct longitude is calculated:
+      //   If the original longitude is negative, the division result multiplied by 180 is added to it
+      //   Otherwise, the division result multiplied by 180 is subtracted from it
       if(divisionResult > 0)
-        correctedLongitude = (originalLongitude < 0) ? originalLongitude + (divisionResult * 180) : longitude - (divisionResult * 180);
+        correctedLongitude = (originalLongitude < 0) ? originalLongitude + (divisionResult * 180) : originalLongitude - (divisionResult * 180);
     }
 
     return correctedLongitude;
   };
-
-  /*if(e.coordinate[0] > 180 || e.coordinate[0] < -180) {
-    if(e.coordinate[0] < 0) {
-      var isDivisionResultEven = (parseInt((e.coordinate[0] * -1) / 180) % 2) === 0;
-
-      var divisionResult = isDivisionResultEven ? parseInt((e.coordinate[0] * -1) / 180) : Math.ceil((e.coordinate[0] * -1) / 180);
-
-      if(divisionResult > 0)
-        var correctedLongitude = e.coordinate[0] + (divisionResult * 180);
-    } else {
-      var isDivisionResultEven = (parseInt(parseFloat(e.coordinate[0]) / 180) % 2) === 0;
-
-      var divisionResult = isDivisionResultEven ? parseInt(parseFloat(e.coordinate[0]) / 180) : Math.ceil(parseFloat(e.coordinate[0]) / 180);
-
-      if(divisionResult > 0)
-        var correctedLongitude = e.coordinate[0] - (divisionResult * 180);
-    }
-  }*/
 
   /**
    * Initializes the necessary features.
@@ -222,7 +226,7 @@ BDQueimadas.components.Utils = (function() {
     processStringWithDatePattern: processStringWithDatePattern,
     stringInArray: stringInArray,
     sortIntegerArray: sortIntegerArray,
-    normalizeLongitude: normalizeLongitude,
+    correctLongitude: correctLongitude,
     init: init
   };
 })();

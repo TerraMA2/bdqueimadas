@@ -252,7 +252,7 @@ BDQueimadas.components.Map = (function() {
           });
 
           TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(e) {
-            var longitude = BDQueimadas.components.Utils.normalizeLongitude(e.coordinate[0]);
+            var longitude = BDQueimadas.components.Utils.correctLongitude(e.coordinate[0]);
             var latitude = e.coordinate[1];
 
             BDQueimadas.obj.getSocket().emit('dataByIntersectionRequest', {
