@@ -241,20 +241,17 @@ BDQueimadas.components.Map = (function() {
 
       var interval = window.setInterval(function() {
         if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-          TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function(e) {
+          TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function() {
             var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
             TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
             BDQueimadas.components.Filter.updateComponents();
           });
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function(e) {
+          TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function() {
             setSubtitlesVisibility();
           });
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(e) {
-            var longitude = BDQueimadas.components.Utils.correctLongitude(e.coordinate[0]);
-            var latitude = e.coordinate[1];
-
+          TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
             BDQueimadas.obj.getSocket().emit('dataByIntersectionRequest', {
               longitude: longitude,
               latitude: latitude,
@@ -262,7 +259,7 @@ BDQueimadas.components.Map = (function() {
             });
           });
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityChangeEvent(function(e, layerId) {
+          TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
             setSubtitlesVisibility(layerId);
           });
 

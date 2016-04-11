@@ -164,54 +164,6 @@ BDQueimadas.components.Utils = (function() {
   };
 
   /**
-   * Corrects the longitude of the map, if it's wrong. That's necessary because Openlayers 3 (in the current version) has a bug, when the map is moved to the right or to the left the X coordinate keeps growing.
-   * @param {float} longitude - Original longitude
-   * @returns {float} correctedLongitude - Corrected longitude
-   *
-   * @function correctLongitude
-   * @memberof Utils
-   * @inner
-   */
-  var correctLongitude = function(longitude) {
-    // Variable that will keep the corrected longitude
-    var correctedLongitude = parseFloat(longitude);
-    // Variable that will keep the original longitude
-    var originalLongitude = parseFloat(longitude);
-
-    // The correction is executed only if the longitude is incorrect
-    if(originalLongitude > 180 || originalLongitude <= -180) {
-      // If the longitude is negative, it's converted to a positive float, otherwise just to a float
-      longitude = originalLongitude < 0 ? longitude * -1 : parseFloat(longitude);
-
-      // Division of the longitude by 180:
-      //   If the result is an even negative integer, nothing is added, subtracted or rounded
-      //   If the result is an odd negative integer, is added 1 to the result
-      //   If the result is a positive integer, is subtracted 1 from the result
-      //   If isn't integer but its integer part is even, it's rounded down
-      //   Otherwise, it's rounded up
-      var divisionResult = 0;
-      if((originalLongitude / 180) % 2 === -0)
-        divisionResult = longitude / 180;
-      else if((originalLongitude / 180) % 2 === -1)
-        divisionResult = (longitude / 180) + 1;
-      else if((longitude / 180) % 1 === 0)
-        divisionResult = (longitude / 180) - 1;
-      else if(parseInt(longitude / 180) % 2 === 0)
-        divisionResult = parseInt(longitude / 180);
-      else
-        divisionResult = Math.ceil(longitude / 180);
-
-      // If the division result is greater than zero, the correct longitude is calculated:
-      //   If the original longitude is negative, the division result multiplied by 180 is added to it
-      //   Otherwise, the division result multiplied by 180 is subtracted from it
-      if(divisionResult > 0)
-        correctedLongitude = (originalLongitude < 0) ? originalLongitude + (divisionResult * 180) : originalLongitude - (divisionResult * 180);
-    }
-
-    return correctedLongitude;
-  };
-
-  /**
    * Initializes the necessary features.
    *
    * @function init
@@ -226,7 +178,6 @@ BDQueimadas.components.Utils = (function() {
     processStringWithDatePattern: processStringWithDatePattern,
     stringInArray: stringInArray,
     sortIntegerArray: sortIntegerArray,
-    correctLongitude: correctLongitude,
     init: init
   };
 })();
