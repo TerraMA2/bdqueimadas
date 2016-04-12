@@ -38,53 +38,68 @@ var ExportController = function(app) {
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-    memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, GeoJSONData) {
+    memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {
       if(err) return console.error(err);
 
-      var GeoJSON = createFeatureCollection(GeoJSONData);
+      var geoJson = createFeatureCollection(geoJsonData);
 
       var path = require('path');
       var jsonfile = require('jsonfile');
 
       require('crypto').randomBytes(24, function(err, buffer) {
-        var GeoJSONPath = path.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
+        var geoJsonPath = path.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
 
-        jsonfile.writeFileSync(GeoJSONPath, GeoJSON);
+        jsonfile.writeFileSync(geoJsonPath, geoJson);
 
         if(request.query.format === 'shapefile') {
-          var ShapefileFolderName = 'Shapefile-' + buffer.toString('hex');
-          var ShapefileFolderPath = path.join(__dirname, '../tmp/' + ShapefileFolderName);
-          var ShapefilePath = path.join(__dirname, '../tmp/' + ShapefileFolderName + '/BDQueimadas-Shapefile.shp');
+          var shapefileFolderName = 'Shapefile-' + buffer.toString('hex');
+          var shapefileFolderPath = path.join(__dirname, '../tmp/' + shapefileFolderName);
+          var shapefilePath = path.join(__dirname, '../tmp/' + shapefileFolderName + '/BDQueimadas-Shapefile.shp');
 
-          var ZipPath = path.join(__dirname, '../tmp/' + ShapefileFolderName) + "/BDQueimadas-Shapefile.zip";
+          var zipPath = path.join(__dirname, '../tmp/' + shapefileFolderName) + "/BDQueimadas-Shapefile.zip";
 
-          var shapefileGenerationCommand = "ogr2ogr -F \"ESRI Shapefile\" " + ShapefilePath + " " + GeoJSONPath + " OGRGeoJSON";
-          var zipGenerationCommand = "zip -r -j " + ZipPath + " " + ShapefileFolderPath;
+          var shapefileGenerationCommand = "ogr2ogr -F \"ESRI Shapefile\" " + shapefilePath + " " + geoJsonPath + " OGRGeoJSON";
+          var zipGenerationCommand = "zip -r -j " + zipPath + " " + shapefileFolderPath;
 
           try {
-            memberFs.mkdirSync(ShapefileFolderPath);
+            memberFs.mkdirSync(shapefileFolderPath);
           } catch(e) {
             if(e.code != 'EEXIST') throw e;
           }
 
           memberExec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
             if(err) return console.error(err);
+
             memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
               if(err) return console.error(err);
 
-              response.download(ZipPath, 'BDQueimadas-Shapefile.zip', function(err) {
+              response.download(zipPath, 'BDQueimadas-Shapefile.zip', function(err) {
                 if(err) return console.error(err);
 
-                memberFs.unlink(GeoJSONPath);
-                deleteFolderRecursively(ShapefileFolderPath);
+                memberFs.unlink(geoJsonPath);
+                deleteFolderRecursively(shapefileFolderPath);
               });
             });
           });
-        } else {
-          response.download(GeoJSONPath, 'BDQueimadas-GeoJSON.json', function(err) {
+        } else if(request.query.format === 'csv') {
+          var csvPath = path.join(__dirname, '../tmp/BDQueimadas-CSV.csv');
+          var csvGenerationCommand = "ogr2ogr -F \"CSV\" " + csvPath + " " + geoJsonPath;
+
+          memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
             if(err) return console.error(err);
 
-            memberFs.unlink(GeoJSONPath);
+            response.download(csvPath, 'BDQueimadas-CSV.csv', function(err) {
+              if(err) return console.error(err);
+
+              memberFs.unlink(geoJsonPath);
+              memberFs.unlink(csvPath);
+            });
+          });
+        } else {
+          response.download(geoJsonPath, 'BDQueimadas-GeoJSON.json', function(err) {
+            if(err) return console.error(err);
+
+            memberFs.unlink(geoJsonPath);
           });
         }
       });
@@ -93,29 +108,29 @@ var ExportController = function(app) {
 
   /**
    * Processes the data returned from the database and creates a Feature Collection (GeoJSON).
-   * @param {json} GeoJSONData - JSON containing the data returned from the database
-   * @returns {geojson} GeoJSON - Feature Collection (GeoJSON)
+   * @param {json} geoJsonData - JSON containing the data returned from the database
+   * @returns {geojson} geoJson - Feature Collection (GeoJSON)
    *
    * @private
    * @function createFeatureCollection
    * @memberof ExportController
    * @inner
    */
-  var createFeatureCollection = function(GeoJSONData) {
-    var GeoJSON = {
+  var createFeatureCollection = function(geoJsonData) {
+    var geoJson = {
       "type": "FeatureCollection",
       "features": []
     };
 
-    GeoJSONData.rows.forEach(function(feature) {
-      GeoJSON.features.push({
+    geoJsonData.rows.forEach(function(feature) {
+      geoJson.features.push({
         "type": "Feature",
         "geometry": feature.geometry,
         "properties": feature.properties
       });
     });
 
-    return GeoJSON;
+    return geoJson;
   };
 
   /**

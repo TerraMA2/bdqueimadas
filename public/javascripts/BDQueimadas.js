@@ -240,6 +240,7 @@ BDQueimadas.obj = (function() {
               '<option value="">Selecione o formato</option>' +
               '<option value="geojson">GeoJSON</option>' +
               '<option value="shapefile">Shapefile</option>' +
+              '<option value="csv">CSV</option>' +
               '</select>',
               buttons: [{
                 type: 'submit',
