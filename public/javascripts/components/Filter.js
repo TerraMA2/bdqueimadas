@@ -421,9 +421,17 @@ BDQueimadas.components.Filter = (function() {
     });
 
     BDQueimadas.obj.getSocket().on('countryByStateResponse', function(result) {
-      $('#countries-title').empty().html(result.country.rows[0].name);
-
+      enableDropdown('countries', result.country.rows[0].name);
       BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
+
+      var html = "",
+          countriesCount = result.countries.rowCount;
+
+      for(var i = 0; i < countriesCount; i++) {
+        html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
+      }
+
+      $('#countries').empty().html(html);
     });
 
     BDQueimadas.obj.getSocket().on('countriesByContinentResponse', function(result) {

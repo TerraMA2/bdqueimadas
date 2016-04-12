@@ -184,7 +184,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query

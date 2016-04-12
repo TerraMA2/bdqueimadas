@@ -62,7 +62,11 @@ var Filter = function(io) {
       memberFilter.getCountryByState(json.state, function(err, country) {
         if(err) return console.error(err);
 
-        client.emit('countryByStateResponse', { country: country });
+        memberFilter.getCountriesByContinent(country.rows[0].continent, function(err, countries) {
+          if(err) return console.error(err);
+
+          client.emit('countryByStateResponse', { country: country, countries: countries });
+        });
       });
     });
 
