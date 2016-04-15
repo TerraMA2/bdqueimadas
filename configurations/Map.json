@@ -161,8 +161,8 @@
           "Name": "Risco Observado",
           "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
           "ServerType": "mapserver",
-          "Visible": true,
-          "MinResolution": 0.025,
+          "Visible": false,
+          "MinResolution": 0,
           "MaxResolution": "Infinity",
           "Time": null
         }
