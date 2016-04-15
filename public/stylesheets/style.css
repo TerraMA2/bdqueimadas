@@ -264,6 +264,12 @@
   border-color: #d58512;
 }
 
+.ui-dialog { z-index: 999999 !important; top: 39px !important; }
+
+.ui-dialog-titlebar-close { padding: 0px !important; }
+
+#dialog { padding: 0 !important; }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }

@@ -24,3 +24,17 @@ var bdqueimadasInterval = window.setInterval(function() {
     clearInterval(bdqueimadasInterval);
   }
 }, 10);
+
+$('#btnDialog').on('click', function() {
+  $('#dialog').dialog({
+    width: 800,
+    height: 900,
+    modal: true,
+    resizable: false,
+    draggable: false,
+    closeOnEscape: true,
+    title: 'Sobre',
+    position: { my: 'top', at: 'top+15' }
+  });
+  $('.ui-dialog-titlebar-close').text('X');
+});
