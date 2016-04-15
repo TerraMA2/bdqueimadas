@@ -1,31 +1,72 @@
 {
   "Subtitles": [
     {
-      "LayerId": "sde:Paises_SQL_FOCOS",
-      "SubtitleText": "0 focos",
-      "FillColor": "#FFEBCD",
-      "BorderColor": "black",
-      "Image": null,
-      "MinResolution": 0.025,
-      "MaxResolution": "Infinity"
+      "LayerId": "sde:situacao_atual_de_2016_04_01_a_2016_04_15",
+      "LayerName": "Camada: Situação Atual",
+      "Subtitles": [
+        {
+          "SubtitleText": "0 focos",
+          "FillColor": "#FFEBCD",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 1 a 100 focos",
+          "FillColor": "#FFC387",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 101 a 500 focos",
+          "FillColor": "#FAA046",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 1001 a 5000 focos",
+          "FillColor": "#FA5C25",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 5001 a 25000 focos",
+          "FillColor": "#C34231",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 25001 a 50000 focos",
+          "FillColor": "#A21C0D",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        }
+      ]
     },
     {
-      "LayerId": "sde:Paises_SQL_FOCOS",
-      "SubtitleText": "De 25001 a 50000 focos",
-      "FillColor": "#A21C0D",
-      "BorderColor": "black",
-      "Image": null,
-      "MinResolution": 0.025,
-      "MaxResolution": "Infinity"
-    },
-    {
-      "LayerId": "focos:focos_20151210-14",
-      "SubtitleText": "Focos",
-      "FillColor": null,
-      "BorderColor": null,
-      "Image": "images/subtitles/fire.png",
-      "MinResolution": 0,
-      "MaxResolution": 0.025
+      "LayerId": "sde:focos_de_2016_04_01_a_2016_04_15",
+      "LayerName": "Camada: Focos",
+      "Subtitles": [
+        {
+          "SubtitleText": "Focos",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/subtitles/fire.png",
+          "MinResolution": 0,
+          "MaxResolution": 0.025
+        }
+      ]
     }
   ],
   "LayerGroups": [
@@ -38,7 +79,7 @@
           "Name": "Modis Aqua {{-|30|d=DD/MM/YYYY}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{-|30|d=YYYY-MM-DD}}"
@@ -48,7 +89,7 @@
           "Name": "Modis Terra {{-|30|d=DD/MM/YYYY}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{-|30|d=YYYY-MM-DD}}"
@@ -72,7 +113,7 @@
         {
           "Id": "sde:estados",
           "Name": "Estados",
-          "Url": "http://localhost:9095/geoserver/ows",
+          "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
@@ -82,7 +123,7 @@
         {
           "Id": "sde:countries",
           "Name": "Países",
-          "Url": "http://localhost:9095/geoserver/ows",
+          "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0.080,
@@ -90,9 +131,9 @@
           "Time": null
         },
         {
-          "Id": "focos:focos_20151210-14",
+          "Id": "sde:focos_de_2016_04_01_a_2016_04_15",
           "Name": "Focos",
-          "Url": "http://localhost:9095/geoserver/ows",
+          "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
@@ -100,9 +141,9 @@
           "Time": null
         },
         {
-          "Id": "sde:Paises_SQL_FOCOS",
+          "Id": "sde:situacao_atual_de_2016_04_01_a_2016_04_15",
           "Name": "Situação Atual",
-          "Url": "http://localhost:9095/geoserver/ows",
+          "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0.025,
@@ -116,122 +157,12 @@
       "Name": "Meteorologia",
       "Layers": [
         {
-          "Id": "observacao_rf_obs1d",
-          "Name": "Risco Observado {{-|1|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+          "Id": "mrp0",
+          "Name": "Risco Observado",
+          "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
           "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_rf_obs2d",
-          "Name": "Risco Observado {{-|2|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_rf_obs3d",
-          "Name": "Risco Observado {{-|3|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_prec_obs1d",
-          "Name": "Precipitacao {{-|1|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_prec_obs2d",
-          "Name": "Precipitacao {{-|2|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_prec_obs3d",
-          "Name": "Precipitacao {{-|3|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_ndsc_obs1d",
-          "Name": "Falta Chuva {{-|1|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_ndsc_obs2d",
-          "Name": "Falta Chuva {{-|2|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_ndsc_obs3d",
-          "Name": "Falta Chuva {{-|3|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_tmax_obs1d",
-          "Name": "Temperatura Max {{-|1|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_tmax_obs2d",
-          "Name": "Temperatura Max {{-|2|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "observacao_tmax_obs3d",
-          "Name": "Temperatura Max {{-|3|d=DD/MM/YYYY}}",
-          "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": 0,
+          "Visible": true,
+          "MinResolution": 0.025,
           "MaxResolution": "Infinity",
           "Time": null
         }

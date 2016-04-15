@@ -111,18 +111,22 @@ BDQueimadas.components.Map = (function() {
     var configuration = BDQueimadas.obj.getConfigurations().mapConfigurations;
 
     $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-      var css = "";
+      elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><span style=\"font-weight: bold;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
 
-      if(mapSubtitleItem.FillColor !== null)
-        css += "background-color: " + mapSubtitleItem.FillColor + ";";
+      $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
+        var css = "";
 
-      if(mapSubtitleItem.BorderColor !== null)
-        css += "border: solid 2px " + mapSubtitleItem.BorderColor + ";";
+        if(layerSubtitleItem.FillColor !== null)
+          css += "background-color: " + layerSubtitleItem.FillColor + ";";
 
-      if(mapSubtitleItem.Image !== null)
-        css += "background: url(" + mapSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
+        if(layerSubtitleItem.BorderColor !== null)
+          css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
 
-      elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + css + "\"></div><span>" + mapSubtitleItem.SubtitleText + "</span></a></li>";
+        if(layerSubtitleItem.Image !== null)
+          css += "background: url(" + layerSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
+
+        elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
+      });
     });
 
     $('#map-subtitle-items').append(elem);
