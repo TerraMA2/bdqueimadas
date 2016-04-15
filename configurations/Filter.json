@@ -1,8 +1,8 @@
 {
   "LayerToFilter": {
-    "LayerId": "focos:focos_20151210-14",
-    "SatelliteFieldName": "Satelite",
-    "DateFieldName": "Data",
+    "LayerId": "sde:focos_de_2016_04_01_a_2016_04_15",
+    "SatelliteFieldName": "satelite",
+    "DateFieldName": "data",
     "DateFormat": "YYYYMMDD",
     "InitialDate": "{{-|1|d=YYYYMMDD}}",
     "FinalDate": "{{0=YYYYMMDD}}"

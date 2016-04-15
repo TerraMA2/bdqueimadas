@@ -15,3 +15,12 @@ var terrama2Interval = window.setInterval(function() {
     clearInterval(terrama2Interval);
   }
 }, 10);
+
+var bdqueimadasInterval = window.setInterval(function() {
+  if(BDQueimadas.obj.isComponentsLoaded()) {
+
+    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
+
+    clearInterval(bdqueimadasInterval);
+  }
+}, 10);
