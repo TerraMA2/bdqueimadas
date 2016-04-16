@@ -46,7 +46,6 @@ BDQueimadas.components.Map = (function() {
   /**
    * Resets the map tools to its initial state.
    *
-   * @private
    * @function resetMapMouseTools
    * @memberof Map
    * @inner
@@ -290,6 +289,7 @@ BDQueimadas.components.Map = (function() {
   };
 
   return {
+    resetMapMouseTools: resetMapMouseTools,
     init: init
   };
 })();

@@ -152,6 +152,28 @@ BDQueimadas.components.Graphics = (function() {
     });
   };
 
+  // new
+
+  var loadEvents = function() {
+    $('#getTimeSeries').on('click', function() {
+      setTimeSeriesTool();
+    });
+  };
+
+  var setTimeSeriesTool = function() {
+    if($('#getTimeSeries > i').hasClass('active')) {
+      TerraMA2WebComponents.webcomponents.MapDisplay.unsetMapSingleClickEvent();
+      BDQueimadas.components.Map.resetMapMouseTools();
+    } else {
+      BDQueimadas.components.Map.resetMapMouseTools();
+      $('#getTimeSeries > i').addClass('active');
+      $('#terrama2-map').addClass('cursor-crosshair');
+      TerraMA2WebComponents.webcomponents.MapDisplay.setMapSingleClickEvent();
+    }
+  };
+
+  // new
+
   /**
    * Initializes the necessary features.
    *
@@ -161,6 +183,7 @@ BDQueimadas.components.Graphics = (function() {
    */
   var init = function() {
     $(document).ready(function() {
+      loadEvents();
       loadSocketsListeners();
       updateGraphics();
     });
