@@ -80,8 +80,9 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var initialExtent = function() {
-    TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
-    BDQueimadas.components.Filter.updateComponents();
+    //TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
+    //BDQueimadas.components.Filter.updateComponents();
+    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
   };
 
   /**
