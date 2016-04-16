@@ -14,6 +14,52 @@ BDQueimadas.components.Graphics = (function() {
   // Graphics of fires count
   var memberFiresCountGraphics = {};
 
+  // new
+
+  var getTimeSeriesGraphic = function() {
+    var url = BDQueimadas.obj.getConfigurations().graphicsConfigurations.TimeSeries.URL;
+
+    $.getJSON(url, function(data) {
+        if(data.result !== undefined) {
+        var graphicData = {
+          labels: data.result.timeline,
+          datasets: [
+            {
+              label: "Data Series",
+              fillColor: "rgba(220,220,220,0.2)",
+              strokeColor: "rgba(220,220,220,1)",
+              pointColor: "rgba(220,220,220,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(220,220,220,1)",
+              data: [1,2,3,4,5,6,7,8,9,10,11,12]//data.result.attributes[0].values
+            }
+          ]
+        };
+
+        console.log(graphicData);
+
+        $('#timeSeriesDialog').dialog({
+          width: 800,
+          height: 900,
+          resizable: false,
+          closeOnEscape: true,
+          position: { my: 'top', at: 'top+15' }
+        });
+        $('.ui-dialog-titlebar-close').text('X');
+
+        var htmlElement = $("#time-series").get(0).getContext("2d");
+        var timeSeriesGraphic = new Chart(htmlElement).Line(graphicData, { responsive : true });
+
+
+      } else {
+        throw new Error("Time Series Server Error!");
+      }
+    });
+  };
+
+  // new
+
   /**
    * Updates all the graphics.
    *
@@ -122,6 +168,7 @@ BDQueimadas.components.Graphics = (function() {
 
   return {
     updateGraphics: updateGraphics,
+    getTimeSeriesGraphic: getTimeSeriesGraphic,
     init: init
   };
 })();
