@@ -56,6 +56,7 @@ BDQueimadas.components.Map = (function() {
     $('.mouse-function-btn > i').removeClass('active');
     $('#terrama2-map').removeClass('cursor-crosshair');
     $('#terrama2-map').removeClass('cursor-move');
+    $('#terrama2-map').removeClass('cursor-pointer');
   };
 
   /**

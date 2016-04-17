@@ -52,7 +52,6 @@ BDQueimadas.components.Graphics = (function() {
           closeText: "",
           position: { my: 'top', at: 'top+15' }
         });
-        //$('.ui-dialog-titlebar-close').text('X');
 
         var htmlElement = $("#time-series").get(0).getContext("2d");
 
@@ -175,7 +174,7 @@ BDQueimadas.components.Graphics = (function() {
     } else {
       BDQueimadas.components.Map.resetMapMouseTools();
       $('#getTimeSeries > i').addClass('active');
-      $('#terrama2-map').addClass('cursor-crosshair');
+      $('#terrama2-map').addClass('cursor-pointer');
       TerraMA2WebComponents.webcomponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
         getTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
       });
