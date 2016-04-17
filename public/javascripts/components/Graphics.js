@@ -16,42 +16,50 @@ BDQueimadas.components.Graphics = (function() {
 
   // new
 
-  var getTimeSeriesGraphic = function() {
-    var url = BDQueimadas.obj.getConfigurations().graphicsConfigurations.TimeSeries.URL;
+  var getTimeSeriesGraphic = function(longitude, latitude, start, end) {
+    var wtssObj = new wtss(BDQueimadas.obj.getConfigurations().graphicsConfigurations.TimeSeries.URL);
 
-    $.getJSON(url, function(data) {
+    wtssObj.time_series({
+      coverage: BDQueimadas.obj.getConfigurations().graphicsConfigurations.TimeSeries.Coverage,
+      attributes: BDQueimadas.obj.getConfigurations().graphicsConfigurations.TimeSeries.Attributes,
+      longitude: longitude,
+      latitude: latitude,
+      start: start,
+      end: end
+    }, function(data) {
         if(data.result !== undefined) {
         var graphicData = {
           labels: data.result.timeline,
           datasets: [
             {
-              label: "Data Series",
+              label: "Séries Temporais",
               fillColor: "rgba(220,220,220,0.2)",
               strokeColor: "rgba(220,220,220,1)",
               pointColor: "rgba(220,220,220,1)",
               pointStrokeColor: "#fff",
               pointHighlightFill: "#fff",
               pointHighlightStroke: "rgba(220,220,220,1)",
-              data: [1,2,3,4,5,6,7,8,9,10,11,12]//data.result.attributes[0].values
+              data: data.result.attributes[0].values
             }
           ]
         };
 
-        console.log(graphicData);
-
         $('#timeSeriesDialog').dialog({
-          width: 800,
-          height: 900,
+          width: 855,
+          height: 480,
           resizable: false,
           closeOnEscape: true,
+          closeText: "",
           position: { my: 'top', at: 'top+15' }
         });
-        $('.ui-dialog-titlebar-close').text('X');
+        //$('.ui-dialog-titlebar-close').text('X');
 
         var htmlElement = $("#time-series").get(0).getContext("2d");
-        var timeSeriesGraphic = new Chart(htmlElement).Line(graphicData, { responsive : true });
 
+        if(memberFiresCountGraphics["timeSeries"] !== undefined && memberFiresCountGraphics["timeSeries"] !== null)
+          memberFiresCountGraphics["timeSeries"].destroy();
 
+        memberFiresCountGraphics["timeSeries"] = new Chart(htmlElement).Line(graphicData, { responsive : true, maintainAspectRatio: true });
       } else {
         throw new Error("Time Series Server Error!");
       }
@@ -162,13 +170,15 @@ BDQueimadas.components.Graphics = (function() {
 
   var setTimeSeriesTool = function() {
     if($('#getTimeSeries > i').hasClass('active')) {
-      TerraMA2WebComponents.webcomponents.MapDisplay.unsetMapSingleClickEvent();
       BDQueimadas.components.Map.resetMapMouseTools();
+      BDQueimadas.components.Map.activateMoveMapTool();
     } else {
       BDQueimadas.components.Map.resetMapMouseTools();
       $('#getTimeSeries > i').addClass('active');
       $('#terrama2-map').addClass('cursor-crosshair');
-      TerraMA2WebComponents.webcomponents.MapDisplay.setMapSingleClickEvent();
+      TerraMA2WebComponents.webcomponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
+        getTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
+      });
     }
   };
 

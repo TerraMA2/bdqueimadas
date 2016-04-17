@@ -33,7 +33,7 @@ $('#btnDialog').on('click', function() {
     resizable: false,
     draggable: false,
     closeOnEscape: true,
-    title: 'Sobre',
+    closeText: "",
     position: { my: 'top', at: 'top+15' }
   });
   $('.ui-dialog-titlebar-close').text('X');

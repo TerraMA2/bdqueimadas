@@ -76,33 +76,33 @@
       "Layers": [
         {
           "Id": "aqua_250m_truecolor",
-          "Name": "Modis Aqua {{-|30|d=DD/MM/YYYY}}",
+          "Name": "Modis Aqua {{-|35|d=DD/MM/YYYY}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{-|30|d=YYYY-MM-DD}}"
+          "Time": "{{-|35|d=YYYY-MM-DD}}"
         },
         {
           "Id": "terra_250m_truecolor",
-          "Name": "Modis Terra {{-|30|d=DD/MM/YYYY}}",
+          "Name": "Modis Terra {{-|35|d=DD/MM/YYYY}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{-|30|d=YYYY-MM-DD}}"
+          "Time": "{{-|35|d=YYYY-MM-DD}}"
         },
         {
           "Id": "npp_250m_truecolor",
-          "Name": "Modis NPP {{-|30|d=DD/MM/YYYY}}",
+          "Name": "Modis NPP {{-|35|d=DD/MM/YYYY}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
           "Visible": true,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{-|30|d=YYYY-MM-DD}}"
+          "Time": "{{-|35|d=YYYY-MM-DD}}"
         }
       ]
     },

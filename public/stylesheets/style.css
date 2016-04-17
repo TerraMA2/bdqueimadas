@@ -264,7 +264,7 @@
   border-color: #d58512;
 }
 
-.ui-dialog { z-index: 999999 !important; top: 39px !important; }
+.ui-dialog { z-index: 999999 !important; }
 
 .ui-dialog-titlebar-close { padding: 0px !important; }
 
