@@ -122,6 +122,8 @@
 
 .cursor-move { cursor: move !important; }
 
+.cursor-pointer { cursor: pointer !important; }
+
 #welcome {
   position: absolute;
   left: 0;

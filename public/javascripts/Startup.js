@@ -36,5 +36,4 @@ $('#btnDialog').on('click', function() {
     closeText: "",
     position: { my: 'top', at: 'top+15' }
   });
-  $('.ui-dialog-titlebar-close').text('X');
 });
