@@ -51,6 +51,7 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var resetMapMouseTools = function() {
+    TerraMA2WebComponents.webcomponents.MapDisplay.unsetMapSingleClickEvent();
     TerraMA2WebComponents.webcomponents.MapDisplay.removeZoomDragBox();
     $('.mouse-function-btn > i').removeClass('active');
     $('#terrama2-map').removeClass('cursor-crosshair');
@@ -60,7 +61,6 @@ BDQueimadas.components.Map = (function() {
   /**
    * Activates the move map tool.
    *
-   * @private
    * @function activateMoveMapTool
    * @memberof Map
    * @inner
@@ -290,6 +290,7 @@ BDQueimadas.components.Map = (function() {
 
   return {
     resetMapMouseTools: resetMapMouseTools,
+    activateMoveMapTool: activateMoveMapTool,
     init: init
   };
 })();

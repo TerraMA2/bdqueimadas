@@ -14,6 +14,8 @@
     }
   ],
   "TimeSeries": {
-    "URL": "http://www.dpi.inpe.br/ts/wtss/time_series?coverage=fire_risk_monthly&attributes=value&longitude=-54&latitude=-12&start=2000-01&end=2000-12"
+    "URL": "http://www.dpi.inpe.br/ts",
+    "Coverage": "fire_risk_monthly",
+    "Attributes": ["value"]
   }
 }
