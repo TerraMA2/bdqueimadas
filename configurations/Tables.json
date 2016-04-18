@@ -18,7 +18,7 @@
     "GeometryFieldName": "geom"
   },
   "Fires": {
-    "TableName": "focos_de_2016_04_01_a_2016_04_15",
+    "TableName": "focos_de_2016_04_01_a_2016_04_18",
     "IdFieldName": "gid",
     "DateFieldName": "data",
     "TimeFieldName": "horagmt",
