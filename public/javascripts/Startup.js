@@ -25,8 +25,8 @@ var bdqueimadasInterval = window.setInterval(function() {
   }
 }, 10);
 
-$('#btnDialog').on('click', function() {
-  $('#dialog').dialog({
+$('#about-btn').on('click', function() {
+  $('#about-dialog').dialog({
     width: 800,
     height: 900,
     modal: true,

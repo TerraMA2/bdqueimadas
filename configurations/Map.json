@@ -1,7 +1,7 @@
 {
   "Subtitles": [
     {
-      "LayerId": "sde:situacao_atual_de_2016_04_01_a_2016_04_15",
+      "LayerId": "sde:situacao_atual_de_2016_04_01_a_2016_04_18",
       "LayerName": "Camada: Situação Atual",
       "Subtitles": [
         {
@@ -55,7 +55,7 @@
       ]
     },
     {
-      "LayerId": "sde:focos_de_2016_04_01_a_2016_04_15",
+      "LayerId": "sde:focos_de_2016_04_01_a_2016_04_18",
       "LayerName": "Camada: Focos",
       "Subtitles": [
         {
@@ -131,7 +131,7 @@
           "Time": null
         },
         {
-          "Id": "sde:focos_de_2016_04_01_a_2016_04_15",
+          "Id": "sde:focos_de_2016_04_01_a_2016_04_18",
           "Name": "Focos",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -141,7 +141,7 @@
           "Time": null
         },
         {
-          "Id": "sde:situacao_atual_de_2016_04_01_a_2016_04_15",
+          "Id": "sde:situacao_atual_de_2016_04_01_a_2016_04_18",
           "Name": "Situação Atual",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",

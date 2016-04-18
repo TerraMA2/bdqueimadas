@@ -14,9 +14,41 @@ BDQueimadas.components.Graphics = (function() {
   // Graphics of fires count
   var memberFiresCountGraphics = {};
 
-  // new
+  /**
+   * Activates or deactivates the time series tool.
+   *
+   * @private
+   * @function setTimeSeriesTool
+   * @memberof Graphics(2)
+   * @inner
+   */
+  var setTimeSeriesTool = function() {
+    if($('#show-time-series-graphic > i').hasClass('active')) {
+      BDQueimadas.components.Map.resetMapMouseTools();
+      BDQueimadas.components.Map.activateMoveMapTool();
+    } else {
+      BDQueimadas.components.Map.resetMapMouseTools();
+      $('#show-time-series-graphic > i').addClass('active');
+      $('#terrama2-map').addClass('cursor-pointer');
+      TerraMA2WebComponents.webcomponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
+        showTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
+      });
+    }
+  };
 
-  var getTimeSeriesGraphic = function(longitude, latitude, start, end) {
+  /**
+   * Shows the time series graphic to the received parameters.
+   * @param {float} longitude - Received longitude
+   * @param {float} latitude - Received latitude
+   * @param {string} start - Time series start month (YYYY-MM)
+   * @param {string} end - Time series end month (YYYY-MM)
+   *
+   * @private
+   * @function showTimeSeriesGraphic
+   * @memberof Graphics(2)
+   * @inner
+   */
+  var showTimeSeriesGraphic = function(longitude, latitude, start, end) {
     var wtssObj = new wtss(BDQueimadas.obj.getConfigurations().graphicsConfigurations.TimeSeries.URL);
 
     wtssObj.time_series({
@@ -27,7 +59,7 @@ BDQueimadas.components.Graphics = (function() {
       start: start,
       end: end
     }, function(data) {
-        if(data.result !== undefined) {
+      if(data.result !== undefined) {
         var graphicData = {
           labels: data.result.timeline,
           datasets: [
@@ -44,7 +76,7 @@ BDQueimadas.components.Graphics = (function() {
           ]
         };
 
-        $('#timeSeriesDialog').dialog({
+        $('#time-series-dialog').dialog({
           width: 855,
           height: 480,
           resizable: false,
@@ -64,8 +96,6 @@ BDQueimadas.components.Graphics = (function() {
       }
     });
   };
-
-  // new
 
   /**
    * Updates all the graphics.
@@ -159,29 +189,19 @@ BDQueimadas.components.Graphics = (function() {
     });
   };
 
-  // new
-
+  /**
+   * Loads the DOM events.
+   *
+   * @private
+   * @function loadEvents
+   * @memberof Graphics(2)
+   * @inner
+   */
   var loadEvents = function() {
-    $('#getTimeSeries').on('click', function() {
+    $('#show-time-series-graphic').on('click', function() {
       setTimeSeriesTool();
     });
   };
-
-  var setTimeSeriesTool = function() {
-    if($('#getTimeSeries > i').hasClass('active')) {
-      BDQueimadas.components.Map.resetMapMouseTools();
-      BDQueimadas.components.Map.activateMoveMapTool();
-    } else {
-      BDQueimadas.components.Map.resetMapMouseTools();
-      $('#getTimeSeries > i').addClass('active');
-      $('#terrama2-map').addClass('cursor-pointer');
-      TerraMA2WebComponents.webcomponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
-        getTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
-      });
-    }
-  };
-
-  // new
 
   /**
    * Initializes the necessary features.
@@ -200,7 +220,6 @@ BDQueimadas.components.Graphics = (function() {
 
   return {
     updateGraphics: updateGraphics,
-    getTimeSeriesGraphic: getTimeSeriesGraphic,
     init: init
   };
 })();
