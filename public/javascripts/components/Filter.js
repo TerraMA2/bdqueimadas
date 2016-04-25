@@ -144,6 +144,12 @@ BDQueimadas.components.Filter = (function() {
     if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
       updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
       cql += createDateFilter();
+
+      $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+        var currentSituationFilter = "begin:" + BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD') + ";end:" + BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD');
+
+        TerraMA2WebComponents.webcomponents.MapDisplay.findBy(TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getLayerGroup(), 'id', layer).getSource().updateParams({ viewparams: currentSituationFilter });
+      });
     }
 
     if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterSatellite !== "all")

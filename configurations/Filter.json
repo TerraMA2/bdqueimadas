@@ -7,6 +7,15 @@
     "InitialDate": "{{-|1|d=YYYYMMDD}}",
     "FinalDate": "{{0=YYYYMMDD}}"
   },
+  "CurrentSituationLayers": {
+    "Layers": [
+      "sde:situacao_atual_paises_de_2016_04_01_a_2016_04_18",
+      "sde:situacao_atual_estados_de_2016_04_01_a_2016_04_18"
+    ],
+    "DateFormat": "YYYYMMDD",
+    "InitialDate": "{{-|1|d=YYYYMMDD}}",
+    "FinalDate": "{{0=YYYYMMDD}}"
+  },
   "SpatialFilter": {
     "Continents": {
       "LayerId": "",

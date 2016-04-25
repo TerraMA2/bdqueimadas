@@ -29,7 +29,6 @@ BDQueimadas.components.Map = (function() {
         TerraMA2WebComponents.webcomponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layerTime);
 
         if(layer.Id === BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
-
           var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
           var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
           var filter = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;
@@ -38,6 +37,12 @@ BDQueimadas.components.Map = (function() {
 
           BDQueimadas.components.Filter.updateDates(initialDate, finalDate, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
           BDQueimadas.components.Filter.updateComponents();
+        } else if(BDQueimadas.components.Utils.stringInArray(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
+          var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
+          var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
+          var filter = "begin:" + initialDate + ";end:" + finalDate;
+
+          TerraMA2WebComponents.webcomponents.MapDisplay.findBy(TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getLayerGroup(), 'id', layer.Id).getSource().updateParams({ viewparams: filter });
         }
       });
     });

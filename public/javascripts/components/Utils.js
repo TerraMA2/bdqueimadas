@@ -124,10 +124,10 @@ BDQueimadas.components.Utils = (function() {
    * @inner
    */
   var stringInArray = function(array, string) {
-    $.each(array, function(i, item) {
-      if(item === string)
+    for(var i = 0; i < array.length; i++) {
+      if(array[i].toString() === string.toString())
         return true;
-    });
+    }
     return false;
   };
 

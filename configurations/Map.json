@@ -1,8 +1,62 @@
 {
   "Subtitles": [
     {
-      "LayerId": "sde:situacao_atual_de_2016_04_01_a_2016_04_18",
-      "LayerName": "Camada: Situação Atual",
+      "LayerId": "sde:situacao_atual_paises_de_2016_04_01_a_2016_04_18",
+      "LayerName": "Camada: Situação Atual - Países",
+      "Subtitles": [
+        {
+          "SubtitleText": "0 focos",
+          "FillColor": "#FFEBCD",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 1 a 100 focos",
+          "FillColor": "#FFC387",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 101 a 500 focos",
+          "FillColor": "#FAA046",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 1001 a 5000 focos",
+          "FillColor": "#FA5C25",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 5001 a 25000 focos",
+          "FillColor": "#C34231",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleText": "De 25001 a 50000 focos",
+          "FillColor": "#A21C0D",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "LayerId": "sde:situacao_atual_estados_de_2016_04_01_a_2016_04_18",
+      "LayerName": "Camada: Situação Atual - Estados",
       "Subtitles": [
         {
           "SubtitleText": "0 focos",
@@ -141,13 +195,23 @@
           "Time": null
         },
         {
-          "Id": "sde:situacao_atual_de_2016_04_01_a_2016_04_18",
-          "Name": "Situação Atual",
+          "Id": "sde:situacao_atual_paises_de_2016_04_01_a_2016_04_18",
+          "Name": "Situação Atual - Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0.025,
           "MaxResolution": "Infinity",
+          "Time": null
+        },
+        {
+          "Id": "sde:situacao_atual_estados_de_2016_04_01_a_2016_04_18",
+          "Name": "Situação Atual - Estados",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0.015,
+          "MaxResolution": 0.050,
           "Time": null
         }
       ]
