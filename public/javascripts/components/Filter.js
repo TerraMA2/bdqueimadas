@@ -165,14 +165,8 @@ BDQueimadas.components.Filter = (function() {
    * @inner
    */
   var updateComponents = function() {
-    var bdqueimadasInterval = window.setInterval(function() {
-      if(BDQueimadas.obj.isComponentsLoaded()) {
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
-        BDQueimadas.components.Graphics.updateGraphics();
-
-        clearInterval(bdqueimadasInterval);
-      }
-    }, 10);
+    BDQueimadas.components.AttributesTable.updateAttributesTable();
+    BDQueimadas.components.Graphics.updateGraphics();
   };
 
   /**
@@ -404,7 +398,7 @@ BDQueimadas.components.Filter = (function() {
           selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
         }
       } else {
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
+        BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
       }
 
       updateComponents();

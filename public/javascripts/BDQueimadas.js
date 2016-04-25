@@ -19,6 +19,7 @@ window.BDQueimadas = {
  * @property {number} memberReducedFooterHeight - Reduced footer height.
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  * @property {boolean} memberComponentsLoaded - Flag that indicates if all the components have been loaded.
+ * @property {function} memberCallbackFunction - Callback function to be executed when all the components are loaded.
  */
 BDQueimadas.obj = (function() {
 
@@ -40,6 +41,8 @@ BDQueimadas.obj = (function() {
   var memberMapSubtitleHeight = null;
   // Flag that indicates if all the components have been loaded
   var memberComponentsLoaded = false;
+  // Callback function to be executed when all the components are loaded
+  var memberCallbackFunction = null;
 
   /**
    * Returns the configurations object.
@@ -80,12 +83,17 @@ BDQueimadas.obj = (function() {
         url: "/javascripts/components/" + memberConfigurations.componentsConfigurations[memberConfigurations.componentsConfigurations.Components[i]],
         dataType: "script",
         success: function() {
-          BDQueimadas.components[memberConfigurations.componentsConfigurations.Components[i]].init();
           loadComponents(++i);
         }
       });
     } else {
       memberComponentsLoaded = true;
+
+      $.each(memberConfigurations.componentsConfigurations.Components, function(i, componentItem) {
+        BDQueimadas.components[componentItem].init();
+      });
+
+      memberCallbackFunction();
     }
   };
 
@@ -458,18 +466,18 @@ BDQueimadas.obj = (function() {
   /**
    * Initializes the necessary features.
    * @param {json} configurations - Configurations object
+   * @param {function} callbackFunction - Callback function to be executed when all the components are loaded
    *
    * @function init
    * @memberof BDQueimadas
    * @inner
    */
-  var init = function(configurations) {
+  var init = function(configurations, callbackFunction) {
+    memberCallbackFunction = callbackFunction;
+
     $(document).ready(function() {
-      var interval = window.setInterval(function() {
-        updateSizeVars();
-        setFullContentSize(300);
-      }, 10);
-      window.setTimeout(function() { clearInterval(interval); }, 300);
+      updateSizeVars();
+      setFullContentSize(300);
 
       loadEvents();
       memberConfigurations = configurations;
@@ -482,7 +490,7 @@ BDQueimadas.obj = (function() {
         }
       });
 
-      window.setInterval(function() { updateSizeVars(); }, 1000);
+      window.setInterval(function() { updateSizeVars(); }, 20000);
     });
   };
 

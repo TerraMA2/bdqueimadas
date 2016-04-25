@@ -80,8 +80,6 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var initialExtent = function() {
-    //TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
-    //BDQueimadas.components.Filter.updateComponents();
     BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
   };
 
@@ -146,23 +144,17 @@ BDQueimadas.components.Map = (function() {
    * @inner
    */
   var setSubtitlesVisibility = function(layerId) {
-    var interval = window.setInterval(function() {
-      if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-        var configuration = BDQueimadas.obj.getConfigurations().mapConfigurations;
+    var configuration = BDQueimadas.obj.getConfigurations().mapConfigurations;
 
-        $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-          if(layerId === undefined || layerId === mapSubtitleItem.LayerId) {
-            if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(mapSubtitleItem.LayerId) && TerraMA2WebComponents.webcomponents.MapDisplay.isLayerVisible(mapSubtitleItem.LayerId)) {
-              showSubtitle(mapSubtitleItem.LayerId);
-            } else {
-              hideSubtitle(mapSubtitleItem.LayerId);
-            }
-          }
-        });
-
-        clearInterval(interval);
+    $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
+      if(layerId === undefined || layerId === mapSubtitleItem.LayerId) {
+        if(TerraMA2WebComponents.webcomponents.MapDisplay.isCurrentResolutionValidForLayer(mapSubtitleItem.LayerId) && TerraMA2WebComponents.webcomponents.MapDisplay.isLayerVisible(mapSubtitleItem.LayerId)) {
+          showSubtitle(mapSubtitleItem.LayerId);
+        } else {
+          hideSubtitle(mapSubtitleItem.LayerId);
+        }
       }
-    }, 10);
+    });
   };
 
   /**
@@ -244,33 +236,27 @@ BDQueimadas.components.Map = (function() {
         updateZoomTop(true);
       });
 
-      var interval = window.setInterval(function() {
-        if(TerraMA2WebComponents.obj.isComponentsLoaded()) {
-          TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function() {
-            var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
-            TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
-            BDQueimadas.components.Filter.updateComponents();
-          });
+      TerraMA2WebComponents.webcomponents.MapDisplay.setZoomDragBoxEndEvent(function() {
+        var dragBoxExtent = TerraMA2WebComponents.webcomponents.MapDisplay.getZoomDragBoxExtent();
+        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(dragBoxExtent);
+        BDQueimadas.components.Filter.updateComponents();
+      });
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function() {
-            setSubtitlesVisibility();
-          });
+      TerraMA2WebComponents.webcomponents.MapDisplay.setMapResolutionChangeEvent(function() {
+        setSubtitlesVisibility();
+      });
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
-            BDQueimadas.obj.getSocket().emit('dataByIntersectionRequest', {
-              longitude: longitude,
-              latitude: latitude,
-              resolution: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution()
-            });
-          });
+      TerraMA2WebComponents.webcomponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
+        BDQueimadas.obj.getSocket().emit('dataByIntersectionRequest', {
+          longitude: longitude,
+          latitude: latitude,
+          resolution: TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentResolution()
+        });
+      });
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
-            setSubtitlesVisibility(layerId);
-          });
-
-          clearInterval(interval);
-        }
-      }, 10);
+      TerraMA2WebComponents.webcomponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
+        setSubtitlesVisibility(layerId);
+      });
     });
   };
 
