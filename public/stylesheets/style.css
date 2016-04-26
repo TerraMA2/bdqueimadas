@@ -375,6 +375,11 @@
   right: 0;
 }
 
+.blockUI {
+  z-index: 9999999 !important;
+  cursor: wait !important;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }

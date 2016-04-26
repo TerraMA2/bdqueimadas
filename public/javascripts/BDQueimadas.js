@@ -94,6 +94,12 @@ BDQueimadas.obj = (function() {
       });
 
       memberCallbackFunction();
+
+      window.setTimeout(function() {
+        updateSizeVars();
+        setFullContentSize(300);
+        $.unblockUI();
+      }, 1000);
     }
   };
 
@@ -183,23 +189,20 @@ BDQueimadas.obj = (function() {
       closeAllLeftContentBoxes();
       closeLeftContentBoxBackground();
 
-      // Executes map / DOM elements size updates during 300 milliseconds, with intervals of 10 milliseconds
-      var interval = window.setInterval(function() {
-        // Updates the variables that keep DOM elements sizes
-        updateSizeVars();
+      // Updates the variables that keep DOM elements sizes
+      updateSizeVars();
 
-        // Elements sizes adjustments, accordingly with the sidebar width
-        if($("body").hasClass('sidebar-collapse'))
-          setReducedContentSize(0);
-        else
-          setFullContentSize(0);
+      // Elements sizes adjustments, accordingly with the sidebar width
+      if($("body").hasClass('sidebar-collapse')) {
+        setReducedContentSize(0);
+      } else {
+        setFullContentSize(0);
+      }
 
-        // Updates the padding top of the sidebar
-        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+      // Updates the padding top of the sidebar
+      $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
-        TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
-      }, 10);
-      window.setTimeout(function() { clearInterval(interval); }, 300);
+      TerraMA2WebComponents.webcomponents.MapDisplay.updateMapSize();
     });
 
     // Control sidebar toggle click event
@@ -490,7 +493,10 @@ BDQueimadas.obj = (function() {
         }
       });
 
-      window.setInterval(function() { updateSizeVars(); }, 20000);
+      window.setInterval(function() {
+        updateSizeVars();
+        BDQueimadas.components.Filter.updateComponents();
+      }, 60000);
     });
   };
 

@@ -502,8 +502,6 @@ BDQueimadas.components.Filter = (function() {
       updateDatesToCurrent();
       loadEvents();
       loadSocketsListeners();
-
-      window.setInterval(function() { updateComponents(); }, 60000);
     });
   };
 
