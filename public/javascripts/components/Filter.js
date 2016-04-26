@@ -146,9 +146,7 @@ BDQueimadas.components.Filter = (function() {
       cql += createDateFilter();
 
       $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-        var currentSituationFilter = "begin:" + BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD') + ";end:" + BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD');
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.findBy(TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getLayerGroup(), 'id', layer).getSource().updateParams({ viewparams: currentSituationFilter });
+        applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), $('#countries-title').attr('item-id'), layer);
       });
     }
 
@@ -161,6 +159,25 @@ BDQueimadas.components.Filter = (function() {
     updateSatelliteSelect();
     TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
     updateComponents();
+  };
+
+  /**
+   * Applies filters to the current situation layers.
+   * @param {int} begin - Initial date
+   * @param {int} end - Final date
+   * @param {string} country - Country id
+   * @param {string} layer - Layer id
+   *
+   * @private
+   * @function applyCurrentSituationFilter
+   * @memberof Filter(2)
+   * @inner
+   */
+  var applyCurrentSituationFilter = function(begin, end, country, layer) {
+    var currentSituationFilter = "begin:" + begin + ";end:" + end;
+    if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
+
+    TerraMA2WebComponents.webcomponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter });
   };
 
   /**
@@ -312,32 +329,36 @@ BDQueimadas.components.Filter = (function() {
 
   /**
    * Enables a dropdown.
-   * @param {string} id - Item id
+   * @param {string} id - Item HTML id
    * @param {string} text - Item name
+   * @param {string} itemId - Item id
    *
    * @private
    * @function enableDropdown
    * @memberof Filter(2)
    * @inner
    */
-  var enableDropdown = function(id, text) {
+  var enableDropdown = function(id, text, itemId) {
     $('#' + id + '-title').empty().html(text);
+    $('#' + id + '-title').attr("item-id", itemId);
     $('#' + id + '-dropdown').removeClass('open');
     $('#' + id + '-dropdown').removeClass('dropdown-closed');
   };
 
   /**
    * Disables a dropdown.
-   * @param {string} id - Item id
+   * @param {string} id - Item HTML id
    * @param {string} text - Item name
+   * @param {string} itemId - Item id
    *
    * @private
    * @function disableDropdown
    * @memberof Filter(2)
    * @inner
    */
-  var disableDropdown = function(id, text) {
+  var disableDropdown = function(id, text, itemId) {
     $('#' + id + '-title').empty().html(text);
+    $('#' + id + '-title').attr("item-id", itemId);
     $('#' + id + '-dropdown').removeClass('open');
     if(!$('#' + id + '-dropdown').hasClass('dropdown-closed')) $('#' + id + '-dropdown').addClass('dropdown-closed');
   };
@@ -351,10 +372,10 @@ BDQueimadas.components.Filter = (function() {
    * @inner
    */
   var resetDropdowns = function() {
-    enableDropdown('continents', "Continentes");
-    disableDropdown('countries', 'Pa&iacute;ses');
+    enableDropdown('continents', 'Continentes', '');
+    disableDropdown('countries', 'Pa&iacute;ses', '');
     $('#countries').empty();
-    disableDropdown('states', 'Estados');
+    disableDropdown('states', 'Estados', '');
     $('#states').empty();
   };
 
@@ -378,16 +399,20 @@ BDQueimadas.components.Filter = (function() {
         if(result.key === 'Continent') {
           BDQueimadas.obj.getSocket().emit('countriesByContinentRequest', { continent: result.id });
 
-          enableDropdown('continents', result.text);
-          enableDropdown('countries', 'Pa&iacute;ses');
-          disableDropdown('states', 'Estados');
+          enableDropdown('continents', result.text, result.id);
+          enableDropdown('countries', 'Pa&iacute;ses', '');
+          disableDropdown('states', 'Estados', '');
         } else if(result.key === 'Country') {
           BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.id });
 
-          enableDropdown('countries', result.text);
-          enableDropdown('states', 'Estados');
+          enableDropdown('countries', result.text, result.id);
+          enableDropdown('states', 'Estados', '');
+
+          $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+            applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.id, layer);
+          });
         } else {
-          enableDropdown('states', result.text);
+          enableDropdown('states', result.text, result.id);
         }
       } else {
         TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
@@ -400,6 +425,10 @@ BDQueimadas.components.Filter = (function() {
           selectStateItem(result.data.rows[0].id, result.data.rows[0].name);
         } else if(result.data.rows[0].key === "Countries") {
           selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
+
+          $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+            applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.data.rows[0].id, layer);
+          });
         } else {
           selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
         }
@@ -421,7 +450,7 @@ BDQueimadas.components.Filter = (function() {
     });
 
     BDQueimadas.obj.getSocket().on('countryByStateResponse', function(result) {
-      enableDropdown('countries', result.country.rows[0].name);
+      enableDropdown('countries', result.country.rows[0].name, result.country.rows[0].id);
       BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
 
       var html = "",
@@ -432,6 +461,10 @@ BDQueimadas.components.Filter = (function() {
       }
 
       $('#countries').empty().html(html);
+
+      $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+        applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.country.rows[0].id, layer);
+      });
     });
 
     BDQueimadas.obj.getSocket().on('countriesByContinentResponse', function(result) {
@@ -480,6 +513,7 @@ BDQueimadas.components.Filter = (function() {
     getSatellite: getSatellite,
     resetDropdowns: resetDropdowns,
     updateDates: updateDates,
+    applyCurrentSituationFilter: applyCurrentSituationFilter,
     updateComponents: updateComponents,
     init: init
   };

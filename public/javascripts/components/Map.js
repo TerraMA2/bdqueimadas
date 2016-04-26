@@ -40,9 +40,8 @@ BDQueimadas.components.Map = (function() {
         } else if(BDQueimadas.components.Utils.stringInArray(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
           var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
           var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
-          var filter = "begin:" + initialDate + ";end:" + finalDate;
 
-          TerraMA2WebComponents.webcomponents.MapDisplay.findBy(TerraMA2WebComponents.webcomponents.MapDisplay.getMap().getLayerGroup(), 'id', layer.Id).getSource().updateParams({ viewparams: filter });
+          BDQueimadas.components.Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), layer.Id);
         }
       });
     });
