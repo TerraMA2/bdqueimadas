@@ -146,7 +146,7 @@ BDQueimadas.components.Filter = (function() {
       cql += createDateFilter();
 
       $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-        applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), $('#countries-title').attr('item-id'), layer);
+        applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), $('#countries-title').attr('item-id'), memberSatellite, layer);
       });
     }
 
@@ -166,16 +166,18 @@ BDQueimadas.components.Filter = (function() {
    * @param {int} begin - Initial date
    * @param {int} end - Final date
    * @param {string} country - Country id
+   * @param {string} satellite - Satellite
    * @param {string} layer - Layer id
    *
-   * @private
    * @function applyCurrentSituationFilter
    * @memberof Filter(2)
    * @inner
    */
-  var applyCurrentSituationFilter = function(begin, end, country, layer) {
+  var applyCurrentSituationFilter = function(begin, end, country, satellite, layer) {
     var currentSituationFilter = "begin:" + begin + ";end:" + end;
+
     if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
+    if(satellite !== undefined && satellite !== null && satellite !== "" && satellite !== '' && satellite !== "all") currentSituationFilter += ";satellite:" + satellite;
 
     TerraMA2WebComponents.webcomponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter });
   };
@@ -409,7 +411,7 @@ BDQueimadas.components.Filter = (function() {
           enableDropdown('states', 'Estados', '');
 
           $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-            applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.id, layer);
+            applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.id, memberSatellite, layer);
           });
         } else {
           enableDropdown('states', result.text, result.id);
@@ -427,7 +429,7 @@ BDQueimadas.components.Filter = (function() {
           selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
 
           $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-            applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.data.rows[0].id, layer);
+            applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.data.rows[0].id, memberSatellite, layer);
           });
         } else {
           selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
@@ -463,7 +465,7 @@ BDQueimadas.components.Filter = (function() {
       $('#countries').empty().html(html);
 
       $.each(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-        applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.country.rows[0].id, layer);
+        applyCurrentSituationFilter(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'YYYYMMDD'), BDQueimadas.components.Utils.dateToString(memberDateTo, 'YYYYMMDD'), result.country.rows[0].id, memberSatellite, layer);
       });
     });
 

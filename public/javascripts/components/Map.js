@@ -31,7 +31,7 @@ BDQueimadas.components.Map = (function() {
         if(layer.Id === BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
           var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
           var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
-          var filter = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;
+          var filter = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
 
           TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(filter, layer.Id);
 
@@ -41,7 +41,7 @@ BDQueimadas.components.Map = (function() {
           var initialDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
           var finalDate = BDQueimadas.components.Utils.processStringWithDatePattern(BDQueimadas.obj.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-          BDQueimadas.components.Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), layer.Id);
+          BDQueimadas.components.Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), 'AQUA_M-T', layer.Id);
         }
       });
     });

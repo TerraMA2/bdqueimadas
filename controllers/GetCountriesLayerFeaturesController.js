@@ -27,7 +27,7 @@ var GetCountriesLayerFeaturesController = function(app) {
    */
   var getCountriesLayerFeaturesController = function(request, response) {
     var request = require("request");
-    var url = 'http://localhost:9095/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=sde:countries';
+    var url = 'http://localhost:9095/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=BDQueimadas:countries';
 
     request({
       url: url,
