@@ -113,7 +113,6 @@ define(
     /**
      * Updates the initial and the final date to the current date.
      *
-     * @private
      * @function updateDatesToCurrent
      * @memberof Filter(2)
      * @inner
@@ -308,7 +307,6 @@ define(
     /**
      * Resets the three dropdowns to its initial states.
      *
-     * @private
      * @function resetDropdowns
      * @memberof Filter(2)
      * @inner
@@ -340,8 +338,8 @@ define(
       getFormattedDateTo: getFormattedDateTo,
       setSatellite: setSatellite,
       getSatellite: getSatellite,
-      resetDropdowns: resetDropdowns,
       updateDates: updateDates,
+      updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       selectContinentItem: selectContinentItem,
@@ -349,6 +347,7 @@ define(
       selectStateItem: selectStateItem,
       enableDropdown: enableDropdown,
       disableDropdown: disableDropdown,
+      resetDropdowns: resetDropdowns,
       init: init
     };
   }

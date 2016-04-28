@@ -19,7 +19,6 @@ define(
     /**
      * Activates or deactivates the time series tool.
      *
-     * @private
      * @function setTimeSeriesTool
      * @memberof Graphics(2)
      * @inner
@@ -190,6 +189,7 @@ define(
     };
 
     return {
+      setTimeSeriesTool: setTimeSeriesTool,
       updateGraphics: updateGraphics,
       loadFiresCountGraphic: loadFiresCountGraphic,
       init: init

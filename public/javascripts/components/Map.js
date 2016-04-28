@@ -90,7 +90,6 @@ define(
     /**
      * Activates the Zoom DragBox.
      *
-     * @private
      * @function activateDragboxTool
      * @memberof Map
      * @inner
@@ -196,7 +195,6 @@ define(
      * Updates the zoom element top.
      * @param {boolean} toggle - Flag that indicates if the subtitle toggle was triggered
      *
-     * @private
      * @function updateZoomTop
      * @memberof Map
      * @inner
@@ -225,8 +223,10 @@ define(
     return {
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
+      activateDragboxTool: activateDragboxTool,
       activateMoveMapTool: activateMoveMapTool,
       setSubtitlesVisibility: setSubtitlesVisibility,
+      updateZoomTop: updateZoomTop,
       init: init
     };
   }
