@@ -10,8 +10,8 @@
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
  */
 define(
-  ['components/Utils', 'components/Filter'],
-  function(Utils, Filter) {
+  ['components/Utils', 'components/Filter', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
+  function(Utils, Filter, TerraMA2MapDisplay) {
 
     // Attributes table object (DataTables)
     var memberAttributesTable = null;
@@ -67,7 +67,7 @@ define(
               data.dateFrom = Filter.getFormattedDateFrom('YYYYMMDD');
               data.dateTo = Filter.getFormattedDateTo('YYYYMMDD');
               data.satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
-              data.extent = TerraMA2WebComponents.webcomponents.MapDisplay.getCurrentExtent();
+              data.extent = TerraMA2MapDisplay.getCurrentExtent();
             }
           },
           "columns": getAttributesTableColumnNamesArray(),
