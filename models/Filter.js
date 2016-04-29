@@ -26,64 +26,6 @@ var Filter = function() {
   var memberPg = require('pg');
 
   /**
-   * Returns the center cordinates of the country correspondent to the received id.
-   * @param {number} countryId - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getCountryCenter
-   * @memberof Filter
-   * @inner
-   */
-  this.getCountryCenter = function(countryId, callback) {
-    // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.Countries.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
-            params = [countryId];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
-   * Returns the center cordinates of the state correspondent to the received id.
-   * @param {number} stateId - State id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getStateCenter
-   * @memberof Filter
-   * @inner
-   */
-  this.getStateCenter = function(stateId, callback) {
-    // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.States.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
-            params = [stateId];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
    * Returns a list of continents.
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
