@@ -12,5 +12,10 @@
       "Key": "bioma",
       "Title": "Focos por Bioma"
     }
-  ]
+  ],
+  "TimeSeries": {
+    "URL": "http://www.dpi.inpe.br/ts",
+    "Coverage": "fire_risk_monthly",
+    "Attributes": ["value"]
+  }
 }

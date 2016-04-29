@@ -122,6 +122,8 @@
 
 .cursor-move { cursor: move !important; }
 
+.cursor-pointer { cursor: pointer !important; }
+
 #welcome {
   position: absolute;
   left: 0;
@@ -140,7 +142,7 @@
   font-family: 'Myriad Pro Regular';
   margin-top: 75px;
   text-align: right;
-  width: 600px;
+  width: 700px;
 }
 
 #welcome > #welcome-text > p.title {
@@ -262,6 +264,120 @@
   color: #fff;
   background-color: #ec971f;
   border-color: #d58512;
+}
+
+.ui-dialog { z-index: 999999 !important; }
+
+.ui-dialog-titlebar-close { padding: 0px !important; }
+
+#time-series-dialog {
+  display: none;
+  padding: 0 !important;
+}
+
+#time-series-dialog > div {
+  width: 800px;
+  height: 350px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+#footer-image {
+  background: url('/images/footer.png');
+  background-size: 1500px;
+  height: 135px;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: 0 !important;
+  background-position: center;
+  margin: 0 !important;
+  max-width: 100% !important;
+  margin-top: 30px !important;
+}
+
+#about-dialog {
+  display: none;
+  padding: 0 !important;
+}
+
+#programa-cerrado-image {
+  background: url('/images/about/header.png');
+  background-size: 800px;
+  height: 830px;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: 0 !important;
+  background-position: initial;
+  margin: 0 !important;
+  max-width: 100%;
+  margin-top: 4px !important;
+}
+
+#about-dialog > p {
+  margin: 10px;
+  text-align: center;
+  margin-top: 70px;
+}
+
+#about-dialog > p > span {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#projeto-inpe-image {
+  background: url('/images/about/inpe.png');
+  background-size: 700px;
+  height: 130px;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: 0 !important;
+  background-position: center;
+  margin: 0 !important;
+  max-width: 100%;
+  margin-top: 4px !important;
+}
+
+#realizacao-image {
+  background: url('/images/about/realizacao.png');
+  background-size: 700px;
+  height: 130px;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: 0 !important;
+  background-position: center;
+  margin: 0 !important;
+  max-width: 100%;
+  margin-top: 4px !important;
+}
+
+#about-btn {
+  color: black;
+  font-size: 16px;
+  float: right;
+  margin-bottom: 10px;
+  margin-top: 65px;
+}
+
+#bdqueimadas-description {
+  color: #fbda43;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 25px;
+}
+
+#welcome-text-separator {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 8px solid #f8b802;
+  width: 650px;
+  position: absolute;
+  right: 0;
+}
+
+.blockUI {
+  z-index: 9999999 !important;
+  cursor: wait !important;
 }
 
 /* TerraMA2Components styles */

@@ -14,7 +14,7 @@
       configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
         if(satellite.Current) {
         %>
-        <option value="<%- satellite.Name %>"><%- satellite.Name %></option>
+        <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
         <%
         }
       })

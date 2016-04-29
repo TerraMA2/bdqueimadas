@@ -5,8 +5,40 @@
  * @class Utils
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
+ *
+ * @property {json} memberConfigurations - Configurations object.
+ * @property {object} memberSocket - Socket object.
  */
-BDQueimadas.components.Utils = (function() {
+define(function() {
+
+  // Configurations object
+  var memberConfigurations = null;
+  // Socket object
+  var memberSocket = null;
+
+  /**
+   * Returns the configurations object.
+   * @returns {json} memberConfigurations - Configurations object
+   *
+   * @function getConfigurations
+   * @memberof Utils
+   * @inner
+   */
+  var getConfigurations = function() {
+    return memberConfigurations;
+  };
+
+  /**
+   * Returns the socket object.
+   * @returns {object} memberSocket - Socket object
+   *
+   * @function getSocket
+   * @memberof Utils
+   * @inner
+   */
+  var getSocket = function() {
+    return memberSocket;
+  };
 
   /**
    * Converts a date into a string date formatted accordingly with the received format.
@@ -124,10 +156,10 @@ BDQueimadas.components.Utils = (function() {
    * @inner
    */
   var stringInArray = function(array, string) {
-    $.each(array, function(i, item) {
-      if(item === string)
+    for(var i = 0; i < array.length; i++) {
+      if(array[i].toString() === string.toString())
         return true;
-    });
+    }
     return false;
   };
 
@@ -165,14 +197,20 @@ BDQueimadas.components.Utils = (function() {
 
   /**
    * Initializes the necessary features.
+   * @param {object} configurations - Configurations object
    *
    * @function init
    * @memberof Utils
    * @inner
    */
-  var init = function() {};
+  var init = function(configurations) {
+    memberConfigurations = configurations;
+    memberSocket = io(window.location.origin);
+  };
 
   return {
+    getSocket: getSocket,
+    getConfigurations: getConfigurations,
     dateToString: dateToString,
     stringToDate: stringToDate,
     processStringWithDatePattern: processStringWithDatePattern,
@@ -180,4 +218,4 @@ BDQueimadas.components.Utils = (function() {
     sortIntegerArray: sortIntegerArray,
     init: init
   };
-})();
+});

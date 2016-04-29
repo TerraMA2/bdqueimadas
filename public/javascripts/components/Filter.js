@@ -11,470 +11,344 @@
  * @property {date} memberDateTo - Current final date.
  * @property {string} memberSatellite - Current satellite.
  */
-BDQueimadas.components.Filter = (function() {
+define(
+  ['components/Utils', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
+  function(Utils, TerraMA2MapDisplay) {
 
-  // Current initial date
-  var memberDateFrom = null;
-  // Current final date
-  var memberDateTo = null;
-  // Current satellite
-  var memberSatellite = "all";
+    // Current initial date
+    var memberDateFrom = null;
+    // Current final date
+    var memberDateTo = null;
+    // Current satellite
+    var memberSatellite = "all";
 
-  /**
-   * Returns the initial date formatted with the received format.
-   * @param {string} format - Format
-   * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted initial date (string)
-   *
-   * @function getFormattedDateFrom
-   * @memberof Filter(2)
-   * @inner
-   */
-  var getFormattedDateFrom = function(format) {
-    return BDQueimadas.components.Utils.dateToString(memberDateFrom, format);
-  };
+    /**
+     * Returns the initial date formatted with the received format.
+     * @param {string} format - Format
+     * @returns {string} Utils.dateToString() - Formatted initial date (string)
+     *
+     * @function getFormattedDateFrom
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getFormattedDateFrom = function(format) {
+      return Utils.dateToString(memberDateFrom, format);
+    };
 
-  /**
-   * Returns the final date formatted with the received format.
-   * @param {string} format - Format
-   * @returns {string} BDQueimadas.components.Utils.dateToString() - Formatted final date (string)
-   *
-   * @function getFormattedDateTo
-   * @memberof Filter(2)
-   * @inner
-   */
-  var getFormattedDateTo = function(format) {
-    return BDQueimadas.components.Utils.dateToString(memberDateTo, format);
-  };
+    /**
+     * Returns the final date formatted with the received format.
+     * @param {string} format - Format
+     * @returns {string} Utils.dateToString() - Formatted final date (string)
+     *
+     * @function getFormattedDateTo
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getFormattedDateTo = function(format) {
+      return Utils.dateToString(memberDateTo, format);
+    };
 
-  /**
-   * Returns the satellite.
-   * @returns {string} memberSatellite - Satellite
-   *
-   * @function getSatellite
-   * @memberof Filter(2)
-   * @inner
-   */
-  var getSatellite = function() {
-    return memberSatellite;
-  };
+    /**
+     * Sets the satellite.
+     * @param {string} satellite - Satellite
+     *
+     * @function setSatellite
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setSatellite = function(satellite) {
+      memberSatellite = satellite;
+    };
 
-  /**
-   * Creates the date filter.
-   * @returns {string} cql - Date cql filter
-   *
-   * @private
-   * @function createDateFilter
-   * @memberof Filter(2)
-   * @inner
-   */
-  var createDateFilter = function() {
-    var cql = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + BDQueimadas.components.Utils.dateToString(memberDateFrom, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-    cql += " and ";
-    cql += BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + BDQueimadas.components.Utils.dateToString(memberDateTo, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+    /**
+     * Returns the satellite.
+     * @returns {string} memberSatellite - Satellite
+     *
+     * @function getSatellite
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSatellite = function() {
+      return memberSatellite;
+    };
 
-    return cql;
-  };
+    /**
+     * Creates the date filter.
+     * @returns {string} cql - Date cql filter
+     *
+     * @private
+     * @function createDateFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createDateFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+      cql += " and ";
+      cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
 
-  /**
-   * Updates the initial and the final date.
-   * @param {string} newDateFrom - New initial date (string)
-   * @param {string} newDateTo - New final date (string)
-   * @param {string} format - Dates format
-   *
-   * @function updateDates
-   * @memberof Filter(2)
-   * @inner
-   */
-  var updateDates = function(newDateFrom, newDateTo, format) {
-    memberDateFrom = BDQueimadas.components.Utils.stringToDate(newDateFrom, format);
-    memberDateTo = BDQueimadas.components.Utils.stringToDate(newDateTo, format);
+      return cql;
+    };
 
-    memberDateFrom.setHours(0,0,0,0);
-    memberDateTo.setHours(0,0,0,0);
+    /**
+     * Updates the initial and the final date.
+     * @param {string} newDateFrom - New initial date (string)
+     * @param {string} newDateTo - New final date (string)
+     * @param {string} format - Dates format
+     *
+     * @function updateDates
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateDates = function(newDateFrom, newDateTo, format) {
+      memberDateFrom = Utils.stringToDate(newDateFrom, format);
+      memberDateTo = Utils.stringToDate(newDateTo, format);
 
-    $('#filter-date-from').val(BDQueimadas.components.Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
-    $('#filter-date-to').val(BDQueimadas.components.Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
-  };
+      memberDateFrom.setHours(0,0,0,0);
+      memberDateTo.setHours(0,0,0,0);
 
-  /**
-   * Updates the initial and the final date to the current date.
-   *
-   * @private
-   * @function updateDatesToCurrent
-   * @memberof Filter(2)
-   * @inner
-   */
-  var updateDatesToCurrent = function() {
-    memberDateFrom = new Date();
-    memberDateTo = new Date();
-    memberDateFrom.setHours(memberDateFrom.getHours() - 24);
+      $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
+      $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
+    };
 
-    memberDateFrom.setHours(0,0,0,0);
-    memberDateTo.setHours(0,0,0,0);
-  };
+    /**
+     * Updates the initial and the final date to the current date.
+     *
+     * @function updateDatesToCurrent
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateDatesToCurrent = function() {
+      memberDateFrom = new Date();
+      memberDateTo = new Date();
+      memberDateFrom.setHours(memberDateFrom.getHours() - 24);
 
-  /**
-   * Creates the satellite filter.
-   * @returns {string} cql - Satellite cql filter
-   *
-   * @private
-   * @function createSatelliteFilter
-   * @memberof Filter(2)
-   * @inner
-   */
-  var createSatelliteFilter = function() {
-    var cql = BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
-    return cql;
-  };
+      memberDateFrom.setHours(0,0,0,0);
+      memberDateTo.setHours(0,0,0,0);
+    };
 
-  /**
-   * Applies the dates and the satellite filters.
-   * @param {string} filterDateFrom - Filtered initial date
-   * @param {string} filterDateTo - Filtered final date
-   * @param {string} filterSatellite - Filtered satellite
-   *
-   * @private
-   * @function applyFilter
-   * @memberof Filter(2)
-   * @inner
-   */
-  var applyFilter = function(filterDateFrom, filterDateTo, filterSatellite) {
-    var cql = "";
+    /**
+     * Creates the satellite filter.
+     * @returns {string} cql - Satellite cql filter
+     *
+     * @private
+     * @function createSatelliteFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createSatelliteFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
+      return cql;
+    };
 
-    if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
-      updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
-      cql += createDateFilter();
-    }
+    /**
+     * Applies the dates and the satellite filters.
+     * @param {string} filterDateFrom - Filtered initial date
+     * @param {string} filterDateTo - Filtered final date
+     * @param {string} filterSatellite - Filtered satellite
+     *
+     * @function applyFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var applyFilter = function(filterDateFrom, filterDateTo, filterSatellite) {
+      var cql = "";
 
-    if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterSatellite !== "all")
-      cql += " AND ";
+      if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
+        updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
+        cql += createDateFilter();
 
-    if(filterSatellite !== "all")
-      cql += createSatelliteFilter();
-
-    updateSatelliteSelect();
-    TerraMA2WebComponents.webcomponents.MapDisplay.applyCQLFilter(cql, BDQueimadas.obj.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
-    updateComponents();
-  };
-
-  /**
-   * Updates the necessary components.
-   *
-   * @function updateComponents
-   * @memberof Filter(2)
-   * @inner
-   */
-  var updateComponents = function() {
-    var bdqueimadasInterval = window.setInterval(function() {
-      if(BDQueimadas.obj.isComponentsLoaded()) {
-        BDQueimadas.components.AttributesTable.updateAttributesTable();
-        BDQueimadas.components.Graphics.updateGraphics();
-
-        clearInterval(bdqueimadasInterval);
+        $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, 'YYYYMMDD'), Utils.dateToString(memberDateTo, 'YYYYMMDD'), $('#countries-title').attr('item-id'), memberSatellite, layer);
+        });
       }
-    }, 10);
-  };
 
-  /**
-   * Updates the satellite HTML select.
-   *
-   * @private
-   * @function updateSatelliteSelect
-   * @memberof Filter(2)
-   * @inner
-   */
-  var updateSatelliteSelect = function() {
-    var selectedOption = $('#filter-satellite').value;
+      if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterSatellite !== "all")
+        cql += " AND ";
 
-    var elem = "<option value=\"all\">TODOS</option>";
-    var satellitesList = BDQueimadas.obj.getConfigurations().filterConfigurations.Satellites;
+      if(filterSatellite !== "all")
+        cql += createSatelliteFilter();
 
-    $.each(satellitesList, function(i, satelliteItem) {
-      var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
-      var satelliteEnd = new Date(satelliteItem.End + ' UTC-03:00');
+      updateSatelliteSelect();
+      TerraMA2MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
+    };
 
-      satelliteBegin.setHours(0,0,0,0);
-      satelliteEnd.setHours(0,0,0,0);
+    /**
+     * Applies filters to the current situation layers.
+     * @param {int} begin - Initial date
+     * @param {int} end - Final date
+     * @param {string} country - Country id
+     * @param {string} satellite - Satellite
+     * @param {string} layer - Layer id
+     *
+     * @function applyCurrentSituationFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var applyCurrentSituationFilter = function(begin, end, country, satellite, layer) {
+      var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
-      if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
-        if(memberSatellite === satelliteItem.Name) {
+      if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
+      if(satellite !== undefined && satellite !== null && satellite !== "" && satellite !== '' && satellite !== "all") currentSituationFilter += ";satellite:" + satellite;
+
+      TerraMA2MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter });
+    };
+
+    /**
+     * Updates the satellite HTML select.
+     *
+     * @private
+     * @function updateSatelliteSelect
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateSatelliteSelect = function() {
+      var selectedOption = $('#filter-satellite').value;
+
+      var elem = "<option value=\"all\">TODOS</option>";
+      var satellitesList = Utils.getConfigurations().filterConfigurations.Satellites;
+
+      $.each(satellitesList, function(i, satelliteItem) {
+        var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
+        var satelliteEnd = new Date(satelliteItem.End + ' UTC-03:00');
+
+        satelliteBegin.setHours(0,0,0,0);
+        satelliteEnd.setHours(0,0,0,0);
+
+        if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
+          if(memberSatellite === satelliteItem.Name) {
+            elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
+          } else {
+            elem += "<option value=\"" + satelliteItem.Name + "\">" + satelliteItem.Name + "</option>";
+          }
+        } else if(memberSatellite === satelliteItem.Name) {
           elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
-        } else {
-          elem += "<option value=\"" + satelliteItem.Name + "\">" + satelliteItem.Name + "</option>";
         }
-      } else if(memberSatellite === satelliteItem.Name) {
-        elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
-      }
-    });
+      });
 
-    $('#filter-satellite').empty().html(elem);
-  };
+      $('#filter-satellite').empty().html(elem);
+    };
 
-  /**
-   * Loads the DOM events.
-   *
-   * @private
-   * @function loadEvents
-   * @memberof Filter(2)
-   * @inner
-   */
-  var loadEvents = function() {
-    $('#filter-button').on('click', function(el) {
-      var filterDateFrom = $('#filter-date-from').val();
-      var filterDateTo = $('#filter-date-to').val();
-      memberSatellite = $('#filter-satellite').val();
+    /**
+     * Selects a continent in the continent dropdown and fills the country dropdown.
+     * @param {string} id - Continent id
+     * @param {string} text - Continent name
+     *
+     * @function selectContinentItem
+     * @memberof Filter(2)
+     * @inner
+     */
+    var selectContinentItem = function(id, text) {
+      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
+    };
 
-      if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
-        if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
-          updateDatesToCurrent();
-          filterDateTo = getFormattedDateTo('DD/MM/YYYY');
-          filterDateFrom = getFormattedDateFrom('DD/MM/YYYY');
-        }
+    /**
+     * Selects a country in the country dropdown, selects a continent in the continent dropdown and fills the state dropdown.
+     * @param {string} id - Country id
+     * @param {string} text - Country name
+     *
+     * @function selectCountryItem
+     * @memberof Filter(2)
+     * @inner
+     */
+    var selectCountryItem = function(id, text) {
+      Utils.getSocket().emit('continentByCountryRequest', { country: id });
+      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
+    };
 
-        applyFilter(filterDateFrom, filterDateTo, memberSatellite);
-      } else {
-        if(filterDateFrom.length === 0) {
-          $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
-        }
-        if(filterDateTo.length === 0) {
-          $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
-        }
-      }
-    });
+    /**
+     * Selects a state in the state dropdown, selects a continent in the continent dropdown and selects a country in the country dropdown.
+     * @param {string} id - State id
+     * @param {string} text - State name
+     *
+     * @function selectStateItem
+     * @memberof Filter(2)
+     * @inner
+     */
+    var selectStateItem = function(id, text) {
+      Utils.getSocket().emit('continentByStateRequest', { state: id });
+      Utils.getSocket().emit('countryByStateRequest', { state: id });
+      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
+    };
 
-    $('.continent-item').on('click', function() {
-      BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'Continent' });
-    });
+    /**
+     * Enables a dropdown.
+     * @param {string} id - Item HTML id
+     * @param {string} text - Item name
+     * @param {string} itemId - Item id
+     *
+     * @function enableDropdown
+     * @memberof Filter(2)
+     * @inner
+     */
+    var enableDropdown = function(id, text, itemId) {
+      $('#' + id + '-title').empty().html(text);
+      $('#' + id + '-title').attr("item-id", itemId);
+      $('#' + id + '-dropdown').removeClass('open');
+      $('#' + id + '-dropdown').removeClass('dropdown-closed');
+    };
 
-    $(document).on('click', '.country-item', function() {
-      BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'Country' });
-    });
+    /**
+     * Disables a dropdown.
+     * @param {string} id - Item HTML id
+     * @param {string} text - Item name
+     * @param {string} itemId - Item id
+     *
+     * @function disableDropdown
+     * @memberof Filter(2)
+     * @inner
+     */
+    var disableDropdown = function(id, text, itemId) {
+      $('#' + id + '-title').empty().html(text);
+      $('#' + id + '-title').attr("item-id", itemId);
+      $('#' + id + '-dropdown').removeClass('open');
+      if(!$('#' + id + '-dropdown').hasClass('dropdown-closed')) $('#' + id + '-dropdown').addClass('dropdown-closed');
+    };
 
-    $(document).on('click', '.state-item', function() {
-      BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'State' });
-    });
+    /**
+     * Resets the three dropdowns to its initial states.
+     *
+     * @function resetDropdowns
+     * @memberof Filter(2)
+     * @inner
+     */
+    var resetDropdowns = function() {
+      enableDropdown('continents', 'Continentes', '');
+      disableDropdown('countries', 'Pa&iacute;ses', '');
+      $('#countries').empty();
+      disableDropdown('states', 'Estados', '');
+      $('#states').empty();
+    };
 
-    $('.filter-date').on('focus', function(el) {
-      if($(this).parent().hasClass('has-error')) {
-        $(this).parent().removeClass('has-error');
-      }
-    });
+    /**
+     * Initializes the necessary features.
+     *
+     * @function init
+     * @memberof Filter(2)
+     * @inner
+     */
+    var init = function() {
+      $(document).ready(function() {
+        updateDatesToCurrent();
+        Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
+      });
+    };
 
-    $('#updateComponents').on('click', function() {
-      updateComponents();
-    });
-  };
-
-  /**
-   * Selects a continent in the continent dropdown and fills the country dropdown.
-   * @param {string} id - Continent id
-   * @param {string} text - Continent name
-   *
-   * @private
-   * @function selectContinentItem
-   * @memberof Filter(2)
-   * @inner
-   */
-  var selectContinentItem = function(id, text) {
-    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
-  };
-
-  /**
-   * Selects a country in the country dropdown, selects a continent in the continent dropdown and fills the state dropdown.
-   * @param {string} id - Country id
-   * @param {string} text - Country name
-   *
-   * @private
-   * @function selectCountryItem
-   * @memberof Filter(2)
-   * @inner
-   */
-  var selectCountryItem = function(id, text) {
-    BDQueimadas.obj.getSocket().emit('continentByCountryRequest', { country: id });
-    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
-  };
-
-  /**
-   * Selects a state in the state dropdown, selects a continent in the continent dropdown and selects a country in the country dropdown.
-   * @param {string} id - State id
-   * @param {string} text - State name
-   *
-   * @private
-   * @function selectStateItem
-   * @memberof Filter(2)
-   * @inner
-   */
-  var selectStateItem = function(id, text) {
-    BDQueimadas.obj.getSocket().emit('continentByStateRequest', { state: id });
-    BDQueimadas.obj.getSocket().emit('countryByStateRequest', { state: id });
-    BDQueimadas.obj.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
-  };
-
-  /**
-   * Enables a dropdown.
-   * @param {string} id - Item id
-   * @param {string} text - Item name
-   *
-   * @private
-   * @function enableDropdown
-   * @memberof Filter(2)
-   * @inner
-   */
-  var enableDropdown = function(id, text) {
-    $('#' + id + '-title').empty().html(text);
-    $('#' + id + '-dropdown').removeClass('open');
-    $('#' + id + '-dropdown').removeClass('dropdown-closed');
-  };
-
-  /**
-   * Disables a dropdown.
-   * @param {string} id - Item id
-   * @param {string} text - Item name
-   *
-   * @private
-   * @function disableDropdown
-   * @memberof Filter(2)
-   * @inner
-   */
-  var disableDropdown = function(id, text) {
-    $('#' + id + '-title').empty().html(text);
-    $('#' + id + '-dropdown').removeClass('open');
-    if(!$('#' + id + '-dropdown').hasClass('dropdown-closed')) $('#' + id + '-dropdown').addClass('dropdown-closed');
-  };
-
-  /**
-   * Resets the three dropdowns to its initial states.
-   *
-   * @private
-   * @function resetDropdowns
-   * @memberof Filter(2)
-   * @inner
-   */
-  var resetDropdowns = function() {
-    enableDropdown('continents', "Continentes");
-    disableDropdown('countries', 'Pa&iacute;ses');
-    $('#countries').empty();
-    disableDropdown('states', 'Estados');
-    $('#states').empty();
-  };
-
-  /**
-   * Loads the sockets listeners.
-   *
-   * @private
-   * @function loadSocketsListeners
-   * @memberof Filter(2)
-   * @inner
-   */
-  var loadSocketsListeners = function() {
-    BDQueimadas.obj.getSocket().on('spatialFilterResponse', function(result) {
-      var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-      var extentArray = extent[0].split(' ');
-      extentArray = extentArray.concat(extent[1].split(' '));
-      TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-      updateComponents();
-
-      if(result.key === 'Continent') {
-        BDQueimadas.obj.getSocket().emit('countriesByContinentRequest', { continent: result.id });
-
-        enableDropdown('continents', result.text);
-        enableDropdown('countries', 'Pa&iacute;ses');
-        disableDropdown('states', 'Estados');
-      } else if(result.key === 'Country') {
-        BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.id });
-
-        enableDropdown('countries', result.text);
-        enableDropdown('states', 'Estados');
-      } else {
-        enableDropdown('states', result.text);
-      }
-    });
-
-    BDQueimadas.obj.getSocket().on('extentByIntersectionResponse', function(result) {
-      if(result.extent.rowCount > 0 && result.extent.rows[0].extent !== null) {
-        var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-        var extentArray = extent[0].split(' ');
-        extentArray = extentArray.concat(extent[1].split(' '));
-
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToExtent(extentArray);
-
-        if(result.extent.rows[0].key === "States") {
-          selectStateItem(result.extent.rows[0].id, result.extent.rows[0].name);
-        } else if(result.extent.rows[0].key === "Countries") {
-          selectCountryItem(result.extent.rows[0].id, result.extent.rows[0].name);
-        } else {
-          selectContinentItem(result.extent.rows[0].id, result.extent.rows[0].name);
-        }
-      } else {
-        TerraMA2WebComponents.webcomponents.MapDisplay.zoomToInitialExtent();
-      }
-
-      updateComponents();
-    });
-
-    BDQueimadas.obj.getSocket().on('continentByCountryResponse', function(result) {
-      $('#continents-title').empty().html(result.continent.rows[0].name);
-
-      BDQueimadas.obj.getSocket().emit('countriesByContinentRequest', { continent: result.continent.rows[0].id });
-    });
-
-    BDQueimadas.obj.getSocket().on('continentByStateResponse', function(result) {
-      $('#continents-title').empty().html(result.continent.rows[0].name);
-    });
-
-    BDQueimadas.obj.getSocket().on('countryByStateResponse', function(result) {
-      $('#countries-title').empty().html(result.country.rows[0].name);
-
-      BDQueimadas.obj.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
-    });
-
-    BDQueimadas.obj.getSocket().on('countriesByContinentResponse', function(result) {
-      var html = "",
-          countriesCount = result.countries.rowCount;
-
-      for(var i = 0; i < countriesCount; i++) {
-        html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
-      }
-
-      $('#countries').empty().html(html);
-    });
-
-    BDQueimadas.obj.getSocket().on('statesByCountryResponse', function(result) {
-      var html = "",
-          statesCount = result.states.rowCount;
-
-      for(var i = 0; i < statesCount; i++) {
-        html += "<li class='state-item' id='" + result.states.rows[i].id + "'><a href='#'>" + result.states.rows[i].name + "</a></li>";
-      }
-
-      $('#states').empty().html(html);
-    });
-  };
-
-  /**
-   * Initializes the necessary features.
-   *
-   * @function init
-   * @memberof Filter(2)
-   * @inner
-   */
-  var init = function() {
-    $(document).ready(function() {
-      updateDatesToCurrent();
-      loadEvents();
-      loadSocketsListeners();
-
-      window.setInterval(function() { updateComponents(); }, 60000);
-    });
-  };
-
-  return {
-    getFormattedDateFrom: getFormattedDateFrom,
-    getFormattedDateTo: getFormattedDateTo,
-    getSatellite: getSatellite,
-    resetDropdowns: resetDropdowns,
-    updateDates: updateDates,
-    updateComponents: updateComponents,
-    init: init
-  };
-})();
+    return {
+      getFormattedDateFrom: getFormattedDateFrom,
+      getFormattedDateTo: getFormattedDateTo,
+      setSatellite: setSatellite,
+      getSatellite: getSatellite,
+      updateDates: updateDates,
+      updateDatesToCurrent: updateDatesToCurrent,
+      applyFilter: applyFilter,
+      applyCurrentSituationFilter: applyCurrentSituationFilter,
+      selectContinentItem: selectContinentItem,
+      selectCountryItem: selectCountryItem,
+      selectStateItem: selectStateItem,
+      enableDropdown: enableDropdown,
+      disableDropdown: disableDropdown,
+      resetDropdowns: resetDropdowns,
+      init: init
+    };
+  }
+);

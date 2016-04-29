@@ -30,12 +30,12 @@ var Filter = function(io) {
       });
     });
 
-    // Extent by intersection request event
-    client.on('extentByIntersectionRequest', function(json) {
-      memberFilter.getExtentByIntersection(json.longitude, json.latitude, json.resolution, function(err, extent) {
+    // Data by intersection request event
+    client.on('dataByIntersectionRequest', function(json) {
+      memberFilter.getDataByIntersection(json.longitude, json.latitude, json.resolution, function(err, data) {
         if(err) return console.error(err);
 
-        client.emit('extentByIntersectionResponse', { extent: extent });
+        client.emit('dataByIntersectionResponse', { data: data });
       });
     });
 
@@ -62,7 +62,11 @@ var Filter = function(io) {
       memberFilter.getCountryByState(json.state, function(err, country) {
         if(err) return console.error(err);
 
-        client.emit('countryByStateResponse', { country: country });
+        memberFilter.getCountriesByContinent(country.rows[0].continent, function(err, countries) {
+          if(err) return console.error(err);
+
+          client.emit('countryByStateResponse', { country: country, countries: countries });
+        });
       });
     });
 
