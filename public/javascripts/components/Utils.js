@@ -21,7 +21,7 @@ define(function() {
    * @returns {json} memberConfigurations - Configurations object
    *
    * @function getConfigurations
-   * @memberof BDQueimadas
+   * @memberof Utils
    * @inner
    */
   var getConfigurations = function() {
@@ -33,7 +33,7 @@ define(function() {
    * @returns {object} memberSocket - Socket object
    *
    * @function getSocket
-   * @memberof BDQueimadas
+   * @memberof Utils
    * @inner
    */
   var getSocket = function() {
@@ -197,9 +197,10 @@ define(function() {
 
   /**
    * Initializes the necessary features.
+   * @param {object} configurations - Configurations object
    *
    * @function init
-   * @memberof BDQueimadas
+   * @memberof Utils
    * @inner
    */
   var init = function(configurations) {

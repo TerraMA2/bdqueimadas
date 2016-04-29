@@ -51,6 +51,8 @@ define(
      * @inner
      */
     var loadEvents = function() {
+      // General Events
+
       // Sidebar buttons click event
       $(".sidebar-menu > li").on('click', function(event) {
         event.preventDefault();
@@ -212,7 +214,7 @@ define(
         });
       });
 
-      // Filter events
+      // Filter Events
 
       $('#filter-button').on('click', function(el) {
         var filterDateFrom = $('#filter-date-from').val();
@@ -260,13 +262,13 @@ define(
         updateComponents();
       });
 
-      // Graphics
+      // Graphics Events
 
       $('#show-time-series-graphic').on('click', function() {
         Graphics.setTimeSeriesTool();
       });
 
-      // Map
+      // Map Events
 
       $('#dragbox').on('click', function() {
         Map.resetMapMouseTools();
@@ -322,7 +324,8 @@ define(
      */
     var loadSocketsListeners = function() {
 
-      // Filter
+      // Filter Listeners
+
       Utils.getSocket().on('spatialFilterResponse', function(result) {
         if(result.extent.rowCount > 0) {
           var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
@@ -424,7 +427,7 @@ define(
         $('#states').empty().html(html);
       });
 
-      // Graphics
+      // Graphics Listeners
 
       Utils.getSocket().on('graphicsFiresCountResponse', function(result) {
         Graphics.loadFiresCountGraphic(result);
