@@ -7,8 +7,8 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
 define(
-  ['components/Utils', 'components/Filter', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents', 'TerraMA2WC/components/LayerExplorer.TerraMA2WebComponents'],
-  function(Utils, Filter, TerraMA2MapDisplay, TerraMA2LayerExplorer) {
+  ['components/Utils', 'components/Filter'],
+  function(Utils, Filter) {
 
     /**
      * Adds the layers from the map configuration file to the map.
@@ -22,22 +22,22 @@ define(
       var configuration = Utils.getConfigurations().mapConfigurations;
 
       $.each(configuration.LayerGroups, function(i, layerGroup) {
-        if(TerraMA2MapDisplay.addLayerGroup(layerGroup.Id, layerGroup.Name))
-          TerraMA2LayerExplorer.addLayersFromMap(layerGroup.Id, 'terrama2-layerexplorer');
+        if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layerGroup.Id, layerGroup.Name))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layerGroup.Id, 'terrama2-layerexplorer');
 
         $.each(layerGroup.Layers, function(j, layer) {
           var layerName = Utils.processStringWithDatePattern(layer.Name);
           var layerTime = Utils.processStringWithDatePattern(layer.Time);
 
-          if(TerraMA2MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layerTime))
-            TerraMA2LayerExplorer.addLayersFromMap(layer.Id, layerGroup.Id);
+          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layerTime))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, layerGroup.Id);
 
           if(layer.Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
             var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
 
-            TerraMA2MapDisplay.applyCQLFilter(filter, layer.Id);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, layer.Id);
 
             Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
           } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
@@ -58,8 +58,8 @@ define(
      * @inner
      */
     var resetMapMouseTools = function() {
-      TerraMA2MapDisplay.unsetMapSingleClickEvent();
-      TerraMA2MapDisplay.removeZoomDragBox();
+      TerraMA2WebComponents.MapDisplay.unsetMapSingleClickEvent();
+      TerraMA2WebComponents.MapDisplay.removeZoomDragBox();
       $('.mouse-function-btn > i').removeClass('active');
       $('#terrama2-map').removeClass('cursor-crosshair');
       $('#terrama2-map').removeClass('cursor-move');
@@ -99,7 +99,7 @@ define(
     var activateDragboxTool = function() {
       $('#dragbox > i').addClass('active');
       $('#terrama2-map').addClass('cursor-crosshair');
-      TerraMA2MapDisplay.addZoomDragBox();
+      TerraMA2WebComponents.MapDisplay.addZoomDragBox();
     };
 
     /**
@@ -152,7 +152,7 @@ define(
 
       $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
         if(layerId === undefined || layerId === mapSubtitleItem.LayerId) {
-          if(TerraMA2MapDisplay.isCurrentResolutionValidForLayer(mapSubtitleItem.LayerId) && TerraMA2MapDisplay.isLayerVisible(mapSubtitleItem.LayerId)) {
+          if(TerraMA2WebComponents.MapDisplay.isCurrentResolutionValidForLayer(mapSubtitleItem.LayerId) && TerraMA2WebComponents.MapDisplay.isLayerVisible(mapSubtitleItem.LayerId)) {
             showSubtitle(mapSubtitleItem.LayerId);
           } else {
             hideSubtitle(mapSubtitleItem.LayerId);

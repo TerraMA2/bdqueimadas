@@ -14,8 +14,8 @@
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  */
 define(
-  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
-  function(Utils, Filter, AttributesTable, Graphics, Map, TerraMA2MapDisplay) {
+  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map'],
+  function(Utils, Filter, AttributesTable, Graphics, Map) {
 
     // Window height
     var memberHeight = null;
@@ -121,7 +121,7 @@ define(
         }
 
         // Updates the map size
-        TerraMA2MapDisplay.updateMapSize();
+        TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
 
       // Window resize event
@@ -143,7 +143,7 @@ define(
         // Updates the padding top of the sidebar
         $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
-        TerraMA2MapDisplay.updateMapSize();
+        TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
 
       // Control sidebar toggle click event
@@ -166,7 +166,7 @@ define(
         if($(this).val() !== "") {
           var exportLink = "/export?dateFrom=" + Filter.getFormattedDateFrom('YYYYMMDD') +
                            "&dateTo=" + Filter.getFormattedDateTo('YYYYMMDD') +
-                           "&extent=" + TerraMA2MapDisplay.getCurrentExtent().toString() +
+                           "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                            "&format=" + $(this).val();
 
           location.href = exportLink;
@@ -183,7 +183,7 @@ define(
           data: {
             dateFrom: Filter.getFormattedDateFrom('YYYYMMDD'),
             dateTo: Filter.getFormattedDateTo('YYYYMMDD'),
-            extent: TerraMA2MapDisplay.getCurrentExtent().toString()
+            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString()
           },
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {
@@ -291,25 +291,25 @@ define(
         Map.updateZoomTop(true);
       });
 
-      TerraMA2MapDisplay.setZoomDragBoxEndEvent(function() {
-        var dragBoxExtent = TerraMA2MapDisplay.getZoomDragBoxExtent();
-        TerraMA2MapDisplay.zoomToExtent(dragBoxExtent);
+      TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
+        var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
+        TerraMA2WebComponents.MapDisplay.zoomToExtent(dragBoxExtent);
         updateComponents();
       });
 
-      TerraMA2MapDisplay.setMapResolutionChangeEvent(function() {
+      TerraMA2WebComponents.MapDisplay.setMapResolutionChangeEvent(function() {
         Map.setSubtitlesVisibility();
       });
 
-      TerraMA2MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
+      TerraMA2WebComponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
         Utils.getSocket().emit('dataByIntersectionRequest', {
           longitude: longitude,
           latitude: latitude,
-          resolution: TerraMA2MapDisplay.getCurrentResolution()
+          resolution: TerraMA2WebComponents.MapDisplay.getCurrentResolution()
         });
       });
 
-      TerraMA2MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
+      TerraMA2WebComponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
         Map.setSubtitlesVisibility(layerId);
       });
     };
@@ -331,7 +331,7 @@ define(
           var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
           var extentArray = extent[0].split(' ');
           extentArray = extentArray.concat(extent[1].split(' '));
-          TerraMA2MapDisplay.zoomToExtent(extentArray);
+          TerraMA2WebComponents.MapDisplay.zoomToExtent(extentArray);
           updateComponents();
 
           if(result.key === 'Continent') {
@@ -353,7 +353,7 @@ define(
             Filter.enableDropdown('states', result.text, result.id);
           }
         } else {
-          TerraMA2MapDisplay.zoomToInitialExtent();
+          TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
         }
       });
 

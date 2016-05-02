@@ -12,8 +12,8 @@
  * @property {string} memberSatellite - Current satellite.
  */
 define(
-  ['components/Utils', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
-  function(Utils, TerraMA2MapDisplay) {
+  ['components/Utils'],
+  function(Utils) {
 
     // Current initial date
     var memberDateFrom = null;
@@ -169,7 +169,7 @@ define(
         cql += createSatelliteFilter();
 
       updateSatelliteSelect();
-      TerraMA2MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
+      TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
     };
 
     /**
@@ -190,7 +190,7 @@ define(
       if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
       if(satellite !== undefined && satellite !== null && satellite !== "" && satellite !== '' && satellite !== "all") currentSituationFilter += ";satellite:" + satellite;
 
-      TerraMA2MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter });
+      TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter });
     };
 
     /**
