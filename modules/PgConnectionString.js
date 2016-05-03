@@ -17,18 +17,6 @@ var PgConnectionString = function() {
   var memberDatabaseConfigurations = require(memberPath.join(__dirname, '../configurations/Database.json'));
 
   /**
-   * Returns the schema.
-   * @returns {string} memberDatabaseConfigurations.Schema - Schema
-   *
-   * @function getSchema
-   * @memberof PgConnectionString
-   * @inner
-   */
-  this.getSchema = function() {
-    return memberDatabaseConfigurations.Schema;
-  };
-
-  /**
    * Returns the connection string.
    * @returns {string} connectionString - Connection string
    *
