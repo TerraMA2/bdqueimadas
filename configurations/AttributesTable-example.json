@@ -1,0 +1,22 @@
+{
+  "Columns": [
+    {
+      "Name": "col1",
+      "Alias": "Column 1",
+      "Show": true,
+      "Number": true
+    },
+    {
+      "Name": "col2",
+      "Alias": "Column 2",
+      "Show": false,
+      "Number": false
+    },
+    {
+      "Name": "col3",
+      "Alias": "Column 3",
+      "Show": true,
+      "Number": false
+    }
+  ]
+}
