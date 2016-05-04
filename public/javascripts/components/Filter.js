@@ -329,7 +329,7 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
-        Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
+        Utils.getSocket().emit('spatialFilterRequest', { id: "South_America", text: "South_America", key: 'Continent' });
       });
     };
 
