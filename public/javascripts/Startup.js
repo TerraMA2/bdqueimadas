@@ -1,9 +1,9 @@
 //$.blockUI({ message: '<h3>Inicializando o BDQueimadas...</h3>' });
 
 requirejs.config({
-  baseUrl: '/javascripts',
+  baseUrl: BASE_URL + 'javascripts',
   paths: {
-    TerraMA2WC: '/externals/TerraMA2WebComponents/javascripts'
+    TerraMA2WC: BASE_URL + 'externals/TerraMA2WebComponents/javascripts'
   }
 });
 
