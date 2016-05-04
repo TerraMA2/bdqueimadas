@@ -5,47 +5,47 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 <!-- Socket.IO -->
-<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>socket.io/socket.io.js"></script>
 <!-- jQuery 2.1.4 -->
-<script type="text/javascript" src="/externals/jQuery/jQuery-2.1.4.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
-<script type="text/javascript" src="/externals/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/bootstrap/js/bootstrap.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
-<script type="text/javascript" src="/externals/jQueryUI/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/jQueryUI/jquery-ui.min.js"></script>
 <!-- jQuery blockUI 2.70.0-2014.11.23 -->
-<script type="text/javascript" src="/externals/jQueryBlockUI/jquery.blockUI.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/jQueryBlockUI/jquery.blockUI.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script type="text/javascript">
   $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Slimscroll -->
-<script type="text/javascript" src="/externals/slimScroll/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
-<script type="text/javascript" src="/externals/fastclick/fastclick.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/fastclick/fastclick.min.js"></script>
 <!-- AdminLTE App -->
-<script type="text/javascript" src="/externals/adminlte/js/app.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/adminlte/js/app.min.js"></script>
 <!-- DataTables -->
-<script type="text/javascript" src="/externals/datatables/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/externals/datatables/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/datatables/dataTables.bootstrap.min.js"></script>
 <!-- ChartJS 1.0.1 -->
-<script type="text/javascript" src="/externals/chartjs/Chart.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/chartjs/Chart.min.js"></script>
 <!-- InputMask -->
-<script type="text/javascript" src="/externals/input-mask/jquery.inputmask.js"></script>
-<script type="text/javascript" src="/externals/input-mask/jquery.inputmask.date.extensions.js"></script>
-<script type="text/javascript" src="/externals/input-mask/jquery.inputmask.extensions.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.extensions.js"></script>
 <!-- Vex 2.2.1 -->
-<script type="text/javascript" src="/externals/vex/vex.combined.min.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/vex/vex.combined.min.js"></script>
 <script>vex.defaultOptions.className = 'vex-theme-default';</script>
 <!-- Queimadas -->
-<script type="text/javascript" src="/externals/adminlte/js/queimadas.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/adminlte/js/queimadas.js"></script>
 <!-- wtss.js -->
-<script type="text/javascript" src="/externals/wtss.js/wtss.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/wtss.js/wtss.js"></script>
 <!-- OpenLayers 3.15.0 -->
-<script type="text/javascript" src="/externals/openlayers/ol.js"></script>
+<script type="text/javascript" src="<%- BASE_URL %>externals/openlayers/ol.js"></script>
 <!-- Variables used in TerraMA² and BDQueimadas -->
 <script type="text/javascript">
   var configurations = JSON.parse('<%- JSON.stringify(configurations) %>');
 </script>
-<script src="/externals/TerraMA2WebComponents/javascripts/TerraMA2WebComponents.min.js"></script>
+<script src="<%- BASE_URL %>externals/TerraMA2WebComponents/javascripts/TerraMA2WebComponents.min.js"></script>
 <!-- RequireJS 2.2.0 -->
-<script data-main="/javascripts/Startup.js" src="/externals/require.js/require.js"></script>
+<script data-main="<%- BASE_URL %>javascripts/Startup.js" src="<%- BASE_URL %>externals/require.js/require.js"></script>

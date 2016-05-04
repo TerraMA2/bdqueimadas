@@ -1,3 +1,5 @@
+BASE_URL = '/';
+
 const KEY = 'bdqueimadas.sid';
 
 var express = require('express'),

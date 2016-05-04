@@ -283,7 +283,7 @@
 }
 
 #footer-image {
-  background: url('/images/footer.png');
+  background: url('../images/footer.png');
   background-size: 1500px;
   height: 135px;
   background-repeat: no-repeat;
@@ -301,7 +301,7 @@
 }
 
 #programa-cerrado-image {
-  background: url('/images/about/header.png');
+  background: url('../images/about/header.png');
   background-size: 800px;
   height: 830px;
   background-repeat: no-repeat;
@@ -325,7 +325,7 @@
 }
 
 #projeto-inpe-image {
-  background: url('/images/about/inpe.png');
+  background: url('../images/about/inpe.png');
   background-size: 700px;
   height: 130px;
   background-repeat: no-repeat;
@@ -338,7 +338,7 @@
 }
 
 #realizacao-image {
-  background: url('/images/about/realizacao.png');
+  background: url('../images/about/realizacao.png');
   background-size: 700px;
   height: 130px;
   background-repeat: no-repeat;
@@ -428,17 +428,17 @@
 
 .sidebar-menu > li > a > span { padding-left: 22px; }
 
-.skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../../externals/adminlte/img/sprite.png") 0 2px;}
+.skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../externals/adminlte/img/sprite.png") 0 2px;}
 
-.skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../../externals/adminlte/img/sprite.png");}
+.skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../externals/adminlte/img/sprite.png");}
 
 .skin-queimadas .main-header #gov-header #header #logo #portal-title {
-  background: url("../../externals/adminlte/img/logo_queimadas.png");
+  background: url("../externals/adminlte/img/logo_queimadas.png");
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../../externals/adminlte/img/logo_bd.png");}
+.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../externals/adminlte/img/logo_bd.png");}
 
 .content {
   min-height: 0px !important;
