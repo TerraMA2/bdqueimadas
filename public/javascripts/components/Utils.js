@@ -205,7 +205,7 @@ define(function() {
    */
   var init = function(configurations) {
     memberConfigurations = configurations;
-    memberSocket = io(window.location.origin);
+    memberSocket = io(window.location.href);
   };
 
   return {
