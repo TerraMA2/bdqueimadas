@@ -64,8 +64,8 @@ define(
             "url": "/get-attributes-table",
             "type": "POST",
             "data": function(data) {
-              data.dateFrom = Filter.getFormattedDateFrom('YYYYMMDD');
-              data.dateTo = Filter.getFormattedDateTo('YYYYMMDD');
+              data.dateFrom = Filter.getFormattedDateFrom('YYYY-MM-DD');
+              data.dateTo = Filter.getFormattedDateTo('YYYY-MM-DD');
               data.satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
             }
