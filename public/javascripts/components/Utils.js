@@ -203,9 +203,9 @@ define(function() {
    * @memberof Utils
    * @inner
    */
-  var init = function(configurations) {
+  var init = function(configurations, baseUrl) {
     memberConfigurations = configurations;
-    memberSocket = io(window.location.href);
+    memberSocket = io(window.location.origin, { resource: baseUrl + 'socket.io' });
   };
 
   return {

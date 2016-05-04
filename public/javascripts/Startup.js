@@ -31,7 +31,7 @@ requirejs(
     TerraMA2WebComponents.MapDisplay.addMousePosition();
     TerraMA2WebComponents.MapDisplay.addScale();
 
-    Utils.init(configurations);
+    Utils.init(configurations, BASE_URL);
     BDQueimadas.init();
     Filter.init();
     AttributesTable.init();
