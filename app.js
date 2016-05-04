@@ -1,4 +1,4 @@
-BASE_URL = '/bdqueimadas/';
+BASE_URL = '/';
 
 const KEY = 'bdqueimadas.sid';
 
