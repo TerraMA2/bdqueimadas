@@ -205,7 +205,7 @@ define(function() {
    */
   var init = function(configurations, baseUrl) {
     memberConfigurations = configurations;
-    memberSocket = io(window.location.origin, { resource: baseUrl + 'socket.io' });
+    memberSocket = io.connect(window.location.origin, { resource: baseUrl + 'socket.io' });
   };
 
   return {
