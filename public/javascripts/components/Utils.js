@@ -205,8 +205,8 @@ define(function() {
    */
   var init = function(configurations) {
     memberConfigurations = configurations;
-    alert(window.location.href);
-    memberSocket = io(window.location.href);
+    //alert(window.location.href);
+    memberSocket = io('https://dev-queimadas.dgi.inpe.br/bdqueimadas');//io(window.location.href);
   };
 
   return {
