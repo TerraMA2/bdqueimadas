@@ -107,8 +107,8 @@ define(
      */
     var updateGraphics = function() {
       if($("#graph-box").css('left') < '0px') {
-        var dateFrom = Filter.getFormattedDateFrom('YYYYMMDD');
-        var dateTo = Filter.getFormattedDateTo('YYYYMMDD');
+        var dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+        var dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
         var satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 

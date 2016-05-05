@@ -164,8 +164,8 @@ define(
       // Exportation type click event
       $(document).on('change', '#exportation-type', function() {
         if($(this).val() !== "") {
-          var exportLink = "/export?dateFrom=" + Filter.getFormattedDateFrom('YYYYMMDD') +
-                           "&dateTo=" + Filter.getFormattedDateTo('YYYYMMDD') +
+          var exportLink = "/export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                            "&format=" + $(this).val();
 
@@ -181,8 +181,8 @@ define(
           url: "/exists-data-to-export",
           type: "GET",
           data: {
-            dateFrom: Filter.getFormattedDateFrom('YYYYMMDD'),
-            dateTo: Filter.getFormattedDateTo('YYYYMMDD'),
+            dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
+            dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
             extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString()
           },
           success: function(existsDataToExport) {
@@ -347,7 +347,7 @@ define(
             Filter.enableDropdown('states', 'Estados', '');
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom('YYYYMMDD'), Filter.getFormattedDateTo('YYYYMMDD'), result.id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellite(), layer);
             });
           } else {
             Filter.enableDropdown('states', result.text, result.id);
@@ -365,13 +365,13 @@ define(
             Filter.selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom('YYYYMMDD'), Filter.getFormattedDateTo('YYYYMMDD'), result.data.rows[0].id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data.rows[0].id, Filter.getSatellite(), layer);
             });
           } else {
             Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
           }
         } else {
-          Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
+          Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
         }
 
         updateComponents();
@@ -401,7 +401,7 @@ define(
         $('#countries').empty().html(html);
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom('YYYYMMDD'), Filter.getFormattedDateTo('YYYYMMDD'), result.country.rows[0].id, Filter.getSatellite(), layer);
+          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.country.rows[0].id, Filter.getSatellite(), layer);
         });
       });
 

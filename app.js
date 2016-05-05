@@ -1,5 +1,3 @@
-BASE_URL = '/';
-
 const KEY = 'bdqueimadas.sid';
 
 var express = require('express'),
@@ -10,7 +8,12 @@ var express = require('express'),
     favicon = require('serve-favicon'),
     //error = require('./middlewares/error'),
     app = express(),
-    server = require('http').Server(app);
+    server = require('http').Server(app),
+    fs = require('fs');
+
+var applicationConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, './configurations/Application.json'), 'utf8'));
+
+BASE_URL = applicationConfigurations.BaseUrl;
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

@@ -158,7 +158,7 @@ define(
         cql += createDateFilter();
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, 'YYYYMMDD'), Utils.dateToString(memberDateTo, 'YYYYMMDD'), $('#countries-title').attr('item-id'), memberSatellite, layer);
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries-title').attr('item-id'), memberSatellite, layer);
         });
       }
 
@@ -329,7 +329,7 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
-        Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
+        Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
       });
     };
 
