@@ -57,7 +57,7 @@ define(
 
       memberAttributesTable = $('#attributes-table').DataTable(
         {
-          "order": [[ 1, 'asc' ]],
+          "order": Utils.getConfigurations().attributesTableConfigurations.Order,
           "processing": true,
           "serverSide": true,
           "ajax": {
