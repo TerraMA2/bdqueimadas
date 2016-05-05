@@ -371,7 +371,7 @@ define(
             Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
           }
         } else {
-          Utils.getSocket().emit('spatialFilterRequest', { id: "South_America", text: "South_America", key: 'Continent' });
+          Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
         }
 
         updateComponents();

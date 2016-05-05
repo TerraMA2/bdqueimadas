@@ -158,7 +158,7 @@ define(
         cql += createDateFilter();
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, 'YYYY-MM-DD'), Utils.dateToString(memberDateTo, 'YYYY-MM-DD'), $('#countries-title').attr('item-id'), memberSatellite, layer);
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, 'YYYYMMDD'), Utils.dateToString(memberDateTo, 'YYYYMMDD'), $('#countries-title').attr('item-id'), memberSatellite, layer);
         });
       }
 
@@ -185,7 +185,7 @@ define(
      * @inner
      */
     var applyCurrentSituationFilter = function(begin, end, country, satellite, layer) {
-      var currentSituationFilter = "begin:'" + begin + "';end:'" + end + "'";
+      var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
       if(satellite !== undefined && satellite !== null && satellite !== "" && satellite !== '' && satellite !== "all") currentSituationFilter += ";satellite:" + satellite;
@@ -329,7 +329,7 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
-        Utils.getSocket().emit('spatialFilterRequest', { id: "South_America", text: "South_America", key: 'Continent' });
+        Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
       });
     };
 
