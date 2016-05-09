@@ -24,9 +24,9 @@ var GetAttributesTableController = function(app) {
    */
   var getAttributesTableController = function(request, response) {
 
-    // Object responsible for keep several information to be used in the database query
+    // Object responsible for keeping several information to be used in the database query
     var options = {};
-    // Array responsible for keep the query 'order by' field names and type (asc or desc)
+    // Array responsible for keeping the query 'order by' field names and type (asc or desc)
     var order = [];
 
     // Verifications of the 'options' object items
@@ -53,7 +53,7 @@ var GetAttributesTableController = function(app) {
         memberAttributesTable.getAttributesTableCountWithSearch(request.body.dateFrom, request.body.dateTo, request.body.search.value, options, function(err, resultCountWithSearch) {
           if(err) return console.error(err);
 
-          // Array responsible for keep the data obtained by the method 'getAttributesTableData'
+          // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
           var data = [];
 
           // Conversion of the result object to array

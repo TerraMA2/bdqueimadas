@@ -48,7 +48,7 @@ var Graphics = function() {
 
         // Creation of the query
         var query = "select " + key + " as key, count(*) as count from " +
-        memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName +
+        memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 

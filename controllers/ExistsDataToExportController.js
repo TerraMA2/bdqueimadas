@@ -23,7 +23,7 @@ var ExistsDataToExportController = function(app) {
    * @inner
    */
   var existsDataToExportController = function(request, response) {
-    // Object responsible for keep several information to be used in the database query
+    // Object responsible for keeping several information to be used in the database query
     var options = {};
 
     // Verifications of the 'options' object items

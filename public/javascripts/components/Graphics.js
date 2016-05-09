@@ -10,8 +10,8 @@
  * @property {object} memberFiresCountGraphics - Graphics of fires count.
  */
 define(
-  ['components/Utils', 'components/Filter', 'components/Map', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
-  function(Utils, Filter, Map, TerraMA2MapDisplay) {
+  ['components/Utils', 'components/Filter', 'components/Map'],
+  function(Utils, Filter, Map) {
 
     // Graphics of fires count
     var memberFiresCountGraphics = {};
@@ -31,7 +31,7 @@ define(
         Map.resetMapMouseTools();
         $('#show-time-series-graphic > i').addClass('active');
         $('#terrama2-map').addClass('cursor-pointer');
-        TerraMA2MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
+        TerraMA2WebComponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
           showTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
         });
       }
@@ -107,10 +107,10 @@ define(
      */
     var updateGraphics = function() {
       if($("#graph-box").css('left') < '0px') {
-        var dateFrom = Filter.getFormattedDateFrom('YYYYMMDD');
-        var dateTo = Filter.getFormattedDateTo('YYYYMMDD');
+        var dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+        var dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
         var satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
-        var extent = TerraMA2MapDisplay.getCurrentExtent();
+        var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
         $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
           Utils.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: firesCountGraphicsConfig.Key, title: firesCountGraphicsConfig.Title, satellite: satellite, extent: extent });
