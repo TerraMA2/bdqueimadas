@@ -14,8 +14,8 @@
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  */
 define(
-  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
-  function(Utils, Filter, AttributesTable, Graphics, Map, TerraMA2MapDisplay) {
+  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map'],
+  function(Utils, Filter, AttributesTable, Graphics, Map) {
 
     // Window height
     var memberHeight = null;
@@ -121,7 +121,7 @@ define(
         }
 
         // Updates the map size
-        TerraMA2MapDisplay.updateMapSize();
+        TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
 
       // Window resize event
@@ -143,7 +143,7 @@ define(
         // Updates the padding top of the sidebar
         $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
-        TerraMA2MapDisplay.updateMapSize();
+        TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
 
       // Control sidebar toggle click event
@@ -164,9 +164,9 @@ define(
       // Exportation type click event
       $(document).on('change', '#exportation-type', function() {
         if($(this).val() !== "") {
-          var exportLink = "/export?dateFrom=" + Filter.getFormattedDateFrom('YYYYMMDD') +
-                           "&dateTo=" + Filter.getFormattedDateTo('YYYYMMDD') +
-                           "&extent=" + TerraMA2MapDisplay.getCurrentExtent().toString() +
+          var exportLink = "/export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+                           "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                            "&format=" + $(this).val();
 
           location.href = exportLink;
@@ -181,9 +181,9 @@ define(
           url: "/exists-data-to-export",
           type: "GET",
           data: {
-            dateFrom: Filter.getFormattedDateFrom('YYYYMMDD'),
-            dateTo: Filter.getFormattedDateTo('YYYYMMDD'),
-            extent: TerraMA2MapDisplay.getCurrentExtent().toString()
+            dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
+            dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
+            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString()
           },
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {
@@ -291,25 +291,25 @@ define(
         Map.updateZoomTop(true);
       });
 
-      TerraMA2MapDisplay.setZoomDragBoxEndEvent(function() {
-        var dragBoxExtent = TerraMA2MapDisplay.getZoomDragBoxExtent();
-        TerraMA2MapDisplay.zoomToExtent(dragBoxExtent);
+      TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
+        var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
+        TerraMA2WebComponents.MapDisplay.zoomToExtent(dragBoxExtent);
         updateComponents();
       });
 
-      TerraMA2MapDisplay.setMapResolutionChangeEvent(function() {
+      TerraMA2WebComponents.MapDisplay.setMapResolutionChangeEvent(function() {
         Map.setSubtitlesVisibility();
       });
 
-      TerraMA2MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
+      TerraMA2WebComponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
         Utils.getSocket().emit('dataByIntersectionRequest', {
           longitude: longitude,
           latitude: latitude,
-          resolution: TerraMA2MapDisplay.getCurrentResolution()
+          resolution: TerraMA2WebComponents.MapDisplay.getCurrentResolution()
         });
       });
 
-      TerraMA2MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
+      TerraMA2WebComponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
         Map.setSubtitlesVisibility(layerId);
       });
     };
@@ -331,7 +331,7 @@ define(
           var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
           var extentArray = extent[0].split(' ');
           extentArray = extentArray.concat(extent[1].split(' '));
-          TerraMA2MapDisplay.zoomToExtent(extentArray);
+          TerraMA2WebComponents.MapDisplay.zoomToExtent(extentArray);
           updateComponents();
 
           if(result.key === 'Continent') {
@@ -347,13 +347,13 @@ define(
             Filter.enableDropdown('states', 'Estados', '');
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom('YYYYMMDD'), Filter.getFormattedDateTo('YYYYMMDD'), result.id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellite(), layer);
             });
           } else {
             Filter.enableDropdown('states', result.text, result.id);
           }
         } else {
-          TerraMA2MapDisplay.zoomToInitialExtent();
+          TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
         }
       });
 
@@ -365,13 +365,13 @@ define(
             Filter.selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom('YYYYMMDD'), Filter.getFormattedDateTo('YYYYMMDD'), result.data.rows[0].id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data.rows[0].id, Filter.getSatellite(), layer);
             });
           } else {
             Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
           }
         } else {
-          Utils.getSocket().emit('spatialFilterRequest', { id: "South America", text: "South America", key: 'Continent' });
+          Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
         }
 
         updateComponents();
@@ -401,7 +401,7 @@ define(
         $('#countries').empty().html(html);
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom('YYYYMMDD'), Filter.getFormattedDateTo('YYYYMMDD'), result.country.rows[0].id, Filter.getSatellite(), layer);
+          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.country.rows[0].id, Filter.getSatellite(), layer);
         });
       });
 

@@ -26,64 +26,6 @@ var Filter = function() {
   var memberPg = require('pg');
 
   /**
-   * Returns the center cordinates of the country correspondent to the received id.
-   * @param {number} countryId - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getCountryCenter
-   * @memberof Filter
-   * @inner
-   */
-  this.getCountryCenter = function(countryId, callback) {
-    // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.Countries.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
-            params = [countryId];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
-   * Returns the center cordinates of the state correspondent to the received id.
-   * @param {number} stateId - State id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getStateCenter
-   * @memberof Filter
-   * @inner
-   */
-  this.getStateCenter = function(stateId, callback) {
-    // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select ST_AsText(ST_Centroid(" + memberTablesConfig.States.GeometryFieldName + ")) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
-            params = [stateId];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
    * Returns a list of continents.
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -98,7 +40,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
+        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, function(err, result) {
@@ -126,7 +68,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
+        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -155,7 +97,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberTablesConfig.Continents.IdFieldName + " as id, a." + memberTablesConfig.Continents.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " a inner join " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Continents.IdFieldName + " as id, a." + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " a inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -184,7 +126,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -213,7 +155,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
+        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
             params = [continent];
 
         // Execution of the query
@@ -242,7 +184,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 order by " + memberTablesConfig.States.NameFieldName + " asc;",
+        var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 order by " + memberTablesConfig.States.NameFieldName + " asc;",
             params = [country];
 
         // Execution of the query
@@ -271,7 +213,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + ") as extent from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
             params = [continent];
 
         // Execution of the query
@@ -300,7 +242,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -329,7 +271,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -358,7 +300,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) as firescount from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.CountryFieldName + " = $1;",
+        var query = "select count(*) as firescount from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.CountryFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -396,7 +338,7 @@ var Filter = function() {
           key = "Countries";
 
         // Creation of the query
-        var query = "SELECT " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key FROM " + memberPgConnectionString.getSchema() + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));",
+        var query = "SELECT " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key FROM " + memberTablesConfig[key].Schema + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));",
             params = [longitude, latitude];
 
         // Execution of the query

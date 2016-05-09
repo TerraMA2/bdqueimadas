@@ -1,7 +1,7 @@
 {
   "Subtitles": [
     {
-      "LayerId": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_04_18",
+      "LayerId": "abc:current_situation_countries",
       "LayerName": "Camada: Situação Atual - Países",
       "Subtitles": [
         {
@@ -55,7 +55,7 @@
       ]
     },
     {
-      "LayerId": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_04_18",
+      "LayerId": "abc:current_situation_states",
       "LayerName": "Camada: Situação Atual - Estados",
       "Subtitles": [
         {
@@ -109,7 +109,7 @@
       ]
     },
     {
-      "LayerId": "BDQueimadas:focos_de_2016_04_01_a_2016_04_18",
+      "LayerId": "abc:fires",
       "LayerName": "Camada: Focos",
       "Subtitles": [
         {
@@ -165,7 +165,7 @@
       "Name": "Camadas Principais",
       "Layers": [
         {
-          "Id": "BDQueimadas:estados",
+          "Id": "abc:states",
           "Name": "Estados",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -175,7 +175,7 @@
           "Time": null
         },
         {
-          "Id": "BDQueimadas:countries",
+          "Id": "abc:countries",
           "Name": "Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -185,7 +185,7 @@
           "Time": null
         },
         {
-          "Id": "BDQueimadas:focos_de_2016_04_01_a_2016_04_18",
+          "Id": "abc:fires",
           "Name": "Focos",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -195,7 +195,7 @@
           "Time": null
         },
         {
-          "Id": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_04_18",
+          "Id": "abc:current_situation_countries",
           "Name": "Situação Atual - Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -205,7 +205,7 @@
           "Time": null
         },
         {
-          "Id": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_04_18",
+          "Id": "abc:current_situation_states",
           "Name": "Situação Atual - Estados",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",

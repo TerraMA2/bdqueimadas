@@ -1,9 +1,9 @@
 //$.blockUI({ message: '<h3>Inicializando o BDQueimadas...</h3>' });
 
 requirejs.config({
-  baseUrl: '/javascripts',
+  baseUrl: BASE_URL + 'javascripts',
   paths: {
-    'TerraMA2WC': '/externals/TerraMA2WebComponents/javascripts'
+    TerraMA2WC: BASE_URL + 'externals/TerraMA2WebComponents/javascripts'
   }
 });
 
@@ -14,28 +14,24 @@ requirejs(
     'components/Filter',
     'components/AttributesTable',
     'components/Graphics',
-    'components/Map',
-    'TerraMA2WC/TerraMA2WebComponents',
-    'TerraMA2WC/components/LayerExplorer.TerraMA2WebComponents',
-    'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'
+    'components/Map'
   ],
-  function(BDQueimadas, Utils, Filter, AttributesTable, Graphics, Map, TerraMA2WebComponents, TerraMA2LayerExplorer, TerraMA2MapDisplay) {
-    TerraMA2WebComponents.init();
-    TerraMA2LayerExplorer.init();
-    TerraMA2MapDisplay.init();
+  function(BDQueimadas, Utils, Filter, AttributesTable, Graphics, Map) {
+    TerraMA2WebComponents.LayerExplorer.init();
+    TerraMA2WebComponents.MapDisplay.init();
 
-    if(TerraMA2MapDisplay.addBaseLayers('bases', 'Camadas Bases'))
-      TerraMA2LayerExplorer.addLayersFromMap('bases', 'terrama2-layerexplorer');
+    if(TerraMA2WebComponents.MapDisplay.addBaseLayers('bases', 'Camadas Bases'))
+      TerraMA2WebComponents.LayerExplorer.addLayersFromMap('bases', 'terrama2-layerexplorer');
 
-    //TerraMA2MapDisplay.addCapabilitiesLayers('http://localhost:9095/geoserver/ows?service=WMS&request=getCapabilities', 'http://localhost:9095/geoserver/ows', 'geoserver', 'local', 'Local Server', function() {
-    //  TerraMA2LayerExplorer.addLayersFromMap('local', 'terrama2-layerexplorer');
+    //TerraMA2WebComponents.MapDisplay.addCapabilitiesLayers('http://localhost:9095/geoserver/ows?service=WMS&request=getCapabilities', 'http://localhost:9095/geoserver/ows', 'geoserver', 'local', 'Local Server', function() {
+    //  TerraMA2WebComponents.LayerExplorer.addLayersFromMap('local', 'terrama2-layerexplorer');
     //});
 
-    TerraMA2MapDisplay.disableDoubleClickZoom();
-    TerraMA2MapDisplay.addMousePosition();
-    TerraMA2MapDisplay.addScale();
+    TerraMA2WebComponents.MapDisplay.disableDoubleClickZoom();
+    TerraMA2WebComponents.MapDisplay.addMousePosition();
+    TerraMA2WebComponents.MapDisplay.addScale();
 
-    Utils.init(configurations);
+    Utils.init(configurations, BASE_URL);
     BDQueimadas.init();
     Filter.init();
     AttributesTable.init();

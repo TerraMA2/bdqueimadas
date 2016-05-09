@@ -77,7 +77,7 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 
         // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
@@ -135,7 +135,7 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateFrom, dateTo];
 
         // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
@@ -182,7 +182,7 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberPgConnectionString.getSchema() + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateFrom, dateTo];
 
         // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
@@ -237,10 +237,10 @@ var AttributesTable = function() {
       if(memberAttributesTableConfig.Columns[i].Show) {
 
         // Verification of the type of the column (numeric or not numeric)
-        if(!memberAttributesTableConfig.Columns[i].Number) {
+        if(memberAttributesTableConfig.Columns[i].String) {
           searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
           params.push('%' + search + '%');
-        } else if(memberAttributesTableConfig.Columns[i].Number && !isNaN(search)) {
+        } else if(!memberAttributesTableConfig.Columns[i].String && !isNaN(search)) {
           searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
           params.push(Number(search));
         }

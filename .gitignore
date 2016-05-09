@@ -1,3 +1,11 @@
+configurations/Api.json
+configurations/Application.json
+configurations/AttributesTable.json
+configurations/Database.json
+configurations/Filter.json
+configurations/Graphics.json
+configurations/Map.json
+configurations/Tables.json
 node_modules
 npm-debug.log
 makedocs

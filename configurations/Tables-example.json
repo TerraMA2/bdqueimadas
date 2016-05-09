@@ -1,24 +1,28 @@
 {
   "Continents": {
-    "TableName": "paises",
+    "Schema": "public",
+    "TableName": "countries",
     "IdFieldName": "unregion1",
     "NameFieldName": "unregion1",
     "GeometryFieldName": "geom"
   },
   "Countries": {
-    "TableName": "paises",
+    "Schema": "public",
+    "TableName": "countries",
     "IdFieldName": "id_0",
     "NameFieldName": "name_0",
     "GeometryFieldName": "geom"
   },
   "States": {
-    "TableName": "estados",
+    "Schema": "public",
+    "TableName": "states",
     "IdFieldName": "gid",
     "NameFieldName": "name_1",
     "GeometryFieldName": "geom"
   },
   "Fires": {
-    "TableName": "focos_de_2016_04_01_a_2016_04_18",
+    "Schema": "public",
+    "TableName": "fires",
     "IdFieldName": "gid",
     "DateFieldName": "data",
     "TimeFieldName": "horagmt",

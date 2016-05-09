@@ -62,7 +62,7 @@ var Exportation = function() {
 
         // Creation of the query
         var query = "select ST_AsGeoJSON(" + memberTablesConfig.Fires.GeometryFieldName + ")::json as geometry, row_to_json((select columns from (select " +
-                    columns + ") as columns)) as properties from " + memberPgConnectionString.getSchema() + "." +
+                    columns + ") as columns)) as properties from " + memberTablesConfig.Fires.Schema + "." +
                     memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName +
                     " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];

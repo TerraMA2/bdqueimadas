@@ -10,8 +10,8 @@
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
  */
 define(
-  ['components/Utils', 'components/Filter', 'TerraMA2WC/components/MapDisplay.TerraMA2WebComponents'],
-  function(Utils, Filter, TerraMA2MapDisplay) {
+  ['components/Utils', 'components/Filter'],
+  function(Utils, Filter) {
 
     // Attributes table object (DataTables)
     var memberAttributesTable = null;
@@ -57,17 +57,17 @@ define(
 
       memberAttributesTable = $('#attributes-table').DataTable(
         {
-          "order": [[ 5, 'asc' ], [ 6, 'asc' ]],
+          "order": Utils.getConfigurations().attributesTableConfigurations.Order,
           "processing": true,
           "serverSide": true,
           "ajax": {
             "url": "/get-attributes-table",
             "type": "POST",
             "data": function(data) {
-              data.dateFrom = Filter.getFormattedDateFrom('YYYYMMDD');
-              data.dateTo = Filter.getFormattedDateTo('YYYYMMDD');
+              data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+              data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
               data.satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
-              data.extent = TerraMA2MapDisplay.getCurrentExtent();
+              data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
             }
           },
           "columns": getAttributesTableColumnNamesArray(),
