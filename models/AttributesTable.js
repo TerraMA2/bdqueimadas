@@ -237,10 +237,10 @@ var AttributesTable = function() {
       if(memberAttributesTableConfig.Columns[i].Show) {
 
         // Verification of the type of the column (numeric or not numeric)
-        if(!memberAttributesTableConfig.Columns[i].Number) {
+        if(memberAttributesTableConfig.Columns[i].String) {
           searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
           params.push('%' + search + '%');
-        } else if(memberAttributesTableConfig.Columns[i].Number && !isNaN(search)) {
+        } else if(!memberAttributesTableConfig.Columns[i].String && !isNaN(search)) {
           searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
           params.push(Number(search));
         }
