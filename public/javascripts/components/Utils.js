@@ -83,7 +83,7 @@ define(function() {
     var month = date.substring(monthPosition, monthPosition + 2);
     var date = date.substring(datePosition, datePosition + 2);
 
-    var finalDate = new Date(year + '-' + month + '-' + date + ' UTC-03:00');
+    var finalDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(date), 0, 0, 0);
 
     return finalDate;
   };
