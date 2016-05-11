@@ -61,7 +61,7 @@ define(
           "processing": true,
           "serverSide": true,
           "ajax": {
-            "url": "/get-attributes-table",
+            "url": BASE_URL + "get-attributes-table",
             "type": "POST",
             "data": function(data) {
               data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
