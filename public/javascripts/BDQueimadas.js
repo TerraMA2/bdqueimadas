@@ -164,7 +164,7 @@ define(
       // Exportation type click event
       $(document).on('change', '#exportation-type', function() {
         if($(this).val() !== "") {
-          var exportLink = "/export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+          var exportLink = BASE_URL + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
                            "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                            "&format=" + $(this).val();
@@ -178,7 +178,7 @@ define(
       // Export click event
       $('#export').on('click', function() {
         $.ajax({
-          url: "/exists-data-to-export",
+          url: BASE_URL + "exists-data-to-export",
           type: "GET",
           data: {
             dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
