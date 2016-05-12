@@ -78,7 +78,6 @@ var Filter = function(io) {
 
     // Countries by continent request event
     client.on('countriesByContinentRequest', function(json) {
-
       memberQueimadasApi.getData(
         "GetCountries",
         [
@@ -97,7 +96,6 @@ var Filter = function(io) {
 
     // States by country request event
     client.on('statesByCountryRequest', function(json) {
-
       memberQueimadasApi.getData(
         "GetStates",
         [
