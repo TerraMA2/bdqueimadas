@@ -8,7 +8,7 @@
  *
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFs - 'fs' module.
- * @property {object} memberFilter - Filter model.
+ * @property {object} memberQueimadasApi - Queimadas Api module.
  */
 var IndexController = function(app) {
 
@@ -16,8 +16,8 @@ var IndexController = function(app) {
   var memberPath = require('path');
   // 'fs' module
   var memberFs = require('fs');
-  // Filter model
-  var memberFilter = new (require('../models/Filter.js'))();
+  // Queimadas Api module
+  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi.js')))();
 
   /**
    * Processes the request and returns a response.
@@ -45,7 +45,7 @@ var IndexController = function(app) {
       applicationConfigurations: applicationConfigurations
     };
 
-    memberFilter.getContinents(function(err, result) {
+    memberQueimadasApi.getData("GetContinents", [], function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters

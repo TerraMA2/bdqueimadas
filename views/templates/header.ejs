@@ -20,10 +20,10 @@
           <ul class="dropdown-menu">
             <li>
               <ul class="menu" id="continents">
-                <% continents.rows.forEach(function(continent, index) { %>
-                  <li class="continent-item" id="<%- continent.id %>">
+                <% continents.forEach(function(continent, index) { %>
+                  <li class="continent-item" id="<%- continent.pk %>">
                     <a href="#">
-                      <%- continent.name %>
+                      <%- continent.fields.nome %>
                     </a>
                   </li>
                 <% }) %>
