@@ -228,6 +228,34 @@ define(
     };
 
     /**
+     * Creates the country filter.
+     * @returns {string} cql - Country cql filter
+     *
+     * @private
+     * @function createCountryFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createCountryFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountry + "'";
+      return cql;
+    };
+
+    /**
+     * Creates the state filter.
+     * @returns {string} cql - State cql filter
+     *
+     * @private
+     * @function createStateFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createStateFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberState + "'";
+      return cql;
+    };
+
+    /**
      * Applies the dates and the satellite filters.
      * @param {string} filterDateFrom - Filtered initial date
      * @param {string} filterDateTo - Filtered final date
@@ -242,18 +270,28 @@ define(
 
       if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
         updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
-        cql += createDateFilter();
+        cql += createDateFilter() + " AND ";
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
           applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries-title').attr('item-id'), memberSatellite, layer);
         });
       }
 
-      if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterSatellite !== "all")
-        cql += " AND ";
+      if(filterSatellite !== "all") {
+        cql += createSatelliteFilter() + " AND ";
+      }
 
-      if(filterSatellite !== "all")
-        cql += createSatelliteFilter();
+      if(memberCountry !== null) {
+        cql += createCountryFilter() + " AND ";
+      }
+
+      if(memberState !== null) {
+        cql += createStateFilter() + " AND ";
+      }
+
+      if(cql.length > 5) {
+        cql = cql.substring(0, cql.length - 5);
+      }
 
       updateSatelliteSelect();
       TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
@@ -325,9 +363,6 @@ define(
      * @inner
      */
     var selectContinentItem = function(id, text) {
-      setContinent(id);
-      setCountry(null);
-      setState(null);
       Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
     };
 
@@ -341,8 +376,6 @@ define(
      * @inner
      */
     var selectCountryItem = function(id, text) {
-      setCountry(id);
-      setState(null);
       Utils.getSocket().emit('continentByCountryRequest', { country: id });
       Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
     };
@@ -357,7 +390,6 @@ define(
      * @inner
      */
     var selectStateItem = function(id, text) {
-      setState(id);
       Utils.getSocket().emit('continentByStateRequest', { state: id });
       Utils.getSocket().emit('countryByStateRequest', { state: id });
       Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
