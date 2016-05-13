@@ -10,6 +10,9 @@
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
  * @property {string} memberSatellite - Current satellite.
+ * @property {string} memberContinent - Current continent.
+ * @property {string} memberCountry - Current country.
+ * @property {string} memberState - Current state.
  */
 define(
   ['components/Utils'],
@@ -21,6 +24,12 @@ define(
     var memberDateTo = null;
     // Current satellite
     var memberSatellite = "all";
+    // Current continent
+    var memberContinent = null;
+    // Current country
+    var memberCountry = null;
+    // Current state
+    var memberState = null;
 
     /**
      * Returns the initial date formatted with the received format.
@@ -70,6 +79,84 @@ define(
      */
     var getSatellite = function() {
       return memberSatellite;
+    };
+
+    /**
+     * Sets the continent.
+     * @param {string} continent - Continent
+     *
+     * @function setContinent
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setContinent = function(continent) {
+      memberContinent = continent;
+
+      console.log("Current: " + memberContinent + ", " + memberCountry + ", " + memberState);
+    };
+
+    /**
+     * Returns the continent.
+     * @returns {string} memberContinent - Continent
+     *
+     * @function getContinent
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getContinent = function() {
+      return memberContinent;
+    };
+
+    /**
+     * Sets the country.
+     * @param {string} country - Country
+     *
+     * @function setCountry
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setCountry = function(country) {
+      memberCountry = country;
+
+      console.log("Current: " + memberContinent + ", " + memberCountry + ", " + memberState);
+    };
+
+    /**
+     * Returns the country.
+     * @returns {string} memberCountry - Country
+     *
+     * @function getCountry
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getCountry = function() {
+      return memberCountry;
+    };
+
+    /**
+     * Sets the state.
+     * @param {string} state - State
+     *
+     * @function setState
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setState = function(state) {
+      memberState = state;
+
+      console.log("Current: " + memberContinent + ", " + memberCountry + ", " + memberState);
+    };
+
+    /**
+     * Returns the state.
+     * @returns {string} memberState - State
+     *
+     * @function getState
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getState = function() {
+      return memberState;
     };
 
     /**
@@ -238,6 +325,9 @@ define(
      * @inner
      */
     var selectContinentItem = function(id, text) {
+      setContinent(id);
+      setCountry(null);
+      setState(null);
       Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
     };
 
@@ -251,6 +341,8 @@ define(
      * @inner
      */
     var selectCountryItem = function(id, text) {
+      setCountry(id);
+      setState(null);
       Utils.getSocket().emit('continentByCountryRequest', { country: id });
       Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
     };
@@ -265,6 +357,7 @@ define(
      * @inner
      */
     var selectStateItem = function(id, text) {
+      setState(id);
       Utils.getSocket().emit('continentByStateRequest', { state: id });
       Utils.getSocket().emit('countryByStateRequest', { state: id });
       Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
@@ -338,6 +431,12 @@ define(
       getFormattedDateTo: getFormattedDateTo,
       setSatellite: setSatellite,
       getSatellite: getSatellite,
+      setContinent: setContinent,
+      getContinent: getContinent,
+      setCountry: setCountry,
+      getCountry: getCountry,
+      setState: setState,
+      getState: getState,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
