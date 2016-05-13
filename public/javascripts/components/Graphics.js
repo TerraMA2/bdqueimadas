@@ -113,7 +113,19 @@ define(
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
         $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
-          Utils.getSocket().emit('graphicsFiresCountRequest', { dateFrom: dateFrom, dateTo: dateTo, key: firesCountGraphicsConfig.Key, title: firesCountGraphicsConfig.Title, satellite: satellite, extent: extent });
+          Utils.getSocket().emit(
+            'graphicsFiresCountRequest',
+            {
+              dateFrom: dateFrom,
+              dateTo: dateTo,
+              key: firesCountGraphicsConfig.Key,
+              title: firesCountGraphicsConfig.Title,
+              satellite: satellite,
+              extent: extent,
+              country: Filter.getCountry(),
+              state: Filter.getState()
+            }
+          );
         });
       }
     };

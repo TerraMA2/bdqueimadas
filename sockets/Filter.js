@@ -8,14 +8,20 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberSockets - Sockets object.
+ * @property {object} memberPath - 'path' module.
  * @property {object} memberFilter - Filter model.
+ * @property {object} memberQueimadasApi - Queimadas Api module.
  */
 var Filter = function(io) {
 
   // Sockets object
   var memberSockets = io.sockets;
+  // 'path' module
+  var memberPath = require('path');
   // Filter model
-  var memberFilter = new (require('../models/Filter.js'))();
+  var memberFilter = new (require(memberPath.join(__dirname, '../models/Filter.js')))();
+  // Queimadas Api module
+  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi.js')))();
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -72,20 +78,38 @@ var Filter = function(io) {
 
     // Countries by continent request event
     client.on('countriesByContinentRequest', function(json) {
-      memberFilter.getCountriesByContinent(json.continent, function(err, countries) {
-        if(err) return console.error(err);
+      memberQueimadasApi.getData(
+        "GetCountries",
+        [
+          {
+            "Key": "continente",
+            "Value": json.continent
+          }
+        ],
+        function(err, countries) {
+          if(err) return console.error(err);
 
-        client.emit('countriesByContinentResponse', { countries: countries });
-      });
+          client.emit('countriesByContinentResponse', { countries: countries });
+        }
+      );
     });
 
     // States by country request event
     client.on('statesByCountryRequest', function(json) {
-      memberFilter.getStatesByCountry(json.country, function(err, states) {
-        if(err) return console.error(err);
+      memberQueimadasApi.getData(
+        "GetStates",
+        [
+          {
+            "Key": "pais",
+            "Value": json.country
+          }
+        ],
+        function(err, states) {
+          if(err) return console.error(err);
 
-        client.emit('statesByCountryResponse', { states: states });
-      });
+          client.emit('statesByCountryResponse', { states: states });
+        }
+      );
     });
   });
 };

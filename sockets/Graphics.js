@@ -28,6 +28,8 @@ var Graphics = function(io) {
       // Verifications of the 'options' object items
       if(json.satellite !== '') options.satellite = json.satellite;
       if(json.extent !== '') options.extent = json.extent;
+      if(json.country !== null && json.country !== '') options.country = json.country;
+      if(json.state !== null && json.state !== '') options.state = json.state;
 
       memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
         if(err) return console.error(err);
