@@ -128,7 +128,11 @@ define(
         // Block valid only for the toggle in the initial screen
         if($(this).hasClass("begin")) {
           $('#welcome').animate({ 'opacity': '0' }, { duration: 300, queue: false });
-          window.setTimeout(function() { $('#welcome').css('display', 'none'); }, 300);
+          $('#welcome-image').animate({ 'opacity': '0' }, { duration: 300, queue: false });
+          window.setTimeout(function() {
+            $('#welcome').css('display', 'none');
+            $('#welcome-image').css('display', 'none');
+          }, 300);
           $('#main-sidebar-toggle').css("display", "");
         }
 
