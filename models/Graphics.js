@@ -64,6 +64,18 @@ var Graphics = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
+        // If the 'options.country' parameter exists, a country 'where' clause is created
+        if(options.country !== undefined) {
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " = $" + (parameter++);
+          params.push(options.country);
+        }
+
+        // If the 'options.state' parameter exists, a state 'where' clause is created
+        if(options.state !== undefined) {
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " = $" + (parameter++);
+          params.push(options.state);
+        }
+
         query += " group by " + key + " order by count desc;"
 
         // Execution of the query

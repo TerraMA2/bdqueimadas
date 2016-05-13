@@ -91,8 +91,6 @@ define(
      */
     var setContinent = function(continent) {
       memberContinent = continent;
-
-      console.log("Current: " + memberContinent + ", " + memberCountry + ", " + memberState);
     };
 
     /**
@@ -117,8 +115,6 @@ define(
      */
     var setCountry = function(country) {
       memberCountry = country;
-
-      console.log("Current: " + memberContinent + ", " + memberCountry + ", " + memberState);
     };
 
     /**
@@ -143,8 +139,6 @@ define(
      */
     var setState = function(state) {
       memberState = state;
-
-      console.log("Current: " + memberContinent + ", " + memberCountry + ", " + memberState);
     };
 
     /**
