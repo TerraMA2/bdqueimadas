@@ -92,6 +92,18 @@ var AttributesTable = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
+        // If the 'options.country' parameter exists, a country 'where' clause is created
+        if(options.country !== undefined) {
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " = $" + (parameter++);
+          params.push(options.country);
+        }
+
+        // If the 'options.state' parameter exists, a state 'where' clause is created
+        if(options.state !== undefined) {
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " = $" + (parameter++);
+          params.push(options.state);
+        }
+
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
           var searchResult = createSearch(search, parameter);
@@ -150,6 +162,18 @@ var AttributesTable = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
+        // If the 'options.country' parameter exists, a country 'where' clause is created
+        if(options.country !== undefined) {
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " = $" + (parameter++);
+          params.push(options.country);
+        }
+
+        // If the 'options.state' parameter exists, a state 'where' clause is created
+        if(options.state !== undefined) {
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " = $" + (parameter++);
+          params.push(options.state);
+        }
+
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
@@ -195,6 +219,18 @@ var AttributesTable = function() {
         if(options.extent !== undefined) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
+        }
+
+        // If the 'options.country' parameter exists, a country 'where' clause is created
+        if(options.country !== undefined) {
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " = $" + (parameter++);
+          params.push(options.country);
+        }
+
+        // If the 'options.state' parameter exists, a state 'where' clause is created
+        if(options.state !== undefined) {
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " = $" + (parameter++);
+          params.push(options.state);
         }
 
         // If the the user executed a search in the table, a 'where' clause is created for it

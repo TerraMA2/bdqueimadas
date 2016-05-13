@@ -10,6 +10,9 @@
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
  * @property {string} memberSatellite - Current satellite.
+ * @property {string} memberContinent - Current continent.
+ * @property {string} memberCountry - Current country.
+ * @property {string} memberState - Current state.
  */
 define(
   ['components/Utils'],
@@ -21,6 +24,12 @@ define(
     var memberDateTo = null;
     // Current satellite
     var memberSatellite = "all";
+    // Current continent
+    var memberContinent = null;
+    // Current country
+    var memberCountry = null;
+    // Current state
+    var memberState = null;
 
     /**
      * Returns the initial date formatted with the received format.
@@ -70,6 +79,78 @@ define(
      */
     var getSatellite = function() {
       return memberSatellite;
+    };
+
+    /**
+     * Sets the continent.
+     * @param {string} continent - Continent
+     *
+     * @function setContinent
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setContinent = function(continent) {
+      memberContinent = continent;
+    };
+
+    /**
+     * Returns the continent.
+     * @returns {string} memberContinent - Continent
+     *
+     * @function getContinent
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getContinent = function() {
+      return memberContinent;
+    };
+
+    /**
+     * Sets the country.
+     * @param {string} country - Country
+     *
+     * @function setCountry
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setCountry = function(country) {
+      memberCountry = country;
+    };
+
+    /**
+     * Returns the country.
+     * @returns {string} memberCountry - Country
+     *
+     * @function getCountry
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getCountry = function() {
+      return memberCountry;
+    };
+
+    /**
+     * Sets the state.
+     * @param {string} state - State
+     *
+     * @function setState
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setState = function(state) {
+      memberState = state;
+    };
+
+    /**
+     * Returns the state.
+     * @returns {string} memberState - State
+     *
+     * @function getState
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getState = function() {
+      return memberState;
     };
 
     /**
@@ -141,6 +222,34 @@ define(
     };
 
     /**
+     * Creates the country filter.
+     * @returns {string} cql - Country cql filter
+     *
+     * @private
+     * @function createCountryFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createCountryFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountry + "'";
+      return cql;
+    };
+
+    /**
+     * Creates the state filter.
+     * @returns {string} cql - State cql filter
+     *
+     * @private
+     * @function createStateFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createStateFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberState + "'";
+      return cql;
+    };
+
+    /**
      * Applies the dates and the satellite filters.
      * @param {string} filterDateFrom - Filtered initial date
      * @param {string} filterDateTo - Filtered final date
@@ -155,18 +264,28 @@ define(
 
       if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
         updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
-        cql += createDateFilter();
+        cql += createDateFilter() + " AND ";
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
           applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries-title').attr('item-id'), memberSatellite, layer);
         });
       }
 
-      if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterSatellite !== "all")
-        cql += " AND ";
+      if(filterSatellite !== "all") {
+        cql += createSatelliteFilter() + " AND ";
+      }
 
-      if(filterSatellite !== "all")
-        cql += createSatelliteFilter();
+      if(memberCountry !== null) {
+        cql += createCountryFilter() + " AND ";
+      }
+
+      if(memberState !== null) {
+        cql += createStateFilter() + " AND ";
+      }
+
+      if(cql.length > 5) {
+        cql = cql.substring(0, cql.length - 5);
+      }
 
       updateSatelliteSelect();
       TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
@@ -338,6 +457,12 @@ define(
       getFormattedDateTo: getFormattedDateTo,
       setSatellite: setSatellite,
       getSatellite: getSatellite,
+      setContinent: setContinent,
+      getContinent: getContinent,
+      setCountry: setCountry,
+      getCountry: getCountry,
+      setState: setState,
+      getState: getState,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,

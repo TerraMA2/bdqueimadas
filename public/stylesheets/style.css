@@ -170,16 +170,14 @@
   }
 }
 
-@media only screen and (max-height: 1012px) and (min-width: 1301px) {
-  #welcome > img {
-    width: 100%;
-  }
-}
-
-@media only screen and (max-height: 1012px) and (max-width: 1300px), (min-height: 1013px) {
-  #welcome > img {
-    height: 100%;
-  }
+#welcome-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url('../images/welcome.jpg');
+  background-size: 100%;
+  left: 0;
 }
 
 @media only screen and (max-height: 600px) {
@@ -284,7 +282,7 @@
 
 #footer-image {
   background: url('../images/footer.png');
-  background-size: 1500px;
+  background-size: 80%;
   height: 135px;
   background-repeat: no-repeat;
   width: 100%;
