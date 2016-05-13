@@ -126,7 +126,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." + memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -242,7 +242,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent, " + memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 group by " + memberTablesConfig.Countries.BdqNameFieldName + ";",
             params = [country];
 
         // Execution of the query
@@ -271,7 +271,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent, " + memberTablesConfig.States.BdqNameFieldName + " as bdq_name from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1 group by " + memberTablesConfig.States.BdqNameFieldName + ";",
             params = [state];
 
         // Execution of the query
@@ -338,8 +338,15 @@ var Filter = function() {
           key = "Countries";
 
         // Creation of the query
-        var query = "SELECT " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key FROM " + memberTablesConfig[key].Schema + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));",
-            params = [longitude, latitude];
+        var query = "SELECT " + memberTablesConfig[key].IdFieldName + " as id, " + memberTablesConfig[key].NameFieldName + " as name, '" + key + "' as key";
+
+        if(key !== "Continents") {
+          query += ", " + memberTablesConfig[key].BdqNameFieldName + " as bdq_name";
+        }
+
+        query += " FROM " + memberTablesConfig[key].Schema + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));";
+
+        var params = [longitude, latitude];
 
         // Execution of the query
         client.query(query, params, function(err, result) {
