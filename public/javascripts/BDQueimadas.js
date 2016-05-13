@@ -335,12 +335,19 @@ define(
           updateComponents();
 
           if(result.key === 'Continent') {
+            Filter.setContinent(result.id);
+            Filter.setCountry(null);
+            Filter.setState(null);
+
             Utils.getSocket().emit('countriesByContinentRequest', { continent: result.id });
 
             Filter.enableDropdown('continents', result.text, result.id);
             Filter.enableDropdown('countries', 'Pa&iacute;ses', '');
             Filter.disableDropdown('states', 'Estados', '');
           } else if(result.key === 'Country') {
+            Filter.setCountry(result.id);
+            Filter.setState(null);
+
             Utils.getSocket().emit('statesByCountryRequest', { country: result.id });
 
             Filter.enableDropdown('countries', result.text, result.id);
@@ -350,6 +357,8 @@ define(
               Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellite(), layer);
             });
           } else {
+            Filter.setState(result.id);
+
             Filter.enableDropdown('states', result.text, result.id);
           }
         } else {
@@ -378,16 +387,22 @@ define(
       });
 
       Utils.getSocket().on('continentByCountryResponse', function(result) {
+        Filter.setContinent(result.continent.rows[0].id);
+
         $('#continents-title').empty().html(result.continent.rows[0].name);
 
         Utils.getSocket().emit('countriesByContinentRequest', { continent: result.continent.rows[0].id });
       });
 
       Utils.getSocket().on('continentByStateResponse', function(result) {
+        Filter.setContinent(result.continent.rows[0].id);
+
         $('#continents-title').empty().html(result.continent.rows[0].name);
       });
 
       Utils.getSocket().on('countryByStateResponse', function(result) {
+        Filter.setCountry(result.country.rows[0].id);
+
         Filter.enableDropdown('countries', result.country.rows[0].name, result.country.rows[0].id);
         Utils.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
 
