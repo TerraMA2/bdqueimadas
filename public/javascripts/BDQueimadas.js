@@ -43,6 +43,38 @@ define(
     };
 
     /**
+     * Applies the filters.
+     *
+     * @private
+     * @function applyFilter
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var applyFilter = function() {
+      var filterDateFrom = $('#filter-date-from').val();
+      var filterDateTo = $('#filter-date-to').val();
+      Filter.setSatellite($('#filter-satellite').val());
+
+      if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
+        if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
+          Filter.updateDatesToCurrent();
+          filterDateTo = Filter.getFormattedDateTo('DD/MM/YYYY');
+          filterDateFrom = Filter.getFormattedDateFrom('DD/MM/YYYY');
+        }
+
+        Filter.applyFilter(filterDateFrom, filterDateTo, Filter.getSatellite());
+        updateComponents();
+      } else {
+        if(filterDateFrom.length === 0) {
+          $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
+        }
+        if(filterDateTo.length === 0) {
+          $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
+        }
+      }
+    };
+
+    /**
      * Loads the DOM events.
      *
      * @private
@@ -216,28 +248,8 @@ define(
 
       // Filter Events
 
-      $('#filter-button').on('click', function(el) {
-        var filterDateFrom = $('#filter-date-from').val();
-        var filterDateTo = $('#filter-date-to').val();
-        Filter.setSatellite($('#filter-satellite').val());
-
-        if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
-          if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
-            Filter.updateDatesToCurrent();
-            filterDateTo = Filter.getFormattedDateTo('DD/MM/YYYY');
-            filterDateFrom = Filter.getFormattedDateFrom('DD/MM/YYYY');
-          }
-
-          Filter.applyFilter(filterDateFrom, filterDateTo, Filter.getSatellite());
-          updateComponents();
-        } else {
-          if(filterDateFrom.length === 0) {
-            $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
-          }
-          if(filterDateTo.length === 0) {
-            $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
-          }
-        }
+      $('#filter-button').on('click', function() {
+        applyFilter();
       });
 
       $('.continent-item').on('click', function() {
@@ -252,7 +264,7 @@ define(
         Utils.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'State' });
       });
 
-      $('.filter-date').on('focus', function(el) {
+      $('.filter-date').on('focus', function() {
         if($(this).parent().hasClass('has-error')) {
           $(this).parent().removeClass('has-error');
         }
@@ -339,6 +351,8 @@ define(
             Filter.setCountry(null);
             Filter.setState(null);
 
+            applyFilter();
+
             Utils.getSocket().emit('countriesByContinentRequest', { continent: result.id });
 
             Filter.enableDropdown('continents', result.text, result.id);
@@ -347,6 +361,8 @@ define(
           } else if(result.key === 'Country') {
             Filter.setCountry(result.extent.rows[0].bdq_name);
             Filter.setState(null);
+
+            applyFilter();
 
             Utils.getSocket().emit('statesByCountryRequest', { country: result.id });
 
@@ -359,6 +375,8 @@ define(
           } else {
             Filter.setState(result.extent.rows[0].bdq_name);
 
+            applyFilter();
+
             Filter.enableDropdown('states', result.text, result.id);
           }
         } else {
@@ -370,10 +388,16 @@ define(
         if(result.data.rowCount > 0) {
           if(result.data.rows[0].key === "States") {
             Filter.setState(result.data.rows[0].bdq_name);
+
+            applyFilter();
+
             Filter.selectStateItem(result.data.rows[0].id, result.data.rows[0].name);
           } else if(result.data.rows[0].key === "Countries") {
             Filter.setCountry(result.data.rows[0].bdq_name);
             Filter.setState(null);
+
+            applyFilter();
+
             Filter.selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
@@ -383,6 +407,9 @@ define(
             Filter.setContinent(result.data.rows[0].id);
             Filter.setCountry(null);
             Filter.setState(null);
+
+            applyFilter();
+
             Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
           }
         } else {
@@ -408,6 +435,8 @@ define(
 
       Utils.getSocket().on('countryByStateResponse', function(result) {
         Filter.setCountry(result.country.rows[0].bdq_name);
+
+        applyFilter();
 
         Filter.enableDropdown('countries', result.country.rows[0].name, result.country.rows[0].id);
         Utils.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
