@@ -8,6 +8,7 @@
  *
  * @property {json} memberConfigurations - Configurations object.
  * @property {object} memberSocket - Socket object.
+ * @property {string} memberBaseUrl - Base Url.
  */
 define(function() {
 
@@ -15,6 +16,8 @@ define(function() {
   var memberConfigurations = null;
   // Socket object
   var memberSocket = null;
+  // Base Url
+  var memberBaseUrl = null;
 
   /**
    * Returns the configurations object.
@@ -196,8 +199,21 @@ define(function() {
   };
 
   /**
+   * Returns the base Url.
+   * @returns {string} memberBaseUrl - Base Url
+   *
+   * @function getBaseUrl
+   * @memberof Utils
+   * @inner
+   */
+  var getBaseUrl = function() {
+    return memberBaseUrl;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
+   * @param {string} baseUrl - Base Url
    *
    * @function init
    * @memberof Utils
@@ -205,6 +221,7 @@ define(function() {
    */
   var init = function(configurations, baseUrl) {
     memberConfigurations = configurations;
+    memberBaseUrl = baseUrl;
     memberSocket = io.connect(window.location.origin, { path: baseUrl + 'socket.io' });
   };
 
@@ -216,6 +233,7 @@ define(function() {
     processStringWithDatePattern: processStringWithDatePattern,
     stringInArray: stringInArray,
     sortIntegerArray: sortIntegerArray,
+    getBaseUrl: getBaseUrl,
     init: init
   };
 });
