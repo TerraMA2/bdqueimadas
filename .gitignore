@@ -8,5 +8,4 @@ configurations/Map.json
 configurations/Tables.json
 node_modules
 npm-debug.log
-makedocs
 docs
