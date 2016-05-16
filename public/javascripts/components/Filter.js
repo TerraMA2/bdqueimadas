@@ -327,11 +327,18 @@ define(
       var satellitesList = Utils.getConfigurations().filterConfigurations.Satellites;
 
       $.each(satellitesList, function(i, satelliteItem) {
-        var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
-        var satelliteEnd = new Date(satelliteItem.End + ' UTC-03:00');
+        var satelliteBegin = new Date();
+        var satelliteEnd = new Date();
 
-        satelliteBegin.setHours(0,0,0,0);
-        satelliteEnd.setHours(0,0,0,0);
+        if(satelliteItem.Begin !== "") {
+          var satelliteBeginArray = satelliteItem.Begin.split('-');
+          satelliteBegin = new Date(parseInt(satelliteBeginArray[0]), parseInt(satelliteBeginArray[1]) - 1, parseInt(satelliteBeginArray[2]), 0, 0, 0);
+        }
+
+        if(satelliteItem.End !== "") {
+          var satelliteEndArray = satelliteItem.End.split('-');
+          satelliteEnd = new Date(parseInt(satelliteEndArray[0]), parseInt(satelliteEndArray[1]) - 1, parseInt(satelliteEndArray[2]), 0, 0, 0);
+        }
 
         if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
           if(memberSatellite === satelliteItem.Name) {
