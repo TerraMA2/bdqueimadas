@@ -28,11 +28,12 @@ var Filter = function(io) {
 
     // Spatial filter request event
     client.on('spatialFilterRequest', function(json) {
-      var functionName = "get" + json.key + "Extent";
-      memberFilter[functionName](json.id, function(err, extent) {
+      var functionName = "Get" + json.key + "Extent";
+
+      memberQueimadasApi.getData(functionName, [], json.id, function(err, extent) {
         if(err) return console.error(err);
 
-        client.emit('spatialFilterResponse', { key: json.key, id: json.id, text: json.text, extent: extent });
+        client.emit('spatialFilterResponse', { key: json.key, id: json.id, text: json.text, extent: extent[0].bbox });
       });
     });
 
@@ -86,6 +87,7 @@ var Filter = function(io) {
             "Value": json.continent
           }
         ],
+        null,
         function(err, countries) {
           if(err) return console.error(err);
 
@@ -104,6 +106,7 @@ var Filter = function(io) {
             "Value": json.country
           }
         ],
+        null,
         function(err, states) {
           if(err) return console.error(err);
 
