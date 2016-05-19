@@ -33,8 +33,9 @@ var QueimadasApi = function() {
    * @memberof QueimadasApi
    * @inner
    */
-  this.getData = function(request, parameters, callback) {
-    var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + memberApiConfigurations.Requests[request] + memberApiConfigurations.Token;
+  this.getData = function(request, parameters, urlParameter, callback) {
+    var urlParameter = urlParameter !== null ? "/" + urlParameter : "";
+    var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + memberApiConfigurations.Requests[request] + urlParameter + memberApiConfigurations.Token;
 
     for(var i = 0; i < parameters.length; i++) {
       url += "&" + parameters[i].Key + "=" + parameters[i].Value;

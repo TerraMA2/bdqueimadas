@@ -45,7 +45,7 @@ var IndexController = function(app) {
       applicationConfigurations: applicationConfigurations
     };
 
-    memberQueimadasApi.getData("GetContinents", [], function(err, result) {
+    memberQueimadasApi.getData("GetContinents", [], null, function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters
