@@ -42,7 +42,7 @@ var QueimadasApi = function() {
     }
 
     var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + request + memberApiConfigurations.Token;
-console.log(url);
+
     for(var i = 0; i < parameters.length; i++) {
       url += "&" + parameters[i].Key + "=" + parameters[i].Value;
     }

@@ -343,15 +343,9 @@ define(
       // Filter Listeners
 
       Utils.getSocket().on('spatialFilterResponse', function(result) {
-        console.log('spatialFilterResponse');
-        console.log(result);
-        console.log('----------------------------');
 
         if(result.extent.length > 0) {
           var extent = result.extent;
-          console.log(extent);
-          console.log(result.id);
-          console.log(result.text);
           TerraMA2WebComponents.MapDisplay.zoomToExtent(extent);
           updateComponents();
 
@@ -476,10 +470,6 @@ define(
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
-        console.log('statesByCountryResponse');
-        console.log(result);
-        console.log('----------------------------');
-
         var html = "",
             statesCount = result.states.length;
 
