@@ -26,6 +26,7 @@ var QueimadasApi = function() {
    * Returns the data received from the request.
    * @param {string} request - Request to be executed
    * @param {json} parameters - Request parameters
+   * @param {array} urlParameters - Url parameters (http://localhost/url/example/{PARAMETER_1}/{PARAMETER_2})
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -33,10 +34,15 @@ var QueimadasApi = function() {
    * @memberof QueimadasApi
    * @inner
    */
-  this.getData = function(request, parameters, urlParameter, callback) {
-    var urlParameter = urlParameter !== null ? "/" + urlParameter : "";
-    var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + memberApiConfigurations.Requests[request] + urlParameter + memberApiConfigurations.Token;
+  this.getData = function(request, parameters, urlParameters, callback) {
+    var request = memberApiConfigurations.Requests[request];
 
+    for(var i = 0; i < urlParameters.length; i++) {
+      request = request.replace("{" + i + "}", urlParameters[i]);
+    }
+
+    var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + request + memberApiConfigurations.Token;
+console.log(url);
     for(var i = 0; i < parameters.length; i++) {
       url += "&" + parameters[i].Key + "=" + parameters[i].Value;
     }

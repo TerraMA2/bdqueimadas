@@ -11,6 +11,7 @@
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFilter - Filter model.
  * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
  */
 var Filter = function(io) {
 
@@ -19,9 +20,11 @@ var Filter = function(io) {
   // 'path' module
   var memberPath = require('path');
   // Filter model
-  var memberFilter = new (require(memberPath.join(__dirname, '../models/Filter.js')))();
+  var memberFilter = new (require(memberPath.join(__dirname, '../models/Filter')))();
   // Queimadas Api module
-  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi.js')))();
+  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
+  // Api configurations
+  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api.json'));
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -30,10 +33,15 @@ var Filter = function(io) {
     client.on('spatialFilterRequest', function(json) {
       var functionName = "Get" + json.key + "Extent";
 
-      memberQueimadasApi.getData(functionName, [], json.id, function(err, extent) {
+      memberQueimadasApi.getData(functionName, [], [json.id], function(err, extent) {
         if(err) return console.error(err);
 
-        client.emit('spatialFilterResponse', { key: json.key, id: json.id, text: json.text, extent: extent[0].bbox });
+        client.emit('spatialFilterResponse', {
+          key: json.key,
+          id: json.id,
+          text: extent[0][memberApiConfigurations.RequestsFields[functionName].Name],
+          extent: extent[0][memberApiConfigurations.RequestsFields[functionName].Extent]
+        });
       });
     });
 
@@ -87,7 +95,7 @@ var Filter = function(io) {
             "Value": json.continent
           }
         ],
-        null,
+        [],
         function(err, countries) {
           if(err) return console.error(err);
 
@@ -106,7 +114,7 @@ var Filter = function(io) {
             "Value": json.country
           }
         ],
-        null,
+        [],
         function(err, states) {
           if(err) return console.error(err);
 

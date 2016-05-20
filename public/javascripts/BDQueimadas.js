@@ -343,11 +343,16 @@ define(
       // Filter Listeners
 
       Utils.getSocket().on('spatialFilterResponse', function(result) {
-        if(result.extent.rowCount > 0) {
-          var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
-          var extentArray = extent[0].split(' ');
-          extentArray = extentArray.concat(extent[1].split(' '));
-          TerraMA2WebComponents.MapDisplay.zoomToExtent(extentArray);
+        console.log('spatialFilterResponse');
+        console.log(result);
+        console.log('----------------------------');
+
+        if(result.extent.length > 0) {
+          var extent = result.extent;
+          console.log(extent);
+          console.log(result.id);
+          console.log(result.text);
+          TerraMA2WebComponents.MapDisplay.zoomToExtent(extent);
           updateComponents();
 
           if(result.key === 'Continent') {
@@ -363,7 +368,7 @@ define(
             Filter.enableDropdown('countries', 'Pa&iacute;ses', '');
             Filter.disableDropdown('states', 'Estados', '');
           } else if(result.key === 'Country') {
-            Filter.setCountry(result.extent.rows[0].bdq_name);
+            Filter.setCountry(result.id);
             Filter.setState(null);
 
             applyFilter();
@@ -377,7 +382,7 @@ define(
               Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellite(), layer);
             });
           } else {
-            Filter.setState(result.extent.rows[0].bdq_name);
+            Filter.setState(result.id);
 
             applyFilter();
 
@@ -461,21 +466,25 @@ define(
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
         var html = "",
-            countriesCount = result.countries.rowCount;
+            countriesCount = result.countries.length;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
+          html += "<li class='country-item' id='" + result.countries[i][Utils.getConfigurations().apiConfigurations.GetCountries.Id] + "'><a href='#'>" + result.countries[i][Utils.getConfigurations().apiConfigurations.GetCountries.Name] + "</a></li>";
         }
 
         $('#countries').empty().html(html);
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
+        console.log('statesByCountryResponse');
+        console.log(result);
+        console.log('----------------------------');
+
         var html = "",
-            statesCount = result.states.rowCount;
+            statesCount = result.states.length;
 
         for(var i = 0; i < statesCount; i++) {
-          html += "<li class='state-item' id='" + result.states.rows[i].id + "'><a href='#'>" + result.states.rows[i].name + "</a></li>";
+          html += "<li class='state-item' id='" + result.states[i][Utils.getConfigurations().apiConfigurations.GetStates.Id] + "'><a href='#'>" + result.states[i].fields[Utils.getConfigurations().apiConfigurations.GetStates.Name] + "</a></li>";
         }
 
         $('#states').empty().html(html);
