@@ -14,7 +14,7 @@ var GetCountriesLayerFeaturesController = function(app) {
   // 'fs' module
   var memberFs = require('fs');
   // Filter model
-  var memberFilter = new (require('../models/Filter.js'))();
+  var memberFilter = new (require('../models/Filter'))();
 
   /**
    * Processes the request and returns a response.

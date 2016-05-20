@@ -11,7 +11,7 @@
 var GetAttributesTableController = function(app) {
 
   // 'AttributesTable' model
-  var memberAttributesTable = new (require('../models/AttributesTable.js'))();
+  var memberAttributesTable = new (require('../models/AttributesTable'))();
 
   /**
    * Processes the request and returns a response.

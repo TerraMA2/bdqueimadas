@@ -24,7 +24,7 @@ var Filter = function(io) {
   // Queimadas Api module
   var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
   // Api configurations
-  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api.json'));
+  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
 
   // Socket connection event
   memberSockets.on('connection', function(client) {

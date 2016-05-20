@@ -17,11 +17,11 @@ var AttributesTable = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionString' module
-  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString.js')))();
+  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString')))();
   // Attributes table configuration
-  var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
+  var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable'));
   // Tables configuration
-  var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
+  var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables'));
   // 'pg' module
   var memberPg = require('pg');
 

@@ -11,7 +11,7 @@
 var ExistsDataToExportController = function(app) {
 
   // 'Exportation' model
-  var memberExportation = new (require('../models/Exportation.js'))();
+  var memberExportation = new (require('../models/Exportation'))();
 
   /**
    * Processes the request and returns a response.

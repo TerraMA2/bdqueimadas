@@ -20,7 +20,7 @@ var QueimadasApi = function() {
   // 'https' module
   var memberHttps = require('https');
   // Api configurations
-  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api.json'));
+  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
 
   /**
    * Returns the data received from the request.

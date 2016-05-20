@@ -14,7 +14,7 @@ var PgConnectionString = function() {
   // 'path' module
   var memberPath = require('path');
   // Database configurations
-  var memberDatabaseConfigurations = require(memberPath.join(__dirname, '../configurations/Database.json'));
+  var memberDatabaseConfigurations = require(memberPath.join(__dirname, '../configurations/Database'));
 
   /**
    * Returns the connection string.
