@@ -15,7 +15,7 @@ var Graphics = function(io) {
   // Sockets object
   var memberSockets = io.sockets;
   // Graphics model
-  var memberGraphics = new (require('../models/Graphics.js'))();
+  var memberGraphics = new (require('../models/Graphics'))();
 
   // Socket connection event
   memberSockets.on('connection', function(client) {

@@ -17,11 +17,11 @@ var Filter = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionString' module
-  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString.js')))();
+  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString')))();
   // Filter configuration
-  var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter.json'));
+  var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter'));
   // Tables configuration
-  var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
+  var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables'));
   // 'pg' module
   var memberPg = require('pg');
 

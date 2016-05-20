@@ -13,7 +13,7 @@
 var ExportController = function(app) {
 
   // 'Exportation' model
-  var memberExportation = new (require('../models/Exportation.js'))();
+  var memberExportation = new (require('../models/Exportation'))();
   // 'fs' module
   var memberFs = require('fs');
   // Exec function
