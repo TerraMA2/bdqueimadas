@@ -420,7 +420,7 @@ define(
             Filter.enableDropdown('countries', result.data[0].nome_bdq, result.data[0].id_0);
             Filter.enableDropdown('states', 'Estados', '');
 
-            $('#continents-title').empty().html(continent: result.data[0].continente_nome);
+            $('#continents-title').empty().html(result.data[0].continente_nome);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
               Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data[0].id_0, Filter.getSatellite(), layer);
@@ -443,42 +443,6 @@ define(
         }
 
         updateComponents();
-      });
-
-      Utils.getSocket().on('continentByCountryResponse', function(result) {
-        Filter.setContinent(result.continent.rows[0].id);
-
-        $('#continents-title').empty().html(result.continent.rows[0].name);
-
-        Utils.getSocket().emit('countriesByContinentRequest', { continent: result.continent.rows[0].id });
-      });
-
-      Utils.getSocket().on('continentByStateResponse', function(result) {
-        Filter.setContinent(result.continent.rows[0].id);
-
-        $('#continents-title').empty().html(result.continent.rows[0].name);
-      });
-
-      Utils.getSocket().on('countryByStateResponse', function(result) {
-        Filter.setCountry(result.country.rows[0].bdq_name);
-
-        applyFilter();
-
-        Filter.enableDropdown('countries', result.country.rows[0].name, result.country.rows[0].id);
-        Utils.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
-
-        var html = "",
-            countriesCount = result.countries.rowCount;
-
-        for(var i = 0; i < countriesCount; i++) {
-          html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
-        }
-
-        $('#countries').empty().html(html);
-
-        $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.country.rows[0].id, Filter.getSatellite(), layer);
-        });
       });
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {

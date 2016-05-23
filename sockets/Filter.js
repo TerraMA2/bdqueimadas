@@ -9,7 +9,6 @@
  *
  * @property {object} memberSockets - Sockets object.
  * @property {object} memberPath - 'path' module.
- * @property {object} memberFilter - Filter model.
  * @property {object} memberQueimadasApi - Queimadas Api module.
  * @property {json} memberApiConfigurations - Api configurations.
  * @property {json} memberFilterConfig - Filter configuration.
@@ -20,8 +19,6 @@ var Filter = function(io) {
   var memberSockets = io.sockets;
   // 'path' module
   var memberPath = require('path');
-  // Filter model
-  var memberFilter = new (require(memberPath.join(__dirname, '../models/Filter')))();
   // Queimadas Api module
   var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
   // Api configurations
@@ -76,37 +73,6 @@ var Filter = function(io) {
           client.emit('dataByIntersectionResponse', { data: data, key: key });
         }
       );
-    });
-
-    // Continent by country request event
-    client.on('continentByCountryRequest', function(json) {
-      memberFilter.getContinentByCountry(json.country, function(err, continent) {
-        if(err) return console.error(err);
-
-        client.emit('continentByCountryResponse', { continent: continent });
-      });
-    });
-
-    // Continent by state request event
-    client.on('continentByStateRequest', function(json) {
-      memberFilter.getContinentByState(json.state, function(err, continent) {
-        if(err) return console.error(err);
-
-        client.emit('continentByStateResponse', { continent: continent });
-      });
-    });
-
-    // Country by state request event
-    client.on('countryByStateRequest', function(json) {
-      memberFilter.getCountryByState(json.state, function(err, country) {
-        if(err) return console.error(err);
-
-        memberFilter.getCountriesByContinent(country.rows[0].continent, function(err, countries) {
-          if(err) return console.error(err);
-
-          client.emit('countryByStateResponse', { country: country, countries: countries });
-        });
-      });
     });
 
     // Countries by continent request event

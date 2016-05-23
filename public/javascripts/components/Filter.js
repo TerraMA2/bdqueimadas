@@ -355,48 +355,6 @@ define(
     };
 
     /**
-     * Selects a continent in the continent dropdown and fills the country dropdown.
-     * @param {string} id - Continent id
-     * @param {string} text - Continent name
-     *
-     * @function selectContinentItem
-     * @memberof Filter(2)
-     * @inner
-     */
-    var selectContinentItem = function(id, text) {
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
-    };
-
-    /**
-     * Selects a country in the country dropdown, selects a continent in the continent dropdown and fills the state dropdown.
-     * @param {string} id - Country id
-     * @param {string} text - Country name
-     *
-     * @function selectCountryItem
-     * @memberof Filter(2)
-     * @inner
-     */
-    var selectCountryItem = function(id, text) {
-      Utils.getSocket().emit('continentByCountryRequest', { country: id });
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
-    };
-
-    /**
-     * Selects a state in the state dropdown, selects a continent in the continent dropdown and selects a country in the country dropdown.
-     * @param {string} id - State id
-     * @param {string} text - State name
-     *
-     * @function selectStateItem
-     * @memberof Filter(2)
-     * @inner
-     */
-    var selectStateItem = function(id, text) {
-      Utils.getSocket().emit('continentByStateRequest', { state: id });
-      Utils.getSocket().emit('countryByStateRequest', { state: id });
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
-    };
-
-    /**
      * Enables a dropdown.
      * @param {string} id - Item HTML id
      * @param {string} text - Item name
@@ -474,9 +432,6 @@ define(
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
-      selectContinentItem: selectContinentItem,
-      selectCountryItem: selectCountryItem,
-      selectStateItem: selectStateItem,
       enableDropdown: enableDropdown,
       disableDropdown: disableDropdown,
       resetDropdowns: resetDropdowns,
