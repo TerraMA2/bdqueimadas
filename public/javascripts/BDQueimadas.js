@@ -388,33 +388,56 @@ define(
       });
 
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
-        if(result.data.rowCount > 0) {
-          if(result.data.rows[0].key === "States") {
-            Filter.setState(result.data.rows[0].bdq_name);
+        if(result.data.length > 0 && result.key !== undefined) {
+          var extent = result.data[0].bbox.replace("BOX(", "").replace(")", "").replace(",", " ").split(' ');
+          TerraMA2WebComponents.MapDisplay.zoomToExtent(extent);
+          updateComponents();
 
-            applyFilter();
+          if(result.key === "States") {
+            Filter.setContinent(result.data[0].continente_id);
+            Filter.setCountry(result.data[0].pais_id);
+            Filter.setState(result.data[0].id_1);
 
-            Filter.selectStateItem(result.data.rows[0].id, result.data.rows[0].name);
-          } else if(result.data.rows[0].key === "Countries") {
-            Filter.setCountry(result.data.rows[0].bdq_name);
-            Filter.setState(null);
+            Utils.getSocket().emit('statesByCountryRequest', { country: result.data[0].pais_id });
+            Utils.getSocket().emit('countriesByContinentRequest', { continent: result.data[0].continente_id });
 
-            applyFilter();
+            Filter.enableDropdown('countries', result.data[0].pais_nome, result.data[0].pais_id);
+            Filter.enableDropdown('states', result.data[0].name_1, result.data[0].id_1);
 
-            Filter.selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
+            $('#continents-title').empty().html(result.continent.rows[0].name);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data.rows[0].id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data[0].pais_id, Filter.getSatellite(), layer);
+            });
+          } else if(result.key === "Countries") {
+            Filter.setContinent(result.data[0].continente_id);
+            Filter.setCountry(result.data[0].id_0);
+            Filter.setState(null);
+
+            Utils.getSocket().emit('statesByCountryRequest', { country: result.data[0].id_0 });
+            Utils.getSocket().emit('countriesByContinentRequest', { continent: result.data[0].continente_id });
+
+            Filter.enableDropdown('countries', result.data[0].nome_bdq, result.data[0].id_0);
+            Filter.enableDropdown('states', 'Estados', '');
+
+            $('#continents-title').empty().html(continent: result.data[0].continente_nome);
+
+            $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data[0].id_0, Filter.getSatellite(), layer);
             });
           } else {
-            Filter.setContinent(result.data.rows[0].id);
+            Filter.setContinent(result.data[0].id);
             Filter.setCountry(null);
             Filter.setState(null);
 
-            applyFilter();
+            Utils.getSocket().emit('countriesByContinentRequest', { continent: result.data[0].id });
 
-            Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
+            Filter.enableDropdown('continents', result.data[0].nome, result.data[0].id);
+            Filter.enableDropdown('countries', 'Pa&iacute;ses', '');
+            Filter.disableDropdown('states', 'Estados', '');
           }
+
+          applyFilter();
         } else {
           Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
         }
