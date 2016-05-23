@@ -12,6 +12,7 @@
  * @property {object} memberFilter - Filter model.
  * @property {object} memberQueimadasApi - Queimadas Api module.
  * @property {json} memberApiConfigurations - Api configurations.
+ * @property {json} memberFilterConfig - Filter configuration.
  */
 var Filter = function(io) {
 
@@ -25,6 +26,8 @@ var Filter = function(io) {
   var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
   // Api configurations
   var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
+  // Filter configuration
+  var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter'));
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -47,11 +50,32 @@ var Filter = function(io) {
 
     // Data by intersection request event
     client.on('dataByIntersectionRequest', function(json) {
-      memberFilter.getDataByIntersection(json.longitude, json.latitude, json.resolution, function(err, data) {
-        if(err) return console.error(err);
+      var key = "State";
 
-        client.emit('dataByIntersectionResponse', { data: data });
-      });
+      if(json.resolution >= memberFilterConfig.SpatialFilter.Continents.MinResolution)
+        key = "Continent";
+      else if(json.resolution >= memberFilterConfig.SpatialFilter.Countries.MinResolution && json.resolution < memberFilterConfig.SpatialFilter.Countries.MaxResolution)
+        key = "Country";
+
+      memberQueimadasApi.getData(
+        "DataByIntersection",
+        [
+          {
+            "Key": "tipo",
+            "Value": memberApiConfigurations.RequestsFields["DataByIntersection"].Types[key]
+          },
+          {
+            "Key": "latlng",
+            "Value": json.longitude + " " + json.latitude
+          },
+        ],
+        [],
+        function(err, data) {
+          if(err) return console.error(err);
+
+          client.emit('dataByIntersectionResponse', { data: data, key: key });
+        }
+      );
     });
 
     // Continent by country request event
