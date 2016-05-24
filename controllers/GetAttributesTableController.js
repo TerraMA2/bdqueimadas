@@ -6,12 +6,21 @@
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
+ * @property {object} memberPath - 'path' module.
  * @property {object} memberAttributesTable - 'AttributesTable' model.
+ * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
  */
 var GetAttributesTableController = function(app) {
 
+  // 'path' module
+  var memberPath = require('path');
   // 'AttributesTable' model
-  var memberAttributesTable = new (require('../models/AttributesTable'))();
+  var memberAttributesTable = new (require(memberPath.join(__dirname, '../models/AttributesTable')))();
+  // Queimadas Api module
+  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
+  // Api configurations
+  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
 
   /**
    * Processes the request and returns a response.
@@ -24,18 +33,96 @@ var GetAttributesTableController = function(app) {
    */
   var getAttributesTableController = function(request, response) {
 
-    // Object responsible for keeping several information to be used in the database query
-    var options = {};
     // Array responsible for keeping the query 'order by' field names and type (asc or desc)
     var order = [];
 
-    // Verifications of the 'options' object items
-    if(request.body.satellite !== '') options.satellite = request.body.satellite;
-    if(request.body.extent !== '') options.extent = request.body.extent;
-    if(request.body.country !== null && request.body.country !== '') options.country = request.body.country;
-    if(request.body.state !== null && request.body.state !== '') options.state = request.body.state;
+    // new
 
-    // Setting of the 'order' array, the fields names are obtained by the columns numbers
+
+    var parameters = [
+      {
+        "Key": "inicio",
+        "Value": request.body.dateFrom
+      },
+      {
+        "Key": "fim",
+        "Value": request.body.dateTo
+      },
+      {
+        "Key": "limit",
+        "Value": request.body.length
+      },
+      {
+        "Key": "offset",
+        "Value": request.body.start
+      }
+    ];
+
+    // Verifications of the 'options' object items
+    if(request.body.satellite !== '') {
+      parameters.push({
+        "Key": "satelite",
+        "Value": request.body.satellite
+      });
+    }
+
+    if(request.body.extent !== '') {
+      parameters.push({
+        "Key": "extent",
+        "Value": request.body.extent
+      });
+    }
+
+    if(request.body.country !== null && request.body.country !== '') {
+      parameters.push({
+        "Key": "pais",
+        "Value": request.body.country
+      });
+    }
+
+    if(request.body.state !== null && request.body.state !== '') {
+      parameters.push({
+        "Key": "estado",
+        "Value": request.body.state
+      });
+    }
+
+    memberQueimadasApi.getData(
+      "GetFires",
+      parameters,
+      [],
+      function(err, result) {
+        if(err) return console.error(err);
+
+        // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
+        var data = [];
+
+        result.features.forEach(function(val){
+          val = val.properties;
+
+          var temp = [];
+          for(var key in val) temp.push(val[key]);
+          data.push(temp);
+        });
+
+        // JSON response
+        response.json({
+          draw: parseInt(request.body.draw),
+          recordsTotal: result.features.length,
+          recordsFiltered: result.features.length,
+          data: data
+        });
+      }
+    );
+
+
+
+    // new
+
+
+
+
+    /*// Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {
       for(var i = 0; i < request.body.order.length; i++) {
         if(item.data === request.body.order[i].column)
@@ -74,7 +161,7 @@ var GetAttributesTableController = function(app) {
           });
         });
       });
-    });
+    });*/
   };
 
   return getAttributesTableController;
