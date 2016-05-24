@@ -388,6 +388,8 @@ define(
       });
 
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
+        console.log(result);
+
         if(result.data.length > 0 && result.key !== undefined) {
           var extent = result.data[0].bbox.replace("BOX(", "").replace(")", "").replace(",", " ").split(' ');
           TerraMA2WebComponents.MapDisplay.zoomToExtent(extent);
@@ -404,7 +406,7 @@ define(
             Filter.enableDropdown('countries', result.data[0].pais_nome, result.data[0].pais_id);
             Filter.enableDropdown('states', result.data[0].name_1, result.data[0].id_1);
 
-            $('#continents-title').empty().html(result.continent.rows[0].name);
+            $('#continents-title').empty().html(result.data[0].continente_nome);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
               Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data[0].pais_id, Filter.getSatellite(), layer);

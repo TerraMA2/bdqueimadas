@@ -47,12 +47,12 @@ var Filter = function(io) {
 
     // Data by intersection request event
     client.on('dataByIntersectionRequest', function(json) {
-      var key = "State";
+      var key = "States";
 
       if(json.resolution >= memberFilterConfig.SpatialFilter.Continents.MinResolution)
-        key = "Continent";
+        key = "Continents";
       else if(json.resolution >= memberFilterConfig.SpatialFilter.Countries.MinResolution && json.resolution < memberFilterConfig.SpatialFilter.Countries.MaxResolution)
-        key = "Country";
+        key = "Countries";
 
       memberQueimadasApi.getData(
         "DataByIntersection",
@@ -63,7 +63,7 @@ var Filter = function(io) {
           },
           {
             "Key": "latlng",
-            "Value": json.longitude + " " + json.latitude
+            "Value": json.longitude + "%20" + json.latitude
           },
         ],
         [],
