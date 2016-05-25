@@ -32,7 +32,7 @@ define(
         $('#show-time-series-graphic > i').addClass('active');
         $('#terrama2-map').addClass('cursor-pointer');
         TerraMA2WebComponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
-          showTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
+          showTimeSeriesGraphic(longitude, latitude, "2010-01", "2010-12");
         });
       }
     };
