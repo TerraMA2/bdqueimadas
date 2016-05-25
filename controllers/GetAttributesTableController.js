@@ -7,20 +7,14 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberAttributesTable - 'AttributesTable' model.
  * @property {object} memberQueimadasApi - Queimadas Api module.
- * @property {json} memberApiConfigurations - Api configurations.
  */
 var GetAttributesTableController = function(app) {
 
   // 'path' module
   var memberPath = require('path');
-  // 'AttributesTable' model
-  var memberAttributesTable = new (require(memberPath.join(__dirname, '../models/AttributesTable')))();
   // Queimadas Api module
   var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
-  // Api configurations
-  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
 
   /**
    * Processes the request and returns a response.
@@ -84,16 +78,6 @@ var GetAttributesTableController = function(app) {
       function(err, count) {
         if(err) return console.error(err);
 
-        parameters.push({
-          "Key": "limit",
-          "Value": parseInt(request.body.start) + parseInt(request.body.length)
-        });
-
-        parameters.push({
-          "Key": "offset",
-          "Value": parseInt(request.body.start)
-        });
-
         // Setting of the 'order' array and the search string, the fields names are obtained by the columns numbers
         request.body.columns.forEach(function(column) {
           for(var i = 0; i < request.body.order.length; i++) {
@@ -105,12 +89,14 @@ var GetAttributesTableController = function(app) {
           if(column.search.value !== '') search += column.name + ':' + column.search.value + ',';
         });
 
-        search = search.slice(0, -1);
+        if(search !== "") {
+          search = search.slice(0, -1);
 
-        parameters.push({
-          "Key": "pesquisa",
-          "Value": search
-        });
+          parameters.push({
+            "Key": "pesquisa",
+            "Value": search
+          });
+        }
 
         memberQueimadasApi.getData(
           "GetFiresCount",
@@ -118,6 +104,16 @@ var GetAttributesTableController = function(app) {
           [],
           function(err, countWithSearch) {
             if(err) return console.error(err);
+
+            parameters.push({
+              "Key": "limit",
+              "Value": parseInt(request.body.start) + parseInt(request.body.length)
+            });
+
+            parameters.push({
+              "Key": "offset",
+              "Value": parseInt(request.body.start)
+            });
 
             parameters.push({
               "Key": "orientar",
@@ -128,13 +124,13 @@ var GetAttributesTableController = function(app) {
               "GetFires",
               parameters,
               [],
-              function (err, result) {
-                if (err) return console.error(err);
+              function(err, result) {
+                if(err) return console.error(err);
 
                 // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
                 var data = [];
 
-                result.features.forEach(function (val) {
+                result.features.forEach(function(val) {
                   val = val.properties;
 
                   var temp = [];
