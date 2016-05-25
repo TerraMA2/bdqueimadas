@@ -48,8 +48,7 @@ var AttributesTable = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-      if(memberAttributesTableConfig.Columns[i].Show)
-        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
+      columns += memberAttributesTableConfig.Columns[i].Name + ", ";
     }
     columns = columns.substring(0, (columns.length - 2));
 

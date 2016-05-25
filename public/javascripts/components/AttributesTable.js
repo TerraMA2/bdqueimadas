@@ -18,7 +18,7 @@ define(
 
     /**
      * Creates and returns an array with the attributes table columns names.
-     * @returns {array} columnsArray - Array of the columns names
+     * @returns {Array} columnsArray - Array of the columns names
      *
      * @private
      * @function getAttributesTableColumnNamesArray
@@ -31,10 +31,30 @@ define(
       var columnsArray = [];
 
       for(var i = 0; i < columnsJsonLength; i++)
-        if(columnsJson[i].Show)
-          columnsArray.push({ "name": columnsJson[i].Name });
+        columnsArray.push({ "name": columnsJson[i].Name });
 
       return columnsArray;
+    };
+
+    /**
+     * Creates and returns an array with the attributes table order data.
+     * @returns {Array} order - Array of the order data
+     *
+     * @private
+     * @function getAttributesTableOrder
+     * @memberof AttributesTable(2)
+     * @inner
+     */
+    var getAttributesTableOrder = function() {
+      var columnsJson = Utils.getConfigurations().attributesTableConfigurations.Columns;
+      var columnsJsonLength = columnsJson.length;
+      var order = [];
+
+      for(var i = 0; i < columnsJsonLength; i++)
+        if(columnsJson[i].Order !== null && (columnsJson[i].Order === "asc" || columnsJson[i].Order === "desc"))
+          order.push([i, columnsJson[i].Order]);
+
+      return order;
     };
 
     /**
@@ -51,7 +71,7 @@ define(
       var titles = "";
 
       for(var i = 0; i < columnsLength; i++)
-        titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
+        titles += "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>";
 
       $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
@@ -62,7 +82,7 @@ define(
 
       memberAttributesTable = $('#attributes-table').DataTable(
         {
-          "order": Utils.getConfigurations().attributesTableConfigurations.Order,
+          "order": getAttributesTableOrder(),
           "sDom": '<"H"lr>t<"F"ip>',
           "processing": true,
           "serverSide": true,
