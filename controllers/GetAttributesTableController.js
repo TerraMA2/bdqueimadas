@@ -32,12 +32,10 @@ var GetAttributesTableController = function(app) {
    * @inner
    */
   var getAttributesTableController = function(request, response) {
-
     // Array responsible for keeping the query 'order by' field names and type (asc or desc)
     var order = [];
-
-    // new
-
+    // Variable responsible for keeping the search string
+    var search = "";
 
     var parameters = [
       {
@@ -47,14 +45,6 @@ var GetAttributesTableController = function(app) {
       {
         "Key": "fim",
         "Value": request.body.dateTo
-      },
-      {
-        "Key": "limit",
-        "Value": request.body.length
-      },
-      {
-        "Key": "offset",
-        "Value": request.body.start
       }
     ];
 
@@ -88,80 +78,87 @@ var GetAttributesTableController = function(app) {
     }
 
     memberQueimadasApi.getData(
-      "GetFires",
+      "GetFiresCount",
       parameters,
       [],
-      function(err, result) {
+      function(err, count) {
         if(err) return console.error(err);
 
-        // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
-        var data = [];
-
-        result.features.forEach(function(val){
-          val = val.properties;
-
-          var temp = [];
-          for(var key in val) temp.push(val[key]);
-          data.push(temp);
+        parameters.push({
+          "Key": "limit",
+          "Value": parseInt(request.body.start) + parseInt(request.body.length)
         });
 
-        // JSON response
-        response.json({
-          draw: parseInt(request.body.draw),
-          recordsTotal: result.features.length,
-          recordsFiltered: result.features.length,
-          data: data
+        parameters.push({
+          "Key": "offset",
+          "Value": parseInt(request.body.start)
         });
+
+        // Setting of the 'order' array and the search string, the fields names are obtained by the columns numbers
+        request.body.columns.forEach(function(column) {
+          for(var i = 0; i < request.body.order.length; i++) {
+            if(column.data === request.body.order[i].column) {
+              order.push((request.body.order[i].dir === 'asc' ? '' : '-') + column.name);
+            }
+          }
+
+          if(column.search.value !== '') search += column.name + ':' + column.search.value + ',';
+        });
+
+        search = search.slice(0, -1);
+
+        parameters.push({
+          "Key": "pesquisa",
+          "Value": search
+        });
+
+        memberQueimadasApi.getData(
+          "GetFiresCount",
+          parameters,
+          [],
+          function(err, countWithSearch) {
+            if(err) return console.error(err);
+
+            parameters.push({
+              "Key": "orientar",
+              "Value": order
+            });
+
+            memberQueimadasApi.getData(
+              "GetFires",
+              parameters,
+              [],
+              function (err, result) {
+                if (err) return console.error(err);
+
+                // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
+                var data = [];
+
+                result.features.forEach(function (val) {
+                  val = val.properties;
+
+                  var temp = [];
+
+                  request.body.columns.forEach(function(column) {
+                    temp.push(val[column.name]);
+                  });
+
+                  data.push(temp);
+                });
+
+                // JSON response
+                response.json({
+                  draw: parseInt(request.body.draw),
+                  recordsTotal: count,
+                  recordsFiltered: countWithSearch,
+                  data: data
+                });
+              }
+            );
+          }
+        );
       }
     );
-
-
-
-    // new
-
-
-
-
-    /*// Setting of the 'order' array, the fields names are obtained by the columns numbers
-    var arrayFound = request.body.columns.filter(function(item) {
-      for(var i = 0; i < request.body.order.length; i++) {
-        if(item.data === request.body.order[i].column)
-          order.push({ "column": item.name, "dir": request.body.order[i].dir });
-      }
-    });
-
-    // Call of the method 'getAttributesTableData', responsible for returning data of the attributes table accordingly with the request parameters
-    memberAttributesTable.getAttributesTableData(request.body.length, request.body.start, order, request.body.search.value, request.body.dateFrom, request.body.dateTo, options, function(err, result) {
-      if(err) return console.error(err);
-
-      // Call of the method 'getAttributesTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, not considering the table search
-      memberAttributesTable.getAttributesTableCount(request.body.dateFrom, request.body.dateTo, options, function(err, resultCount) {
-        if(err) return console.error(err);
-
-        // Call of the method 'getAttributesTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, considering the table search
-        memberAttributesTable.getAttributesTableCountWithSearch(request.body.dateFrom, request.body.dateTo, request.body.search.value, options, function(err, resultCountWithSearch) {
-          if(err) return console.error(err);
-
-          // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
-          var data = [];
-
-          // Conversion of the result object to array
-          result.rows.forEach(function(val){
-            var temp = [];
-            for(var key in val) temp.push(val[key]);
-            data.push(temp);
-          });
-
-          // JSON response
-          response.json({
-            draw: parseInt(request.body.draw),
-            recordsTotal: parseInt(resultCount.rows[0].count),
-            recordsFiltered: parseInt(resultCountWithSearch.rows[0].count),
-            data: data
-          });
-        });
-      });
-    });*/
   };
 
   return getAttributesTableController;
