@@ -57,7 +57,11 @@ var QueimadasApi = function() {
       });
 
       res.on('end', function() {
-        var jsonData = JSON.parse(body);
+        try {
+          var jsonData = JSON.parse(body);
+        } catch(ex) {
+          var jsonData = {};
+        }
 
         callback(null, jsonData);
       });

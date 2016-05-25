@@ -55,9 +55,15 @@ define(
 
       $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
+      $('#attributes-table thead th').each(function() {
+        var title = $(this).text();
+        $(this).html(title + '&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" placeholder="Pesquisar ' + title + '"/>');
+      });
+
       memberAttributesTable = $('#attributes-table').DataTable(
         {
           "order": Utils.getConfigurations().attributesTableConfigurations.Order,
+          "sDom": '<"H"lr>t<"F"ip>',
           "processing": true,
           "serverSide": true,
           "ajax": {
@@ -92,6 +98,19 @@ define(
           }
         }
       );
+
+      memberAttributesTable.columns().every(function() {
+        var that = this;
+
+        $('input', this.header()).on('click', function(e) {
+          e.stopPropagation();
+        });
+
+        $('input', this.header()).on('keyup change', function() {
+          if(that.search() !== this.value)
+            that.search(this.value).draw();
+        });
+      });
     };
 
     /**

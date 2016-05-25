@@ -196,7 +196,7 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
-        updateGraphics();
+        //updateGraphics();
       });
     };
 
