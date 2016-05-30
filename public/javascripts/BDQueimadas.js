@@ -200,9 +200,12 @@ define(
       // Exportation type click event
       $(document).on('change', '#exportation-type', function() {
         if($(this).val() !== "") {
-          var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
-                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+          var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat) +
+                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat) +
+                           "&satellite=" + (Filter.getSatellite() !== "all" ? Filter.getSatellite() : "") +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
+                           "&country=" + (Filter.getCountry() !== null ? Filter.getCountry() : "") +
+                           "&state=" + (Filter.getState() !== null ? Filter.getState() : "") +
                            "&format=" + $(this).val();
 
           location.href = exportLink;
@@ -217,9 +220,12 @@ define(
           url: Utils.getBaseUrl() + "exists-data-to-export",
           type: "GET",
           data: {
-            dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
-            dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
-            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString()
+            dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat),
+            dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat),
+            satellite: (Filter.getSatellite() !== "all" ? Filter.getSatellite() : ""),
+            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
+            country: (Filter.getCountry() !== null ? Filter.getCountry() : ""),
+            state: (Filter.getState() !== null ? Filter.getState() : "")
           },
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {
@@ -388,8 +394,6 @@ define(
       });
 
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
-        console.log(result);
-
         if(result.data.length > 0 && result.key !== undefined) {
           var extent = result.data[0].bbox.replace("BOX(", "").replace(")", "").replace(",", " ").split(' ');
           TerraMA2WebComponents.MapDisplay.zoomToExtent(extent);

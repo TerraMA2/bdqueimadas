@@ -7,11 +7,14 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
  */
 var ExistsDataToExportController = function(app) {
 
   // Queimadas Api module
   var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
+  // Api configurations
+  var memberApiConfigurations = require('../configurations/Api');
 
   /**
    * Processes the request and returns a response.
@@ -25,15 +28,15 @@ var ExistsDataToExportController = function(app) {
   var existsDataToExportController = function(request, response) {
     var parameters = [
       {
-        "Key": "inicio",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateFrom,
         "Value": request.query.dateFrom
       },
       {
-        "Key": "fim",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateTo,
         "Value": request.query.dateTo
       },
       {
-        "Key": "limit",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Limit,
         "Value": 1
       }
     ];
@@ -41,28 +44,28 @@ var ExistsDataToExportController = function(app) {
     // Verifications of the parameters
     if(request.query.satellite !== '') {
       parameters.push({
-        "Key": "satelite",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Satellite,
         "Value": request.query.satellite
       });
     }
 
     if(request.query.extent !== '') {
       parameters.push({
-        "Key": "extent",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Extent,
         "Value": request.query.extent.split(',')
       });
     }
 
     if(request.query.country !== null && request.query.country !== '') {
       parameters.push({
-        "Key": "pais",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Country,
         "Value": request.query.country
       });
     }
 
     if(request.query.state !== null && request.query.state !== '') {
       parameters.push({
-        "Key": "estado",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.State,
         "Value": request.query.state
       });
     }

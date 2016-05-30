@@ -8,7 +8,6 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberSockets - Sockets object.
- * @property {object} memberPath - 'path' module.
  * @property {object} memberQueimadasApi - Queimadas Api module.
  * @property {json} memberApiConfigurations - Api configurations.
  * @property {json} memberFilterConfig - Filter configuration.
@@ -17,14 +16,12 @@ var Filter = function(io) {
 
   // Sockets object
   var memberSockets = io.sockets;
-  // 'path' module
-  var memberPath = require('path');
   // Queimadas Api module
-  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
   // Api configurations
-  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
+  var memberApiConfigurations = require('../configurations/Api');
   // Filter configuration
-  var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter'));
+  var memberFilterConfig = require('../configurations/Filter');
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -58,11 +55,11 @@ var Filter = function(io) {
         "DataByIntersection",
         [
           {
-            "Key": "tipo",
+            "Key": memberApiConfigurations.RequestsFields.DataByIntersection.Type,
             "Value": memberApiConfigurations.RequestsFields["DataByIntersection"].Types[key]
           },
           {
-            "Key": "latlng",
+            "Key": memberApiConfigurations.RequestsFields.DataByIntersection.Coordinates,
             "Value": json.longitude + "%20" + json.latitude
           },
         ],
@@ -81,7 +78,7 @@ var Filter = function(io) {
         "GetCountries",
         [
           {
-            "Key": "continente",
+            "Key": memberApiConfigurations.RequestsFields.GetCountries.Continent,
             "Value": json.continent
           }
         ],
@@ -100,7 +97,7 @@ var Filter = function(io) {
         "GetStates",
         [
           {
-            "Key": "pais",
+            "Key": memberApiConfigurations.RequestsFields.GetStates.Country,
             "Value": json.country
           }
         ],

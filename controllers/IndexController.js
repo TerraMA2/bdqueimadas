@@ -17,7 +17,7 @@ var IndexController = function(app) {
   // 'fs' module
   var memberFs = require('fs');
   // Queimadas Api module
-  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
 
   /**
    * Processes the request and returns a response.

@@ -1,7 +1,7 @@
 {
   "Subtitles": [
     {
-      "LayerId": "abc:current_situation_countries",
+      "LayerId": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
       "LayerName": "Camada: Situação Atual - Países",
       "Subtitles": [
         {
@@ -55,7 +55,7 @@
       ]
     },
     {
-      "LayerId": "abc:current_situation_states",
+      "LayerId": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05",
       "LayerName": "Camada: Situação Atual - Estados",
       "Subtitles": [
         {
@@ -109,7 +109,7 @@
       ]
     },
     {
-      "LayerId": "abc:fires",
+      "LayerId": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
       "LayerName": "Camada: Focos",
       "Subtitles": [
         {
@@ -125,47 +125,11 @@
   ],
   "LayerGroups": [
     {
-      "Id": "imagens_satelite",
-      "Name": "Imagens de Satélite",
-      "Layers": [
-        {
-          "Id": "aqua_250m_truecolor",
-          "Name": "Modis Aqua {{-|35|d=DD/MM/YYYY}}",
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{-|35|d=YYYY-MM-DD}}"
-        },
-        {
-          "Id": "terra_250m_truecolor",
-          "Name": "Modis Terra {{-|35|d=DD/MM/YYYY}}",
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{-|35|d=YYYY-MM-DD}}"
-        },
-        {
-          "Id": "npp_250m_truecolor",
-          "Name": "Modis NPP {{-|35|d=DD/MM/YYYY}}",
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": true,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{-|35|d=YYYY-MM-DD}}"
-        }
-      ]
-    },
-    {
       "Id": "principais",
       "Name": "Camadas Principais",
       "Layers": [
         {
-          "Id": "abc:states",
+          "Id": "BDQueimadas:estados",
           "Name": "Estados",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -175,7 +139,7 @@
           "Time": null
         },
         {
-          "Id": "abc:countries",
+          "Id": "BDQueimadas:paises",
           "Name": "Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -185,7 +149,7 @@
           "Time": null
         },
         {
-          "Id": "abc:fires",
+          "Id": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
           "Name": "Focos",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -195,7 +159,7 @@
           "Time": null
         },
         {
-          "Id": "abc:current_situation_countries",
+          "Id": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
           "Name": "Situação Atual - Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
@@ -205,7 +169,7 @@
           "Time": null
         },
         {
-          "Id": "abc:current_situation_states",
+          "Id": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05",
           "Name": "Situação Atual - Estados",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",

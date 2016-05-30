@@ -90,8 +90,8 @@ define(
             "url": Utils.getBaseUrl() + "get-attributes-table",
             "type": "POST",
             "data": function(data) {
-              data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-              data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+              data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat);
+              data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat);
               data.satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.country = Filter.getCountry();

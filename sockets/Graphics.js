@@ -9,6 +9,7 @@
  *
  * @property {object} memberSockets - Sockets object.
  * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
  */
 var Graphics = function(io) {
 
@@ -16,6 +17,8 @@ var Graphics = function(io) {
   var memberSockets = io.sockets;
   // Queimadas Api module
   var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
+  // Api configurations
+  var memberApiConfigurations = require('../configurations/Api');
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -24,15 +27,15 @@ var Graphics = function(io) {
     client.on('graphicsFiresCountRequest', function(json) {
       var parameters = [
         {
-          "Key": "inicio",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.DateFrom,
           "Value": json.dateFrom
         },
         {
-          "Key": "fim",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.DateTo,
           "Value": json.dateTo
         },
         {
-          "Key": "agregar",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Aggregate,
           "Value": json.key
         }
       ];
@@ -40,28 +43,28 @@ var Graphics = function(io) {
       // Verifications of the parameters
       if(json.satellite !== '') {
         parameters.push({
-          "Key": "satelite",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Satellite,
           "Value": json.satellite
         });
       }
 
       if(json.extent !== '') {
         parameters.push({
-          "Key": "extent",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Extent,
           "Value": json.extent
         });
       }
 
       if(json.country !== null && json.country !== '') {
         parameters.push({
-          "Key": "pais",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Country,
           "Value": json.country
         });
       }
 
       if(json.state !== null && json.state !== '') {
         parameters.push({
-          "Key": "estado",
+          "Key": memberApiConfigurations.RequestsFields.GetFiresCount.State,
           "Value": json.state
         });
       }
