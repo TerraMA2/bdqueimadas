@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3cad8e8f-11df-4d6e-9202-8d1e365c5cb3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/AttributesTable.js" afterPath="$PROJECT_DIR$/models/AttributesTable.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/components/AttributesTable.js" afterPath="$PROJECT_DIR$/public/javascripts/components/AttributesTable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bdqueimadas.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,11 +24,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AttributesTable.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AttributesTable.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/AttributesTable.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="172">
               <caret line="268" column="73" selection-start-line="268" selection-start-column="73" selection-end-line="268" selection-end-column="73" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -63,6 +73,7 @@
         <option value="$PROJECT_DIR$/configurations/Graphics.json" />
         <option value="$PROJECT_DIR$/public/javascripts/components/AttributesTable.js" />
         <option value="$PROJECT_DIR$/models/AttributesTable.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -274,12 +285,12 @@
       <updated>1464092230615</updated>
       <workItem from="1464092232455" duration="11094000" />
       <workItem from="1464177097964" duration="13736000" />
-      <workItem from="1464607471917" duration="6851000" />
+      <workItem from="1464607471917" duration="6900000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31681000" />
+    <option name="totallyTimeSpent" value="31730000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1929" y="-9" width="1938" height="1060" extended-state="6" />
@@ -576,14 +587,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/configurations/Tables.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -684,6 +687,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
           <caret line="268" column="73" selection-start-line="268" selection-start-column="73" selection-end-line="268" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
           <folding />
         </state>
       </provider>
