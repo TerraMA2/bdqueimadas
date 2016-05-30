@@ -1,22 +1,15 @@
 {
-  "Order": [[ 5, "asc" ], [ 6, "asc" ]],
   "Columns": [
     {
-      "Name": "col1",
-      "Alias": "Column 1",
-      "Show": true,
-      "String": false
-    },
-    {
-      "Name": "col2",
-      "Alias": "Column 2",
-      "Show": false,
+      "Name": "satelite",
+      "Alias": "",
+      "Order": "asc",
       "String": true
     },
     {
-      "Name": "col3",
-      "Alias": "Column 3",
-      "Show": true,
+      "Name": "pais",
+      "Alias": "",
+      "Order": null,
       "String": true
     }
   ]
