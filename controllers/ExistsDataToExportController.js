@@ -29,6 +29,8 @@ var ExistsDataToExportController = function(app) {
     // Verifications of the 'options' object items
     if(request.query.satellite !== '') options.satellite = request.query.satellite;
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
+    if(request.query.country !== '') options.country = request.query.country;
+    if(request.query.state !== '') options.state = request.query.state;
     options.limit = 1;
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
