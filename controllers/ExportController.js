@@ -7,6 +7,8 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
+ * @property {json} memberAttributesTableConfigurations - Attributes Table configurations.
  * @property {object} memberFs - 'fs' module.
  * @property {function} memberExec - Exec function.
  */
@@ -14,6 +16,10 @@ var ExportController = function(app) {
 
   // Queimadas Api module
   var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
+  // Api configurations
+  var memberApiConfigurations = require('../configurations/Api');
+  // Attributes Table configurations
+  var memberAttributesTableConfigurations = require('../configurations/AttributesTable');
   // 'fs' module
   var memberFs = require('fs');
   // Exec function
@@ -32,11 +38,11 @@ var ExportController = function(app) {
 
     var parameters = [
       {
-        "Key": "inicio",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateFrom,
         "Value": request.query.dateFrom
       },
       {
-        "Key": "fim",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateTo,
         "Value": request.query.dateTo
       }
     ];
@@ -44,28 +50,28 @@ var ExportController = function(app) {
     // Verifications of the parameters
     if(request.query.satellite !== '') {
       parameters.push({
-        "Key": "satelite",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Satellite,
         "Value": request.query.satellite
       });
     }
 
     if(request.query.extent !== '') {
       parameters.push({
-        "Key": "extent",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Extent,
         "Value": request.query.extent.split(',')
       });
     }
 
     if(request.query.country !== null && request.query.country !== '') {
       parameters.push({
-        "Key": "pais",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Country,
         "Value": request.query.country
       });
     }
 
     if(request.query.state !== null && request.query.state !== '') {
       parameters.push({
-        "Key": "estado",
+        "Key": memberApiConfigurations.RequestsFields.GetFires.State,
         "Value": request.query.state
       });
     }
@@ -73,6 +79,8 @@ var ExportController = function(app) {
     // Call of the API method 'GetFires', responsible for returning the fires data in GeoJSON format
     memberQueimadasApi.getData("GetFires", parameters, [], function(err, geoJson) {
       if(err) return console.error(err);
+
+      geoJson = filterColumns(geoJson);
 
       var path = require('path');
       var jsonfile = require('jsonfile');
@@ -158,6 +166,32 @@ var ExportController = function(app) {
       });
       memberFs.rmdirSync(path);
     }
+  };
+
+  /**
+   * Filter the table columns.
+   * @param {GeoJSON} geoJsonOriginal - Received GeoJSON
+   * @returns {GeoJSON} geoJson - Filtered GeoJSON
+   *
+   * @private
+   * @function filterColumns
+   * @memberof ExportController
+   * @inner
+   */
+  var filterColumns = function(geoJsonOriginal) {
+    var geoJson = JSON.parse(JSON.stringify(geoJsonOriginal));
+
+    for(var i = 0; i < geoJson.features.length; i++) {
+      var properties = {};
+
+      memberAttributesTableConfigurations.Columns.forEach(function(column, index) {
+        properties[column.Name] = geoJson.features[i].properties[column.Name];
+      });
+
+      geoJson.features[i].properties = properties;
+    }
+
+    return geoJson;
   };
 
   return exportController;

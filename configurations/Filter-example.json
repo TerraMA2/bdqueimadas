@@ -1,16 +1,18 @@
 {
   "LayerToFilter": {
-    "LayerId": "abc:fires",
-    "SatelliteFieldName": "satellite",
-    "DateFieldName": "date",
+    "LayerId": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
+    "SatelliteFieldName": "satelite",
+    "CountryFieldName": "pais",
+    "StateFieldName": "uf",
+    "DateFieldName": "data",
     "DateFormat": "YYYYMMDD",
     "InitialDate": "{{-|1|d=YYYYMMDD}}",
     "FinalDate": "{{0=YYYYMMDD}}"
   },
   "CurrentSituationLayers": {
     "Layers": [
-      "abc:current_situation_countries",
-      "abc:current_situation_states"
+      "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
+      "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05"
     ],
     "DateFormat": "YYYYMMDD",
     "InitialDate": "{{-|1|d=YYYYMMDD}}",
@@ -18,17 +20,17 @@
   },
   "SpatialFilter": {
     "Continents": {
-      "LayerId": "abc:continents",
+      "LayerId": "",
       "MinResolution": 0.35,
       "MaxResolution": "Infinity"
     },
     "Countries": {
-      "LayerId": "abc:countries",
+      "LayerId": "BDQueimadas:countries",
       "MinResolution": 0.080,
       "MaxResolution": 0.35
     },
     "States": {
-      "LayerId": "abc:states",
+      "LayerId": "BDQueimadas:estados",
       "MinResolution": 0,
       "MaxResolution": 0.080
     }

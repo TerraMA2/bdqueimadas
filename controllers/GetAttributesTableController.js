@@ -6,15 +6,15 @@
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
- * @property {object} memberPath - 'path' module.
  * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
  */
 var GetAttributesTableController = function(app) {
 
-  // 'path' module
-  var memberPath = require('path');
   // Queimadas Api module
-  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi')))();
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
+  // Api configurations
+  var memberApiConfigurations = require('../configurations/Api');
 
   /**
    * Processes the request and returns a response.
@@ -31,49 +31,80 @@ var GetAttributesTableController = function(app) {
     // Variable responsible for keeping the search string
     var search = "";
 
-    var parameters = [
+    var parametersGetFiresCount = [
       {
-        "Key": "inicio",
+        "Key": memberApiConfigurations.RequestsFields.GetFiresCount.DateFrom,
         "Value": request.body.dateFrom
       },
       {
-        "Key": "fim",
+        "Key": memberApiConfigurations.RequestsFields.GetFiresCount.DateTo,
+        "Value": request.body.dateTo
+      }
+    ];
+
+    var parametersGetFires = [
+      {
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateFrom,
+        "Value": request.body.dateFrom
+      },
+      {
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateTo,
         "Value": request.body.dateTo
       }
     ];
 
     // Verifications of the 'options' object items
     if(request.body.satellite !== '') {
-      parameters.push({
-        "Key": "satelite",
+      parametersGetFiresCount.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Satellite,
+        "Value": request.body.satellite
+      });
+
+      parametersGetFires.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Satellite,
         "Value": request.body.satellite
       });
     }
 
     if(request.body.extent !== '') {
-      parameters.push({
-        "Key": "extent",
+      parametersGetFiresCount.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Extent,
+        "Value": request.body.extent
+      });
+
+      parametersGetFires.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Extent,
         "Value": request.body.extent
       });
     }
 
     if(request.body.country !== null && request.body.country !== '') {
-      parameters.push({
-        "Key": "pais",
+      parametersGetFiresCount.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Country,
+        "Value": request.body.country
+      });
+
+      parametersGetFires.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Country,
         "Value": request.body.country
       });
     }
 
     if(request.body.state !== null && request.body.state !== '') {
-      parameters.push({
-        "Key": "estado",
+      parametersGetFiresCount.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFiresCount.State,
+        "Value": request.body.state
+      });
+
+      parametersGetFires.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.State,
         "Value": request.body.state
       });
     }
 
     memberQueimadasApi.getData(
       "GetFiresCount",
-      parameters,
+      parametersGetFiresCount,
       [],
       function(err, count) {
         if(err) return console.error(err);
@@ -92,37 +123,42 @@ var GetAttributesTableController = function(app) {
         if(search !== "") {
           search = search.slice(0, -1);
 
-          parameters.push({
-            "Key": "pesquisa",
+          parametersGetFiresCount.push({
+            "Key": memberApiConfigurations.RequestsFields.GetFiresCount.Search,
+            "Value": search
+          });
+
+          parametersGetFires.push({
+            "Key": memberApiConfigurations.RequestsFields.GetFires.Search,
             "Value": search
           });
         }
 
         memberQueimadasApi.getData(
           "GetFiresCount",
-          parameters,
+          parametersGetFiresCount,
           [],
           function(err, countWithSearch) {
             if(err) return console.error(err);
 
-            parameters.push({
-              "Key": "limit",
+            parametersGetFires.push({
+              "Key": memberApiConfigurations.RequestsFields.GetFires.Limit,
               "Value": parseInt(request.body.start) + parseInt(request.body.length)
             });
 
-            parameters.push({
-              "Key": "offset",
+            parametersGetFires.push({
+              "Key": memberApiConfigurations.RequestsFields.GetFires.Offset,
               "Value": parseInt(request.body.start)
             });
 
-            parameters.push({
-              "Key": "orientar",
+            parametersGetFires.push({
+              "Key": memberApiConfigurations.RequestsFields.GetFires.Ordination,
               "Value": order
             });
 
             memberQueimadasApi.getData(
               "GetFires",
-              parameters,
+              parametersGetFires,
               [],
               function(err, result) {
                 if(err) return console.error(err);
