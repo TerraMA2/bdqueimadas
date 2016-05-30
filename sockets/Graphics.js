@@ -8,30 +8,65 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberSockets - Sockets object.
- * @property {object} memberGraphics - Graphics model.
+ * @property {object} memberQueimadasApi - Queimadas Api module.
  */
 var Graphics = function(io) {
 
   // Sockets object
   var memberSockets = io.sockets;
-  // Graphics model
-  var memberGraphics = new (require('../models/Graphics'))();
+  // Queimadas Api module
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
 
     // Fires count graphics request event
     client.on('graphicsFiresCountRequest', function(json) {
-      // Object responsible for keep several information to be used in the database query
-      var options = {};
+      var parameters = [
+        {
+          "Key": "inicio",
+          "Value": json.dateFrom
+        },
+        {
+          "Key": "fim",
+          "Value": json.dateTo
+        },
+        {
+          "Key": "agregar",
+          "Value": json.key
+        }
+      ];
 
-      // Verifications of the 'options' object items
-      if(json.satellite !== '') options.satellite = json.satellite;
-      if(json.extent !== '') options.extent = json.extent;
-      if(json.country !== null && json.country !== '') options.country = json.country;
-      if(json.state !== null && json.state !== '') options.state = json.state;
+      // Verifications of the parameters
+      if(json.satellite !== '') {
+        parameters.push({
+          "Key": "satelite",
+          "Value": json.satellite
+        });
+      }
 
-      memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
+      if(json.extent !== '') {
+        parameters.push({
+          "Key": "extent",
+          "Value": json.extent
+        });
+      }
+
+      if(json.country !== null && json.country !== '') {
+        parameters.push({
+          "Key": "pais",
+          "Value": json.country
+        });
+      }
+
+      if(json.state !== null && json.state !== '') {
+        parameters.push({
+          "Key": "estado",
+          "Value": json.state
+        });
+      }
+
+      memberQueimadasApi.getData("GetFiresCount", parameters, [], function(err, firesCount) {
         if(err) return console.error(err);
 
         client.emit('graphicsFiresCountResponse', { firesCount: firesCount, key: json.key, title: json.title });

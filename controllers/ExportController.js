@@ -6,14 +6,14 @@
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
- * @property {object} memberExportation - 'Exportation' model.
+ * @property {object} memberQueimadasApi - Queimadas Api module.
  * @property {object} memberFs - 'fs' module.
  * @property {function} memberExec - Exec function.
  */
 var ExportController = function(app) {
 
-  // 'Exportation' model
-  var memberExportation = new (require('../models/Exportation'))();
+  // Queimadas Api module
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
   // 'fs' module
   var memberFs = require('fs');
   // Exec function
@@ -30,18 +30,49 @@ var ExportController = function(app) {
    */
   var exportController = function(request, response) {
 
-    // Object responsible for keeping several information to be used in the database query
-    var options = {};
+    var parameters = [
+      {
+        "Key": "inicio",
+        "Value": request.query.dateFrom
+      },
+      {
+        "Key": "fim",
+        "Value": request.query.dateTo
+      }
+    ];
 
-    // Verifications of the 'options' object items
-    if(request.query.satellite !== '') options.satellite = request.query.satellite;
-    if(request.query.extent !== '') options.extent = request.query.extent.split(',');
+    // Verifications of the parameters
+    if(request.query.satellite !== '') {
+      parameters.push({
+        "Key": "satelite",
+        "Value": request.query.satellite
+      });
+    }
 
-    // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-    memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {
+    if(request.query.extent !== '') {
+      parameters.push({
+        "Key": "extent",
+        "Value": request.query.extent.split(',')
+      });
+    }
+
+    if(request.query.country !== null && request.query.country !== '') {
+      parameters.push({
+        "Key": "pais",
+        "Value": request.query.country
+      });
+    }
+
+    if(request.query.state !== null && request.query.state !== '') {
+      parameters.push({
+        "Key": "estado",
+        "Value": request.query.state
+      });
+    }
+
+    // Call of the API method 'GetFires', responsible for returning the fires data in GeoJSON format
+    memberQueimadasApi.getData("GetFires", parameters, [], function(err, geoJson) {
       if(err) return console.error(err);
-
-      var geoJson = createFeatureCollection(geoJsonData);
 
       var path = require('path');
       var jsonfile = require('jsonfile');
@@ -104,33 +135,6 @@ var ExportController = function(app) {
         }
       });
     });
-  };
-
-  /**
-   * Processes the data returned from the database and creates a Feature Collection (GeoJSON).
-   * @param {json} geoJsonData - JSON containing the data returned from the database
-   * @returns {geojson} geoJson - Feature Collection (GeoJSON)
-   *
-   * @private
-   * @function createFeatureCollection
-   * @memberof ExportController
-   * @inner
-   */
-  var createFeatureCollection = function(geoJsonData) {
-    var geoJson = {
-      "type": "FeatureCollection",
-      "features": []
-    };
-
-    geoJsonData.rows.forEach(function(feature) {
-      geoJson.features.push({
-        "type": "Feature",
-        "geometry": feature.geometry,
-        "properties": feature.properties
-      });
-    });
-
-    return geoJson;
   };
 
   /**

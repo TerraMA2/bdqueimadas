@@ -151,13 +151,13 @@ define(
         memberFiresCountGraphics[firesCount.key] = null;
       }
 
-      if(firesCount.firesCount.rowCount > 0) {
+      if(firesCount.firesCount.length !== undefined && firesCount.firesCount.length > 0) {
         var labels = [];
         var values = [];
 
-        $.each(firesCount.firesCount.rows, function(i, firesCountItem) {
-          labels.push(firesCountItem.key);
-          values.push(firesCountItem.count);
+        $.each(firesCount.firesCount, function(i, firesCountItem) {
+          labels.push(firesCountItem[firesCount.key]);
+          values.push(firesCountItem[Utils.getConfigurations().apiConfigurations.GetFiresCount.Count]);
         });
 
         var firesCountGraphicData = {
@@ -196,7 +196,7 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
-        //updateGraphics();
+        updateGraphics();
       });
     };
 
