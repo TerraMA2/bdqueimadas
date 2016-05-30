@@ -35,14 +35,16 @@ var IndexController = function(app) {
         attributesTableConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8')),
         mapConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8')),
         graphicsConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Graphics.json'), 'utf8')),
-        applicationConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Application.json'), 'utf8'));
+        applicationConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Application.json'), 'utf8')),
+        tablesConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Tables.json'), 'utf8'));
 
     var configurations = {
       filterConfigurations: filterConfigurations,
       attributesTableConfigurations: attributesTableConfigurations,
       mapConfigurations: mapConfigurations,
       graphicsConfigurations: graphicsConfigurations,
-      applicationConfigurations: applicationConfigurations
+      applicationConfigurations: applicationConfigurations,
+      firesDateFormat: tablesConfigurations.Fires.DateFormat
     };
 
     memberFilter.getContinents(function(err, result) {
