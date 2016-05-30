@@ -202,7 +202,10 @@ define(
         if($(this).val() !== "") {
           var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
                            "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+                           "&satellite=" + Filter.getSatellite() +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
+                           "&country=" + (Filter.getCountry() !== null ? Filter.getCountry() : "") +
+                           "&state=" + (Filter.getState() !== null ? Filter.getState() : "") +
                            "&format=" + $(this).val();
 
           location.href = exportLink;
@@ -219,7 +222,10 @@ define(
           data: {
             dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
             dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
-            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString()
+            satellite: Filter.getSatellite(),
+            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
+            country: (Filter.getCountry() !== null ? Filter.getCountry() : ""),
+            state: (Filter.getState() !== null ? Filter.getState() : "")
           },
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {

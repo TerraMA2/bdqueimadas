@@ -79,6 +79,18 @@ var Exportation = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
+        // If the 'options.country' parameter exists, a country 'where' clause is created
+        if(options.country !== undefined) {
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " = $" + (parameter++);
+          params.push(options.country);
+        }
+
+        // If the 'options.state' parameter exists, a state 'where' clause is created
+        if(options.state !== undefined) {
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " = $" + (parameter++);
+          params.push(options.state);
+        }
+
         // If the 'options.limit' parameter exists, a limit clause is created
         if(options.limit !== undefined) {
           query += " limit " + options.limit;
