@@ -10,8 +10,8 @@
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
  */
 define(
-  ['components/Utils', 'components/Filter'],
-  function(Utils, Filter) {
+  ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
+  function(Utils, Filter, TerraMA2WebComponents) {
 
     // Attributes table object (DataTables)
     var memberAttributesTable = null;

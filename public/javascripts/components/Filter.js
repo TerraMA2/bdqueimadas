@@ -15,8 +15,8 @@
  * @property {string} memberState - Current state.
  */
 define(
-  ['components/Utils'],
-  function(Utils) {
+  ['components/Utils', 'TerraMA2WebComponents'],
+  function(Utils, TerraMA2WebComponents) {
 
     // Current initial date
     var memberDateFrom = null;
