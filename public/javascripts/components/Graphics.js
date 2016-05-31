@@ -10,8 +10,8 @@
  * @property {object} memberFiresCountGraphics - Graphics of fires count.
  */
 define(
-  ['components/Utils', 'components/Filter', 'components/Map'],
-  function(Utils, Filter, Map) {
+  ['components/Utils', 'components/Filter', 'components/Map', 'TerraMA2WebComponents'],
+  function(Utils, Filter, Map, TerraMA2WebComponents) {
 
     // Graphics of fires count
     var memberFiresCountGraphics = {};

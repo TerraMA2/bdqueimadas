@@ -14,8 +14,8 @@
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  */
 define(
-  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map'],
-  function(Utils, Filter, AttributesTable, Graphics, Map) {
+  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
+  function(Utils, Filter, AttributesTable, Graphics, Map, TerraMA2WebComponents) {
 
     // Window height
     var memberHeight = null;

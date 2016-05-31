@@ -7,8 +7,8 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
 define(
-  ['components/Utils', 'components/Filter'],
-  function(Utils, Filter) {
+  ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
+  function(Utils, Filter, TerraMA2WebComponents) {
 
     /**
      * Adds the layers from the map configuration file to the map.
