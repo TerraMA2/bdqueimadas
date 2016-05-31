@@ -327,11 +327,18 @@ define(
       var satellitesList = Utils.getConfigurations().filterConfigurations.Satellites;
 
       $.each(satellitesList, function(i, satelliteItem) {
-        var satelliteBegin = new Date(satelliteItem.Begin + ' UTC-03:00');
-        var satelliteEnd = new Date(satelliteItem.End + ' UTC-03:00');
+        var satelliteBegin = new Date();
+        var satelliteEnd = new Date();
 
-        satelliteBegin.setHours(0,0,0,0);
-        satelliteEnd.setHours(0,0,0,0);
+        if(satelliteItem.Begin !== "") {
+          var satelliteBeginArray = satelliteItem.Begin.split('-');
+          satelliteBegin = new Date(parseInt(satelliteBeginArray[0]), parseInt(satelliteBeginArray[1]) - 1, parseInt(satelliteBeginArray[2]), 0, 0, 0);
+        }
+
+        if(satelliteItem.End !== "") {
+          var satelliteEndArray = satelliteItem.End.split('-');
+          satelliteEnd = new Date(parseInt(satelliteEndArray[0]), parseInt(satelliteEndArray[1]) - 1, parseInt(satelliteEndArray[2]), 0, 0, 0);
+        }
 
         if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
           if(memberSatellite === satelliteItem.Name) {
@@ -345,48 +352,6 @@ define(
       });
 
       $('#filter-satellite').empty().html(elem);
-    };
-
-    /**
-     * Selects a continent in the continent dropdown and fills the country dropdown.
-     * @param {string} id - Continent id
-     * @param {string} text - Continent name
-     *
-     * @function selectContinentItem
-     * @memberof Filter(2)
-     * @inner
-     */
-    var selectContinentItem = function(id, text) {
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
-    };
-
-    /**
-     * Selects a country in the country dropdown, selects a continent in the continent dropdown and fills the state dropdown.
-     * @param {string} id - Country id
-     * @param {string} text - Country name
-     *
-     * @function selectCountryItem
-     * @memberof Filter(2)
-     * @inner
-     */
-    var selectCountryItem = function(id, text) {
-      Utils.getSocket().emit('continentByCountryRequest', { country: id });
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
-    };
-
-    /**
-     * Selects a state in the state dropdown, selects a continent in the continent dropdown and selects a country in the country dropdown.
-     * @param {string} id - State id
-     * @param {string} text - State name
-     *
-     * @function selectStateItem
-     * @memberof Filter(2)
-     * @inner
-     */
-    var selectStateItem = function(id, text) {
-      Utils.getSocket().emit('continentByStateRequest', { state: id });
-      Utils.getSocket().emit('countryByStateRequest', { state: id });
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
     };
 
     /**
@@ -467,9 +432,6 @@ define(
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
-      selectContinentItem: selectContinentItem,
-      selectCountryItem: selectCountryItem,
-      selectStateItem: selectStateItem,
       enableDropdown: enableDropdown,
       disableDropdown: disableDropdown,
       resetDropdowns: resetDropdowns,

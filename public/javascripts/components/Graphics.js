@@ -32,7 +32,7 @@ define(
         $('#show-time-series-graphic > i').addClass('active');
         $('#terrama2-map').addClass('cursor-pointer');
         TerraMA2WebComponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
-          showTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
+          showTimeSeriesGraphic(longitude, latitude, "2010-01", "2010-12");
         });
       }
     };
@@ -107,8 +107,8 @@ define(
      */
     var updateGraphics = function() {
       if($("#graph-box").css('left') < '0px') {
-        var dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-        var dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+        var dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat);
+        var dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().apiConfigurations.GetFires.DateFormat);
         var satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
@@ -151,13 +151,13 @@ define(
         memberFiresCountGraphics[firesCount.key] = null;
       }
 
-      if(firesCount.firesCount.rowCount > 0) {
+      if(firesCount.firesCount.length !== undefined && firesCount.firesCount.length > 0) {
         var labels = [];
         var values = [];
 
-        $.each(firesCount.firesCount.rows, function(i, firesCountItem) {
-          labels.push(firesCountItem.key);
-          values.push(firesCountItem.count);
+        $.each(firesCount.firesCount, function(i, firesCountItem) {
+          labels.push(firesCountItem[firesCount.key]);
+          values.push(firesCountItem[Utils.getConfigurations().apiConfigurations.GetFiresCount.Count]);
         });
 
         var firesCountGraphicData = {

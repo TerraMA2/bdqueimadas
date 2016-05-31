@@ -17,7 +17,7 @@ var IndexController = function(app) {
   // 'fs' module
   var memberFs = require('fs');
   // Queimadas Api module
-  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi.js')))();
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
 
   /**
    * Processes the request and returns a response.
@@ -35,17 +35,19 @@ var IndexController = function(app) {
         attributesTableConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/AttributesTable.json'), 'utf8')),
         mapConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Map.json'), 'utf8')),
         graphicsConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Graphics.json'), 'utf8')),
-        applicationConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Application.json'), 'utf8'));
+        applicationConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Application.json'), 'utf8')),
+        apiConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Api.json'), 'utf8'));
 
     var configurations = {
       filterConfigurations: filterConfigurations,
       attributesTableConfigurations: attributesTableConfigurations,
       mapConfigurations: mapConfigurations,
       graphicsConfigurations: graphicsConfigurations,
-      applicationConfigurations: applicationConfigurations
+      applicationConfigurations: applicationConfigurations,
+      apiConfigurations: apiConfigurations.RequestsFields
     };
 
-    memberQueimadasApi.getData("GetContinents", [], function(err, result) {
+    memberQueimadasApi.getData("GetContinents", [], [], function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters

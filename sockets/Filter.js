@@ -8,72 +8,68 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberSockets - Sockets object.
- * @property {object} memberPath - 'path' module.
- * @property {object} memberFilter - Filter model.
  * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
+ * @property {json} memberFilterConfig - Filter configuration.
  */
 var Filter = function(io) {
 
   // Sockets object
   var memberSockets = io.sockets;
-  // 'path' module
-  var memberPath = require('path');
-  // Filter model
-  var memberFilter = new (require(memberPath.join(__dirname, '../models/Filter.js')))();
   // Queimadas Api module
-  var memberQueimadasApi = new (require(memberPath.join(__dirname, '../modules/QueimadasApi.js')))();
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
+  // Api configurations
+  var memberApiConfigurations = require('../configurations/Api');
+  // Filter configuration
+  var memberFilterConfig = require('../configurations/Filter');
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
 
     // Spatial filter request event
     client.on('spatialFilterRequest', function(json) {
-      var functionName = "get" + json.key + "Extent";
-      memberFilter[functionName](json.id, function(err, extent) {
+      var functionName = "Get" + json.key + "Extent";
+
+      memberQueimadasApi.getData(functionName, [], [json.id], function(err, extent) {
         if(err) return console.error(err);
 
-        client.emit('spatialFilterResponse', { key: json.key, id: json.id, text: json.text, extent: extent });
+        client.emit('spatialFilterResponse', {
+          key: json.key,
+          id: json.id,
+          text: extent[0][memberApiConfigurations.RequestsFields[functionName].Name],
+          extent: extent[0][memberApiConfigurations.RequestsFields[functionName].Extent]
+        });
       });
     });
 
     // Data by intersection request event
     client.on('dataByIntersectionRequest', function(json) {
-      memberFilter.getDataByIntersection(json.longitude, json.latitude, json.resolution, function(err, data) {
-        if(err) return console.error(err);
+      var key = "States";
 
-        client.emit('dataByIntersectionResponse', { data: data });
-      });
-    });
+      if(json.resolution >= memberFilterConfig.SpatialFilter.Continents.MinResolution)
+        key = "Continents";
+      else if(json.resolution >= memberFilterConfig.SpatialFilter.Countries.MinResolution && json.resolution < memberFilterConfig.SpatialFilter.Countries.MaxResolution)
+        key = "Countries";
 
-    // Continent by country request event
-    client.on('continentByCountryRequest', function(json) {
-      memberFilter.getContinentByCountry(json.country, function(err, continent) {
-        if(err) return console.error(err);
-
-        client.emit('continentByCountryResponse', { continent: continent });
-      });
-    });
-
-    // Continent by state request event
-    client.on('continentByStateRequest', function(json) {
-      memberFilter.getContinentByState(json.state, function(err, continent) {
-        if(err) return console.error(err);
-
-        client.emit('continentByStateResponse', { continent: continent });
-      });
-    });
-
-    // Country by state request event
-    client.on('countryByStateRequest', function(json) {
-      memberFilter.getCountryByState(json.state, function(err, country) {
-        if(err) return console.error(err);
-
-        memberFilter.getCountriesByContinent(country.rows[0].continent, function(err, countries) {
+      memberQueimadasApi.getData(
+        "DataByIntersection",
+        [
+          {
+            "Key": memberApiConfigurations.RequestsFields.DataByIntersection.Type,
+            "Value": memberApiConfigurations.RequestsFields["DataByIntersection"].Types[key]
+          },
+          {
+            "Key": memberApiConfigurations.RequestsFields.DataByIntersection.Coordinates,
+            "Value": json.longitude + "%20" + json.latitude
+          },
+        ],
+        [],
+        function(err, data) {
           if(err) return console.error(err);
 
-          client.emit('countryByStateResponse', { country: country, countries: countries });
-        });
-      });
+          client.emit('dataByIntersectionResponse', { data: data, key: key });
+        }
+      );
     });
 
     // Countries by continent request event
@@ -82,10 +78,11 @@ var Filter = function(io) {
         "GetCountries",
         [
           {
-            "Key": "continente",
+            "Key": memberApiConfigurations.RequestsFields.GetCountries.Continent,
             "Value": json.continent
           }
         ],
+        [],
         function(err, countries) {
           if(err) return console.error(err);
 
@@ -100,10 +97,11 @@ var Filter = function(io) {
         "GetStates",
         [
           {
-            "Key": "pais",
+            "Key": memberApiConfigurations.RequestsFields.GetStates.Country,
             "Value": json.country
           }
         ],
+        [],
         function(err, states) {
           if(err) return console.error(err);
 

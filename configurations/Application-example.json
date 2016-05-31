@@ -1,4 +1,4 @@
 {
   "BaseUrl": "/",
-  "InitialContinentToFilter": "South America"
+  "InitialContinentToFilter": 8
 }

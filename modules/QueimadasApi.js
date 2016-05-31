@@ -20,12 +20,13 @@ var QueimadasApi = function() {
   // 'https' module
   var memberHttps = require('https');
   // Api configurations
-  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api.json'));
+  var memberApiConfigurations = require(memberPath.join(__dirname, '../configurations/Api'));
 
   /**
    * Returns the data received from the request.
    * @param {string} request - Request to be executed
    * @param {json} parameters - Request parameters
+   * @param {array} urlParameters - Url parameters (http://localhost/url/example/{PARAMETER_1}/{PARAMETER_2})
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -33,8 +34,14 @@ var QueimadasApi = function() {
    * @memberof QueimadasApi
    * @inner
    */
-  this.getData = function(request, parameters, callback) {
-    var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + memberApiConfigurations.Requests[request] + memberApiConfigurations.Token;
+  this.getData = function(request, parameters, urlParameters, callback) {
+    var request = memberApiConfigurations.Requests[request];
+
+    for(var i = 0; i < urlParameters.length; i++) {
+      request = request.replace("{" + i + "}", urlParameters[i]);
+    }
+
+    var url = memberApiConfigurations.Protocol + "://" + memberApiConfigurations.URL + request + memberApiConfigurations.Token;
 
     for(var i = 0; i < parameters.length; i++) {
       url += "&" + parameters[i].Key + "=" + parameters[i].Value;
@@ -50,7 +57,11 @@ var QueimadasApi = function() {
       });
 
       res.on('end', function() {
-        var jsonData = JSON.parse(body);
+        try {
+          var jsonData = JSON.parse(body);
+        } catch(ex) {
+          var jsonData = {};
+        }
 
         callback(null, jsonData);
       });

@@ -6,12 +6,15 @@
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
- * @property {object} memberExportation - 'Exportation' model.
+ * @property {object} memberQueimadasApi - Queimadas Api module.
+ * @property {json} memberApiConfigurations - Api configurations.
  */
 var ExistsDataToExportController = function(app) {
 
-  // 'Exportation' model
-  var memberExportation = new (require('../models/Exportation.js'))();
+  // Queimadas Api module
+  var memberQueimadasApi = new (require('../modules/QueimadasApi'))();
+  // Api configurations
+  var memberApiConfigurations = require('../configurations/Api');
 
   /**
    * Processes the request and returns a response.
@@ -23,21 +26,57 @@ var ExistsDataToExportController = function(app) {
    * @inner
    */
   var existsDataToExportController = function(request, response) {
-    // Object responsible for keeping several information to be used in the database query
-    var options = {};
+    var parameters = [
+      {
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateFrom,
+        "Value": request.query.dateFrom
+      },
+      {
+        "Key": memberApiConfigurations.RequestsFields.GetFires.DateTo,
+        "Value": request.query.dateTo
+      },
+      {
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Limit,
+        "Value": 1
+      }
+    ];
 
-    // Verifications of the 'options' object items
-    if(request.query.satellite !== '') options.satellite = request.query.satellite;
-    if(request.query.extent !== '') options.extent = request.query.extent.split(',');
-    options.limit = 1;
+    // Verifications of the parameters
+    if(request.query.satellite !== '') {
+      parameters.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Satellite,
+        "Value": request.query.satellite
+      });
+    }
 
-    // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-    memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, GeoJSONData) {
+    if(request.query.extent !== '') {
+      parameters.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Extent,
+        "Value": request.query.extent.split(',')
+      });
+    }
+
+    if(request.query.country !== null && request.query.country !== '') {
+      parameters.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.Country,
+        "Value": request.query.country
+      });
+    }
+
+    if(request.query.state !== null && request.query.state !== '') {
+      parameters.push({
+        "Key": memberApiConfigurations.RequestsFields.GetFires.State,
+        "Value": request.query.state
+      });
+    }
+
+    // Call of the API method 'GetFires', responsible for returning the fires data in GeoJSON format
+    memberQueimadasApi.getData("GetFires", parameters, [], function(err, GeoJSONData) {
       if(err) return console.error(err);
 
       // JSON response
       response.json({
-        existsDataToExport: GeoJSONData.rowCount > 0
+        existsDataToExport: GeoJSONData.features.length > 0
       });
     });
   };

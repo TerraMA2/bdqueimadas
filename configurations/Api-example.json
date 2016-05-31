@@ -1,10 +1,80 @@
 {
-  "URL": "https://dev-queimadas.dgi.inpe.br/api/",
-  "Token": "",
-  "Requests": [
-    {
-      "Name": "",
-      "URL": ""
+  "Protocol": "http",
+  "URL": "localhost:8000/v1/",
+  "Token": "?token=45743d86a806ff263cf22ee6befbb357",
+  "Requests": {
+    "GetContinents": "geo/continentes",
+    "GetCountries": "geo/paises",
+    "GetStates": "geo/estados",
+    "GetContinentExtent": "geo/getcontinenteext/{0}",
+    "GetCountryExtent": "geo/getpaisext/{0}",
+    "GetStateExtent": "geo/getestadoext/{0}",
+    "DataByIntersection": "geo/getextbyfoco/",
+    "GetFires": "focos/getfocos",
+    "GetFiresCount": "focos/getcountfocos"
+  },
+  "RequestsFields": {
+    "GetContinents": {
+      "Id": "",
+      "Name": ""
+    },
+    "GetCountries": {
+      "Id": "pk",
+      "Name": "nome_bdq",
+      "Continent": "continente"
+    },
+    "GetStates": {
+      "Id": "pk",
+      "Name": "name_1",
+      "Country": "pais"
+    },
+    "GetContinentExtent": {
+      "Id": "id",
+      "Name": "nome",
+      "Extent": "bbox"
+    },
+    "GetCountryExtent": {
+      "Id": "objectid",
+      "Name": "nome_bdq",
+      "Extent": "bbox"
+    },
+    "GetStateExtent": {
+      "Id": "objectid",
+      "Name": "name_1",
+      "Extent": "bbox"
+    },
+    "DataByIntersection": {
+      "Types": {
+        "Continents": "Continentes",
+        "Countries": "Pais",
+        "States": "Estado"
+      },
+      "Type": "tipo",
+      "Coordinates": "latlng"
+    },
+    "GetFires": {
+      "DateFormat": "YYYY-MM-DD",
+      "DateFrom": "inicio",
+      "DateTo": "fim",
+      "Satellite": "satelite",
+      "Extent": "extent",
+      "Country": "pais",
+      "State": "estado",
+      "Search": "pesquisa",
+      "Limit": "limit",
+      "Offset": "offset",
+      "Ordination": "orientar"
+    },
+    "GetFiresCount": {
+      "Count": "quantidade_focos",
+      "DateFrom": "inicio",
+      "DateTo": "fim",
+      "Satellite": "satelite",
+      "Extent": "extent",
+      "Country": "pais",
+      "State": "estado",
+      "Search": "pesquisa",
+      "Aggregate": "agregar"
     }
-  ]
+  }
 }
