@@ -36,6 +36,8 @@ var ExportController = function(app) {
     // Verifications of the 'options' object items
     if(request.query.satellite !== '') options.satellite = request.query.satellite;
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
+    if(request.query.country !== '') options.country = request.query.country;
+    if(request.query.state !== '') options.state = request.query.state;
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
     memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {

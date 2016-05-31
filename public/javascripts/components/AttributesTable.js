@@ -31,10 +31,30 @@ define(
       var columnsArray = [];
 
       for(var i = 0; i < columnsJsonLength; i++)
-        if(columnsJson[i].Show)
-          columnsArray.push({ "name": columnsJson[i].Name });
+        columnsArray.push({ "name": columnsJson[i].Name });
 
       return columnsArray;
+    };
+
+    /**
+     * Creates and returns an array with the attributes table order data.
+     * @returns {Array} order - Array of the order data
+     *
+     * @private
+     * @function getAttributesTableOrder
+     * @memberof AttributesTable(2)
+     * @inner
+     */
+    var getAttributesTableOrder = function() {
+      var columnsJson = Utils.getConfigurations().attributesTableConfigurations.Columns;
+      var columnsJsonLength = columnsJson.length;
+      var order = [];
+
+      for(var i = 0; i < columnsJsonLength; i++)
+        if(columnsJson[i].Order !== null && (columnsJson[i].Order === "asc" || columnsJson[i].Order === "desc"))
+          order.push([i, columnsJson[i].Order]);
+
+      return order;
     };
 
     /**
@@ -51,21 +71,21 @@ define(
       var titles = "";
 
       for(var i = 0; i < columnsLength; i++)
-        titles += columns[i].Show ? "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>" : "";
+        titles += "<th>" + (columns[i].Alias !== '' ? columns[i].Alias : columns[i].Name) + "</th>";
 
       $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
       memberAttributesTable = $('#attributes-table').DataTable(
         {
-          "order": Utils.getConfigurations().attributesTableConfigurations.Order,
+          "order": getAttributesTableOrder(),
           "processing": true,
           "serverSide": true,
           "ajax": {
-            "url": BASE_URL + "get-attributes-table",
+            "url": Utils.getBaseUrl() + "get-attributes-table",
             "type": "POST",
             "data": function(data) {
-              data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-              data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+              data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
+              data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
               data.satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.country = Filter.getCountry();

@@ -200,9 +200,12 @@ define(
       // Exportation type click event
       $(document).on('change', '#exportation-type', function() {
         if($(this).val() !== "") {
-          var exportLink = BASE_URL + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
-                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) +
+          var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat) +
+                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) +
+                           "&satellite=" + (Filter.getSatellite() !== "all" ? Filter.getSatellite() : "") +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
+                           "&country=" + (Filter.getCountry() !== null ? Filter.getCountry() : "") +
+                           "&state=" + (Filter.getState() !== null ? Filter.getState() : "") +
                            "&format=" + $(this).val();
 
           location.href = exportLink;
@@ -214,12 +217,15 @@ define(
       // Export click event
       $('#export').on('click', function() {
         $.ajax({
-          url: BASE_URL + "exists-data-to-export",
+          url: Utils.getBaseUrl() + "exists-data-to-export",
           type: "GET",
           data: {
-            dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
-            dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat),
-            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString()
+            dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat),
+            dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat),
+            satellite: (Filter.getSatellite() !== "all" ? Filter.getSatellite() : ""),
+            extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
+            country: (Filter.getCountry() !== null ? Filter.getCountry() : ""),
+            state: (Filter.getState() !== null ? Filter.getState() : "")
           },
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {

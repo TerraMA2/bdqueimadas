@@ -48,8 +48,7 @@ var AttributesTable = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-      if(memberAttributesTableConfig.Columns[i].Show)
-        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
+      columns += memberAttributesTableConfig.Columns[i].Name + ", ";
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -268,18 +267,13 @@ var AttributesTable = function() {
 
     // Loop through the columns configuration
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-
-      // If the column is set to be shown in the table, it's included in the search, otherwise it's not
-      if(memberAttributesTableConfig.Columns[i].Show) {
-
-        // Verification of the type of the column (numeric or not numeric)
-        if(memberAttributesTableConfig.Columns[i].String) {
-          searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
-          params.push('%' + search + '%');
-        } else if(!memberAttributesTableConfig.Columns[i].String && !isNaN(search)) {
-          searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
-          params.push(Number(search));
-        }
+      // Verification of the type of the column (numeric or not numeric)
+      if(memberAttributesTableConfig.Columns[i].String) {
+        searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
+        params.push('%' + search + '%');
+      } else if(!memberAttributesTableConfig.Columns[i].String && !isNaN(search)) {
+        searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
+        params.push(Number(search));
       }
     }
     searchText = searchText.substring(0, (searchText.length - 4)) + ")";
