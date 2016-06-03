@@ -205,6 +205,9 @@ define(
 
       memberDateFrom.setHours(0,0,0,0);
       memberDateTo.setHours(0,0,0,0);
+
+      $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
+      $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
     };
 
     /**
@@ -269,6 +272,21 @@ define(
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
           applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries-title').attr('item-id'), memberSatellite, layer);
         });
+
+        $.each(Utils.getConfigurations().mapConfigurations.LayerGroups, function(i, layerGroup) {
+          $.each(layerGroup.Layers, function (j, layer) {
+            if(layer.Time !== null) {
+              TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, { TIME: Utils.processStringWithDatePattern(layer.Time) }, true);
+
+              var layerName = Utils.processStringWithDatePattern(layer.Name);
+
+              $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').text(layerName);
+              TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+            }
+          });
+        });
+
+        console.log(TerraMA2WebComponents.MapDisplay.getMap().getLayerGroup());
       }
 
       if(filterSatellite !== "all") {
@@ -309,7 +327,7 @@ define(
       if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
       if(satellite !== undefined && satellite !== null && satellite !== "" && satellite !== '' && satellite !== "all") currentSituationFilter += ";satellite:" + satellite;
 
-      TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter });
+      TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
     };
 
     /**
