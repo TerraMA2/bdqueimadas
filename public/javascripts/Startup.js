@@ -3,7 +3,7 @@
 requirejs.config({
   baseUrl: BASE_URL + 'javascripts',
   paths: {
-    TerraMA2WebComponents: BASE_URL + 'externals/TerraMA2WebComponents/javascripts/TerraMA2WebComponents.min'
+    TerraMA2WebComponents: BASE_URL + 'externals/TerraMA2WebComponents/TerraMA2WebComponents.min'
   }
 });
 
@@ -18,8 +18,6 @@ requirejs(
     'TerraMA2WebComponents'
   ],
   function(BDQueimadas, Utils, Filter, AttributesTable, Graphics, Map, TerraMA2WebComponents) {
-    console.log(TerraMA2WebComponents);
-
     TerraMA2WebComponents.LayerExplorer.init();
     TerraMA2WebComponents.MapDisplay.init();
 
