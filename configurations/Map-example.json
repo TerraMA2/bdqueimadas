@@ -118,12 +118,98 @@
           "BorderColor": null,
           "Image": "images/subtitles/fire.png",
           "MinResolution": 0,
-          "MaxResolution": 0.025
+          "MaxResolution": "Infinity"
         }
       ]
     }
   ],
   "LayerGroups": [
+    {
+      "Id": "imagens_satelite",
+      "Name": "Imagens de Satélite",
+      "Layers": [
+        {
+          "Id": "aqua_250m_truecolor",
+          "Name": "Modis Aqua {{INITIAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "terra_250m_truecolor",
+          "Name": "Modis Terra {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "suomi_npp_250m_truecolor",
+          "Name": "Suomi NPP {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "quicklook_noaa12",
+          "Name": "NOAA-12 {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "quicklook_noaa15",
+          "Name": "NOAA-15 {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "quicklook_noaa16",
+          "Name": "NOAA-16 {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "quicklook_noaa18",
+          "Name": "NOAA-18 {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        },
+        {
+          "Id": "quicklook_noaa19",
+          "Name": "NOAA-19 {{FINAL_DATE=DD/MM/YYYY}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": true,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+        }
+      ]
+    },
     {
       "Id": "principais",
       "Name": "Camadas Principais",
@@ -155,7 +241,7 @@
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
-          "MaxResolution": 0.025,
+          "MaxResolution": "Infinity",
           "Time": null
         },
         {
