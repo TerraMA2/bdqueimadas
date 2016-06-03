@@ -285,8 +285,6 @@ define(
             }
           });
         });
-
-        console.log(TerraMA2WebComponents.MapDisplay.getMap().getLayerGroup());
       }
 
       if(filterSatellite !== "all") {
