@@ -118,7 +118,7 @@
           "BorderColor": null,
           "Image": "images/subtitles/fire.png",
           "MinResolution": 0,
-          "MaxResolution": 0.025
+          "MaxResolution": "Infinity"
         }
       ]
     }
@@ -241,7 +241,7 @@
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
-          "MaxResolution": 0.025,
+          "MaxResolution": "Infinity",
           "Time": null
         },
         {
