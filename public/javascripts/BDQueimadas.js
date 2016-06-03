@@ -14,8 +14,8 @@
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  */
 define(
-  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map'],
-  function(Utils, Filter, AttributesTable, Graphics, Map) {
+  ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
+  function(Utils, Filter, AttributesTable, Graphics, Map, TerraMA2WebComponents) {
 
     // Window height
     var memberHeight = null;
@@ -51,26 +51,24 @@ define(
      * @inner
      */
     var applyFilter = function() {
-      var filterDateFrom = $('#filter-date-from').val();
-      var filterDateTo = $('#filter-date-to').val();
-      Filter.setSatellite($('#filter-satellite').val());
+      var dates = Utils.getFilterDates();
 
-      if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
-        if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
+      if(dates !== null) {
+        Filter.setSatellite($('#filter-satellite').val());
+
+        if(dates.length === 0) {
           Filter.updateDatesToCurrent();
-          filterDateTo = Filter.getFormattedDateTo('DD/MM/YYYY');
-          filterDateFrom = Filter.getFormattedDateFrom('DD/MM/YYYY');
+          var filterDateFrom = Filter.getFormattedDateFrom('DD/MM/YYYY');
+          var filterDateTo = Filter.getFormattedDateTo('DD/MM/YYYY');
+        } else {
+          var filterDateFrom = dates[0];
+          var filterDateTo = dates[1];
         }
 
         Filter.applyFilter(filterDateFrom, filterDateTo, Filter.getSatellite());
         updateComponents();
       } else {
-        if(filterDateFrom.length === 0) {
-          $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
-        }
-        if(filterDateTo.length === 0) {
-          $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
-        }
+        $('#filter-satellite').val(Filter.getSatellite());
       }
     };
 
