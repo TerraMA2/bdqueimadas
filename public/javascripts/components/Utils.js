@@ -45,7 +45,7 @@ define(function() {
 
   /**
    * Converts a date into a string date formatted accordingly with the received format.
-   * @param {date} date - Date
+   * @param {Date} date - Date
    * @param {string} format - Format
    * @returns {string} stringDate - Formatted string date
    *
@@ -111,7 +111,7 @@ define(function() {
         var format = patternFormat[1];
         var currentDate = new Date();
 
-        if(patternFormat[0] !== '0') {
+        if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
           var patterns = patternFormat[0].split(',');
 
           $.each(patterns, function(i, patternItem) {
@@ -138,6 +138,14 @@ define(function() {
                 break;
             }
           });
+        } else if(patternFormat[0] === "INITIAL_DATE") {
+          var dates = getFilterDates();
+
+          if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[0], 'DD/MM/YYYY');
+        } else if(patternFormat[0] === "FINAL_DATE") {
+          var dates = getFilterDates();
+
+          if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'DD/MM/YYYY');
         }
 
         finalString = dateToString(currentDate, format);
@@ -146,6 +154,38 @@ define(function() {
     }
 
     return finalString;
+  };
+
+  /**
+   * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
+   * @returns {array} returnValue - Empy array, or an array with the dates, or a null value
+   *
+   * @function getFilterDates
+   * @memberof Utils
+   * @inner
+   */
+  var getFilterDates = function() {
+    var filterDateFrom = $('#filter-date-from').val();
+    var filterDateTo = $('#filter-date-to').val();
+
+    var returnValue = null;
+
+    if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
+      if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
+        returnValue = [];
+      } else {
+        returnValue = [filterDateFrom, filterDateTo];
+      }
+    } else {
+      if(filterDateFrom.length === 0) {
+        $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
+      }
+      if(filterDateTo.length === 0) {
+        $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
+      }
+    }
+
+    return returnValue;
   };
 
   /**
@@ -231,6 +271,7 @@ define(function() {
     dateToString: dateToString,
     stringToDate: stringToDate,
     processStringWithDatePattern: processStringWithDatePattern,
+    getFilterDates: getFilterDates,
     stringInArray: stringInArray,
     sortIntegerArray: sortIntegerArray,
     getBaseUrl: getBaseUrl,
