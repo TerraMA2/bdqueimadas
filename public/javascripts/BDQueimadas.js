@@ -487,9 +487,9 @@ define(
      * @inner
      */
     var loadPlugins = function() {
-      $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
+      $(".date").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
       $(".date").datepicker({
-        dateFormat: 'dd/mm/yyyy',
+        dateFormat: 'yy/mm/dd',
         dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
         dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
         dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
