@@ -141,11 +141,11 @@ define(function() {
         } else if(patternFormat[0] === "INITIAL_DATE") {
           var dates = getFilterDates();
 
-          if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[0], 'DD/MM/YYYY');
+          if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[0], 'YYYY/MM/DD');
         } else if(patternFormat[0] === "FINAL_DATE") {
           var dates = getFilterDates();
 
-          if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'DD/MM/YYYY');
+          if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'YYYY/MM/DD');
         }
 
         finalString = dateToString(currentDate, format);
