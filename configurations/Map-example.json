@@ -221,7 +221,7 @@
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
-          "MaxResolution": 0.080,
+          "MaxResolution": "Infinity",
           "Time": null
         },
         {
@@ -230,8 +230,8 @@
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
-          "MinResolution": 0.080,
-          "MaxResolution": 0.35,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
           "Time": null
         },
         {
@@ -249,7 +249,7 @@
           "Name": "Situação Atual - Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": 0.025,
           "MaxResolution": "Infinity",
           "Time": null
@@ -259,7 +259,7 @@
           "Name": "Situação Atual - Estados",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": 0.015,
           "MaxResolution": 0.050,
           "Time": null
