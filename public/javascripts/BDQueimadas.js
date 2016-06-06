@@ -58,8 +58,8 @@ define(
 
         if(dates.length === 0) {
           Filter.updateDatesToCurrent();
-          var filterDateFrom = Filter.getFormattedDateFrom('DD/MM/YYYY');
-          var filterDateTo = Filter.getFormattedDateTo('DD/MM/YYYY');
+          var filterDateFrom = Filter.getFormattedDateFrom('YYYY/MM/DD');
+          var filterDateTo = Filter.getFormattedDateTo('YYYY/MM/DD');
         } else {
           var filterDateFrom = dates[0];
           var filterDateTo = dates[1];
