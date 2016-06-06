@@ -125,6 +125,62 @@
   ],
   "LayerGroups": [
     {
+      "Id": "camadas",
+      "Name": "Camadas",
+      "Layers": [
+        {
+          "Id": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
+          "Name": "Focos",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null
+        },
+        {
+          "Id": "BDQueimadas:paises",
+          "Name": "Países",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null
+        },
+        {
+          "Id": "BDQueimadas:estados",
+          "Name": "Estados",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null
+        },
+        {
+          "Id": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05",
+          "Name": "Situação Atual - Estados",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0.015,
+          "MaxResolution": 0.050,
+          "Time": null
+        },
+        {
+          "Id": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
+          "Name": "Situação Atual - Países",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity",
+          "Time": null
+        }
+      ]
+    },
+    {
       "Id": "imagens_satelite",
       "Name": "Imagens de Satélite",
       "Layers": [
@@ -133,7 +189,7 @@
           "Name": "Modis Aqua {{INITIAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": false,
+          "Visible": true,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
@@ -153,7 +209,7 @@
           "Name": "Suomi NPP {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
@@ -163,7 +219,7 @@
           "Name": "NOAA-12 {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
@@ -173,7 +229,7 @@
           "Name": "NOAA-15 {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
@@ -183,7 +239,7 @@
           "Name": "NOAA-16 {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
@@ -193,7 +249,7 @@
           "Name": "NOAA-18 {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
@@ -203,66 +259,10 @@
           "Name": "NOAA-19 {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
-        }
-      ]
-    },
-    {
-      "Id": "camadas",
-      "Name": "Camadas",
-      "Layers": [
-        {
-          "Id": "BDQueimadas:estados",
-          "Name": "Estados",
-          "Url": "http://localhost:8080/geoserver/ows",
-          "ServerType": "geoserver",
-          "Visible": true,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "BDQueimadas:paises",
-          "Name": "Países",
-          "Url": "http://localhost:8080/geoserver/ows",
-          "ServerType": "geoserver",
-          "Visible": true,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
-          "Name": "Focos",
-          "Url": "http://localhost:8080/geoserver/ows",
-          "ServerType": "geoserver",
-          "Visible": true,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
-          "Name": "Situação Atual - Países",
-          "Url": "http://localhost:8080/geoserver/ows",
-          "ServerType": "geoserver",
-          "Visible": false,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity",
-          "Time": null
-        },
-        {
-          "Id": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05",
-          "Name": "Situação Atual - Estados",
-          "Url": "http://localhost:8080/geoserver/ows",
-          "ServerType": "geoserver",
-          "Visible": false,
-          "MinResolution": 0.015,
-          "MaxResolution": 0.050,
-          "Time": null
         }
       ]
     },
