@@ -211,8 +211,8 @@
       ]
     },
     {
-      "Id": "principais",
-      "Name": "Camadas Principais",
+      "Id": "camadas",
+      "Name": "Camadas",
       "Layers": [
         {
           "Id": "BDQueimadas:estados",
@@ -267,8 +267,8 @@
       ]
     },
     {
-      "Id": "meteorologia",
-      "Name": "Meteorologia",
+      "Id": "riscoFogo",
+      "Name": "Risco de Fogo",
       "Layers": [
         {
           "Id": "mrp0",
