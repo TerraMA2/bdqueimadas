@@ -188,10 +188,14 @@ define(
           $('.ol-zoom').animate({ 'right': '60px' }, { duration: 300, queue: false });
           $('.ol-attribution').animate({ 'right': '60px' }, { duration: 300, queue: false });
           $('#map-subtitle').animate({ 'right': '45px' }, { duration: 300, queue: false });
+          $('.ol-scale-line').animate({ 'right': '60px' }, { duration: 300, queue: false });
+          $('#terrama2-map-info').animate({ 'right': '60px' }, { duration: 300, queue: false });
         } else {
           $('.ol-zoom').animate({ 'right': '15px' }, { duration: 300, queue: false });
           $('.ol-attribution').animate({ 'right': '15px' }, { duration: 300, queue: false });
           $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
+          $('.ol-scale-line').animate({ 'right': '15px' }, { duration: 300, queue: false });
+          $('#terrama2-map-info').animate({ 'right': '15px' }, { duration: 300, queue: false });
         }
       });
 
