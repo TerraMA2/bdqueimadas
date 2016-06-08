@@ -9,6 +9,10 @@
 var IndexRoute = function(app) {
   var controller = app.controllers.IndexController;
   app.get('/', controller);
+
+  var proxy = require('html2canvas-proxy');
+
+  app.use('/proxy-html2canvas', proxy());
 };
 
 module.exports = IndexRoute;

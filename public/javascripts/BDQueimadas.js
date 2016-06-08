@@ -182,6 +182,24 @@ define(
 
       // Control sidebar toggle click event
       $('#control-sidebar-btn').on('click', function() {
+        /*function downloadURI(uri, name) {
+            var link = document.createElement("a");
+            link.download = name;
+            link.href = uri;
+            link.click();
+            //after creating link you should delete dynamic link
+            //clearDynamicLink(link);
+        }
+
+        TerraMA2WebComponents.MapDisplay.getMap().once('postcompose', function(event) {
+          var canvas = event.context.canvas;
+          var url = canvas.toDataURL('image/png');
+
+          downloadURI("data:" + url, "yourImage.png");
+        });
+        TerraMA2WebComponents.MapDisplay.getMap().renderSync();*/
+
+
 
         // Adjusts the position of the zoom control, attribution button and subtitle when the control sidebar opens or closes
         if($('.control-sidebar').hasClass('control-sidebar-open')) {
