@@ -32,6 +32,14 @@ requirejs(
     TerraMA2WebComponents.MapDisplay.addMousePosition();
     TerraMA2WebComponents.MapDisplay.addScale();
 
+    TerraMA2WebComponents.MapDisplay.setLayersStartLoadingFunction(function() {
+      if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
+    });
+
+    TerraMA2WebComponents.MapDisplay.setLayersEndLoadingFunction(function() {
+      if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
+    });
+
     Utils.init(configurations, BASE_URL);
     BDQueimadas.init();
     Filter.init();
