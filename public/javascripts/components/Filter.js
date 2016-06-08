@@ -187,8 +187,8 @@ define(
       memberDateFrom.setHours(0,0,0,0);
       memberDateTo.setHours(0,0,0,0);
 
-      $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
-      $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
+      $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
+      $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
     };
 
     /**
@@ -206,8 +206,8 @@ define(
       memberDateFrom.setHours(0,0,0,0);
       memberDateTo.setHours(0,0,0,0);
 
-      $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'DD/MM/YYYY'));
-      $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'DD/MM/YYYY'));
+      $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
+      $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
     };
 
     /**
@@ -266,7 +266,7 @@ define(
       var cql = "";
 
       if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
-        updateDates(filterDateFrom, filterDateTo, 'DD/MM/YYYY');
+        updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
         cql += createDateFilter() + " AND ";
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {

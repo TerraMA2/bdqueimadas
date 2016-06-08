@@ -21,33 +21,33 @@ define(
     var addLayersToMap = function() {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      $.each(configuration.LayerGroups, function(i, layerGroup) {
-        if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layerGroup.Id, layerGroup.Name))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layerGroup.Id, 'terrama2-layerexplorer');
+      for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
+        if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
 
-        $.each(layerGroup.Layers, function(j, layer) {
-          var layerName = Utils.processStringWithDatePattern(layer.Name);
-          var layerTime = Utils.processStringWithDatePattern(layer.Time);
+        for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
+          var layerName = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Name);
+          var layerTime = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Time);
 
-          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, layerGroup.Id, layerTime))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, layerGroup.Id);
+          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Layers[j].Id, configuration.LayerGroups[i].Id);
 
-          if(layer.Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
+          if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
             var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
 
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, layer.Id);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.LayerGroups[i].Layers[j].Id);
 
             Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-          } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
+          } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.LayerGroups[i].Layers[j].Id)) {
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), 'AQUA_M-T', layer.Id);
+            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), 'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
           }
-        });
-      });
+        }
+      }
     };
 
     /**

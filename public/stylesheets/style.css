@@ -378,6 +378,26 @@
   cursor: wait !important;
 }
 
+#loading-span {
+  position: absolute;
+  width: 150px;
+  background-color: rgba(255,255,255,0.7);
+  height: 70px;
+  z-index: 99;
+  border-radius: 8px;
+  top: 46%;
+  left: 46%;
+}
+
+#loading-span > i {
+  position: absolute;
+  z-index: 9999;
+  color: #000;
+  top: 20%;
+  font-size: 40px;
+  left: 40%;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }

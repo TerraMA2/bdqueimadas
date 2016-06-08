@@ -58,8 +58,8 @@ define(
 
         if(dates.length === 0) {
           Filter.updateDatesToCurrent();
-          var filterDateFrom = Filter.getFormattedDateFrom('DD/MM/YYYY');
-          var filterDateTo = Filter.getFormattedDateTo('DD/MM/YYYY');
+          var filterDateFrom = Filter.getFormattedDateFrom('YYYY/MM/DD');
+          var filterDateTo = Filter.getFormattedDateTo('YYYY/MM/DD');
         } else {
           var filterDateFrom = dates[0];
           var filterDateTo = dates[1];
@@ -188,10 +188,14 @@ define(
           $('.ol-zoom').animate({ 'right': '60px' }, { duration: 300, queue: false });
           $('.ol-attribution').animate({ 'right': '60px' }, { duration: 300, queue: false });
           $('#map-subtitle').animate({ 'right': '45px' }, { duration: 300, queue: false });
+          $('.ol-scale-line').animate({ 'right': '60px' }, { duration: 300, queue: false });
+          $('#terrama2-map-info').animate({ 'right': '60px' }, { duration: 300, queue: false });
         } else {
           $('.ol-zoom').animate({ 'right': '15px' }, { duration: 300, queue: false });
           $('.ol-attribution').animate({ 'right': '15px' }, { duration: 300, queue: false });
           $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
+          $('.ol-scale-line').animate({ 'right': '15px' }, { duration: 300, queue: false });
+          $('#terrama2-map-info').animate({ 'right': '15px' }, { duration: 300, queue: false });
         }
       });
 
@@ -501,9 +505,9 @@ define(
      * @inner
      */
     var loadPlugins = function() {
-      $(".date").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
+      $(".date").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
       $(".date").datepicker({
-        dateFormat: 'dd/mm/yyyy',
+        dateFormat: 'yy/mm/dd',
         dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
         dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
         dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
