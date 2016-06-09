@@ -1,0 +1,57 @@
+<div class="left-content-box" id="layer-explorer-and-filter-box">
+  <h4>Camadas</h4>
+  <br/>
+  <div id="terrama2-layerexplorer" style="max-height: 250px;overflow: auto;"></div>
+  <hr/>
+  <h4>Filtros de Datas e Sat&eacute;lites</h4>
+  <br/>
+  <div class="form-group">
+    <label>In&iacute;cio e Fim</label>
+    <div class="row">
+      <div class="col-lg-6">
+        <input type="text" class="form-control date filter-date" id="filter-date-from" placeholder="De" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
+      </div>
+      <div class="col-lg-6">
+        <input type="text" class="form-control date filter-date" id="filter-date-to" placeholder="At&eacute;" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Sat&eacute;lites</label>
+    <select class="form-control" id="filter-satellite">
+      <option value="all">TODOS</option>
+      <%
+      configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+        if(satellite.Current) {
+        %>
+        <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
+        <%
+        }
+      })
+      %>
+    </select>
+  </div>
+  <button class="btn btn-primary" id="filter-button">Aplicar</button>
+  <hr/>
+  <h4>Filtros Espaciais</h4>
+  <br/>
+  <div class="form-group">
+    <label for="continents">Continentes</label>
+    <select id="continents" name="continents" class="form-control">
+      <option value="">Selecione o continente abaixo</option>
+      <% continents.forEach(function(continent, index) { %>
+        <option value="<%- continent.pk %>"><%- continent.fields.nome %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="countries">Países</label>
+    <select id="countries" name="countries" class="form-control"></select>
+  </div>
+  <div class="form-group">
+    <label for="states">Estados</label>
+    <select id="states" name="states" class="form-control"></select>
+  </div>
+
+
+</div>
