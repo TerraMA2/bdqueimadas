@@ -264,16 +264,19 @@ define(
         applyFilter();
       });
 
-      $('.continent-item').on('click', function() {
-        Utils.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'Continent' });
+      $('#continents').change(function() {
+        if($(this).val() !== "")
+          Utils.getSocket().emit('spatialFilterRequest', { id: $(this).val(), text: $(this).text(), key: 'Continent' });
       });
 
-      $(document).on('click', '.country-item', function() {
-        Utils.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'Country' });
+      $('#countries').change(function() {
+        if($(this).val() !== "")
+          Utils.getSocket().emit('spatialFilterRequest', { id: $(this).val(), text: $(this).text(), key: 'Country' });
       });
 
-      $(document).on('click', '.state-item', function() {
-        Utils.getSocket().emit('spatialFilterRequest', { id: $(this).attr('id'), text: $(this).text(), key: 'State' });
+      $('#states').change(function() {
+        if($(this).val() !== "")
+          Utils.getSocket().emit('spatialFilterRequest', { id: $(this).val(), text: $(this).text(), key: 'State' });
       });
 
       $('.filter-date').on('focus', function() {
@@ -367,9 +370,9 @@ define(
 
             Utils.getSocket().emit('countriesByContinentRequest', { continent: result.id });
 
-            Filter.enableDropdown('continents', result.text, result.id);
-            Filter.enableDropdown('countries', 'Pa&iacute;ses', '');
-            Filter.disableDropdown('states', 'Estados', '');
+            Filter.enableDropdown('continents', result.id);
+            Filter.enableDropdown('countries', '');
+            Filter.disableDropdown('states', '');
           } else if(result.key === 'Country') {
             Filter.setCountry(result.extent.rows[0].bdq_name);
             Filter.setState(null);
@@ -378,8 +381,8 @@ define(
 
             Utils.getSocket().emit('statesByCountryRequest', { country: result.id });
 
-            Filter.enableDropdown('countries', result.text, result.id);
-            Filter.enableDropdown('states', 'Estados', '');
+            Filter.enableDropdown('countries', result.id);
+            Filter.enableDropdown('states', '');
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
               Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellite(), layer);
@@ -389,7 +392,7 @@ define(
 
             applyFilter();
 
-            Filter.enableDropdown('states', result.text, result.id);
+            Filter.enableDropdown('states', result.id);
           }
         } else {
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
@@ -450,14 +453,14 @@ define(
 
         applyFilter();
 
-        Filter.enableDropdown('countries', result.country.rows[0].name, result.country.rows[0].id);
+        Filter.enableDropdown('countries', result.country.rows[0].id);
         Utils.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
 
-        var html = "",
+        var html = "<option value=\"\">Selecione o país abaixo</option>",
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
+          html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
         }
 
         $('#countries').empty().html(html);
@@ -468,22 +471,22 @@ define(
       });
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
-        var html = "",
+        var html = "<option value=\"\">Selecione o país abaixo</option>",
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<li class='country-item' id='" + result.countries.rows[i].id + "'><a href='#'>" + result.countries.rows[i].name + "</a></li>";
+          html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
         }
 
         $('#countries').empty().html(html);
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
-        var html = "",
+        var html = "<option value=\"\">Selecione o estado abaixo</option>",
             statesCount = result.states.rowCount;
 
         for(var i = 0; i < statesCount; i++) {
-          html += "<li class='state-item' id='" + result.states.rows[i].id + "'><a href='#'>" + result.states.rows[i].name + "</a></li>";
+          html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
         }
 
         $('#states').empty().html(html);

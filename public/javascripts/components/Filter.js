@@ -270,7 +270,7 @@ define(
         cql += createDateFilter() + " AND ";
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries-title').attr('item-id'), memberSatellite, layer);
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellite, layer);
         });
 
         $.each(Utils.getConfigurations().mapConfigurations.LayerGroups, function(i, layerGroup) {
@@ -415,35 +415,29 @@ define(
     /**
      * Enables a dropdown.
      * @param {string} id - Item HTML id
-     * @param {string} text - Item name
      * @param {string} itemId - Item id
      *
      * @function enableDropdown
      * @memberof Filter(2)
      * @inner
      */
-    var enableDropdown = function(id, text, itemId) {
-      $('#' + id + '-title').empty().html(text);
-      $('#' + id + '-title').attr("item-id", itemId);
-      $('#' + id + '-dropdown').removeClass('open');
-      $('#' + id + '-dropdown').removeClass('dropdown-closed');
+    var enableDropdown = function(id, itemId) {
+      $('#' + id).removeAttr('disabled');
+      $('#' + id).val(itemId);
     };
 
     /**
      * Disables a dropdown.
      * @param {string} id - Item HTML id
-     * @param {string} text - Item name
      * @param {string} itemId - Item id
      *
      * @function disableDropdown
      * @memberof Filter(2)
      * @inner
      */
-    var disableDropdown = function(id, text, itemId) {
-      $('#' + id + '-title').empty().html(text);
-      $('#' + id + '-title').attr("item-id", itemId);
-      $('#' + id + '-dropdown').removeClass('open');
-      if(!$('#' + id + '-dropdown').hasClass('dropdown-closed')) $('#' + id + '-dropdown').addClass('dropdown-closed');
+    var disableDropdown = function(id, itemId) {
+      $('#' + id).attr('disabled', 'disabled');
+      $('#' + id).val(itemId);
     };
 
     /**
@@ -454,10 +448,10 @@ define(
      * @inner
      */
     var resetDropdowns = function() {
-      enableDropdown('continents', 'Continentes', '');
-      disableDropdown('countries', 'Pa&iacute;ses', '');
+      enableDropdown('continents', '');
+      disableDropdown('countries', '');
       $('#countries').empty();
-      disableDropdown('states', 'Estados', '');
+      disableDropdown('states', '');
       $('#states').empty();
     };
 

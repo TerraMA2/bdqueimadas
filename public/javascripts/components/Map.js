@@ -21,30 +21,55 @@ define(
     var addLayersToMap = function() {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
-        if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
+      if(configuration.LayerGroups.length > 0) {
+        for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
+          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
 
-        for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
-          var layerName = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Name);
-          var layerTime = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Time);
+          for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
+            var layerName = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Name);
+            var layerTime = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Time);
 
-          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Layers[j].Id, configuration.LayerGroups[i].Id);
+            if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime))
+              TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Layers[j].Id, configuration.LayerGroups[i].Id);
 
-          if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
+            if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
+              var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
+              var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
+              var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
+
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.LayerGroups[i].Layers[j].Id);
+
+              Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+            } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.LayerGroups[i].Layers[j].Id)) {
+              var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
+              var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
+
+              Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
+            }
+          }
+        }
+      } else if(configuration.Layers.length > 0) {
+        for(var j = configuration.Layers.length - 1; j >= 0; j--) {
+          var layerName = Utils.processStringWithDatePattern(configuration.Layers[j].Name);
+          var layerTime = Utils.processStringWithDatePattern(configuration.Layers[j].Time);
+
+          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.Layers[j].Url, configuration.Layers[j].ServerType, configuration.Layers[j].Id, layerName, configuration.Layers[j].Visible, configuration.Layers[j].MinResolution, configuration.Layers[j].MaxResolution, 'terrama2-layerexplorer', layerTime))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.Layers[j].Id, 'terrama2-layerexplorer');
+
+          if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
             var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
 
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.LayerGroups[i].Layers[j].Id);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.Layers[j].Id);
 
             Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-          } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.LayerGroups[i].Layers[j].Id)) {
+          } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.Layers[j].Id)) {
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), 'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
+            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'AQUA_M-T', configuration.Layers[j].Id);
           }
         }
       }
