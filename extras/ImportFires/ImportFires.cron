@@ -1,0 +1,17 @@
+# Coletado as 23:40, script roda as 00hrs e coleta o periodo de 20:40:01 a 23:40:00
+# Coletado as 02:40, script roda as 03hrs e coleta o periodo de 23:40:01 a 02:40:00
+# Coletado as 08:40, script roda as 09hrs e coleta o periodo de 02:40:01 a 08:40:00
+# Coletado as 11:40, script roda as 12hrs e coleta o periodo de 08:40:01 a 11:40:00
+# Coletado as 14:40, script roda as 15hrs e coleta o periodo de 11:40:01 a 14:40:00
+# Coletado as 17:40, script roda as 18hrs e coleta o periodo de 14:40:01 a 17:40:00
+# Coletado as 20:40, script roda as 21hrs e coleta o periodo de 17:40:01 a 20:40:00
+
+crontab -e
+
+0 0 * * * ImportFires.sh
+0 3 * * * ImportFires.sh
+0 9 * * * ImportFires.sh
+0 12 * * * ImportFires.sh
+0 15 * * * ImportFires.sh
+0 18 * * * ImportFires.sh
+0 21 * * * ImportFires.sh
