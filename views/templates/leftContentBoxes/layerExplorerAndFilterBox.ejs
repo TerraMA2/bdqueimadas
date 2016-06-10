@@ -39,8 +39,8 @@
     <label for="continents">Continentes</label>
     <select id="continents" name="continents" class="form-control">
       <option value="">Selecione o continente abaixo</option>
-      <% continents.forEach(function(continent, index) { %>
-        <option value="<%- continent.pk %>"><%- continent.fields.nome %></option>
+      <% continents.rows.forEach(function(continent, index) { %>
+        <option value="<%- continent.id %>"><%- continent.name %></option>
       <% }) %>
     </select>
   </div>

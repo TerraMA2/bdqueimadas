@@ -24,12 +24,12 @@ define(
      * @inner
      */
     var setTimeSeriesTool = function() {
-      if($('#show-time-series-graphic > i').hasClass('active')) {
+      if($('#show-time-series-graphic').hasClass('active')) {
         Map.resetMapMouseTools();
         Map.activateMoveMapTool();
       } else {
         Map.resetMapMouseTools();
-        $('#show-time-series-graphic > i').addClass('active');
+        $('#show-time-series-graphic').addClass('active');
         $('#terrama2-map').addClass('cursor-pointer');
         TerraMA2WebComponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
           showTimeSeriesGraphic(longitude, latitude, "2000-01", "2000-12");
