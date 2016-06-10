@@ -28,7 +28,7 @@ PGSQL_DB = None
 PGSQL_CURSOR = None
 
 # Path to the log file
-LOG_FILE = "ImportFires.log"
+LOG_FILE = "/ImportFires/ImportFires.log"
 
 # Variable responsible for keeping any exception that occur
 EXCEPTION = None

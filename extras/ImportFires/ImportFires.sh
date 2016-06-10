@@ -61,5 +61,5 @@ fi
 # If there is no errors the ImportFires.py is executed
 if [ "$error" = false ];
 then
-  python ImportFires.py $beginDate $beginTime $endDate $endTime
+  python /ImportFires/ImportFires.py $beginDate $beginTime $endDate $endTime
 fi
