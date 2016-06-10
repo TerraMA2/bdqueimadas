@@ -601,7 +601,7 @@ define(
         $("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
       }
 
-      $(".content-header > h1").html(headerText);
+      $("#page-title").html(headerText);
     };
 
     /**
@@ -638,7 +638,7 @@ define(
      * @inner
      */
     var closeAllLeftContentBoxes = function() {
-      $(".content-header > h1").html("Banco de Dados de Queimadas");
+      $("#page-title").html("Banco de Dados de Queimadas");
       $(".left-content-box").removeClass('active');
       $(".left-content-box").removeClass('fullmenu');
       $(".left-content-box").animate({ left: '-100%' }, { duration: 300, queue: false });
@@ -673,7 +673,7 @@ define(
       $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
       $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-      $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+      $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight + 10) + "px" }, { duration: duration, queue: false });
       $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
     };
 
@@ -690,7 +690,7 @@ define(
       $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
       $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-      $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+      $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight + 10) + "px" }, { duration: duration, queue: false });
       $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
     };
 
