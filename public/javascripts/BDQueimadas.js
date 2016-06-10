@@ -455,7 +455,7 @@ define(
 
         Utils.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
 
-        var html = "<option value=\"\">Selecione o país abaixo</option>",
+        var html = "<option value=\"\">Selecione o país</option>",
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
@@ -474,7 +474,7 @@ define(
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
         var initialValue = $('#countries').val();
 
-        var html = "<option value=\"\">Selecione o país abaixo</option>",
+        var html = "<option value=\"\">Selecione o país</option>",
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
@@ -492,7 +492,7 @@ define(
       Utils.getSocket().on('statesByCountryResponse', function(result) {
         var initialValue = $('#states').val();
 
-        var html = "<option value=\"\">Selecione o estado abaixo</option>",
+        var html = "<option value=\"\">Selecione o estado</option>",
             statesCount = result.states.rowCount;
 
         for(var i = 0; i < statesCount; i++) {

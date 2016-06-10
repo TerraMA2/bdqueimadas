@@ -3,16 +3,19 @@
   <br/>
   <div id="terrama2-layerexplorer" style="max-height: 250px;overflow: auto;"></div>
   <hr/>
-  <h4 class="layer-explorer-and-filters-title">Filtros de Datas e Sat&eacute;lites</h4>
+  <h4 class="layer-explorer-and-filters-title">Filtros de Datas e de Sat&eacute;lites</h4>
   <br/>
   <div class="form-group">
-    <label>In&iacute;cio e Fim</label>
+    <div class="row">
+      <div class="col-lg-6"><label for="filter-date-from">In&iacute;cio</label></div>
+      <div class="col-lg-6"><label for="filter-date-to">Fim</label></div>
+    </div>
     <div class="row">
       <div class="col-lg-6">
-        <input type="text" class="form-control date filter-date" id="filter-date-from" placeholder="De" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
+        <input type="text" class="form-control date filter-date" id="filter-date-from" name="filter-date-from" placeholder="De" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
       </div>
       <div class="col-lg-6">
-        <input type="text" class="form-control date filter-date" id="filter-date-to" placeholder="At&eacute;" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
+        <input type="text" class="form-control date filter-date" id="filter-date-to" name="filter-date-to" placeholder="At&eacute;" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
       </div>
     </div>
   </div>
@@ -38,7 +41,7 @@
   <div class="form-group">
     <label for="continents">Continentes</label>
     <select id="continents" name="continents" class="form-control">
-      <option value="">Selecione o continente abaixo</option>
+      <option value="">Selecione o continente</option>
       <% continents.rows.forEach(function(continent, index) { %>
         <option value="<%- continent.id %>"><%- continent.name %></option>
       <% }) %>
