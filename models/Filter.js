@@ -40,7 +40,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
+        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%américa%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europa%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%áfrica%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, function(err, result) {
