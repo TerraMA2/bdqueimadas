@@ -424,6 +424,7 @@ define(
     var enableDropdown = function(id, itemId) {
       $('#' + id).removeAttr('disabled');
       $('#' + id).val(itemId);
+      $('#' + id).attr('data-value', itemId);
     };
 
     /**
@@ -436,8 +437,9 @@ define(
      * @inner
      */
     var disableDropdown = function(id, itemId) {
-      $('#' + id).attr('disabled', 'disabled');
       $('#' + id).val(itemId);
+      $('#' + id).attr('data-value', itemId);
+      $('#' + id).attr('disabled', 'disabled');
     };
 
     /**

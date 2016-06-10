@@ -85,7 +85,7 @@ define(
     var resetMapMouseTools = function() {
       TerraMA2WebComponents.MapDisplay.unsetMapSingleClickEvent();
       TerraMA2WebComponents.MapDisplay.removeZoomDragBox();
-      $('.mouse-function-btn > i').removeClass('active');
+      $('.mouse-function-btn').removeClass('active');
       $('#terrama2-map').removeClass('cursor-crosshair');
       $('#terrama2-map').removeClass('cursor-move');
       $('#terrama2-map').removeClass('cursor-pointer');
@@ -99,7 +99,7 @@ define(
      * @inner
      */
     var activateMoveMapTool = function() {
-      $('#moveMap > i').addClass('active');
+      $('#moveMap').addClass('active');
       $('#terrama2-map').addClass('cursor-move');
     };
 
@@ -122,7 +122,7 @@ define(
      * @inner
      */
     var activateDragboxTool = function() {
-      $('#dragbox > i').addClass('active');
+      $('#dragbox').addClass('active');
       $('#terrama2-map').addClass('cursor-crosshair');
       TerraMA2WebComponents.MapDisplay.addZoomDragBox();
     };
@@ -244,6 +244,7 @@ define(
       $(document).ready(function() {
         addLayersToMap();
         addSubtitles();
+        activateMoveMapTool();
       });
     };
 

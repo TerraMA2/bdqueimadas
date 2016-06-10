@@ -398,6 +398,18 @@
   left: 40%;
 }
 
+.mouse-function-btn {
+  background: #f8b802 !important;
+}
+
+.mouse-function-btn:hover {
+  background: #E0A602 !important;
+}
+
+.mouse-function-btn.active {
+  background: #E0A602 !important;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
@@ -444,7 +456,7 @@
 
 #graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
 
-.sidebar-menu > li > a > span { padding-left: 22px; }
+/*.sidebar-menu > li > a > span { padding-left: 22px; }*/
 
 .skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../externals/adminlte/img/sprite.png") 0 2px;}
 
