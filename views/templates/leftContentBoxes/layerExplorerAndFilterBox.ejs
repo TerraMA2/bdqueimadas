@@ -2,33 +2,34 @@
   <h4 class="layer-explorer-and-filters-title">Filtros de Datas e de Sat&eacute;lites</h4>
   <br/>
   <div class="form-group">
-    <div class="row">
-      <div class="col-lg-6"><label for="filter-date-from">In&iacute;cio</label></div>
-      <div class="col-lg-6"><label for="filter-date-to">Fim</label></div>
+    <div style="float: left;">
+      <label for="filter-date-from" style="float: left; margin-right: 10px; margin-top: 5px;">Início</label>
+      <input type="text" style="max-width: 100px;" class="form-control date filter-date hasDatepicker" id="filter-date-from" placeholder="De" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask="">
     </div>
-    <div class="row">
-      <div class="col-lg-6">
-        <input type="text" class="form-control date filter-date" id="filter-date-from" name="filter-date-from" placeholder="De" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
-      </div>
-      <div class="col-lg-6">
-        <input type="text" class="form-control date filter-date" id="filter-date-to" name="filter-date-to" placeholder="At&eacute;" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
-      </div>
+    <div style="float: right;">
+      <label for="filter-date-to" style="float: left; margin-right: 10px; margin-top: 5px;">Fim</label>
+      <input type="text" style="max-width: 100px;" class="form-control date filter-date hasDatepicker" id="filter-date-to" placeholder="Até" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask="">
     </div>
   </div>
-  <div class="form-group">
-    <label>Sat&eacute;lites</label>
-    <select class="form-control" id="filter-satellite">
-      <option value="all">TODOS</option>
-      <%
-      configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
-        if(satellite.Current) {
-        %>
-        <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
-        <%
-        }
-      })
-      %>
-    </select>
+  <div style="clear: both; height: 15px;"></div>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="filter-satellite" class="col-sm-3 control-label">Sat&eacute;lites</label>
+      <div class="col-sm-9">
+        <select class="form-control" id="filter-satellite">
+          <option value="all">TODOS</option>
+          <%
+          configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+            if(satellite.Current) {
+            %>
+            <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
+            <%
+            }
+          })
+          %>
+        </select>
+      </div>
+    </div>
   </div>
   <button class="btn btn-primary" id="filter-button">Aplicar</button>
   <hr/>
