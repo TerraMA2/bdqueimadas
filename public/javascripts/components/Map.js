@@ -30,7 +30,7 @@ define(
             var layerName = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Name);
             var layerTime = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Time);
 
-            if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime))
+            if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime, configuration.LayerGroups[i].Layers[j].Disabled))
               TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Layers[j].Id, configuration.LayerGroups[i].Id);
 
             if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
@@ -54,7 +54,7 @@ define(
           var layerName = Utils.processStringWithDatePattern(configuration.Layers[j].Name);
           var layerTime = Utils.processStringWithDatePattern(configuration.Layers[j].Time);
 
-          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.Layers[j].Url, configuration.Layers[j].ServerType, configuration.Layers[j].Id, layerName, configuration.Layers[j].Visible, configuration.Layers[j].MinResolution, configuration.Layers[j].MaxResolution, 'terrama2-layerexplorer', layerTime))
+          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.Layers[j].Url, configuration.Layers[j].ServerType, configuration.Layers[j].Id, layerName, configuration.Layers[j].Visible, configuration.Layers[j].MinResolution, configuration.Layers[j].MaxResolution, 'terrama2-layerexplorer', layerTime, configuration.Layers[j].Disabled))
             TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.Layers[j].Id, 'terrama2-layerexplorer');
 
           if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
