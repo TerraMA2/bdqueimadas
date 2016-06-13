@@ -180,7 +180,7 @@ define(function() {
         if($('#filter-date-from').datepicker('getDate') > $('#filter-date-to').datepicker('getDate')) {
           if(showAlerts) {
             vex.dialog.alert({
-              message: '<p class="text-center">A data de fim deve ser maior ou igual que a data de início!</p>',
+              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
               buttons: [{
                 type: 'submit',
                 text: 'Ok',
@@ -189,10 +189,10 @@ define(function() {
             });
           }
 
-          filterDateTo = $('#filter-date-from').val();
+          $('#filter-date-to').val('');
+        } else {
+          returnValue = [filterDateFrom, filterDateTo];
         }
-
-        returnValue = [filterDateFrom, filterDateTo];
       }
     } else {
       if(filterDateFrom.length === 0) {

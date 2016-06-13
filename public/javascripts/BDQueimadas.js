@@ -544,7 +544,7 @@ define(
 
         if(dateFrom === null) {
           vex.dialog.alert({
-            message: '<p class="text-center">A data de início deve ser preenchida primeiro!</p>',
+            message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
@@ -556,7 +556,7 @@ define(
         } else {
           if(dateFrom > dateTo) {
             vex.dialog.alert({
-              message: '<p class="text-center">A data de fim deve ser maior ou igual que a data de início!</p>',
+              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
               buttons: [{
                 type: 'submit',
                 text: 'Ok',
@@ -564,7 +564,7 @@ define(
               }]
             });
 
-            $("#filter-date-to").val($("#filter-date-from").val());
+            $("#filter-date-to").val('');
           }
         }
       };
