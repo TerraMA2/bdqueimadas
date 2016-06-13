@@ -36,7 +36,7 @@ define(
             if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
               var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
               var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
-              var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
+              var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;// + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
 
               TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.LayerGroups[i].Layers[j].Id);
 
@@ -45,7 +45,7 @@ define(
               var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
               var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-              Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
+              Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'all', configuration.LayerGroups[i].Layers[j].Id);//'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
             }
           }
         }
@@ -60,7 +60,7 @@ define(
           if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
-            var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
+            var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;// + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
 
             TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.Layers[j].Id);
 
@@ -69,7 +69,7 @@ define(
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'AQUA_M-T', configuration.Layers[j].Id);
+            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'all', configuration.Layers[j].Id);//'AQUA_M-T', configuration.Layers[j].Id);
           }
         }
       }
