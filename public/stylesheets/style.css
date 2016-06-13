@@ -424,6 +424,10 @@
   color: #03316f;
 }
 
+.bdqueimadas-form {
+  margin-bottom: 5px;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
