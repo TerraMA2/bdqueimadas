@@ -35,22 +35,34 @@
   <hr/>
   <h4 class="layer-explorer-and-filters-title">Filtros Espaciais</h4>
   <br/>
-  <div class="form-group">
-    <label for="continents">Continentes</label>
-    <select id="continents" name="continents" class="form-control">
-      <option value="">Selecione o continente</option>
-      <% continents.rows.forEach(function(continent, index) { %>
-        <option value="<%- continent.id %>"><%- continent.name %></option>
-      <% }) %>
-    </select>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="continents" class="col-sm-3 control-label">Continentes</label>
+      <div class="col-sm-9">
+        <select id="continents" name="continents" class="form-control">
+          <option value="">Selecione o continente</option>
+          <% continents.rows.forEach(function(continent, index) { %>
+            <option value="<%- continent.id %>"><%- continent.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="countries">Países</label>
-    <select id="countries" name="countries" class="form-control"></select>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="countries" class="col-sm-3 control-label" style="text-align: left;">Países</label>
+      <div class="col-sm-9">
+        <select id="countries" name="countries" class="form-control"></select>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="states">Estados</label>
-    <select id="states" name="states" class="form-control"></select>
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label for="states" class="col-sm-3 control-label">Estados</label>
+      <div class="col-sm-9">
+        <select id="states" name="states" class="form-control"></select>
+      </div>
+    </div>
   </div>
   <hr/>
   <h4 class="layer-explorer-and-filters-title">Camadas</h4>

@@ -51,7 +51,7 @@ define(
      * @inner
      */
     var applyFilter = function() {
-      var dates = Utils.getFilterDates();
+      var dates = Utils.getFilterDates(true);
 
       if(dates !== null) {
         Filter.setSatellite($('#filter-satellite').val());
@@ -524,7 +524,8 @@ define(
      */
     var loadPlugins = function() {
       $(".date").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
-      $(".date").datepicker({
+
+      var datePickerOptions = {
         dateFormat: 'yy/mm/dd',
         dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
         dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
@@ -533,7 +534,42 @@ define(
         monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
         nextText: 'Próximo',
         prevText: 'Anterior'
-      });
+      };
+
+      $("#filter-date-from").datepicker(datePickerOptions);
+
+      datePickerOptions['onSelect'] = function (date) {
+        var dateFrom = $('#filter-date-from').datepicker('getDate');
+        var dateTo = $(this).datepicker('getDate');
+
+        if(dateFrom === null) {
+          vex.dialog.alert({
+            message: '<p class="text-center">A data de início deve ser preenchida primeiro!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $("#filter-date-to").val('');
+        } else {
+          if(dateFrom > dateTo) {
+            vex.dialog.alert({
+              message: '<p class="text-center">A data de fim deve ser maior ou igual que a data de início!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+
+            $("#filter-date-to").val($("#filter-date-from").val());
+          }
+        }
+      };
+
+      $("#filter-date-to").datepicker(datePickerOptions);
     };
 
     /**
