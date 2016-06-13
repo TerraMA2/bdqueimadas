@@ -158,13 +158,16 @@ define(function() {
 
   /**
    * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
+   * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
    * @returns {array} returnValue - Empy array, or an array with the dates, or a null value
    *
    * @function getFilterDates
    * @memberof Utils
    * @inner
    */
-  var getFilterDates = function() {
+  var getFilterDates = function(showAlerts) {
+    showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
+
     var filterDateFrom = $('#filter-date-from').val();
     var filterDateTo = $('#filter-date-to').val();
 
@@ -174,6 +177,21 @@ define(function() {
       if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
         returnValue = [];
       } else {
+        if($('#filter-date-from').datepicker('getDate') > $('#filter-date-to').datepicker('getDate')) {
+          if(showAlerts) {
+            vex.dialog.alert({
+              message: '<p class="text-center">A data de fim deve ser maior ou igual que a data de início!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+
+          filterDateTo = $('#filter-date-from').val();
+        }
+
         returnValue = [filterDateFrom, filterDateTo];
       }
     } else {
