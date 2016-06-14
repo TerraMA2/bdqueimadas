@@ -318,6 +318,11 @@ define(
         Map.updateZoomTop(true);
       });
 
+      setTimeout(function(){
+        $('.sidebar-toggle').click();
+        $('#main-sidebar-toggle').css('display', '');
+      }, 15000);
+
       TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
         var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
         TerraMA2WebComponents.MapDisplay.zoomToExtent(dragBoxExtent);
