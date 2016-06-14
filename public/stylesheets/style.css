@@ -348,14 +348,6 @@
   margin-top: 4px !important;
 }
 
-#about-btn {
-  color: black;
-  font-size: 16px;
-  float: right;
-  margin-bottom: 10px;
-  margin-top: 65px;
-}
-
 #bdqueimadas-description {
   color: #fbda43;
   font-weight: bold;
@@ -426,6 +418,16 @@
 
 .bdqueimadas-form {
   margin-bottom: 5px;
+}
+
+#footer > p {
+  text-align: center;
+  bottom: 16px;
+  position: absolute;
+  width: 100%;
+  font-size: 17px;
+  color: #03316f !important;
+  font-weight: 900;
 }
 
 /* TerraMA2Components styles */
@@ -511,3 +513,9 @@
 .dropdown-closed > .dropdown-menu { display: none !important; }
 
 .control-sidebar > .tab-content { text-align: center; }
+
+.skin-queimadas #footer>div { margin-top: 0px !important; }
+
+.skin-queimadas #footer>div.clear { margin: 0px !important; }
+
+.skin-queimadas #footer { padding: 10px 0 !important; }

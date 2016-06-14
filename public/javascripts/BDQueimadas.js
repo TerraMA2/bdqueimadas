@@ -84,7 +84,7 @@ define(
       // General Events
 
       // Sidebar buttons click event
-      $(".sidebar-menu > li").on('click', function(event) {
+      $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();
 
         var box = $(this).attr('box');
@@ -175,7 +175,7 @@ define(
         }
 
         // Updates the padding top of the sidebar
-        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+        $('.main-sidebar').attr("style", "padding-top: " + ($('#header').outerHeight() + $('.navbar').outerHeight() + 33) + "px");
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
