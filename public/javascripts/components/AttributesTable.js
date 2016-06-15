@@ -86,10 +86,10 @@ define(
             "data": function(data) {
               data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
               data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
-              data.satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+              data.satellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-              data.country = Filter.getCountries();
-              data.state = Filter.getStates();
+              data.countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
+              data.states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
             }
           },
           "columns": getAttributesTableColumnNamesArray(),

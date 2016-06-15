@@ -32,8 +32,8 @@ var GetAttributesTableController = function(app) {
     // Verifications of the 'options' object items
     if(request.body.satellites !== '') options.satellites = request.body.satellites;
     if(request.body.extent !== '') options.extent = request.body.extent;
-    if(request.body.country !== null && request.body.country !== '') options.country = request.body.country;
-    if(request.body.state !== null && request.body.state !== '') options.state = request.body.state;
+    if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
+    if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
 
     // Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {
