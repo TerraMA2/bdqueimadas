@@ -12,7 +12,9 @@
  * @property {array} memberSatellites - Current satellites.
  * @property {string} memberContinent - Current continent.
  * @property {array} memberCountries - Current countries.
+ * @property {array} memberCountriesBdqNames - Current countries BDQ names.
  * @property {array} memberStates - Current states.
+ * @property {array} memberStatesBdqNames - Current states BDQ names.
  */
 define(
   ['components/Utils', 'TerraMA2WebComponents'],
@@ -28,8 +30,12 @@ define(
     var memberContinent = null;
     // Current countries
     var memberCountries = [];
+    // Current countries BDQ names
+    var memberCountriesBdqNames = [];
     // Current states
     var memberStates = [];
+    // Current states BDQ names
+    var memberStatesBdqNames = [];
 
     /**
      * Returns the initial date formatted with the received format.
@@ -130,6 +136,30 @@ define(
     };
 
     /**
+     * Sets the countries BDQ names array.
+     * @param {array} countriesBdqNames - Countries BDQ names array
+     *
+     * @function setCountriesBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setCountriesBdqNames = function(countriesBdqNames) {
+      memberCountriesBdqNames = countriesBdqNames;
+    };
+
+    /**
+     * Returns the countries BDQ names array.
+     * @returns {array} memberCountriesBdqNames - Countries BDQ names array
+     *
+     * @function getCountriesBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getCountriesBdqNames = function() {
+      return memberCountriesBdqNames;
+    };
+
+    /**
      * Sets the states array.
      * @param {array} states - States array
      *
@@ -151,6 +181,30 @@ define(
      */
     var getStates = function() {
       return memberStates;
+    };
+
+    /**
+     * Sets the states BDQ names array.
+     * @param {array} statesBdqNames - States BDQ names array
+     *
+     * @function setStatesBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setStatesBdqNames = function(statesBdqNames) {
+      memberStatesBdqNames = statesBdqNames;
+    };
+
+    /**
+     * Returns the states BDQ names array.
+     * @returns {array} memberStatesBdqNames - States BDQ names array
+     *
+     * @function getStatesBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getStatesBdqNames = function() {
+      return memberStatesBdqNames;
     };
 
     /**
@@ -243,8 +297,8 @@ define(
     var createCountriesFilter = function() {
       var cql = "(";
 
-      for(var i = 0; i < memberCountries.length; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountries[i] + "' OR ";
+      for(var i = 0; i < memberCountriesBdqNames.length; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountriesBdqNames[i] + "' OR ";
       }
 
       cql = cql.substring(0, cql.length - 4) + ")";
@@ -264,8 +318,8 @@ define(
     var createStatesFilter = function() {
       var cql = "(";
 
-      for(var i = 0; i < memberStates.length; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberStates[i] + "' OR ";
+      for(var i = 0; i < memberStatesBdqNames.length; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberStatesBdqNames[i] + "' OR ";
       }
 
       cql = cql.substring(0, cql.length - 4) + ")";
@@ -414,7 +468,7 @@ define(
      * @inner
      */
     var selectContinentItem = function(id, text) {
-      Utils.getSocket().emit('spatialFilterRequest', { ids: id, key: 'Continent' });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: id, key: 'Continent', filterForm: false });
     };
 
     /**
@@ -427,7 +481,7 @@ define(
      */
     var selectCountries = function(ids) {
       Utils.getSocket().emit('continentByCountryRequest', { country: ids[0] });
-      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'Countries' });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'Countries', filterForm: false });
     };
 
     /**
@@ -441,7 +495,7 @@ define(
     var selectStates = function(ids) {
       Utils.getSocket().emit('continentByStateRequest', { state: ids[0] });
       Utils.getSocket().emit('countriesByStatesRequest', { states: ids });
-      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'States' });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'States', filterForm: false });
     };
 
     /**
@@ -499,7 +553,7 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
-        Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
+        Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
       });
     };
 
@@ -512,8 +566,12 @@ define(
       getContinent: getContinent,
       setCountries: setCountries,
       getCountries: getCountries,
+      setCountriesBdqNames: setCountriesBdqNames,
+      getCountriesBdqNames: getCountriesBdqNames,
       setStates: setStates,
       getStates: getStates,
+      setStatesBdqNames: setStatesBdqNames,
+      getStatesBdqNames: getStatesBdqNames,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,

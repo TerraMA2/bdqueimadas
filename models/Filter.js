@@ -229,7 +229,7 @@ var Filter = function() {
         // Creation of the query
         var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " +
         memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName +
-        " where " + memberTablesConfig.Countries.IdFieldName + " in (",
+        " where " + memberTablesConfig.Countries.IdFieldName + " in (";
 
         for(var i = 0; i < countries.length; i++) {
           query += "$" + (parameter++) + ",";
@@ -295,33 +295,22 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName;
+        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." +
+        memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
 
-        if(!Utils.stringInArray(countries, "") && countries.length > 0) {
-          query += " where " + memberTablesConfig.Countries.IdFieldName + " in (";
-
-          for(var i = 0; i < countries.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countries[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
+        for(var i = 0; i < countries.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(countries[i]);
         }
+
+        query = query.substring(0, (query.length - 1)) + ")";
 
         // Execution of the query
-        if(params.length > 0) {
-          client.query(query, params, function(err, result) {
-            done();
-            if(!err) return callback(null, result);
-            else return callback(err);
-          });
-        } else {
-          client.query(query, function(err, result) {
-            done();
-            if(!err) return callback(null, result);
-            else return callback(err);
-          });
-        }
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
       } else return callback(err);
     });
   };
@@ -344,33 +333,22 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName;
+        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." +
+        memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
-        if(!Utils.stringInArray(states, "") && states.length > 0) {
-          query += " where " + memberTablesConfig.States.IdFieldName + " in (";
-
-          for(var i = 0; i < states.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(states[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
+        for(var i = 0; i < states.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(states[i]);
         }
+
+        query = query.substring(0, (query.length - 1)) + ")";
 
         // Execution of the query
-        if(params.length > 0) {
-          client.query(query, params, function(err, result) {
-            done();
-            if(!err) return callback(null, result);
-            else return callback(err);
-          });
-        } else {
-          client.query(query, function(err, result) {
-            done();
-            if(!err) return callback(null, result);
-            else return callback(err);
-          });
-        }
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
       } else return callback(err);
     });
   };
@@ -438,6 +416,82 @@ var Filter = function() {
         query += " FROM " + memberTablesConfig[key].Schema + "." + memberTablesConfig[key].TableName + " WHERE ST_Intersects(" + memberTablesConfig[key].GeometryFieldName + ", ST_SetSRID(ST_MakePoint($1, $2), 4326));";
 
         var params = [longitude, latitude];
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the BDQ names of the received countries ids.
+   * @param {array} countries - Countries ids
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCountriesBdqNames
+   * @memberof Filter
+   * @inner
+   */
+  this.getCountriesBdqNames = function(countries, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+        var parameter = 1;
+        var params = [];
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.Countries.BdqNameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." +
+                    memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
+
+        for(var i = 0; i < countries.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(countries[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.Countries.BdqNameFieldName + " asc;";
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the BDQ names of the received states ids.
+   * @param {array} states - States ids
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getStatesBdqNames
+   * @memberof Filter
+   * @inner
+   */
+  this.getStatesBdqNames = function(states, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+        var parameter = 1;
+        var params = [];
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.States.BdqNameFieldName + " as name from " + memberTablesConfig.States.Schema + "." +
+                    memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+
+        for(var i = 0; i < states.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(states[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.States.BdqNameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
