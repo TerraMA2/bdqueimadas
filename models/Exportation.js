@@ -86,16 +86,30 @@ var Exportation = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
-        // If the 'options.country' parameter exists, a country 'where' clause is created
-        if(options.country !== undefined) {
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " = $" + (parameter++);
-          params.push(options.country);
+        // If the 'options.countries' parameter exists, a countries 'where' clause is created
+        if(options.countries !== undefined) {
+          var countriesArray = options.countries.split(',');
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
+
+          for(var i = 0; i < countriesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countriesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        // If the 'options.state' parameter exists, a state 'where' clause is created
-        if(options.state !== undefined) {
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " = $" + (parameter++);
-          params.push(options.state);
+        // If the 'options.states' parameter exists, a states 'where' clause is created
+        if(options.states !== undefined) {
+          var statesArray = options.states.split(',');
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
+
+          for(var i = 0; i < statesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
         }
 
         // If the 'options.limit' parameter exists, a limit clause is created

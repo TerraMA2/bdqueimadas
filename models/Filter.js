@@ -111,23 +111,35 @@ var Filter = function() {
   };
 
   /**
-   * Returns a country filtered by the received state id.
-   * @param {string} state - State id
+   * Returns a list of countries filtered by the received states ids.
+   * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
-   * @function getCountryByState
+   * @function getCountriesByStates
    * @memberof Filter
    * @inner
    */
-  this.getCountryByState = function(state, callback) {
+  this.getCountriesByStates = function(states, callback) {
     // Connection with the PostgreSQL database
     memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
+        var parameter = 1;
+        var params = [];
 
         // Creation of the query
-        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." + memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
-            params = [state];
+        var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." +
+                    memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " +
+                    memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberTablesConfig.States.Schema + "." +
+                    memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName +
+                    ") where b." + memberTablesConfig.States.IdFieldName + " in (";
+
+        for(var i = 0; i < states.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(states[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ");";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -198,6 +210,45 @@ var Filter = function() {
   };
 
   /**
+   * Returns a list of states filtered by the received countries ids.
+   * @param {array} countries - Countries ids
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getStatesByCountries
+   * @memberof Filter
+   * @inner
+   */
+  this.getStatesByCountries = function(countries, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+        var parameter = 1;
+        var params = [];
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " +
+        memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName +
+        " where " + memberTablesConfig.Countries.IdFieldName + " in (",
+
+        for(var i = 0; i < countries.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(countries[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.Countries.NameFieldName + " asc, " + memberTablesConfig.States.NameFieldName + " asc;";
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns the continent extent correspondent to the received id.
    * @param {number} continent - Continent id
    * @param {function} callback - Callback function
@@ -227,59 +278,99 @@ var Filter = function() {
   };
 
   /**
-   * Returns the country extent correspondent to the received id.
-   * @param {number} country - Country id
+   * Returns the countries extent correspondent to the received ids.
+   * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
-   * @function getCountryExtent
+   * @function getCountriesExtent
    * @memberof Filter
    * @inner
    */
-  this.getCountryExtent = function(country, callback) {
+  this.getCountriesExtent = function(countries, callback) {
     // Connection with the PostgreSQL database
     memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
+        var parameter = 1;
+        var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent, " + memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 group by " + memberTablesConfig.Countries.BdqNameFieldName + ";",
-            params = [country];
+        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName;
+
+        if(!Utils.stringInArray(countries, "") && countries.length > 0) {
+          query += " where " + memberTablesConfig.Countries.IdFieldName + " in (";
+
+          for(var i = 0; i < countries.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countries[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
 
         // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
+        if(params.length > 0) {
+          client.query(query, params, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        } else {
+          client.query(query, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        }
       } else return callback(err);
     });
   };
 
   /**
-   * Returns the state extent correspondent to the received id.
-   * @param {number} state - State id
+   * Returns the states extent correspondent to the received ids.
+   * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
-   * @function getStateExtent
+   * @function getStatesExtent
    * @memberof Filter
    * @inner
    */
-  this.getStateExtent = function(state, callback) {
+  this.getStatesExtent = function(states, callback) {
     // Connection with the PostgreSQL database
     memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
       if(!err) {
+        var parameter = 1;
+        var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent, " + memberTablesConfig.States.BdqNameFieldName + " as bdq_name from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " = $1 group by " + memberTablesConfig.States.BdqNameFieldName + ";",
-            params = [state];
+        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName;
+
+        if(!Utils.stringInArray(states, "") && states.length > 0) {
+          query += " where " + memberTablesConfig.States.IdFieldName + " in (";
+
+          for(var i = 0; i < states.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(states[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
 
         // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
+        if(params.length > 0) {
+          client.query(query, params, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        } else {
+          client.query(query, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        }
       } else return callback(err);
     });
   };
