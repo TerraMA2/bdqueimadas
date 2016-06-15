@@ -54,6 +54,22 @@ define(
       var dates = Utils.getFilterDates(true);
 
       if(dates !== null) {
+        if(Filter.getCountries() !== $('#countries').val()) {
+          if(!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0) {
+            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries' });
+          } else {
+            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent' });
+          }
+        } else {
+          if(Filter.getStates() !== $('#states').val()) {
+            if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
+              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States' });
+            } else {
+              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries' });
+            }
+          }
+        }
+
         Filter.setSatellites($('#filter-satellite').val());
 
         if(dates.length === 0) {
@@ -206,8 +222,8 @@ define(
                            "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) +
                            "&satellites=" + (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString()) +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
-                           "&country=" + (Filter.getCountry() !== null ? Filter.getCountry() : "") +
-                           "&state=" + (Filter.getState() !== null ? Filter.getState() : "") +
+                           "&countries=" + (!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0 ? Filter.getCountries().toString() : '') +
+                           "&states=" + (!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0 ? Filter.getStates().toString() : '') +
                            "&format=" + $(this).val();
 
           location.href = exportLink;
@@ -224,10 +240,10 @@ define(
           data: {
             dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat),
             dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat),
-            satellites: Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString(),
+            satellites: (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString()),
             extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
-            country: (Filter.getCountry() !== null ? Filter.getCountry() : ""),
-            state: (Filter.getState() !== null ? Filter.getState() : "")
+            countries: (!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0 ? Filter.getCountries().toString() : ''),
+            states: (!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0 ? Filter.getStates().toString() : '')
           },
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {
@@ -266,17 +282,7 @@ define(
 
       $('#continents').change(function() {
         if($(this).val() !== "")
-          Utils.getSocket().emit('spatialFilterRequest', { id: $(this).val(), text: $(this).text(), key: 'Continent' });
-      });
-
-      $('#countries').change(function() {
-        if($(this).val() !== "")
-          Utils.getSocket().emit('spatialFilterRequest', { id: $(this).val(), text: $(this).text(), key: 'Country' });
-      });
-
-      $('#states').change(function() {
-        if($(this).val() !== "")
-          Utils.getSocket().emit('spatialFilterRequest', { id: $(this).val(), text: $(this).text(), key: 'State' });
+          Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent' });
       });
 
       $('.filter-date').on('focus', function() {
@@ -367,37 +373,37 @@ define(
           updateComponents();
 
           if(result.key === 'Continent') {
-            Filter.setContinent(result.id);
-            Filter.setCountry(null);
-            Filter.setState(null);
+            Filter.setContinent(result.ids);
+            Filter.setCountries([]);
+            Filter.setStates([]);
 
             applyFilter();
 
-            Utils.getSocket().emit('countriesByContinentRequest', { continent: result.id });
+            Utils.getSocket().emit('countriesByContinentRequest', { continent: result.ids });
 
-            Filter.enableDropdown('continents', result.id);
+            Filter.enableDropdown('continents', result.ids);
             Filter.enableDropdown('countries', '');
             Filter.disableDropdown('states', '');
-          } else if(result.key === 'Country') {
-            Filter.setCountry(result.extent.rows[0].bdq_name);
-            Filter.setState(null);
+          } else if(result.key === 'Countries') {
+            Filter.setCountries(result.ids);
+            Filter.setStates([]);
 
             applyFilter();
 
-            Utils.getSocket().emit('statesByCountryRequest', { country: result.id });
+            Utils.getSocket().emit('statesByCountriesRequest', { countries: result.ids });
 
-            Filter.enableDropdown('countries', result.id);
+            Filter.enableDropdown('countries', result.ids);
             Filter.enableDropdown('states', '');
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellites(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.ids, Filter.getSatellites(), layer);
             });
           } else {
-            Filter.setState(result.extent.rows[0].bdq_name);
+            Filter.setStates(result.ids);
 
             applyFilter();
 
-            Filter.enableDropdown('states', result.id);
+            Filter.enableDropdown('states', result.ids);
           }
         } else {
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
@@ -407,33 +413,33 @@ define(
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
         if(result.data.rowCount > 0) {
           if(result.data.rows[0].key === "States") {
-            Filter.setState(result.data.rows[0].bdq_name);
+            Filter.setStates([result.data.rows[0].id]);
 
             applyFilter();
 
-            Filter.selectStateItem(result.data.rows[0].id, result.data.rows[0].name);
+            Filter.selectStates([result.data.rows[0].id]);
           } else if(result.data.rows[0].key === "Countries") {
-            Filter.setCountry(result.data.rows[0].bdq_name);
-            Filter.setState(null);
+            Filter.setCountries([result.data.rows[0].id]);
+            Filter.setStates([]);
 
             applyFilter();
 
-            Filter.selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
+            Filter.selectCountries([result.data.rows[0].id]);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data.rows[0].id, Filter.getSatellites(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), [result.data.rows[0].id], Filter.getSatellites(), layer);
             });
           } else {
             Filter.setContinent(result.data.rows[0].id);
-            Filter.setCountry(null);
-            Filter.setState(null);
+            Filter.setCountries([]);
+            Filter.setStates([]);
 
             applyFilter();
 
             Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
           }
         } else {
-          Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
+          Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
         }
 
         updateComponents();
@@ -453,12 +459,18 @@ define(
         Filter.enableDropdown('continents', result.continent.rows[0].id);
       });
 
-      Utils.getSocket().on('countryByStateResponse', function(result) {
-        Filter.setCountry(result.country.rows[0].bdq_name);
+      Utils.getSocket().on('countriesByStatesResponse', function(result) {
+        var countriesIds = [];
+
+        for(var i = 0; i < result.countriesByStates.rowCount; i++) {
+          countriesIds.push(result.countriesByStates.rows[i].id);
+        }
+
+        Filter.setCountries(countriesIds);
 
         applyFilter();
 
-        Utils.getSocket().emit('statesByCountryRequest', { country: result.country.rows[0].id });
+        Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
 
         var html = "<option value=\"\">Selecione o país</option>",
             countriesCount = result.countries.rowCount;
@@ -469,10 +481,10 @@ define(
 
         $('#countries').empty().html(html);
 
-        Filter.enableDropdown('countries', result.country.rows[0].id);
+        Filter.enableDropdown('countries', countriesIds);
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.country.rows[0].id, Filter.getSatellites(), layer);
+          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), countriesIds, Filter.getSatellites(), layer);
         });
       });
 
@@ -485,6 +497,8 @@ define(
         for(var i = 0; i < countriesCount; i++) {
           html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
         }
+
+        // todo: correct bellows block
 
         $('#countries').empty().html(html);
         if($('#countries').attr('data-value') === "") {
@@ -503,6 +517,28 @@ define(
         for(var i = 0; i < statesCount; i++) {
           html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
         }
+
+        // todo: correct bellows block
+
+        $('#states').empty().html(html);
+        if($('#states').attr('data-value') === "") {
+          $('#states').val(initialValue);
+        } else {
+          $('#states').val($('#states').attr('data-value'));
+        }
+      });
+
+      Utils.getSocket().on('statesByCountriesResponse', function(result) {
+        var initialValue = $('#states').val();
+
+        var html = "<option value=\"\">Selecione o estado</option>",
+            statesCount = result.states.rowCount;
+
+        for(var i = 0; i < statesCount; i++) {
+          html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
+        }
+
+        // todo: correct bellows block
 
         $('#states').empty().html(html);
         if($('#states').attr('data-value') === "") {

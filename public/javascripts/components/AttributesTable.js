@@ -88,8 +88,8 @@ define(
               data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
               data.satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-              data.country = Filter.getCountry();
-              data.state = Filter.getState();
+              data.country = Filter.getCountries();
+              data.state = Filter.getStates();
             }
           },
           "columns": getAttributesTableColumnNamesArray(),

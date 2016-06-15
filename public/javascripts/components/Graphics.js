@@ -122,8 +122,8 @@ define(
               title: firesCountGraphicsConfig.Title,
               satellites: satellites,
               extent: extent,
-              country: Filter.getCountry(),
-              state: Filter.getState()
+              country: Filter.getCountries(),
+              state: Filter.getStates()
             }
           );
         });

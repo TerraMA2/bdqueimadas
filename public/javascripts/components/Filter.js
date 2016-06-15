@@ -9,10 +9,10 @@
  *
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
- * @property {string} memberSatellites - Current satellites.
+ * @property {array} memberSatellites - Current satellites.
  * @property {string} memberContinent - Current continent.
- * @property {string} memberCountry - Current country.
- * @property {string} memberState - Current state.
+ * @property {array} memberCountries - Current countries.
+ * @property {array} memberStates - Current states.
  */
 define(
   ['components/Utils', 'TerraMA2WebComponents'],
@@ -26,10 +26,10 @@ define(
     var memberSatellites = ["all"];
     // Current continent
     var memberContinent = null;
-    // Current country
-    var memberCountry = null;
-    // Current state
-    var memberState = null;
+    // Current countries
+    var memberCountries = [];
+    // Current states
+    var memberStates = [];
 
     /**
      * Returns the initial date formatted with the received format.
@@ -58,8 +58,8 @@ define(
     };
 
     /**
-     * Sets the satellites.
-     * @param {string} satellites - Satellites
+     * Sets the satellites array.
+     * @param {string} satellites - Satellites array
      *
      * @function setSatellites
      * @memberof Filter(2)
@@ -70,8 +70,8 @@ define(
     };
 
     /**
-     * Returns the satellites.
-     * @returns {string} memberSatellites - Satellites
+     * Returns the satellites array.
+     * @returns {string} memberSatellites - Satellites array
      *
      * @function getSatellites
      * @memberof Filter(2)
@@ -106,51 +106,51 @@ define(
     };
 
     /**
-     * Sets the country.
-     * @param {string} country - Country
+     * Sets the countries array.
+     * @param {array} countries - Countries array
      *
-     * @function setCountry
+     * @function setCountries
      * @memberof Filter(2)
      * @inner
      */
-    var setCountry = function(country) {
-      memberCountry = country;
+    var setCountries = function(countries) {
+      memberCountries = countries;
     };
 
     /**
-     * Returns the country.
-     * @returns {string} memberCountry - Country
+     * Returns the countries array.
+     * @returns {array} memberCountries - Countries array
      *
-     * @function getCountry
+     * @function getCountries
      * @memberof Filter(2)
      * @inner
      */
-    var getCountry = function() {
-      return memberCountry;
+    var getCountries = function() {
+      return memberCountries;
     };
 
     /**
-     * Sets the state.
-     * @param {string} state - State
+     * Sets the states array.
+     * @param {array} states - States array
      *
-     * @function setState
+     * @function setStates
      * @memberof Filter(2)
      * @inner
      */
-    var setState = function(state) {
-      memberState = state;
+    var setStates = function(states) {
+      memberStates = states;
     };
 
     /**
-     * Returns the state.
-     * @returns {string} memberState - State
+     * Returns the states array.
+     * @returns {array} memberStates - States array
      *
-     * @function getState
+     * @function getStates
      * @memberof Filter(2)
      * @inner
      */
-    var getState = function() {
-      return memberState;
+    var getStates = function() {
+      return memberStates;
     };
 
     /**
@@ -232,30 +232,44 @@ define(
     };
 
     /**
-     * Creates the country filter.
-     * @returns {string} cql - Country cql filter
+     * Creates the countries filter.
+     * @returns {string} cql - Countries cql filter
      *
      * @private
-     * @function createCountryFilter
+     * @function createCountriesFilter
      * @memberof Filter(2)
      * @inner
      */
-    var createCountryFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountry + "'";
+    var createCountriesFilter = function() {
+      var cql = "(";
+
+      for(var i = 0; i < memberCountries.length; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountries[i] + "' OR ";
+      }
+
+      cql = cql.substring(0, cql.length - 4) + ")";
+
       return cql;
     };
 
     /**
-     * Creates the state filter.
-     * @returns {string} cql - State cql filter
+     * Creates the states filter.
+     * @returns {string} cql - States cql filter
      *
      * @private
-     * @function createStateFilter
+     * @function createStatesFilter
      * @memberof Filter(2)
      * @inner
      */
-    var createStateFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberState + "'";
+    var createStatesFilter = function() {
+      var cql = "(";
+
+      for(var i = 0; i < memberStates.length; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberStates[i] + "' OR ";
+      }
+
+      cql = cql.substring(0, cql.length - 4) + ")";
+
       return cql;
     };
 
@@ -311,12 +325,12 @@ define(
         cql += createSatellitesFilter() + " AND ";
       }
 
-      if(memberCountry !== null) {
-        cql += createCountryFilter() + " AND ";
+      if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
+        cql += createCountriesFilter() + " AND ";
       }
 
-      if(memberState !== null) {
-        cql += createStateFilter() + " AND ";
+      if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
+        cql += createStatesFilter() + " AND ";
       }
 
       if(cql.length > 5) {
@@ -331,18 +345,18 @@ define(
      * Applies filters to the current situation layers.
      * @param {int} begin - Initial date
      * @param {int} end - Final date
-     * @param {string} country - Country id
-     * @param {string} satellites - Satellites
+     * @param {array} countries - Countries ids
+     * @param {array} satellites - Satellites
      * @param {string} layer - Layer id
      *
      * @function applyCurrentSituationFilter
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, country, satellites, layer) {
+    var applyCurrentSituationFilter = function(begin, end, countries, satellites, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
-      if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
+      if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) currentSituationFilter += ";countries:" + countries.toString();
       if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) currentSituationFilter += ";satellites:" + satellites.toString();
 
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
@@ -391,7 +405,7 @@ define(
     };
 
     /**
-     * Selects a continent in the continent dropdown and fills the country dropdown.
+     * Selects a continent in the continent dropdown and fills the countries dropdown.
      * @param {string} id - Continent id
      * @param {string} text - Continent name
      *
@@ -400,36 +414,34 @@ define(
      * @inner
      */
     var selectContinentItem = function(id, text) {
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Continent' });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: id, key: 'Continent' });
     };
 
     /**
-     * Selects a country in the country dropdown, selects a continent in the continent dropdown and fills the state dropdown.
-     * @param {string} id - Country id
-     * @param {string} text - Country name
+     * Selects a list of countries in the countries dropdown, selects a continent in the continent dropdown and fills the states dropdown.
+     * @param {array} ids - Countries ids
      *
-     * @function selectCountryItem
+     * @function selectCountries
      * @memberof Filter(2)
      * @inner
      */
-    var selectCountryItem = function(id, text) {
-      Utils.getSocket().emit('continentByCountryRequest', { country: id });
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'Country' });
+    var selectCountries = function(ids) {
+      Utils.getSocket().emit('continentByCountryRequest', { country: ids[0] });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'Countries' });
     };
 
     /**
-     * Selects a state in the state dropdown, selects a continent in the continent dropdown and selects a country in the country dropdown.
-     * @param {string} id - State id
-     * @param {string} text - State name
+     * Selects a list of states in the states dropdown, selects a continent in the continent dropdown and selects a list of countries in the countries dropdown.
+     * @param {array} ids - States ids
      *
-     * @function selectStateItem
+     * @function selectStates
      * @memberof Filter(2)
      * @inner
      */
-    var selectStateItem = function(id, text) {
-      Utils.getSocket().emit('continentByStateRequest', { state: id });
-      Utils.getSocket().emit('countryByStateRequest', { state: id });
-      Utils.getSocket().emit('spatialFilterRequest', { id: id, text: text, key: 'State' });
+    var selectStates = function(ids) {
+      Utils.getSocket().emit('continentByStateRequest', { state: ids[0] });
+      Utils.getSocket().emit('countriesByStatesRequest', { states: ids });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'States' });
     };
 
     /**
@@ -487,7 +499,7 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
-        Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
+        Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
       });
     };
 
@@ -498,17 +510,17 @@ define(
       getSatellites: getSatellites,
       setContinent: setContinent,
       getContinent: getContinent,
-      setCountry: setCountry,
-      getCountry: getCountry,
-      setState: setState,
-      getState: getState,
+      setCountries: setCountries,
+      getCountries: getCountries,
+      setStates: setStates,
+      getStates: getStates,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       selectContinentItem: selectContinentItem,
-      selectCountryItem: selectCountryItem,
-      selectStateItem: selectStateItem,
+      selectCountries: selectCountries,
+      selectStates: selectStates,
       enableDropdown: enableDropdown,
       disableDropdown: disableDropdown,
       resetDropdowns: resetDropdowns,
