@@ -109,7 +109,7 @@ define(
       if($("#graph-box").css('left') < '0px') {
         var dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
         var dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
-        var satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
+        var satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
         $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
@@ -120,7 +120,7 @@ define(
               dateTo: dateTo,
               key: firesCountGraphicsConfig.Key,
               title: firesCountGraphicsConfig.Title,
-              satellite: satellite,
+              satellites: satellites,
               extent: extent,
               country: Filter.getCountry(),
               state: Filter.getState()
