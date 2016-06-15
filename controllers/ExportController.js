@@ -34,7 +34,7 @@ var ExportController = function(app) {
     var options = {};
 
     // Verifications of the 'options' object items
-    if(request.query.satellite !== '') options.satellite = request.query.satellite;
+    if(request.query.satellites !== '') options.satellites = request.query.satellites;
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
     if(request.query.country !== '') options.country = request.query.country;
     if(request.query.state !== '') options.state = request.query.state;

@@ -86,7 +86,7 @@ define(
             "data": function(data) {
               data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
               data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
-              data.satellite = Filter.getSatellite() !== "all" ? Filter.getSatellite() : '';
+              data.satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.country = Filter.getCountry();
               data.state = Filter.getState();

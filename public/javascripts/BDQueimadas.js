@@ -54,7 +54,7 @@ define(
       var dates = Utils.getFilterDates(true);
 
       if(dates !== null) {
-        Filter.setSatellite($('#filter-satellite').val());
+        Filter.setSatellites($('#filter-satellite').val());
 
         if(dates.length === 0) {
           Filter.updateDatesToCurrent();
@@ -65,10 +65,10 @@ define(
           var filterDateTo = dates[1];
         }
 
-        Filter.applyFilter(filterDateFrom, filterDateTo, Filter.getSatellite());
+        Filter.applyFilter(filterDateFrom, filterDateTo, Filter.getSatellites());
         updateComponents();
       } else {
-        $('#filter-satellite').val(Filter.getSatellite());
+        $('#filter-satellite').val(Filter.getSatellites());
       }
     };
 
@@ -204,7 +204,7 @@ define(
         if($(this).val() !== "") {
           var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat) +
                            "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) +
-                           "&satellite=" + (Filter.getSatellite() !== "all" ? Filter.getSatellite() : "") +
+                           "&satellites=" + (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString()) +
                            "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                            "&country=" + (Filter.getCountry() !== null ? Filter.getCountry() : "") +
                            "&state=" + (Filter.getState() !== null ? Filter.getState() : "") +
@@ -224,7 +224,7 @@ define(
           data: {
             dateFrom: Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat),
             dateTo: Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat),
-            satellite: (Filter.getSatellite() !== "all" ? Filter.getSatellite() : ""),
+            satellites: Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString(),
             extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
             country: (Filter.getCountry() !== null ? Filter.getCountry() : ""),
             state: (Filter.getState() !== null ? Filter.getState() : "")
@@ -390,7 +390,7 @@ define(
             Filter.enableDropdown('states', '');
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.id, Filter.getSatellites(), layer);
             });
           } else {
             Filter.setState(result.extent.rows[0].bdq_name);
@@ -421,7 +421,7 @@ define(
             Filter.selectCountryItem(result.data.rows[0].id, result.data.rows[0].name);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data.rows[0].id, Filter.getSatellite(), layer);
+              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.data.rows[0].id, Filter.getSatellites(), layer);
             });
           } else {
             Filter.setContinent(result.data.rows[0].id);
@@ -472,7 +472,7 @@ define(
         Filter.enableDropdown('countries', result.country.rows[0].id);
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.country.rows[0].id, Filter.getSatellite(), layer);
+          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.country.rows[0].id, Filter.getSatellites(), layer);
         });
       });
 

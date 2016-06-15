@@ -45,7 +45,7 @@ define(
               var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
               var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-              Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'all', configuration.LayerGroups[i].Layers[j].Id);//'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
+              Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), [], configuration.LayerGroups[i].Layers[j].Id);//['AQUA_M-T'], configuration.LayerGroups[i].Layers[j].Id);
             }
           }
         }
@@ -69,7 +69,7 @@ define(
             var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
             var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
 
-            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), 'all', configuration.Layers[j].Id);//'AQUA_M-T', configuration.Layers[j].Id);
+            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), [], configuration.Layers[j].Id);//['AQUA_M-T'], configuration.Layers[j].Id);
           }
         }
       }

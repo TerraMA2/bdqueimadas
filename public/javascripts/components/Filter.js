@@ -9,7 +9,7 @@
  *
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
- * @property {string} memberSatellite - Current satellite.
+ * @property {string} memberSatellites - Current satellites.
  * @property {string} memberContinent - Current continent.
  * @property {string} memberCountry - Current country.
  * @property {string} memberState - Current state.
@@ -22,8 +22,8 @@ define(
     var memberDateFrom = null;
     // Current final date
     var memberDateTo = null;
-    // Current satellite
-    var memberSatellite = "all";
+    // Current satellites
+    var memberSatellites = ["all"];
     // Current continent
     var memberContinent = null;
     // Current country
@@ -58,27 +58,27 @@ define(
     };
 
     /**
-     * Sets the satellite.
-     * @param {string} satellite - Satellite
+     * Sets the satellites.
+     * @param {string} satellites - Satellites
      *
-     * @function setSatellite
+     * @function setSatellites
      * @memberof Filter(2)
      * @inner
      */
-    var setSatellite = function(satellite) {
-      memberSatellite = satellite;
+    var setSatellites = function(satellites) {
+      memberSatellites = satellites;
     };
 
     /**
-     * Returns the satellite.
-     * @returns {string} memberSatellite - Satellite
+     * Returns the satellites.
+     * @returns {string} memberSatellites - Satellites
      *
-     * @function getSatellite
+     * @function getSatellites
      * @memberof Filter(2)
      * @inner
      */
-    var getSatellite = function() {
-      return memberSatellite;
+    var getSatellites = function() {
+      return memberSatellites;
     };
 
     /**
@@ -211,16 +211,23 @@ define(
     };
 
     /**
-     * Creates the satellite filter.
-     * @returns {string} cql - Satellite cql filter
+     * Creates the satellites filter.
+     * @returns {string} cql - Satellites cql filter
      *
      * @private
-     * @function createSatelliteFilter
+     * @function createSatellitesFilter
      * @memberof Filter(2)
      * @inner
      */
-    var createSatelliteFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='" + memberSatellite + "'";
+    var createSatellitesFilter = function() {
+      var cql = "(";
+
+      for(var i = 0; i < memberSatellites.length; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='" + memberSatellites[i] + "' OR ";
+      }
+
+      cql = cql.substring(0, cql.length - 4) + ")";
+
       return cql;
     };
 
@@ -253,16 +260,16 @@ define(
     };
 
     /**
-     * Applies the dates and the satellite filters.
+     * Applies the dates and the satellites filters.
      * @param {string} filterDateFrom - Filtered initial date
      * @param {string} filterDateTo - Filtered final date
-     * @param {string} filterSatellite - Filtered satellite
+     * @param {string} filterSatellites - Filtered satellites
      *
      * @function applyFilter
      * @memberof Filter(2)
      * @inner
      */
-    var applyFilter = function(filterDateFrom, filterDateTo, filterSatellite) {
+    var applyFilter = function(filterDateFrom, filterDateTo, filterSatellites) {
       var cql = "";
 
       if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
@@ -270,7 +277,7 @@ define(
         cql += createDateFilter() + " AND ";
 
         $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellite, layer);
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellites, layer);
         });
 
         if(Utils.getConfigurations().mapConfigurations.LayerGroups.length > 0) {
@@ -300,8 +307,8 @@ define(
         }
       }
 
-      if(filterSatellite !== "all") {
-        cql += createSatelliteFilter() + " AND ";
+      if(!Utils.stringInArray(filterSatellites, "all")) {
+        cql += createSatellitesFilter() + " AND ";
       }
 
       if(memberCountry !== null) {
@@ -316,7 +323,7 @@ define(
         cql = cql.substring(0, cql.length - 5);
       }
 
-      updateSatelliteSelect();
+      updateSatellitesSelect();
       TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
     };
 
@@ -325,34 +332,34 @@ define(
      * @param {int} begin - Initial date
      * @param {int} end - Final date
      * @param {string} country - Country id
-     * @param {string} satellite - Satellite
+     * @param {string} satellites - Satellites
      * @param {string} layer - Layer id
      *
      * @function applyCurrentSituationFilter
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, country, satellite, layer) {
+    var applyCurrentSituationFilter = function(begin, end, country, satellites, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(country !== undefined && country !== null && country !== "" && country !== '') currentSituationFilter += ";country:" + country;
-      if(satellite !== undefined && satellite !== null && satellite !== "" && satellite !== '' && satellite !== "all") currentSituationFilter += ";satellite:" + satellite;
+      if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) currentSituationFilter += ";satellites:" + satellites.toString();
 
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
     };
 
     /**
-     * Updates the satellite HTML select.
+     * Updates the satellites HTML select.
      *
      * @private
-     * @function updateSatelliteSelect
+     * @function updateSatellitesSelect
      * @memberof Filter(2)
      * @inner
      */
-    var updateSatelliteSelect = function() {
-      var selectedOption = $('#filter-satellite').value;
+    var updateSatellitesSelect = function() {
+      var selectedOptions = $('#filter-satellite').val();
 
-      var elem = "<option value=\"all\">TODOS</option>";
+      var elem = Utils.stringInArray(selectedOptions, "all") ? "<option value=\"all\" selected>TODOS</option>" : "<option value=\"all\">TODOS</option>";
       var satellitesList = Utils.getConfigurations().filterConfigurations.Satellites;
 
       $.each(satellitesList, function(i, satelliteItem) {
@@ -370,12 +377,12 @@ define(
         }
 
         if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
-          if(memberSatellite === satelliteItem.Name) {
+          if(Utils.stringInArray(selectedOptions, satelliteItem.Name)) {
             elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
           } else {
             elem += "<option value=\"" + satelliteItem.Name + "\">" + satelliteItem.Name + "</option>";
           }
-        } else if(memberSatellite === satelliteItem.Name) {
+        } else if(Utils.stringInArray(selectedOptions, satelliteItem.Name)) {
           elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
         }
       });
@@ -487,8 +494,8 @@ define(
     return {
       getFormattedDateFrom: getFormattedDateFrom,
       getFormattedDateTo: getFormattedDateTo,
-      setSatellite: setSatellite,
-      getSatellite: getSatellite,
+      setSatellites: setSatellites,
+      getSatellites: getSatellites,
       setContinent: setContinent,
       getContinent: getContinent,
       setCountry: setCountry,

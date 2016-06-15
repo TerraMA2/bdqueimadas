@@ -67,13 +67,20 @@ var Exportation = function() {
                     " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 
-        // If the 'options.satellite' parameter exists, a satellite 'where' clause is created
-        if(options.satellite !== undefined) {
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " = $" + (parameter++);
-          params.push(options.satellite);
+        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
+        if(options.satellites !== undefined) {
+          var satellitesArray = options.satellites.split(',');
+          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+
+          for(var i = 0; i < satellitesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(satellitesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        // If the 'options.extent' parameter exists, a satellite 'where' clause is created
+        // If the 'options.extent' parameter exists, a extent 'where' clause is created
         if(options.extent !== undefined) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);

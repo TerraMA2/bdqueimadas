@@ -26,7 +26,7 @@ var Graphics = function(io) {
       var options = {};
 
       // Verifications of the 'options' object items
-      if(json.satellite !== '') options.satellite = json.satellite;
+      if(json.satellites !== '') options.satellites = json.satellites;
       if(json.extent !== '') options.extent = json.extent;
       if(json.country !== null && json.country !== '') options.country = json.country;
       if(json.state !== null && json.state !== '') options.state = json.state;

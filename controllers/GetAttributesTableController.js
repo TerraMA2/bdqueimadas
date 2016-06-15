@@ -30,7 +30,7 @@ var GetAttributesTableController = function(app) {
     var order = [];
 
     // Verifications of the 'options' object items
-    if(request.body.satellite !== '') options.satellite = request.body.satellite;
+    if(request.body.satellites !== '') options.satellites = request.body.satellites;
     if(request.body.extent !== '') options.extent = request.body.extent;
     if(request.body.country !== null && request.body.country !== '') options.country = request.body.country;
     if(request.body.state !== null && request.body.state !== '') options.state = request.body.state;
