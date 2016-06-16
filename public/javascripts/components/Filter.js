@@ -436,8 +436,13 @@ define(
     var applyCurrentSituationFilter = function(begin, end, countries, satellites, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
-      if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) currentSituationFilter += ";countries:" + countries.toString();
-      if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) currentSituationFilter += ";satellites:" + satellites.toString();
+      if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
+        currentSituationFilter += ";countries:" + Utils.replaceAll(countries.toString(), ',', '\\,');
+      }
+
+      if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) {
+        currentSituationFilter += ";satellites:'" + Utils.replaceAll(satellites.toString(), ',', '\'\\,\'') + "'";
+      }
 
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
     };
