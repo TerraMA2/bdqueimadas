@@ -225,6 +225,21 @@ define(function() {
   };
 
   /**
+   * Replaces all occurrences of a string inside another string.
+   * @param {string} subject - Subject string
+   * @param {string} find - String to be replaced
+   * @param {string} replace - New string
+   * @returns {string} string - New string after the replacement
+   *
+   * @function replaceAll
+   * @memberof Utils
+   * @inner
+   */
+  var replaceAll = function(subject, find, replace) {
+    return subject.replace(new RegExp(find, 'g'), replace);
+  };
+
+  /**
    * Sorts an array of integers and returns it in JSON format, along with the original index of each value.
    * @param {array} array - Array of integers to be sorted
    * @param {string} [order=asc] - Sorting order
@@ -353,6 +368,7 @@ define(function() {
     processStringWithDatePattern: processStringWithDatePattern,
     getFilterDates: getFilterDates,
     stringInArray: stringInArray,
+    replaceAll: replaceAll,
     sortIntegerArray: sortIntegerArray,
     sortArray: sortArray,
     areArraysEqual: areArraysEqual,
