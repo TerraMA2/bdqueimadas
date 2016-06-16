@@ -260,18 +260,22 @@ define(
         var dates = Utils.getFilterDates(true);
 
         if(dates !== null) {
-          if(Filter.getCountries() !== $('#countries').val()) {
+          if(!Utils.areArraysEqual(Filter.getCountries(), $('#countries').val(), false)) {
             if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
+              Filter.clearStates();
             } else {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
+              Filter.clearCountries();
+              Filter.clearStates();
             }
           } else {
-            if(Filter.getStates() !== $('#states').val()) {
+            if(!Utils.areArraysEqual(Filter.getStates(), $('#states').val(), false)) {
               if(!Utils.stringInArray($('#states').val(), "") && $('#states').val().length > 0) {
                 Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
               } else {
                 Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
+                Filter.clearStates();
               }
             }
           }
@@ -373,8 +377,8 @@ define(
 
           if(result.key === 'Continent') {
             Filter.setContinent(result.ids);
-            Filter.setCountries([]);
-            Filter.setStates([]);
+            Filter.clearCountries();
+            Filter.clearStates();
 
             Utils.getSocket().emit('countriesByContinentRequest', { continent: result.ids });
 
@@ -383,7 +387,7 @@ define(
             Filter.disableDropdown('states', '');
           } else if(result.key === 'Countries') {
             Filter.setCountries(result.ids);
-            Filter.setStates([]);
+            Filter.clearStates();
 
             Utils.getSocket().emit('statesByCountriesRequest', { countries: result.ids });
 
@@ -462,7 +466,7 @@ define(
             Filter.selectStates([result.data.rows[0].id]);
           } else if(result.data.rows[0].key === "Countries") {
             Filter.setCountries([result.data.rows[0].id]);
-            Filter.setStates([]);
+            Filter.clearStates();
             Filter.selectCountries([result.data.rows[0].id]);
 
             $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
@@ -470,8 +474,8 @@ define(
             });
           } else {
             Filter.setContinent(result.data.rows[0].id);
-            Filter.setCountries([]);
-            Filter.setStates([]);
+            Filter.clearCountries();
+            Filter.clearStates();
 
             Filter.selectContinentItem(result.data.rows[0].id, result.data.rows[0].name);
           }
@@ -509,7 +513,7 @@ define(
 
         Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
 
-        var html = "<option value=\"\" selected>Selecione o país</option>",
+        var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
@@ -528,7 +532,7 @@ define(
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
         var initialValue = $('#countries').val();
 
-        var html = "<option value=\"\" selected>Selecione o país</option>",
+        var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
@@ -548,7 +552,7 @@ define(
       Utils.getSocket().on('statesByCountryResponse', function(result) {
         var initialValue = $('#states').val();
 
-        var html = "<option value=\"\" selected>Selecione o estado</option>",
+        var html = "<option value=\"\" selected>Todos os estados</option>",
             statesCount = result.states.rowCount;
 
         for(var i = 0; i < statesCount; i++) {
@@ -568,7 +572,7 @@ define(
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
         var initialValue = $('#states').val();
 
-        var html = "<option value=\"\" selected>Selecione o estado</option>",
+        var html = "<option value=\"\" selected>Todos os estados</option>",
             statesCount = result.states.rowCount;
 
         for(var i = 0; i < statesCount; i++) {
