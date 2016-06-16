@@ -160,6 +160,19 @@ define(
     };
 
     /**
+     * Clears the list of selected countries.
+     *
+     * @function clearCountries
+     * @memberof Filter(2)
+     * @inner
+     */
+    var clearCountries = function() {
+      setCountries([]);
+      setCountriesBdqNames([]);
+      $("#countries option:selected").removeAttr("selected");
+    };
+
+    /**
      * Sets the states array.
      * @param {array} states - States array
      *
@@ -205,6 +218,19 @@ define(
      */
     var getStatesBdqNames = function() {
       return memberStatesBdqNames;
+    };
+
+    /**
+     * Clears the list of selected states.
+     *
+     * @function clearStates
+     * @memberof Filter(2)
+     * @inner
+     */
+    var clearStates = function() {
+      setStates([]);
+      setStatesBdqNames([]);
+      $("#states option:selected").removeAttr("selected");
     };
 
     /**
@@ -523,6 +549,7 @@ define(
      * @inner
      */
     var disableDropdown = function(id, itemId) {
+      $('#' + id).empty();
       $('#' + id).val(itemId);
       $('#' + id).attr('data-value', itemId);
       $('#' + id).attr('disabled', 'disabled');
@@ -568,10 +595,12 @@ define(
       getCountries: getCountries,
       setCountriesBdqNames: setCountriesBdqNames,
       getCountriesBdqNames: getCountriesBdqNames,
+      clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
       setStatesBdqNames: setStatesBdqNames,
       getStatesBdqNames: getStatesBdqNames,
+      clearStates: clearStates,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,

@@ -257,6 +257,68 @@ define(function() {
   };
 
   /**
+   * Sorts a simple array of integers or strings.
+   * @param {array} array - Array to be sorted
+   * @param {string} [order=asc] - Sorting order
+   * @returns {array} array - Sorted array
+   *
+   * @function sortArray
+   * @memberof Utils
+   * @inner
+   */
+  var sortArray = function(array, order) {
+    order = (order !== null && order !== undefined && (order === 'asc' || order === 'desc')) ? order : 'asc';
+
+    if(isNaN(array[0])) {
+      array.sort();
+      if(order === 'desc') array.reverse();
+    } else {
+      array.sort(function(a, b) {
+        var intA = parseFloat(a),
+            intB = parseFloat(b);
+
+        if(intA > intB) return (order === 'asc') ? 1 : -1;
+        if(intA < intB) return (order === 'asc') ? -1 : 1;
+
+        return 0;
+      });
+    }
+
+    return array;
+  };
+
+  /**
+   * Compares two arrays.
+   * @param {array} a - Array to be compared
+   * @param {array} b - Array to be compared
+   * @param {boolean} compareOrder - Flag that indicates if the order should be compared
+   * @returns {boolean} boolean - Flag that indicates if the arrays are equal or not
+   *
+   * @function areArraysEqual
+   * @memberof Utils
+   * @inner
+   */
+  var areArraysEqual = function(a, b, compareOrder) {
+    if(a === b) return true;
+    if(a == null || b == null) return false;
+    if(a.length != b.length) return false;
+
+    if(!compareOrder) {
+      a = sortArray(a, 'asc');
+      b = sortArray(b, 'asc');
+    }
+
+    for(var i = 0; i < a.length; ++i) {
+      var aValue = isNaN(a[i]) ? a[i] : parseFloat(a[i]);
+      var bValue = isNaN(b[i]) ? b[i] : parseFloat(b[i]);
+
+      if(aValue !== bValue) return false;
+    }
+
+    return true;
+  };
+
+  /**
    * Returns the base Url.
    * @returns {string} memberBaseUrl - Base Url
    *
@@ -292,6 +354,8 @@ define(function() {
     getFilterDates: getFilterDates,
     stringInArray: stringInArray,
     sortIntegerArray: sortIntegerArray,
+    sortArray: sortArray,
+    areArraysEqual: areArraysEqual,
     getBaseUrl: getBaseUrl,
     init: init
   };
