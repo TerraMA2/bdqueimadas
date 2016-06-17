@@ -385,10 +385,43 @@ define(
                 $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').text(layerName);
                 TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
               }
+
+              if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {
+                var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "='" + (memberContinent !== null ? memberContinent : "") + "'";
+                TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+              } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
+                var cqlFilter = "";
+
+                if(memberCountries.length > 0) {
+                  for(var count = 0; count < memberCountries.length; count++) {
+                    cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=" + memberCountries[count] + " OR ";
+                  }
+
+                  cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+                } else {
+                  cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=0";
+                }
+
+                TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+              } else if(layer.Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
+                var cqlFilter = "";
+
+                if(memberStates.length > 0) {
+                  for(var count = 0; count < memberStates.length; count++) {
+                    cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + memberStates[count] + " OR ";
+                  }
+
+                  cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+                } else {
+                  cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+                }
+
+                TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+              }
             });
           });
         } else if(Utils.getConfigurations().mapConfigurations.Layers.length > 0) {
-          $.each(Utils.getConfigurations().mapConfigurations.Layers, function (j, layer) {
+          $.each(Utils.getConfigurations().mapConfigurations.Layers, function(j, layer) {
             if(layer.Time !== null) {
               TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, { TIME: Utils.processStringWithDatePattern(layer.Time) }, true);
 
@@ -396,6 +429,41 @@ define(
 
               $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').text(layerName);
               TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+            }
+
+            if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {
+              var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "='" + (memberContinent !== null ? memberContinent : "") + "'";
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+            } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
+              var cqlFilter = "";
+
+              if(memberCountries.length > 0) {
+                for(var count = 0; count < memberCountries.length; count++) {
+                  cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=" + memberCountries[count] + " OR ";
+                }
+
+                cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+              } else {
+                cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=0";
+              }
+
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+            } else if(layer.Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
+              var cqlFilter = "";
+
+              if(memberStates.length > 0) {
+                for(var count = 0; count < memberStates.length; count++) {
+                  cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + memberStates[count] + " OR ";
+                }
+
+                cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+              } else {
+                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+              }
+
+              console.log(cqlFilter);
+
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
             }
           });
         }
