@@ -66,9 +66,9 @@ define(
             } else if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
               var cqlFilter = "";
 
-              if(Filter.getStates().length > 0) {
-                for(var count = 0; count < Filter.getStates().length; count++) {
-                  var ids = Utils.getStateIds(Filter.getStates()[count]);
+              if(Utils.getStatesIds(Filter.getStates()).length > 0) {
+                for(var count = 0; count < Utils.getStatesIds(Filter.getStates()).length; count++) {
+                  var ids = Utils.getStateIds(Utils.getStatesIds(Filter.getStates())[count]);
                   cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
                 }
 
@@ -122,9 +122,9 @@ define(
           } else if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
             var cqlFilter = "";
 
-            if(Filter.getStates().length > 0) {
-              for(var count = 0; count < Filter.getStates().length; count++) {
-                var ids = Utils.getStateIds(Filter.getStates()[count]);
+            if(Utils.getStatesIds(Filter.getStates()).length > 0) {
+              for(var count = 0; count < Utils.getStatesIds(Filter.getStates()).length; count++) {
+                var ids = Utils.getStateIds(Utils.getStatesIds(Filter.getStates())[count]);
                 cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
               }
 
