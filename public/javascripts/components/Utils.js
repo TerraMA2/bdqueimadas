@@ -367,7 +367,7 @@ define(function() {
       if(ids == "") {
         statesIds.push(ids);
       } else {
-        statesIds.push(Utils.getStateIds(ids)[1].toString());
+        statesIds.push(getStateIds(ids)[1].toString());
       }
     });
 
