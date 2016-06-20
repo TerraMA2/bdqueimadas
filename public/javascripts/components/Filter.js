@@ -197,28 +197,6 @@ define(
     };
 
     /**
-     * Returns a states ids array.
-     * @returns {array} statesIds - States ids array
-     *
-     * @function getStatesIds
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getStatesIds = function() {
-      var statesIds = [];
-
-      $.each(memberStates, function(i, ids) {
-        if(ids == "") {
-          statesIds.push(ids);
-        } else {
-          statesIds.push(Utils.getStateIds(ids)[1].toString());
-        }
-      });
-
-      return statesIds;
-    };
-
-    /**
      * Sets the states BDQ names array.
      * @param {array} statesBdqNames - States BDQ names array
      *
@@ -499,7 +477,7 @@ define(
         cql += createCountriesFilter() + " AND ";
       }
 
-      if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
+      if(!Utils.stringInArray(getStateIds(), "") && getStateIds().length > 0) {
         cql += createStatesFilter() + " AND ";
       }
 
@@ -693,7 +671,6 @@ define(
       clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
-      getStatesIds: getStatesIds,
       setStatesBdqNames: setStatesBdqNames,
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
