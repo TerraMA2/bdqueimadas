@@ -269,7 +269,7 @@ define(
               Filter.clearCountries();
               Filter.clearStates();
             }
-          } else {
+          } else if(!Utils.areArraysEqual(Filter.getStates(), $('#states').val(), false)) {
             if(!Utils.areArraysEqual(Filter.getStates(), $('#states').val(), false)) {
               if(!Utils.stringInArray($('#states').val(), "") && $('#states').val().length > 0) {
                 Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
@@ -278,6 +278,8 @@ define(
                 Filter.clearStates();
               }
             }
+          } else {
+            applyFilter();
           }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
