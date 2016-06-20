@@ -1,9 +1,9 @@
 crontab -e
 
-0 1 * * * /usr/bin/python /ImportFires/ImportFires.py
-0 4 * * * /usr/bin/python /ImportFires/ImportFires.py
-0 10 * * * /usr/bin/python /ImportFires/ImportFires.py
-0 13 * * * /usr/bin/python /ImportFires/ImportFires.py
-0 16 * * * /usr/bin/python /ImportFires/ImportFires.py
-0 19 * * * /usr/bin/python /ImportFires/ImportFires.py
-0 22 * * * /usr/bin/python /ImportFires/ImportFires.py
+0 0 * * * /ImportFires/ImportFires.sh
+0 3 * * * /ImportFires/ImportFires.sh
+0 9 * * * /ImportFires/ImportFires.sh
+0 12 * * * /ImportFires/ImportFires.sh
+0 15 * * * /ImportFires/ImportFires.sh
+0 18 * * * /ImportFires/ImportFires.sh
+0 21 * * * /ImportFires/ImportFires.sh
