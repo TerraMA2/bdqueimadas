@@ -477,7 +477,7 @@ define(
         cql += createCountriesFilter() + " AND ";
       }
 
-      if(!Utils.stringInArray(getStates(), "") && getStates().length > 0) {
+      if(!Utils.stringInArray(Utils.getStatesIds(getStates()), "") && Utils.getStatesIds(getStates()).length > 0) {
         cql += createStatesFilter() + " AND ";
       }
 

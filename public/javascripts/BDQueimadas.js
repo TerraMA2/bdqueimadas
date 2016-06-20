@@ -270,7 +270,7 @@ define(
               Filter.clearStates();
             }
           } else {
-            if(!Utils.areArraysEqual(Filter.getStates(), Utils.getStatesIds($('#states').val()), false)) {
+            if(!Utils.areArraysEqual(Utils.getStatesIds(Filter.getStates()), Utils.getStatesIds($('#states').val()), false)) {
               if(!Utils.stringInArray(Utils.getStatesIds($('#states').val()), "") && Utils.getStatesIds($('#states').val()).length > 0) {
                 Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getStatesIds($('#states').val()), key: 'States', filterForm: true });
               } else {
@@ -431,13 +431,13 @@ define(
             applyFilter();
           }
         } else if(result.key === 'States') {
-          if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
+          if(!Utils.stringInArray(Utils.getStatesIds(Filter.getStates()), "") && Utils.getStatesIds(Filter.getStates()).length > 0) {
             $.ajax({
               url: Utils.getBaseUrl() + "get-bdq-names",
               type: "GET",
               data: {
                 key: "States",
-                ids: Filter.getStates().toString()
+                ids: Utils.getStatesIds(Filter.getStates()).toString()
               },
               success: function(names) {
                 var namesArray = [];
