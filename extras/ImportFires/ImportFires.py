@@ -24,11 +24,12 @@ PGSQL_USER = "postgres"
 PGSQL_PASSWORD = "secreto"
 PGSQL_DATABASE = "db"
 PGSQL_TABLE = "public.tabela"
+PGSQL_UNIQUE_KEY = "unique_key"
 PGSQL_DB = None
 PGSQL_CURSOR = None
 
 # Path to the log file
-LOG_FILE = "/ImportFires/ImportFires.log"
+LOG_FILE = "ImportFires.log"
 
 # Variable responsible for keeping any exception that occur
 EXCEPTION = None
@@ -49,10 +50,10 @@ def connect():
 
         MYSQL_DB = MySQLdb.connect(host=MYSQL_HOST, user=MYSQL_USER, passwd=MYSQL_PASSWORD, db=MYSQL_DATABASE)
         MYSQL_CURSOR = MYSQL_DB.cursor()
+        MYSQL_CURSOR.execute("SET CHARACTER SET utf8;")
 
         PGSQL_DB = psycopg2.connect(host=PGSQL_HOST, user=PGSQL_USER, password=PGSQL_PASSWORD, database=PGSQL_DATABASE)
         PGSQL_CURSOR = PGSQL_DB.cursor()
-        PGSQL_CURSOR.execute("SET CLIENT_ENCODING TO 'LATIN1';")
 
         return True
     except Exception as e:
@@ -61,8 +62,8 @@ def connect():
 
         return False
 
-# Function responsible for executing the query
-def executeQuery(begin, end):
+# Function responsible for executing the query with a range of given dates
+def executeQueryRange(begin, end):
     try:
         query = "select id, LAT, LON, Data, Satelite, Municipio, Estado, Regiao, Pais, Precipitacao, NumDiasSemPrecip, Risco, BiomaBrasileiro from " + MYSQL_TABLE + " where Data between %s and %s;"
         MYSQL_CURSOR.execute(query, [begin, end])
@@ -74,12 +75,11 @@ def executeQuery(begin, end):
 
         return False
 
-# Function responsible for inserting the data to the PostGIS database
-def insertData(data):
+# Function responsible for executing the query with dates bigger than a given date
+def executeQueryBiggerThan(date):
     try:
-        query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, data, horagmt, satelite, municipio, uf, regiao, pais, prec, ndiasschuv, risco, bioma, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
-        PGSQL_CURSOR.execute(query, data)
-        PGSQL_DB.commit()
+        query = "select id, LAT, LON, Data, Satelite, Municipio, Estado, Regiao, Pais, Precipitacao, NumDiasSemPrecip, Risco, BiomaBrasileiro from " + MYSQL_TABLE + " where Data >= %s;"
+        MYSQL_CURSOR.execute(query, [date])
 
         return True
     except Exception as e:
@@ -87,6 +87,83 @@ def insertData(data):
         EXCEPTION = str(e)
 
         return False
+
+# Retrieves the register with the bigger date/time from the PostgreSQL database
+def getLastDateTime():
+    try:
+        query = "select data, horagmt from " + PGSQL_TABLE + " order by data desc, horagmt desc limit 1;"
+        PGSQL_CURSOR.execute(query)
+
+        return True
+    except Exception as e:
+        global EXCEPTION
+        EXCEPTION = str(e)
+
+        return False
+
+# Converts a latitude from decimal format to DMS
+def convertLatitudeToDMS(latitude):
+    dmsCoordinate = ''
+
+    signal = str(latitude)[:1]
+
+    if signal == '-':
+        latitude = str(latitude)[1:]
+        dmsCoordinate += 'S '
+    else:
+        dmsCoordinate += 'N '
+
+    valuesOne = str(latitude).split('.')
+    dmsCoordinate += valuesOne[0] + ' '
+    valuesTwo = str(float('0.' + valuesOne[1]) * 60).split('.')
+    dmsCoordinate += valuesTwo[0] + ' ' + str(float('0.' + valuesTwo[1]) * 60)
+
+    return dmsCoordinate
+
+# Converts a longitude from decimal format to DMS
+def convertLongitudeToDMS(longitude):
+    dmsCoordinate = ''
+
+    signal = str(longitude)[:1]
+
+    if signal == '-':
+        longitude = str(longitude)[1:]
+        dmsCoordinate += 'O '
+    else:
+        dmsCoordinate += 'L '
+
+    valuesOne = str(longitude).split('.')
+    dmsCoordinate += valuesOne[0] + ' '
+    valuesTwo = str(float('0.' + valuesOne[1]) * 60).split('.')
+    dmsCoordinate += valuesTwo[0] + ' ' + str(float('0.' + valuesTwo[1]) * 60)
+
+    return dmsCoordinate
+
+# Function responsible for inserting the data to the PostGIS database
+def insertData():
+    rows = MYSQL_CURSOR.fetchall()
+
+    for i in range(0, int(MYSQL_CURSOR.rowcount)):
+        dateHour = str(rows[i][3]).split(' ')
+        date = dateHour[0].replace('-', '')
+        hour = dateHour[1].replace(':', '')
+
+        insertParameters = [ rows[i][0], rows[i][1], rows[i][2], convertLatitudeToDMS(rows[i][1]), convertLongitudeToDMS(rows[i][2]), date, hour, rows[i][4], rows[i][5], rows[i][6], rows[i][7][:3], rows[i][8], rows[i][9], rows[i][10], rows[i][11], rows[i][12], rows[i][2], rows[i][1] ]
+
+        try:
+            query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, latgms, longms, data, horagmt, satelite, municipio, uf, regiao, pais, prec, ndiasschuv, risco, bioma, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
+            PGSQL_CURSOR.execute(query, insertParameters)
+            PGSQL_DB.commit()
+        except Exception as e:
+            if str(e).split('\n')[0] == 'duplicate key value violates unique constraint "' + PGSQL_UNIQUE_KEY + '"':
+                PGSQL_DB.rollback()
+            else:
+                global EXCEPTION
+                EXCEPTION = str(e)
+
+                return False
+
+    return True
 
 # Function responsible for closing the databases connections
 def closeConnections():
@@ -131,6 +208,7 @@ def writeLog(message):
 
         return False
 
+# Function responsible for validating a date
 def validateDate(date):
     try:
         datetime.datetime.strptime(date, '%Y-%m-%d')
@@ -138,6 +216,7 @@ def validateDate(date):
     except:
         return False
 
+# Function responsible for validating a time
 def validateTime(time):
     try:
         datetime.time(*map(int, time.split(':')))
@@ -145,62 +224,71 @@ def validateTime(time):
     except:
         return False
 
+# Function responsible for validating the received arguments
 def validateArguments(arguments):
-    if len(arguments) < 5:
+    if len(arguments) < 5 and len(arguments) > 1:
         appendIntoResult("Error: wrong number of arguments!\n\nUsage:\n")
-        appendIntoResult("python " + arguments[0] + " {begin-date} {begin-time} {end-date} {end-time}", False)
+        appendIntoResult("python " + arguments[0] + " {begin-date} {begin-time} {end-date} {end-time} or python " + arguments[0], False)
         return False
     else:
-        if not validateDate(arguments[1]):
-            appendIntoResult("Error: invalid begin date!\n\nCorrect format: YYYY-MM-DD")
-            return False
+        if len(arguments) == 1:
+            return True
         else:
-            if not validateDate(arguments[3]):
-                appendIntoResult("Error: invalid end date!\n\nCorrect format: YYYY-MM-DD")
+            if not validateDate(arguments[1]):
+                appendIntoResult("Error: invalid begin date!\n\nCorrect format: YYYY-MM-DD")
                 return False
             else:
-                if not validateTime(arguments[2]):
-                    appendIntoResult("Error: invalid begin time!\n\nCorrect format: HH:MM:SS (24hrs)")
+                if not validateDate(arguments[3]):
+                    appendIntoResult("Error: invalid end date!\n\nCorrect format: YYYY-MM-DD")
                     return False
                 else:
-                    if not validateTime(arguments[4]):
-                        appendIntoResult("Error: invalid end time!\n\nCorrect format: HH:MM:SS (24hrs)")
+                    if not validateTime(arguments[2]):
+                        appendIntoResult("Error: invalid begin time!\n\nCorrect format: HH:MM:SS (24hrs)")
                         return False
                     else:
-                        return True
+                        if not validateTime(arguments[4]):
+                            appendIntoResult("Error: invalid end time!\n\nCorrect format: HH:MM:SS (24hrs)")
+                            return False
+                        else:
+                            return True
 
 # Main function responsible for executing the importation
 def performImportation():
     appendIntoResult("-----------------------------------------------------------------------", False)
 
     if validateArguments(sys.argv):
-        begin = sys.argv[1] + " " + sys.argv[2]
-        end = sys.argv[3] + " " + sys.argv[4]
-
         appendIntoResult("Starting the importation")
 
         if connect():
             appendIntoResult("Connections made with success")
 
-            if executeQuery(begin, end):
-                appendIntoResult("Query executed with success")
+            if len(sys.argv) > 1:
+                begin = sys.argv[1] + " " + sys.argv[2]
+                end = sys.argv[3] + " " + sys.argv[4]
 
-                rows = MYSQL_CURSOR.fetchall()
+                if executeQueryRange(begin, end):
+                    appendIntoResult("Query executed with success")
+                    appendIntoResult("Inserting data into the table")
 
-                appendIntoResult("Inserting data into the table")
-
-                for i in range(0, int(MYSQL_CURSOR.rowcount)):
-                    dateHour = str(rows[i][3]).split(' ')
-                    date = dateHour[0].replace('-', '')
-                    hour = dateHour[1].replace(':', '')
-
-                    insertParameters = [ rows[i][0], rows[i][1], rows[i][2], date, hour, rows[i][4], rows[i][5], rows[i][6], rows[i][7][:3], rows[i][8], rows[i][9], rows[i][10], rows[i][11], rows[i][12], rows[i][2], rows[i][1] ]
-
-                    if not insertData(insertParameters):
+                    if not insertData():
                         exception("Insert error")
-                        break
+                else:
+                    exception("Query error")
             else:
-                exception("Query error")
+                if getLastDateTime():
+                    pgsqlRows = PGSQL_CURSOR.fetchall()
+                    dateTime = str(pgsqlRows[0][0])[:4] + "-" + str(pgsqlRows[0][0])[4:-2] + "-" + str(pgsqlRows[0][0])[6:] + " " + pgsqlRows[0][1][:2] + ":" + pgsqlRows[0][1][2:-2] + ":" + pgsqlRows[0][1][4:]
+
+                    if executeQueryBiggerThan(dateTime):
+                        appendIntoResult("Query executed with success")
+                        appendIntoResult("Inserting data into the table")
+
+                        if not insertData():
+                            exception("Insert error")
+                    else:
+                        exception("Query error")
+                else:
+                    exception("Error retrieving data from the PostgreSQL database!")
         else:
             exception("Connection error")
 
