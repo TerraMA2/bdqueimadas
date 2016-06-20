@@ -68,12 +68,13 @@ define(
 
               if(Filter.getStates().length > 0) {
                 for(var count = 0; count < Filter.getStates().length; count++) {
-                  cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + Filter.getStates()[count] + " OR ";
+                  var ids = Utils.getStateIds(Filter.getStates()[count]);
+                  cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
                 }
 
                 cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
               } else {
-                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
               }
 
               TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.LayerGroups[i].Layers[j].Id);
@@ -123,12 +124,13 @@ define(
 
             if(Filter.getStates().length > 0) {
               for(var count = 0; count < Filter.getStates().length; count++) {
-                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + Filter.getStates()[count] + " OR ";
+                var ids = Utils.getStateIds(Filter.getStates()[count]);
+                cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
               }
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
             } else {
-              cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+              cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
             }
 
             TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.Layers[j].Id);

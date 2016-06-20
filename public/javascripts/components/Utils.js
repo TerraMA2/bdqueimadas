@@ -334,6 +334,24 @@ define(function() {
   };
 
   /**
+   * Receives a string that contains the id of the country and the id of the state, and returns an array with both ids formatted as integers.
+   * @param {string} ids - String containing the id of the country and the id of the state
+   * @returns {array} idsArray - Array with both ids formatted as integers
+   *
+   * @function getStateIds
+   * @memberof Utils
+   * @inner
+   */
+  var getStateIds = function(ids) {
+    var idsArray = [];
+
+    idsArray.push(parseInt(ids.substr(0, 3)));
+    idsArray.push(parseInt(ids.substr(3, 4)));
+
+    return idsArray;
+  };
+
+  /**
    * Returns the base Url.
    * @returns {string} memberBaseUrl - Base Url
    *
@@ -372,6 +390,7 @@ define(function() {
     sortIntegerArray: sortIntegerArray,
     sortArray: sortArray,
     areArraysEqual: areArraysEqual,
+    getStateIds: getStateIds,
     getBaseUrl: getBaseUrl,
     init: init
   };
