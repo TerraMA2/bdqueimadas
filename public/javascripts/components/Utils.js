@@ -352,29 +352,6 @@ define(function() {
   };
 
   /**
-   * Receives an array of strings that contains ids of countries and states, and returns an array with the states ids.
-   * @param {array} idsArray - Array containing the strings
-   * @returns {array} statesIds - States ids array
-   *
-   * @function getStatesIds
-   * @memberof Utils
-   * @inner
-   */
-  var getStatesIds = function(idsArray) {
-    var statesIds = [];
-
-    $.each(idsArray, function(i, ids) {
-      if(ids == "") {
-        statesIds.push(ids);
-      } else {
-        statesIds.push(getStateIds(ids)[1].toString());
-      }
-    });
-
-    return statesIds;
-  };
-
-  /**
    * Returns the base Url.
    * @returns {string} memberBaseUrl - Base Url
    *
@@ -414,7 +391,6 @@ define(function() {
     sortArray: sortArray,
     areArraysEqual: areArraysEqual,
     getStateIds: getStateIds,
-    getStatesIds: getStatesIds,
     getBaseUrl: getBaseUrl,
     init: init
   };
