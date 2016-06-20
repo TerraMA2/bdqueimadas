@@ -197,6 +197,28 @@ define(
     };
 
     /**
+     * Returns a states ids array.
+     * @returns {array} statesIds - States ids array
+     *
+     * @function getStatesIds
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getStatesIds = function() {
+      var statesIds = [];
+
+      $.each(memberStates, function(i, ids) {
+        if(ids == "") {
+          statesIds.push(ids);
+        } else {
+          statesIds.push(Utils.getStateIds(ids)[1].toString());
+        }
+      });
+
+      return statesIds;
+    };
+
+    /**
      * Sets the states BDQ names array.
      * @param {array} statesBdqNames - States BDQ names array
      *
@@ -408,12 +430,13 @@ define(
 
                 if(memberStates.length > 0) {
                   for(var count = 0; count < memberStates.length; count++) {
-                    cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + memberStates[count] + " OR ";
+                    var ids = Utils.getStateIds(memberStates[count]);
+                    cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
                   }
 
                   cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
                 } else {
-                  cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+                  cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
                 }
 
                 TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
@@ -453,15 +476,14 @@ define(
 
               if(memberStates.length > 0) {
                 for(var count = 0; count < memberStates.length; count++) {
-                  cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + memberStates[count] + " OR ";
+                  var ids = Utils.getStateIds(memberStates[count]);
+                  cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
                 }
 
                 cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
               } else {
-                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
               }
-
-              console.log(cqlFilter);
 
               TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
             }
@@ -671,6 +693,7 @@ define(
       clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
+      getStatesIds: getStatesIds,
       setStatesBdqNames: setStatesBdqNames,
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
