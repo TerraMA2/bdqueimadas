@@ -276,8 +276,7 @@ define(
      * @inner
      */
     var hideSubtitle = function(layerId) {
-      if($("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
-        $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
+      $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
 
       updateZoomTop(false);
     };
