@@ -453,7 +453,11 @@ var Filter = function() {
           params.push(countries[i]);
         }
 
-        query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.Countries.BdqNameFieldName + " asc;";
+        if(countries.length > 0) {
+          query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.Countries.BdqNameFieldName + " asc;";
+        } else {
+          query += "'0') order by " + memberTablesConfig.Countries.BdqNameFieldName + " asc;";
+        }
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -491,7 +495,11 @@ var Filter = function() {
           params.push(states[i]);
         }
 
-        query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.States.BdqNameFieldName + " asc;";
+        if(states.length > 0) {
+          query = query.substring(0, (query.length - 1)) + ") order by " + memberTablesConfig.States.BdqNameFieldName + " asc;";
+        } else {
+          query += "'0') order by " + memberTablesConfig.States.BdqNameFieldName + " asc;";
+        }
 
         // Execution of the query
         client.query(query, params, function(err, result) {
