@@ -192,6 +192,22 @@ define(
     };
 
     /**
+     * Activates the GetFeatureInfo tool.
+     *
+     * @function activateGetFeatureInfoTool
+     * @memberof Map
+     * @inner
+     */
+    var activateGetFeatureInfoTool = function() {
+      $('#getAttributes').addClass('active');
+      $('#terrama2-map').addClass('cursor-pointer');
+
+      TerraMA2WebComponents.MapDisplay.setGetFeatureInfoUrlOnClick(Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId, function(url) {
+        if(url !== null) Utils.getSocket().emit('proxyRequest', { url: url, requestId: 'GetFeatureInfoTool' });
+      });
+    };
+
+    /**
      * Adds the layers subtitles from the map configuration file to the map.
      *
      * @private
@@ -315,6 +331,7 @@ define(
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,
+      activateGetFeatureInfoTool: activateGetFeatureInfoTool,
       activateMoveMapTool: activateMoveMapTool,
       setSubtitlesVisibility: setSubtitlesVisibility,
       updateZoomTop: updateZoomTop,

@@ -92,6 +92,34 @@ define(function() {
   };
 
   /**
+   * Formats a time with a given format.
+   * @param {string} time - String time
+   * @param {string} currentFormat - Current format
+   * @param {string} newFormat - New format
+   * @returns {string} newTime - Formatted time
+   *
+   * @function formatTime
+   * @memberof Utils
+   * @inner
+   */
+  var formatTime = function(time, currentFormat, newFormat) {
+    var hoursPosition = currentFormat.indexOf("HH");
+    var minutesPosition = currentFormat.indexOf("MM");
+    var secondsPosition = currentFormat.indexOf("SS");
+    var newTime = newFormat;
+
+    var hours = time.substring(hoursPosition, hoursPosition + 2);
+    var minutes = time.substring(minutesPosition, minutesPosition + 2);
+    var seconds = time.substring(secondsPosition, secondsPosition + 2);
+
+    if(newFormat.match(/HH/)) newTime = newTime.replace("HH", hours);
+    if(newFormat.match(/MM/)) newTime = newTime.replace("MM", minutes);
+    if(newFormat.match(/SS/)) newTime = newTime.replace("SS", seconds);
+
+    return newTime;
+  };
+
+  /**
    * Processes a string that contains a date pattern. If the string has one or more patterns, the function subtracts or adds days / months / years to the current date, accordingly with the received patterns, otherwise the original string is returned.
    * @param {string} string - String to be processed
    * @returns {string} finalString - Processed string
@@ -383,6 +411,7 @@ define(function() {
     getConfigurations: getConfigurations,
     dateToString: dateToString,
     stringToDate: stringToDate,
+    formatTime: formatTime,
     processStringWithDatePattern: processStringWithDatePattern,
     getFilterDates: getFilterDates,
     stringInArray: stringInArray,

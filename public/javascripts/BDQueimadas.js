@@ -326,6 +326,11 @@ define(
         Filter.resetDropdowns();
       });
 
+      $('#getAttributes').on('click', function() {
+        Map.resetMapMouseTools();
+        Map.activateGetFeatureInfoTool();
+      });
+
       $('.map-subtitle-toggle').on('click', function() {
         Map.updateZoomTop(true);
 
@@ -603,6 +608,49 @@ define(
 
       Utils.getSocket().on('graphicsFiresCountResponse', function(result) {
         Graphics.loadFiresCountGraphic(result);
+      });
+
+      // Proxy Listeners
+
+      Utils.getSocket().on('proxyResponse', function(result) {
+        if(result.requestId === 'GetFeatureInfoTool') {
+          var featureInfo = JSON.parse(result.msg);
+
+          if(featureInfo.features.length > 0) {
+            var firesAttributes = "<h4 class=\"text-center\"><strong>" + (featureInfo.features.length > 1 ? "Atributos dos focos:" : "Atributos do foco:") + "</strong></h4>";
+            firesAttributes += "<div style=\"max-height: 350px; overflow: auto;\">";
+
+            $.each(featureInfo.features, function(i, feature) {
+              firesAttributes += "<strong>Id:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
+              firesAttributes += "<br/><strong>Latitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName];
+              firesAttributes += "<br/><strong>Longitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName];
+              firesAttributes += "<br/><strong>Latitude GMS:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Longitude GMS:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Data:</strong> " + Utils.dateToString(Utils.stringToDate(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat), "YYYY/MM/DD");
+              firesAttributes += "<br/><strong>Hora:</strong> " + Utils.formatTime(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFieldName], Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFormat, "HH:MM:SS");
+              firesAttributes += "<br/><strong>Satélite:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
+              firesAttributes += "<br/><strong>Município:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName];
+              firesAttributes += "<br/><strong>Estado:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName];
+              firesAttributes += "<br/><strong>País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
+              firesAttributes += "<br/><strong>Precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
+              firesAttributes += "<br/><strong>Número de dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
+              firesAttributes += "<br/><strong>Risco:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName];
+              firesAttributes += "<br/><strong>Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
+              if(featureInfo.features.length > (i + 1)) firesAttributes += "<hr/>";
+            });
+
+            firesAttributes += "</div>";
+
+            vex.dialog.alert({
+              message: firesAttributes,
+              buttons: [{
+                type: 'submit',
+                text: 'Fechar',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+        }
       });
     };
 
