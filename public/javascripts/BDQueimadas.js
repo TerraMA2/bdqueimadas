@@ -590,7 +590,7 @@ define(
 
           if(featureInfo.features.length > 0) {
             var firesAttributes = "<h4 class=\"text-center\"><strong>" + (featureInfo.features.length > 1 ? "Atributos dos focos:" : "Atributos do foco:") + "</strong></h4>";
-            firesAttributes += "<div style=\"max-height: 350px; overflow: auto;\">";
+            firesAttributes += "<div style=\"max-height: 400px; overflow: auto;\">";
 
             $.each(featureInfo.features, function(i, feature) {
               firesAttributes += "<strong>Id:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
@@ -608,6 +608,7 @@ define(
               firesAttributes += "<br/><strong>Número de dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
               firesAttributes += "<br/><strong>Risco:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName];
               firesAttributes += "<br/><strong>Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
+              firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
               if(featureInfo.features.length > (i + 1)) firesAttributes += "<hr/>";
             });
 
