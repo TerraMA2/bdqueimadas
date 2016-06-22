@@ -24,7 +24,9 @@ var GetBdqNamesController = function(app) {
    */
   var getBdqNamesController = function(request, response) {
     if(request.query.key == "Countries") {
-      memberFilter.getCountriesBdqNames(request.query.ids.split(','), function(err, countriesNames) {
+      var countriesIds = request.query.ids !== "" ? request.query.ids.split(',') : [];
+
+      memberFilter.getCountriesBdqNames(countriesIds, function(err, countriesNames) {
         if(err) return console.error(err);
 
         // JSON response
@@ -32,13 +34,32 @@ var GetBdqNamesController = function(app) {
           names: countriesNames
         });
       });
-    } else {
-      memberFilter.getStatesBdqNames(request.query.ids.split(','), function(err, statesNames) {
+    } else if(request.query.key == "States") {
+      var statesIds = request.query.ids !== "" ? request.query.ids.split(',') : [];
+
+      memberFilter.getStatesBdqNames(statesIds, function(err, statesNames) {
         if(err) return console.error(err);
 
         // JSON response
         response.json({
           names: statesNames
+        });
+      });
+    } else {
+      var countriesIds = request.query.countriesIds !== "" ? request.query.countriesIds.split(',') : [];
+      var statesIds = request.query.statesIds !== "" ? request.query.statesIds.split(',') : [];
+
+      memberFilter.getCountriesBdqNames(countriesIds, function(err, countriesNames) {
+        if(err) return console.error(err);
+
+        memberFilter.getStatesBdqNames(statesIds, function(err, statesNames) {
+          if(err) return console.error(err);
+
+          // JSON response
+          response.json({
+            countriesNames: countriesNames,
+            statesNames: statesNames
+          });
         });
       });
     }

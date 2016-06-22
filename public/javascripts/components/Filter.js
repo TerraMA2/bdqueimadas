@@ -148,6 +148,36 @@ define(
     };
 
     /**
+     * Updates the countries BDQ names array.
+     * @param {function} callback - Callback function
+     *
+     * @function updateCountriesBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateCountriesBdqNames = function(callback) {
+      $.ajax({
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          key: "Countries",
+          ids: getCountries().toString()
+        },
+        success: function(names) {
+          var namesArray = [];
+
+          for(var i = 0; i < names.names.rowCount; i++) {
+            namesArray.push(names.names.rows[i].name);
+          }
+
+          setCountriesBdqNames(namesArray);
+
+          if(callback !== null) callback();
+        }
+      });
+    };
+
+    /**
      * Returns the countries BDQ names array.
      * @returns {array} memberCountriesBdqNames - Countries BDQ names array
      *
@@ -209,6 +239,36 @@ define(
     };
 
     /**
+     * Updates the states BDQ names array.
+     * @param {function} callback - Callback function
+     *
+     * @function updateStatesBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateStatesBdqNames = function(callback) {
+      $.ajax({
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          key: "States",
+          ids: getStates().toString()
+        },
+        success: function(names) {
+          var namesArray = [];
+
+          for(var i = 0; i < names.names.rowCount; i++) {
+            namesArray.push(names.names.rows[i].name);
+          }
+
+          setStatesBdqNames(namesArray);
+
+          if(callback !== null) callback();
+        }
+      });
+    };
+
+    /**
      * Returns the states BDQ names array.
      * @returns {array} memberStatesBdqNames - States BDQ names array
      *
@@ -231,6 +291,42 @@ define(
       setStates([]);
       setStatesBdqNames([]);
       $("#states option:selected").removeAttr("selected");
+    };
+
+    /**
+     * Updates the BDQ names arrays.
+     * @param {function} callback - Callback function
+     *
+     * @function updateBdqNames
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateBdqNames = function(callback) {
+      $.ajax({
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          statesIds: getStates().toString(),
+          countriesIds: getCountries().toString()
+        },
+        success: function(names) {
+          var countriesNamesArray = [];
+          var statesNamesArray = [];
+
+          for(var i = 0; i < names.countriesNames.rowCount; i++) {
+            countriesNamesArray.push(names.countriesNames.rows[i].name);
+          }
+
+          for(var i = 0; i < names.statesNames.rowCount; i++) {
+            statesNamesArray.push(names.statesNames.rows[i].name);
+          }
+
+          setCountriesBdqNames(countriesNamesArray);
+          setStatesBdqNames(statesNamesArray);
+
+          if(callback !== null) callback();
+        }
+      });
     };
 
     /**
@@ -477,7 +573,7 @@ define(
         cql += createCountriesFilter() + " AND ";
       }
 
-      if(!Utils.stringInArray(getStates(), "") && getStates().length > 0) {
+      if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
         cql += createStatesFilter() + " AND ";
       }
 
@@ -667,13 +763,16 @@ define(
       setCountries: setCountries,
       getCountries: getCountries,
       setCountriesBdqNames: setCountriesBdqNames,
+      updateCountriesBdqNames: updateCountriesBdqNames,
       getCountriesBdqNames: getCountriesBdqNames,
       clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
       setStatesBdqNames: setStatesBdqNames,
+      updateStatesBdqNames: updateStatesBdqNames,
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
+      updateBdqNames: updateBdqNames,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,

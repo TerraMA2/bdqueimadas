@@ -423,23 +423,8 @@ define(
 
         if(result.key === 'Countries') {
           if(!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0) {
-            $.ajax({
-              url: Utils.getBaseUrl() + "get-bdq-names",
-              type: "GET",
-              data: {
-                key: "Countries",
-                ids: Filter.getCountries().toString()
-              },
-              success: function(names) {
-                var namesArray = [];
-
-                for(var i = 0; i < names.names.rowCount; i++) {
-                  namesArray.push(names.names.rows[i].name);
-                }
-
-                Filter.setCountriesBdqNames(namesArray);
-                applyFilter();
-              }
+            Filter.updateBdqNames(function() {
+              applyFilter();
             });
           } else {
             Filter.setCountriesBdqNames([]);
@@ -447,23 +432,8 @@ define(
           }
         } else if(result.key === 'States') {
           if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
-            $.ajax({
-              url: Utils.getBaseUrl() + "get-bdq-names",
-              type: "GET",
-              data: {
-                key: "States",
-                ids: Filter.getStates().toString()
-              },
-              success: function(names) {
-                var namesArray = [];
-
-                for(var i = 0; i < names.names.rowCount; i++) {
-                  namesArray.push(names.names.rows[i].name);
-                }
-
-                Filter.setStatesBdqNames(namesArray);
-                applyFilter();
-              }
+            Filter.updateBdqNames(function() {
+              applyFilter();
             });
           } else {
             Filter.setStatesBdqNames([]);
@@ -524,23 +494,25 @@ define(
 
         Filter.setCountries(countriesIds);
 
-        applyFilter();
+        Filter.updateBdqNames(function() {
+          applyFilter();
 
-        Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
+          Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
 
-        var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
-            countriesCount = result.countries.rowCount;
+          var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
+              countriesCount = result.countries.rowCount;
 
-        for(var i = 0; i < countriesCount; i++) {
-          html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
-        }
+          for(var i = 0; i < countriesCount; i++) {
+            html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
+          }
 
-        $('#countries').empty().html(html);
+          $('#countries').empty().html(html);
 
-        Filter.enableDropdown('countries', countriesIds);
+          Filter.enableDropdown('countries', countriesIds);
 
-        $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), countriesIds, Filter.getSatellites(), layer);
+          $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
+            Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), countriesIds, Filter.getSatellites(), layer);
+          });
         });
       });
 
