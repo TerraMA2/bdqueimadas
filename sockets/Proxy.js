@@ -23,24 +23,32 @@ var Proxy = function(io) {
     client.on('proxyRequest', function(json) {
 
       // Http request to the received url
-      memberHttp.get(json.url, function(resp){
-        var xml = '';
+      memberHttp.get(json.url, function(resp) {
+        var body = '';
 
         // Data receiving event
         resp.on('data', function(chunk) {
-          xml += chunk;
+          body += chunk;
         });
 
         // End of request event
         resp.on('end', function() {
-          xml = xml.replace(/>\s*/g, '>');
-          xml = xml.replace(/\s*</g, '<');
+          if(json.format === 'xml') {
+            body = body.replace(/>\s*/g, '>');
+            body = body.replace(/\s*</g, '<');
+          } else if(json.format === 'json') {
+            try {
+              body = JSON.parse(body);
+            } catch(ex) {
+              body = {};
+            }
+          }
 
           // Socket response
-          client.emit('proxyResponse', { msg: xml, requestId: json.requestId });
+          client.emit('proxyResponse', { msg: body, requestId: json.requestId });
         });
 
-      }).on("error", function(e){
+      }).on("error", function(e) {
         console.log("Got error: " + e.message);
       });
     });
