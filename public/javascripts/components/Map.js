@@ -7,8 +7,23 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
 define(
-  ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
-  function(Utils, Filter, TerraMA2WebComponents) {
+  ['components/Utils', 'TerraMA2WebComponents'],
+  function(Utils, TerraMA2WebComponents) {
+
+    // new
+
+    var memberLayers = [];
+    var memberNotAddedLayers = [];
+
+    var getLayers = function() {
+      return memberLayers;
+    };
+
+    var getNotAddedLayers = function() {
+      return memberNotAddedLayers;
+    };
+
+    // new
 
     /**
      * Adds the layers from the map configuration file to the map.
@@ -32,8 +47,9 @@ define(
         processLayers(configuration.Layers, 'terrama2-layerexplorer');
       }
 
-      Filter.applyFilter();
-      $.event.trigger({type: "updateComponents"});
+      $(document).on('click', '.remove-layer', function() {
+        removeLayerFromMap($(this).parent().data('layerid'));
+      });
     };
 
     /**
@@ -48,13 +64,70 @@ define(
      */
     var processLayers = function(layers, parent) {
       for(var i = layers.length - 1; i >= 0; i--) {
-        var layerName = Utils.processStringWithDatePattern(layers[i].Name);
-        var layerTime = Utils.processStringWithDatePattern(layers[i].Time);
-
-        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layers[i].Url, layers[i].ServerType, layers[i].Id, layerName, layers[i].Visible, layers[i].MinResolution, layers[i].MaxResolution, parent, layerTime, layers[i].Disabled))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layers[i].Id, parent);
+        if(layers[i].AddsInTheStart) {
+          addLayerToMap(layers[i], parent, true);
+        } else {
+          addNotAddedLayer(layers[i]);
+        }
       }
     };
+
+    /**
+     * Adds a given layer to the Map and to the LayerExplorer.
+     * @param {object} layer - Object with the layer data
+     * @param {string} parent - Parent id
+     *
+     * @function addLayerToMap
+     * @memberof Map
+     * @inner
+     */
+    var addLayerToMap = function(layer, parent, initialProcess) {
+      memberLayers.push(layer);
+
+      var layerName = Utils.processStringWithDatePattern(layer.Name);
+      var layerTime = Utils.processStringWithDatePattern(layer.Time);
+
+      if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled))
+        TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
+
+      if(!initialProcess) {
+        $.event.trigger({type: "applyFilter"});
+
+        $.each(memberNotAddedLayers, function(i, notAddedLayer) {
+          if(notAddedLayer.Id === layer.Id) {
+            memberNotAddedLayers.splice(i, 1);
+            return false;
+          }
+        });
+      }
+
+      $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
+    };
+
+    // new
+
+    var removeLayerFromMap = function(layerId) {
+      var layerToRemove = null;
+
+      $.each(memberLayers, function(i, layer) {
+        if(layerId === layer.Id) {
+          layerToRemove = memberLayers.splice(i, 1);
+          return false;
+        }
+      });
+
+      if(layerToRemove !== null) {
+        addNotAddedLayer(layerToRemove[0]);
+        TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
+      }
+    };
+
+
+    var addNotAddedLayer = function(layer) {
+      memberNotAddedLayers.push(layer);
+    };
+
+    // new
 
     /**
      * Resets the map tools to its initial state.
@@ -245,6 +318,9 @@ define(
     };
 
     return {
+      getLayers: getLayers,
+      getNotAddedLayers: getNotAddedLayers,
+      addLayerToMap: addLayerToMap,
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,

@@ -430,6 +430,13 @@
   font-weight: 900;
 }
 
+.remove-layer {
+  float: right;
+  margin-top: -28px;
+  color: red;
+  cursor: pointer;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }

@@ -319,9 +319,48 @@ define(
         }
       });
 
+      // new
+
       $(document).on("updateComponents", function() {
         updateComponents();
       });
+
+      $(document).on("applyFilter", function() {
+        Filter.applyFilter();
+        updateComponents();
+      });
+
+      $(document).on('click', '.new-layer', function() {
+        var layerId = $(this).data('layerid');
+
+        $.each(Map.getNotAddedLayers(), function(i, layer) {
+          if(layerId === layer.Id) {
+            Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
+            return false;
+          }
+        });
+
+        vex.close();
+      });
+
+      $('#add-layer').on('click', function() {
+        var availableLayers = "";
+
+        $.each(Map.getNotAddedLayers(), function(i, layer) {
+          availableLayers += "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\">" + Utils.processStringWithDatePattern(layer.Name) + "</span><br/>";
+        });
+
+        vex.dialog.alert({
+          message: availableLayers,
+          buttons: [{
+            type: 'submit',
+            text: 'Fechar',
+            className: 'bdqueimadas-btn'
+          }]
+        });
+      });
+
+      // new
 
       setTimeout(function(){
         $('.sidebar-toggle').click();
@@ -388,10 +427,6 @@ define(
 
             Filter.enableDropdown('countries', result.ids);
             Filter.enableDropdown('states', '');
-
-            $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), result.ids, Filter.getSatellites(), layer);
-            });
           } else {
             Filter.setStates(result.ids);
 

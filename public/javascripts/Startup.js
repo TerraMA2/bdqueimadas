@@ -50,6 +50,7 @@ requirejs(
     Graphics.init();
     Map.init();
 
+    Filter.applyFilter();
     $.event.trigger({type: "updateComponents"});
   }
 );

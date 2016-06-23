@@ -17,8 +17,8 @@
  * @property {array} memberStatesBdqNames - Current states BDQ names.
  */
 define(
-  ['components/Utils', 'TerraMA2WebComponents'],
-  function(Utils, TerraMA2WebComponents) {
+  ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
+  function(Utils, Map, TerraMA2WebComponents) {
 
     // Current initial date
     var memberDateFrom = null;
@@ -476,16 +476,12 @@ define(
         updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
         cql += createDateFilter() + " AND ";
 
-        $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellites, layer);
-        });
-
         if(Utils.getConfigurations().mapConfigurations.LayerGroups.length > 0) {
           $.each(Utils.getConfigurations().mapConfigurations.LayerGroups, function(i, layerGroup) {
             processLayers(layerGroup.Layers);
           });
         } else if(Utils.getConfigurations().mapConfigurations.Layers.length > 0) {
-          processLayers(Utils.getConfigurations().mapConfigurations.Layers);
+          processLayers(Map.getLayers());
         }
       }
 
@@ -561,6 +557,8 @@ define(
           }
 
           TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+        } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellites, layer.Id);
         }
       });
     };
