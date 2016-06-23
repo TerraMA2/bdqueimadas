@@ -519,3 +519,14 @@
 .skin-queimadas #footer>div.clear { margin: 0px !important; }
 
 .skin-queimadas #footer { padding: 10px 0 !important; }
+
+.skin-queimadas .sidebar-menu>li>a {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.skin-queimadas .sidebar-menu>li>a:hover {
+  overflow: visible !important;
+  white-space: normal !important;
+  height: auto !important;
+}
