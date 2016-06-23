@@ -50,7 +50,7 @@ requirejs(
     Graphics.init();
     Map.init();
 
-    BDQueimadas.updateComponents();
+    $.event.trigger({type: "updateComponents"});
   }
 );
 
