@@ -26,116 +26,33 @@ define(
           if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
             TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
 
-          for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
-            var layerName = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Name);
-            var layerTime = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Time);
-
-            if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime, configuration.LayerGroups[i].Layers[j].Disabled))
-              TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Layers[j].Id, configuration.LayerGroups[i].Id);
-
-            if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
-              var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
-              var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
-              var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;// + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
-
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.LayerGroups[i].Layers[j].Id);
-
-              Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-            } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.LayerGroups[i].Layers[j].Id)) {
-              var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
-              var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
-
-              Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), [], configuration.LayerGroups[i].Layers[j].Id);//['AQUA_M-T'], configuration.LayerGroups[i].Layers[j].Id);
-            } else if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {
-              var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "='" + (Filter.getContinent() !== null ? Filter.getContinent() : "") + "'";
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.LayerGroups[i].Layers[j].Id);
-            } else if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
-              var cqlFilter = "";
-
-              if(Filter.getCountries().length > 0) {
-                for(var count = 0; count < Filter.getCountries().length; count++) {
-                  cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=" + Filter.getCountries()[count] + " OR ";
-                }
-
-                cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
-              } else {
-                cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=0";
-              }
-
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.LayerGroups[i].Layers[j].Id);
-            } else if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
-              var cqlFilter = "";
-
-              if(Filter.getStates().length > 0) {
-                for(var count = 0; count < Filter.getStates().length; count++) {
-                  var ids = Utils.getStateIds(Filter.getStates()[count]);
-                  cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
-                }
-
-                cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
-              } else {
-                cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
-              }
-
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.LayerGroups[i].Layers[j].Id);
-            }
-          }
+          processLayers(configuration.LayerGroups[i].Layers, configuration.LayerGroups[i].Id);
         }
       } else if(configuration.Layers.length > 0) {
-        for(var j = configuration.Layers.length - 1; j >= 0; j--) {
-          var layerName = Utils.processStringWithDatePattern(configuration.Layers[j].Name);
-          var layerTime = Utils.processStringWithDatePattern(configuration.Layers[j].Time);
+        processLayers(configuration.Layers, 'terrama2-layerexplorer');
+      }
 
-          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.Layers[j].Url, configuration.Layers[j].ServerType, configuration.Layers[j].Id, layerName, configuration.Layers[j].Visible, configuration.Layers[j].MinResolution, configuration.Layers[j].MaxResolution, 'terrama2-layerexplorer', layerTime, configuration.Layers[j].Disabled))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.Layers[j].Id, 'terrama2-layerexplorer');
+      Filter.applyFilter();
+      $.event.trigger({type: "updateComponents"});
+    };
 
-          if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
-            var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
-            var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
-            var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate;// + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
+    /**
+     * Processes a list of layers and adds each layer to the map.
+     * @param {array} layers - Layers array
+     * @param {string} parent - Parent id
+     *
+     * @private
+     * @function processLayers
+     * @memberof Map
+     * @inner
+     */
+    var processLayers = function(layers, parent) {
+      for(var i = layers.length - 1; i >= 0; i--) {
+        var layerName = Utils.processStringWithDatePattern(layers[i].Name);
+        var layerTime = Utils.processStringWithDatePattern(layers[i].Time);
 
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.Layers[j].Id);
-
-            Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-          } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.Layers[j].Id)) {
-            var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
-            var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
-
-            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries').val(), [], configuration.Layers[j].Id);//['AQUA_M-T'], configuration.Layers[j].Id);
-          } else if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {
-            var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "='" + (Filter.getContinent() !== null ? Filter.getContinent() : "") + "'";
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.Layers[j].Id);
-          } else if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
-            var cqlFilter = "";
-
-            if(Filter.getCountries().length > 0) {
-              for(var count = 0; count < Filter.getCountries().length; count++) {
-                cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=" + Filter.getCountries()[count] + " OR ";
-              }
-
-              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
-            } else {
-              cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=0";
-            }
-
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.Layers[j].Id);
-          } else if(configuration.Layers[j].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
-            var cqlFilter = "";
-
-            if(Filter.getStates().length > 0) {
-              for(var count = 0; count < Filter.getStates().length; count++) {
-                var ids = Utils.getStateIds(Filter.getStates()[count]);
-                cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
-              }
-
-              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
-            } else {
-              cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
-            }
-
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, configuration.Layers[j].Id);
-          }
-        }
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layers[i].Url, layers[i].ServerType, layers[i].Id, layerName, layers[i].Visible, layers[i].MinResolution, layers[i].MaxResolution, parent, layerTime, layers[i].Disabled))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layers[i].Id, parent);
       }
     };
 

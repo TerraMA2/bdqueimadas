@@ -122,7 +122,7 @@ define(
      * @inner
      */
     var updateAttributesTable = function() {
-      if($("#table-box").css('left') < '0px')
+      if($("#table-box").css('left') < '0px' && memberAttributesTable !== null)
         memberAttributesTable.ajax.reload();
     };
 

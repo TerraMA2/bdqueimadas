@@ -33,6 +33,7 @@ define(
     /**
      * Updates the necessary components.
      *
+     * @private
      * @function updateComponents
      * @memberof BDQueimadas
      * @inner
@@ -40,32 +41,6 @@ define(
     var updateComponents = function() {
       AttributesTable.updateAttributesTable();
       Graphics.updateGraphics();
-    };
-
-    /**
-     * Applies the filters.
-     *
-     * @private
-     * @function applyFilter
-     * @memberof BDQueimadas
-     * @inner
-     */
-    var applyFilter = function() {
-      var dates = Utils.getFilterDates(true);
-
-      Filter.setSatellites($('#filter-satellite').val());
-
-      if(dates.length === 0) {
-        Filter.updateDatesToCurrent();
-        var filterDateFrom = Filter.getFormattedDateFrom('YYYY/MM/DD');
-        var filterDateTo = Filter.getFormattedDateTo('YYYY/MM/DD');
-      } else {
-        var filterDateFrom = dates[0];
-        var filterDateTo = dates[1];
-      }
-
-      Filter.applyFilter(filterDateFrom, filterDateTo, Filter.getSatellites());
-      updateComponents();
     };
 
     /**
@@ -279,7 +254,8 @@ define(
               }
             }
           } else {
-            applyFilter();
+            Filter.applyFilter();
+            updateComponents();
           }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
@@ -341,6 +317,10 @@ define(
           $('#map-subtitle').animate({ 'width': '150px' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
         }
+      });
+
+      $(document).on("updateComponents", function() {
+        updateComponents();
       });
 
       setTimeout(function(){
@@ -424,23 +404,28 @@ define(
         if(result.key === 'Countries') {
           if(!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0) {
             Filter.updateBdqNames(function() {
-              applyFilter();
+              Filter.applyFilter();
+              updateComponents();
             });
           } else {
             Filter.setCountriesBdqNames([]);
-            applyFilter();
+            Filter.applyFilter();
+            updateComponents();
           }
         } else if(result.key === 'States') {
           if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
             Filter.updateBdqNames(function() {
-              applyFilter();
+              Filter.applyFilter();
+              updateComponents();
             });
           } else {
             Filter.setStatesBdqNames([]);
-            applyFilter();
+            Filter.applyFilter();
+            updateComponents();
           }
         } else {
-          applyFilter();
+          Filter.applyFilter();
+          updateComponents();
         }
       });
 
@@ -495,7 +480,8 @@ define(
         Filter.setCountries(countriesIds);
 
         Filter.updateBdqNames(function() {
-          applyFilter();
+          Filter.applyFilter();
+          updateComponents();
 
           Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
 
@@ -869,7 +855,6 @@ define(
     };
 
     return {
-      updateComponents: updateComponents,
     	init: init
     };
   }
