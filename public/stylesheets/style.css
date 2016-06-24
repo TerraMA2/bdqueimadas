@@ -437,6 +437,17 @@
   cursor: pointer;
 }
 
+.new-layer {
+  float: right;
+  cursor: pointer;
+}
+
+#add-layer {
+  float: right;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
