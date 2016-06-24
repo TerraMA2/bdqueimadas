@@ -344,10 +344,11 @@ define(
       });
 
       $('#add-layer').on('click', function() {
-        var availableLayers = "";
+        var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
+        availableLayers += "<div style=\"max-height: 400px; overflow: auto;\">";
 
         $.each(Map.getNotAddedLayers(), function(i, layer) {
-          availableLayers += "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\">" + Utils.processStringWithDatePattern(layer.Name) + "</span><br/>";
+          availableLayers += "<strong>" + Utils.processStringWithDatePattern(layer.Name) + "</strong><span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span><br/>";
         });
 
         vex.dialog.alert({
@@ -473,10 +474,6 @@ define(
             Filter.setCountries([result.data.rows[0].id]);
             Filter.clearStates();
             Filter.selectCountries([result.data.rows[0].id]);
-
-            $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-              Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), [result.data.rows[0].id], Filter.getSatellites(), layer);
-            });
           } else {
             Filter.setContinent(result.data.rows[0].id);
             Filter.clearCountries();
@@ -515,9 +512,6 @@ define(
         Filter.setCountries(countriesIds);
 
         Filter.updateBdqNames(function() {
-          Filter.applyFilter();
-          updateComponents();
-
           Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
 
           var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
@@ -531,9 +525,8 @@ define(
 
           Filter.enableDropdown('countries', countriesIds);
 
-          $.each(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, function(i, layer) {
-            Filter.applyCurrentSituationFilter(Filter.getFormattedDateFrom(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Filter.getFormattedDateTo(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), countriesIds, Filter.getSatellites(), layer);
-          });
+          Filter.applyFilter();
+          updateComponents();
         });
       });
 
