@@ -448,6 +448,41 @@
   cursor: pointer;
 }
 
+#available-layers {
+  max-height: 400px;
+  overflow: auto;
+  padding-right: 20px;
+}
+
+#available-layers ul { list-style: none; }
+
+#available-layers li {
+  list-style-type: none;
+  padding: 5px 0;
+  position: relative;
+  margin-left: 11px;
+}
+
+#available-layers > span {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#available-layers .layer-group-plus {
+  float: left;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+#available-layers .layer-group-minus {
+  float: left;
+  font-size: 45px;
+  margin-top: -3px;
+  margin-right: -1px;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }

@@ -336,7 +336,7 @@ define(
         $.each(Map.getNotAddedLayers(), function(i, layer) {
           if(layerId === layer.Id) {
             if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer === "true") {
-              Map.addLayerToMap(layer, layer.LayerGroup, false);
+              Map.addLayerToMap(layer, layer.LayerGroup.Id, false);
             } else {
               Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
             }
@@ -349,12 +349,35 @@ define(
       });
 
       $('#add-layer').on('click', function() {
-        var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
-        availableLayers += "<div style=\"max-height: 400px; overflow: auto;\">";
+        var layerGroups = {
+          "LayerGroupsIds": [],
+          "LayerGroupsNames": []
+        };
 
         $.each(Map.getNotAddedLayers(), function(i, layer) {
-          availableLayers += "<strong>" + Utils.processStringWithDatePattern(layer.Name) + "</strong><span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span><br/>";
+          var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer.Name) + "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span></li>";
+
+          if(layerGroups[layer.LayerGroup.Id] !== undefined) {
+            layerGroups[layer.LayerGroup.Id] += layerHtml;
+          } else {
+            layerGroups[layer.LayerGroup.Id] = layerHtml;
+
+            layerGroups.LayerGroupsIds.push(layer.LayerGroup.Id);
+            layerGroups.LayerGroupsNames.push(layer.LayerGroup.Name);
+          }
         });
+
+        var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
+        availableLayers += "<div id=\"available-layers\">";
+
+        $.each(layerGroups.LayerGroupsIds, function(i, layerGroupId) {
+          availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroupId + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
+          availableLayers += "<ul id=\"layer-group-" + layerGroupId + "\">" + layerGroups[layerGroupId] + "</ul>";
+        });
+
+        availableLayers += "</div>";
+
+        $('#available-layers li').hide();
 
         vex.dialog.alert({
           message: availableLayers,
@@ -364,6 +387,18 @@ define(
             className: 'bdqueimadas-btn'
           }]
         });
+      });
+
+      $(document).on('click', '#available-layers > span.span-group-name', function(ev) {
+        var children = $("#" + $(this).data('available-layer-group')).find(' > li');
+
+        if(children.is(":visible")) {
+          children.hide('fast');
+          $(this).find('div').addClass('layer-group-plus').removeClass('layer-group-minus').html('+');
+        } else {
+          children.show('fast');
+          $(this).find('div').addClass('layer-group-minus').removeClass('layer-group-plus').html('-');
+        }
       });
 
       // new
