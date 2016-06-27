@@ -39,7 +39,10 @@ define(
       if(configuration.LayerGroups.length > 0) {
         for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
           for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
-            configuration.LayerGroups[i].Layers[j]["LayerGroup"] = configuration.LayerGroups[i].Id;
+            configuration.LayerGroups[i].Layers[j]["LayerGroup"] = {
+              "Id": configuration.LayerGroups[i].Id,
+              "Name": configuration.LayerGroups[i].Name
+            };
 
             if(configuration.LayerGroups[i].Layers[j].AddsInTheStart) {
               if(configuration.UseLayerGroupsInTheLayerExplorer === "true") {
@@ -110,7 +113,7 @@ define(
         addNotAddedLayer(layerToRemove[0]);
 
         if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer === "true") {
-          TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id, layerToRemove[0].LayerGroup);
+          TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id, layerToRemove[0].LayerGroup.Id);
         } else {
           TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
         }
