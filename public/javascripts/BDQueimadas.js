@@ -277,6 +277,15 @@ define(
         updateComponents();
       });
 
+      $(document).on("updateComponents", function() {
+        updateComponents();
+      });
+
+      $(document).on("applyFilter", function() {
+        Filter.applyFilter();
+        updateComponents();
+      });
+
       // Graphics Events
 
       $('#show-time-series-graphic').on('click', function() {
@@ -319,19 +328,16 @@ define(
         }
       });
 
-      // new
+      // LayerExplorer events
 
-      $(document).on("updateComponents", function() {
-        updateComponents();
-      });
-
-      $(document).on("applyFilter", function() {
-        Filter.applyFilter();
-        updateComponents();
+      $(document).on('click', '.remove-layer', function() {
+        Map.removeLayerFromMap($(this).parent().data('layerid'));
       });
 
       $(document).on('click', '.new-layer', function() {
         var layerId = $(this).data('layerid');
+
+        vex.close();
 
         $.each(Map.getNotAddedLayers(), function(i, layer) {
           if(layerId === layer.Id) {
@@ -344,8 +350,6 @@ define(
             return false;
           }
         });
-
-        vex.close();
       });
 
       $('#add-layer').on('click', function() {
@@ -401,12 +405,7 @@ define(
         }
       });
 
-      // new
-
-      setTimeout(function(){
-        $('.sidebar-toggle').click();
-        $('#main-sidebar-toggle').css('display', '');
-      }, 15000);
+      // TerraMA2WebComponents events
 
       TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
         var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
@@ -919,6 +918,11 @@ define(
           updateSizeVars();
           updateComponents();
         }, 60000);
+
+        setTimeout(function(){
+          $('.sidebar-toggle').click();
+          $('#main-sidebar-toggle').css('display', '');
+        }, 15000);
       });
     };
 
