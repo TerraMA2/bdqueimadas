@@ -52,6 +52,13 @@ requirejs(
 
     Filter.applyFilter();
     $.event.trigger({type: "updateComponents"});
+
+    $("#date_cont").datepicker();
+    $("#lbl_date_cont").click(function(){ $("#date_cont").datepicker("show"); });
+
+    $("#date_cont").on('change', function() {
+      alert($(this).val());
+    });
   }
 );
 
