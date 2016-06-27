@@ -5,25 +5,42 @@
  * @class Map
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
+ *
+ * @property {array} memberLayers - Layers currently present in the map.
+ * @property {array} memberNotAddedLayers - Layers not present in the map.
  */
 define(
   ['components/Utils', 'TerraMA2WebComponents'],
   function(Utils, TerraMA2WebComponents) {
 
-    // new
-
+    // Layers currently present in the map
     var memberLayers = [];
+    // Layers not present in the map
     var memberNotAddedLayers = [];
 
+    /**
+     * Returns the array of layers currently present in the map.
+     * @returns {array} memberLayers - Layers currently present in the map
+     *
+     * @function getLayers
+     * @memberof Map
+     * @inner
+     */
     var getLayers = function() {
       return memberLayers;
     };
 
+    /**
+     * Returns the array of layers not present in the map.
+     * @returns {array} memberNotAddedLayers - Layers not present in the map
+     *
+     * @function getNotAddedLayers
+     * @memberof Map
+     * @inner
+     */
     var getNotAddedLayers = function() {
       return memberNotAddedLayers;
     };
-
-    // new
 
     /**
      * Adds the layers from the map configuration file to the map.
@@ -59,10 +76,6 @@ define(
           }
         }
       }
-
-      $(document).on('click', '.remove-layer', function() {
-        removeLayerFromMap($(this).parent().data('layerid'));
-      });
     };
 
     /**
@@ -97,8 +110,14 @@ define(
       $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
     };
 
-    // new
-
+    /**
+     * Removes a layer with a given id from the Map.
+     * @param {string} layerId - Layer id
+     *
+     * @function removeLayerFromMap
+     * @memberof Map
+     * @inner
+     */
     var removeLayerFromMap = function(layerId) {
       var layerToRemove = null;
 
@@ -120,12 +139,18 @@ define(
       }
     };
 
-
+    /**
+     * Adds a given layer to the array of layers not present in the map.
+     * @param {object} layer - Layer
+     *
+     * @private
+     * @function addNotAddedLayer
+     * @memberof Map
+     * @inner
+     */
     var addNotAddedLayer = function(layer) {
       memberNotAddedLayers.push(layer);
     };
-
-    // new
 
     /**
      * Resets the map tools to its initial state.
@@ -319,6 +344,7 @@ define(
       getLayers: getLayers,
       getNotAddedLayers: getNotAddedLayers,
       addLayerToMap: addLayerToMap,
+      removeLayerFromMap: removeLayerFromMap,
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,
