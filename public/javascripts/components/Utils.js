@@ -184,6 +184,26 @@ define(function() {
     return finalString;
   };
 
+  // new
+
+  var functionLala = function(string, layerId) {
+    var finalString = string;
+
+    if(string !== null && string !== undefined && layerId !== null && layerId !== undefined) {
+      var datePattern = string.match("{{(.*)}}");
+
+      if(datePattern !== null) {
+        var html = "<span class=\"btn btn-default layer-time-update\" data-id=\"" + layerId + "\">" + datePattern[0] + "</span>";
+
+        finalString = string.replace(datePattern[0], html) + "<input type=\"hidden\" class=\"hidden-layer-time-update\" data-id=\"" + layerId + "\" id=\"hidden-layer-time-update-" + layerId + "\"/>";
+      }
+    }
+
+    return finalString;
+  };
+
+  // new
+
   /**
    * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
    * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
