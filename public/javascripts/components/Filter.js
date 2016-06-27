@@ -476,13 +476,7 @@ define(
         updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
         cql += createDateFilter() + " AND ";
 
-        if(Utils.getConfigurations().mapConfigurations.LayerGroups.length > 0) {
-          $.each(Utils.getConfigurations().mapConfigurations.LayerGroups, function(i, layerGroup) {
-            processLayers(layerGroup.Layers);
-          });
-        } else if(Utils.getConfigurations().mapConfigurations.Layers.length > 0) {
-          processLayers(Map.getLayers());
-        }
+        if(Map.getLayers().length > 0) processLayers(Map.getLayers());
       }
 
       if(!Utils.stringInArray(memberSatellites, "all")) {

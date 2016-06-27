@@ -335,7 +335,12 @@ define(
 
         $.each(Map.getNotAddedLayers(), function(i, layer) {
           if(layerId === layer.Id) {
-            Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
+            if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer === "true") {
+              Map.addLayerToMap(layer, layer.LayerGroup, false);
+            } else {
+              Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
+            }
+
             return false;
           }
         });

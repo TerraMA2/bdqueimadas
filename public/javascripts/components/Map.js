@@ -38,38 +38,28 @@ define(
 
       if(configuration.LayerGroups.length > 0) {
         for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
-          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
+          for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
+            configuration.LayerGroups[i].Layers[j]["LayerGroup"] = configuration.LayerGroups[i].Id;
 
-          processLayers(configuration.LayerGroups[i].Layers, configuration.LayerGroups[i].Id);
+            if(configuration.LayerGroups[i].Layers[j].AddsInTheStart) {
+              if(configuration.UseLayerGroupsInTheLayerExplorer === "true") {
+                if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
+                  TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
+
+                addLayerToMap(configuration.LayerGroups[i].Layers[j], configuration.LayerGroups[i].Id, true);
+              } else {
+                addLayerToMap(configuration.LayerGroups[i].Layers[j], 'terrama2-layerexplorer', true);
+              }
+            } else {
+              addNotAddedLayer(configuration.LayerGroups[i].Layers[j]);
+            }
+          }
         }
-      } else if(configuration.Layers.length > 0) {
-        processLayers(configuration.Layers, 'terrama2-layerexplorer');
       }
 
       $(document).on('click', '.remove-layer', function() {
         removeLayerFromMap($(this).parent().data('layerid'));
       });
-    };
-
-    /**
-     * Processes a list of layers and adds each layer to the map.
-     * @param {array} layers - Layers array
-     * @param {string} parent - Parent id
-     *
-     * @private
-     * @function processLayers
-     * @memberof Map
-     * @inner
-     */
-    var processLayers = function(layers, parent) {
-      for(var i = layers.length - 1; i >= 0; i--) {
-        if(layers[i].AddsInTheStart) {
-          addLayerToMap(layers[i], parent, true);
-        } else {
-          addNotAddedLayer(layers[i]);
-        }
-      }
     };
 
     /**
@@ -118,7 +108,12 @@ define(
 
       if(layerToRemove !== null) {
         addNotAddedLayer(layerToRemove[0]);
-        TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
+
+        if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer === "true") {
+          TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id, layerToRemove[0].LayerGroup);
+        } else {
+          TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
+        }
       }
     };
 
