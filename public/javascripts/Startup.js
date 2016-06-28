@@ -21,8 +21,8 @@ requirejs(
     TerraMA2WebComponents.LayerExplorer.init();
     TerraMA2WebComponents.MapDisplay.init();
 
-    if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer'))
-      TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer');
+    //if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer'))
+      //TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer');
 
     if(TerraMA2WebComponents.MapDisplay.addMapQuestSatelliteLayer('mqt', 'MapQuest', true, 'terrama2-layerexplorer'))
       TerraMA2WebComponents.LayerExplorer.addLayersFromMap('mqt', 'terrama2-layerexplorer');
@@ -52,13 +52,6 @@ requirejs(
 
     Filter.applyFilter();
     $.event.trigger({type: "updateComponents"});
-
-    $("#date_cont").datepicker();
-    $("#lbl_date_cont").click(function(){ $("#date_cont").datepicker("show"); });
-
-    $("#date_cont").on('change', function() {
-      alert($(this).val());
-    });
   }
 );
 
