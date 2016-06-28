@@ -369,11 +369,6 @@ body, .skin-queimadas {
   right: 0;
 }
 
-.blockUI {
-  z-index: 9999999 !important;
-  cursor: wait !important;
-}
-
 #loading-span {
   position: absolute;
   width: 150px;
