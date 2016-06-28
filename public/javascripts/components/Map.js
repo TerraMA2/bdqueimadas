@@ -334,6 +334,10 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        TerraMA2WebComponents.MapDisplay.disableDoubleClickZoom();
+        TerraMA2WebComponents.MapDisplay.addMousePosition();
+        TerraMA2WebComponents.MapDisplay.addScale();
+
         addLayersToMap();
         addSubtitles();
         activateMoveMapTool();
