@@ -14,20 +14,8 @@ requirejs(
     //if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer'))
       //TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer');
 
-    if(TerraMA2WebComponents.MapDisplay.addMapQuestSatelliteLayer('mqt', 'MapQuest', true, 'terrama2-layerexplorer'))
-      TerraMA2WebComponents.LayerExplorer.addLayersFromMap('mqt', 'terrama2-layerexplorer');
-
-    TerraMA2WebComponents.MapDisplay.disableDoubleClickZoom();
-    TerraMA2WebComponents.MapDisplay.addMousePosition();
-    TerraMA2WebComponents.MapDisplay.addScale();
-
-    TerraMA2WebComponents.MapDisplay.setLayersStartLoadingFunction(function() {
-      if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
-    });
-
-    TerraMA2WebComponents.MapDisplay.setLayersEndLoadingFunction(function() {
-      if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
-    });
+    //if(TerraMA2WebComponents.MapDisplay.addMapQuestSatelliteLayer('mqt', 'MapQuest', true, 'terrama2-layerexplorer'))
+      //TerraMA2WebComponents.LayerExplorer.addLayersFromMap('mqt', 'terrama2-layerexplorer');
 
     Utils.init(configurations, BASE_URL);
     BDQueimadas.init();

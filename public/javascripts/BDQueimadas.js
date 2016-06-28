@@ -457,6 +457,14 @@ define(
 
       // TerraMA2WebComponents events
 
+      TerraMA2WebComponents.MapDisplay.setLayersStartLoadingFunction(function() {
+        if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
+      });
+
+      TerraMA2WebComponents.MapDisplay.setLayersEndLoadingFunction(function() {
+        if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
+      });
+
       TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
         var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
         TerraMA2WebComponents.MapDisplay.zoomToExtent(dragBoxExtent);
