@@ -54,6 +54,19 @@ define(
     var loadEvents = function() {
       // General Events
 
+      $('#about-btn').on('click', function() {
+        $('#about-dialog').dialog({
+          width: 800,
+          height: 900,
+          modal: true,
+          resizable: false,
+          draggable: false,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
+      });
+
       // Sidebar buttons click event
       $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();

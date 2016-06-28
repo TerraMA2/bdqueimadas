@@ -1,5 +1,3 @@
-//$.blockUI({ message: '<h3>Inicializando o BDQueimadas...</h3>' });
-
 requirejs.config({
   baseUrl: BASE_URL + 'javascripts',
   paths: {
@@ -8,15 +6,7 @@ requirejs.config({
 });
 
 requirejs(
-  [
-    'BDQueimadas',
-    'components/Utils',
-    'components/Filter',
-    'components/AttributesTable',
-    'components/Graphics',
-    'components/Map',
-    'TerraMA2WebComponents'
-  ],
+  ['BDQueimadas', 'components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
   function(BDQueimadas, Utils, Filter, AttributesTable, Graphics, Map, TerraMA2WebComponents) {
     TerraMA2WebComponents.LayerExplorer.init();
     TerraMA2WebComponents.MapDisplay.init();
@@ -26,10 +16,6 @@ requirejs(
 
     if(TerraMA2WebComponents.MapDisplay.addMapQuestSatelliteLayer('mqt', 'MapQuest', true, 'terrama2-layerexplorer'))
       TerraMA2WebComponents.LayerExplorer.addLayersFromMap('mqt', 'terrama2-layerexplorer');
-
-    //TerraMA2WebComponents.MapDisplay.addCapabilitiesLayers('http://localhost:9095/geoserver/ows?service=WMS&request=getCapabilities', 'http://localhost:9095/geoserver/ows', 'geoserver', 'local', 'Local Server', function() {
-    //  TerraMA2WebComponents.LayerExplorer.addLayersFromMap('local', 'terrama2-layerexplorer');
-    //});
 
     TerraMA2WebComponents.MapDisplay.disableDoubleClickZoom();
     TerraMA2WebComponents.MapDisplay.addMousePosition();
@@ -54,16 +40,3 @@ requirejs(
     $.event.trigger({type: "updateComponents"});
   }
 );
-
-$('#about-btn').on('click', function() {
-  $('#about-dialog').dialog({
-    width: 800,
-    height: 900,
-    modal: true,
-    resizable: false,
-    draggable: false,
-    closeOnEscape: true,
-    closeText: "",
-    position: { my: 'top', at: 'top+15' }
-  });
-});
