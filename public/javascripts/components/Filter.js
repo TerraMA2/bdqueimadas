@@ -521,8 +521,8 @@ define(
         }
 
         if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {
-          //var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "='" + (memberContinent !== null ? memberContinent : "") + "'";
-          //TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+          var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "='" + (memberContinent !== null ? memberContinent : "") + "'";
+          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
         } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
           var cqlFilter = "";
 
