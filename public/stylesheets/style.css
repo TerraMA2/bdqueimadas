@@ -71,6 +71,10 @@
 
 /* BDQueimadas styles */
 
+body, .skin-queimadas {
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
+}
+
 #filter-box { color: black; }
 
 .left-content-box {
@@ -433,7 +437,7 @@
 .remove-layer {
   float: right;
   margin-top: -28px;
-  color: red;
+  color: #555;
   cursor: pointer;
 }
 
