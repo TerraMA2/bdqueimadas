@@ -405,6 +405,43 @@ define(
         }
       });
 
+      $(document).on('click', '.layer-time-update', function() {
+        if(!$("#hidden-layer-time-update-" + $(this).data("id")).hasClass('hasDatepicker')) {
+          $("#hidden-layer-time-update-" + $(this).data("id")).datepicker({
+            markerClassName: 'hasDatepicker',
+            dateFormat: 'yy/mm/dd',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior'
+          });
+        }
+
+        $("#hidden-layer-time-update-" + $(this).data("id")).datepicker("show");
+      });
+
+      $(document).on('change', '.hidden-layer-time-update', function() {
+        var self = $(this);
+
+        $.each(Map.getLayers(), function(j, layer) {
+          if(layer.Id === self.data('id')) {
+            layer.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
+
+            self.parent().find('> span.layer-time-update > a').text(self.val());
+            self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
+            layer.Name = self.parent().html();
+
+            Filter.applyFilter();
+            updateComponents();
+
+            return false;
+          }
+        });
+      });
+
       // TerraMA2WebComponents events
 
       TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {

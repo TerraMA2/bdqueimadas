@@ -513,9 +513,10 @@ define(
         if(layer.Time !== null) {
           TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, { TIME: Utils.processStringWithDatePattern(layer.Time) }, true);
 
-          var layerName = Utils.processStringWithDatePattern(layer.Name);
+          var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
+          layerName = Utils.processStringWithDatePattern(layerName);
 
-          $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').text(layerName);
+          $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
           TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
         }
 

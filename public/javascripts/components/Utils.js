@@ -184,25 +184,32 @@ define(function() {
     return finalString;
   };
 
-  // new
-
-  var functionLala = function(string, layerId) {
+  /**
+   * Creates a layer time update button in a string that have a date pattern.
+   * @param {string} string - String where the button should be created
+   * @param {string} layerId - Layer id
+   * @returns {string} finalString - Processed string
+   *
+   * @function applyLayerTimeUpdateButton
+   * @memberof Utils
+   * @inner
+   */
+  var applyLayerTimeUpdateButton = function(string, layerId) {
     var finalString = string;
 
     if(string !== null && string !== undefined && layerId !== null && layerId !== undefined) {
       var datePattern = string.match("{{(.*)}}");
 
       if(datePattern !== null) {
-        var html = "<span class=\"btn btn-default layer-time-update\" data-id=\"" + layerId + "\">" + datePattern[0] + "</span>";
+        var span = "<span class=\"layer-time-update\" data-id=\"" + layerId + "\"><a href=\"#\">" + datePattern[0] + "</a></span>";
+        var input = "<input type=\"text\" style=\"width: 0; height: 0; opacity: 0;\" class=\"hidden-layer-time-update\" data-id=\"" + layerId + "\" id=\"hidden-layer-time-update-" + layerId + "\"/>";
 
-        finalString = string.replace(datePattern[0], html) + "<input type=\"hidden\" class=\"hidden-layer-time-update\" data-id=\"" + layerId + "\" id=\"hidden-layer-time-update-" + layerId + "\"/>";
+        finalString = string.replace(datePattern[0], span) + input;
       }
     }
 
     return finalString;
   };
-
-  // new
 
   /**
    * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
@@ -433,6 +440,7 @@ define(function() {
     stringToDate: stringToDate,
     formatTime: formatTime,
     processStringWithDatePattern: processStringWithDatePattern,
+    applyLayerTimeUpdateButton: applyLayerTimeUpdateButton,
     getFilterDates: getFilterDates,
     stringInArray: stringInArray,
     replaceAll: replaceAll,
