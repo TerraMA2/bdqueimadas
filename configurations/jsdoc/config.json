@@ -22,7 +22,7 @@
       "README.md"
     ],
     "includePattern": ".+\\.js(doc)?$",
-    "excludePattern": "docs"
+    "excludePattern": "public/docs"
   },
   "plugins": [],
   "templates": {
@@ -39,7 +39,7 @@
   "opts": {
     "template": "configurations/jsdoc/templates/bdqueimadas",
     "encoding": "utf8",
-    "destination": "docs",
+    "destination": "public/docs",
     "recurse": true,
     "private": true
   }
