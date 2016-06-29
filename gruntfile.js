@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*! <%= pkg.name %> <%= pkg.version %> | (C) 2007, <%= grunt.template.today("yyyy") %> National Institute For Space Research (INPE) - Brazil | https://github.com/TerraMA2/terrama2/blob/master/LICENSE */',
     requirejs: {
-      TerraMA2WebComponents: {
+      BDQueimadas: {
         options: {
           baseUrl: "public/javascripts",
           out: "public/dist/BDQueimadas.min.js",
