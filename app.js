@@ -6,7 +6,6 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     methodOverride = require('method-override'),
     favicon = require('serve-favicon'),
-    //error = require('./middlewares/error'),
     app = express(),
     server = require('http').Server(app),
     fs = require('fs');
@@ -27,8 +26,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 load('controllers')
   .then('routes')
   .into(app);
-
-//app.use(error.notFound);
-//app.use(error.serverError);
 
 module.exports = app;
