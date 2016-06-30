@@ -234,6 +234,7 @@ body, .skin-queimadas {
 #map-subtitle {
   position: absolute;
   z-index: 1300;
+  cursor: auto;
   top: 20px;
   right: 0;
 }
