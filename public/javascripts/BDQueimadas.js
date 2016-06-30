@@ -159,7 +159,7 @@ define(
         }
 
         // Updates the padding top of the sidebar
-        $('.main-sidebar').attr("style", "padding-top: " + ($('#header').outerHeight() + $('.navbar').outerHeight() + 33) + "px");
+        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
