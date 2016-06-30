@@ -179,7 +179,7 @@ body, .skin-queimadas {
   width: 100%;
   height: 100%;
   z-index: 9999;
-  background: url('../images/welcome.jpg');
+  background-image: url('../images/welcome.jpg');
   background-size: 100%;
   left: 0;
 }
@@ -285,13 +285,13 @@ body, .skin-queimadas {
 }
 
 #footer-image {
-  background: url('../images/footer.png');
+  background-image: url('../images/footer.png');
   background-size: 80%;
-  height: 135px;
   background-repeat: no-repeat;
+  background-position: center;
+  height: 135px;
   width: 100%;
   padding: 0 !important;
-  background-position: center;
   margin: 0 !important;
   max-width: 100% !important;
   margin-top: 30px !important;
@@ -303,13 +303,13 @@ body, .skin-queimadas {
 }
 
 #programa-cerrado-image {
-  background: url('../images/about/header.png');
+  background-image: url('../images/about/header.png');
   background-size: 800px;
-  height: 830px;
   background-repeat: no-repeat;
+  background-position: initial;
+  height: 830px;
   width: 100%;
   padding: 0 !important;
-  background-position: initial;
   margin: 0 !important;
   max-width: 100%;
   margin-top: 4px !important;
@@ -327,26 +327,26 @@ body, .skin-queimadas {
 }
 
 #projeto-inpe-image {
-  background: url('../images/about/inpe.png');
+  background-image: url('../images/about/inpe.png');
   background-size: 700px;
-  height: 130px;
   background-repeat: no-repeat;
+  background-position: center;
+  height: 130px;
   width: 100%;
   padding: 0 !important;
-  background-position: center;
   margin: 0 !important;
   max-width: 100%;
   margin-top: 4px !important;
 }
 
 #realizacao-image {
-  background: url('../images/about/realizacao.png');
+  background-image: url('../images/about/realizacao.png');
   background-size: 700px;
-  height: 130px;
   background-repeat: no-repeat;
+  background-position: center;
+  height: 130px;
   width: 100%;
   padding: 0 !important;
-  background-position: center;
   margin: 0 !important;
   max-width: 100%;
   margin-top: 4px !important;
@@ -529,14 +529,12 @@ body, .skin-queimadas {
 
 #graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
 
-/*.sidebar-menu > li > a > span { padding-left: 22px; }*/
+.skin-queimadas .main-header #gov-header #header input.searchButton { background-image: url("../externals/adminlte/img/sprite.png") 0 2px; }
 
-.skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../externals/adminlte/img/sprite.png") 0 2px;}
-
-.skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../externals/adminlte/img/sprite.png");}
+.skin-queimadas .main-header #gov-header #header #social-icons li a { background-image: url("../externals/adminlte/img/sprite.png"); }
 
 .skin-queimadas .main-header #gov-header #header #logo #portal-title {
-  background: url("../externals/adminlte/img/logo_queimadas.png");
+  background-image: url("../externals/adminlte/img/logo_queimadas.png");
   background-position: center;
   background-repeat: no-repeat;
 }
