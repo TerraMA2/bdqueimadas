@@ -11,12 +11,6 @@ requirejs(
     TerraMA2WebComponents.LayerExplorer.init();
     TerraMA2WebComponents.MapDisplay.init();
 
-    //if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer'))
-      //TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer');
-
-    //if(TerraMA2WebComponents.MapDisplay.addMapQuestSatelliteLayer('mqt', 'MapQuest', true, 'terrama2-layerexplorer'))
-      //TerraMA2WebComponents.LayerExplorer.addLayersFromMap('mqt', 'terrama2-layerexplorer');
-
     Utils.init(configurations, BASE_URL);
     BDQueimadas.init();
     Filter.init();
