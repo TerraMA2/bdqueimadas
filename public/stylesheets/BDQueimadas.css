@@ -636,3 +636,9 @@ body, .skin-queimadas {
   white-space: normal !important;
   height: auto !important;
 }
+
+.skin-queimadas #footer .footer-logos>div {
+  position: relative;
+  margin: 0 auto;
+  max-width: 100%;
+}
