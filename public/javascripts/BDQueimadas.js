@@ -183,23 +183,6 @@ define(
         }
       });
 
-      // Exportation type click event
-      $(document).on('change', '#exportation-type', function() {
-        if($(this).val() !== "") {
-          var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat) +
-                           "&dateTo=" + Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) +
-                           "&satellites=" + (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString()) +
-                           "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
-                           "&countries=" + (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '') +
-                           "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
-                           "&format=" + $(this).val();
-
-          location.href = exportLink;
-
-          vex.close();
-        }
-      });
-
       // Export click event
       $('#export').on('click', function() {
         $.ajax({
@@ -216,18 +199,97 @@ define(
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {
               vex.dialog.alert({
-                message: '<select id="exportation-type" class="form-control">' +
+                message: '<div style="text-align: center; font-weight: bold;">Confirme abaixo os filtros de datas e de satélites da exportação (os filtros espaciais devem ser parametrizados no filtro principal)</div><br/>' +
+                '<div class="form-group bdqueimadas-form"><div style="float: left;">' +
+                '<label for="filter-date-from-export" style="float: left; margin-right: 10px; margin-top: 5px;">Início</label>' +
+                '<input value="' + $('#filter-date-from').val() + '" type="text" style="max-width: 150px; float: left;" class="form-control date filter-date" id="filter-date-from-export" placeholder="De" data-inputmask="\'alias\': \'yyyy/mm/dd\'" data-mask>' +
+                '</div><div style="float: right;">' +
+                '<label for="filter-date-to-export" style="float: left; margin-right: 10px; margin-top: 5px;">Fim</label>' +
+                '<input value="' + $('#filter-date-to').val() + '" type="text" style="max-width: 150px; float: left;" class="form-control date filter-date" id="filter-date-to-export" placeholder="Até" data-inputmask="\'alias\': \'yyyy/mm/dd\'" data-mask>' +
+                '</div></div>' +
+                '<div style="clear: both; height: 5px;"></div>' +
+                '<div class="form-horizontal"><div class="form-group bdqueimadas-form">' +
+                '<label for="filter-satellite-export" class="col-sm-5 control-label" style="text-align: left;">Focos dos Sat&eacute;lites</label>' +
+                '<div class="col-sm-7"><select multiple class="form-control" id="filter-satellite-export">' + $('#filter-satellite').html() + '</select></div>' +
+                '</div></div>' +
+                '<div class="form-horizontal"><div class="form-group bdqueimadas-form">' +
+                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left;">Formato da exportação</label>' +
+                '<div class="col-sm-6">' +
+                '<select id="exportation-type" class="form-control">' +
                 '<option value="">Selecione o formato</option>' +
                 '<option value="geojson">GeoJSON</option>' +
                 '<option value="shapefile">Shapefile</option>' +
                 '<option value="csv">CSV</option>' +
-                '</select>',
-                buttons: [{
-                  type: 'submit',
-                  text: 'Cancelar',
-                  className: 'bdqueimadas-btn'
-                }]
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '<div style="clear: both;"></div>' +
+                '<span class="help-block" style="color: #dd4b39;" id="filter-error-export"></span>',
+                buttons: [
+                  {
+                    type: 'submit',
+                    text: 'Cancelar',
+                    className: 'bdqueimadas-btn'
+                  },
+                  {
+                    type: 'button',
+                    text: 'Exportar',
+                    className: 'bdqueimadas-btn',
+                    click: function() {
+                      $("#filter-error-export").text('');
+
+                      if($("#filter-date-from-export").val() === "") {
+                        $("#filter-error-export").text('Data inicial inválida!');
+                      } else if($("#filter-date-to-export").val() === "") {
+                        $("#filter-error-export").text('Data final inválida!');
+                      } else if($('#filter-satellite-export').val() === null) {
+                        $("#filter-error-export").text('Selecione algum satélite!');
+                      } else if($("#exportation-type").val() === "") {
+                        $("#filter-error-export").text('Formato da exportação inválido!');
+                      } else {
+                        var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
+                                         "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
+                                         "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
+                                         "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
+                                         "&countries=" + (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '') +
+                                         "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
+                                         "&format=" + $("#exportation-type").val();
+
+                        location.href = exportLink;
+
+                        vex.close();
+                      }
+                    }
+                  }
+                ]
               });
+
+              $('#filter-date-from-export').blur();
+
+              var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
+
+              $("#filter-date-from-export").datepicker(datePickerOptions);
+
+              datePickerOptions['onSelect'] = function(date) {
+                var dateFrom = $('#filter-date-from-export').datepicker('getDate');
+                var dateTo = $(this).datepicker('getDate');
+
+                if(dateFrom === null) {
+                  $("#filter-error-export").text('A data inicial deve ser preenchida primeiro!');
+                  $("#filter-date-to-export").val('');
+                } else {
+                  if(dateFrom > dateTo) {
+                    $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
+                    $("#filter-date-to-export").val('');
+                  } else {
+                    $("#filter-error-export").text('');
+                  }
+                }
+              };
+
+              $("#filter-date-to-export").datepicker(datePickerOptions);
+
+              $("#filter-satellite-export").val($("#filter-satellite").val());
             } else {
               vex.dialog.alert({
                 message: '<p class="text-center">Não existem dados para exportar!</p>',
@@ -420,17 +482,7 @@ define(
 
       $(document).on('click', '.layer-time-update', function() {
         if(!$("#hidden-layer-time-update-" + $(this).data("id")).hasClass('hasDatepicker')) {
-          $("#hidden-layer-time-update-" + $(this).data("id")).datepicker({
-            markerClassName: 'hasDatepicker',
-            dateFormat: 'yy/mm/dd',
-            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
-            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-            nextText: 'Próximo',
-            prevText: 'Anterior'
-          });
+          $("#hidden-layer-time-update-" + $(this).data("id")).datepicker(Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
         }
 
         $("#hidden-layer-time-update-" + $(this).data("id")).datepicker("show");
@@ -749,16 +801,7 @@ define(
     var loadPlugins = function() {
       $(".date").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
 
-      var datePickerOptions = {
-        dateFormat: 'yy/mm/dd',
-        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
-        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-        nextText: 'Próximo',
-        prevText: 'Anterior'
-      };
+      var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
       $("#filter-date-from").datepicker(datePickerOptions);
 
