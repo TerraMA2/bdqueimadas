@@ -39,7 +39,7 @@ define(
      * @inner
      */
     var updateComponents = function() {
-      AttributesTable.updateAttributesTable();
+      AttributesTable.updateAttributesTable(false);
       Graphics.updateGraphics();
     };
 
@@ -199,32 +199,43 @@ define(
           success: function(existsDataToExport) {
             if(existsDataToExport.existsDataToExport) {
               vex.dialog.alert({
-                message: '<div style="text-align: center; font-weight: bold;">Confirme abaixo os filtros de datas e de satélites da exportação (os filtros espaciais devem ser parametrizados no filtro principal)</div><br/>' +
-                '<div class="form-group bdqueimadas-form"><div style="float: left;">' +
-                '<label for="filter-date-from-export" style="float: left; margin-right: 10px; margin-top: 5px;">Início</label>' +
-                '<input value="' + $('#filter-date-from').val() + '" type="text" style="max-width: 150px; float: left;" class="form-control date filter-date" id="filter-date-from-export" placeholder="De" data-inputmask="\'alias\': \'yyyy/mm/dd\'" data-mask>' +
-                '</div><div style="float: right;">' +
-                '<label for="filter-date-to-export" style="float: left; margin-right: 10px; margin-top: 5px;">Fim</label>' +
-                '<input value="' + $('#filter-date-to').val() + '" type="text" style="max-width: 150px; float: left;" class="form-control date filter-date" id="filter-date-to-export" placeholder="Até" data-inputmask="\'alias\': \'yyyy/mm/dd\'" data-mask>' +
-                '</div></div>' +
-                '<div style="clear: both; height: 5px;"></div>' +
-                '<div class="form-horizontal"><div class="form-group bdqueimadas-form">' +
-                '<label for="filter-satellite-export" class="col-sm-5 control-label" style="text-align: left;">Focos dos Sat&eacute;lites</label>' +
-                '<div class="col-sm-7"><select multiple class="form-control" id="filter-satellite-export">' + $('#filter-satellite').html() + '</select></div>' +
-                '</div></div>' +
-                '<div class="form-horizontal"><div class="form-group bdqueimadas-form">' +
-                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left;">Formato da exportação</label>' +
-                '<div class="col-sm-6">' +
-                '<select id="exportation-type" class="form-control">' +
-                '<option value="">Selecione o formato</option>' +
-                '<option value="geojson">GeoJSON</option>' +
-                '<option value="shapefile">Shapefile</option>' +
-                '<option value="csv">CSV</option>' +
-                '</select>' +
-                '</div>' +
-                '</div>' +
-                '<div style="clear: both;"></div>' +
-                '<span class="help-block" style="color: #dd4b39;" id="filter-error-export"></span>',
+                message: '<div class="component-filter">' +
+                  '<div class="component-filter-title">Confirme abaixo os filtros de datas e de satélites da exportação (os filtros espaciais devem ser parametrizados no filtro principal)</div>' +
+                  '<div class="component-filter-content">' +
+                    '<div class="form-group bdqueimadas-form">' +
+                      '<div class="float-left div-date-filter-export">' +
+                        '<label for="filter-date-from-export">Início</label>' +
+                        '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="De">' +
+                      '</div>' +
+                      '<div class="float-right div-date-filter-export">' +
+                        '<label for="filter-date-to-export">Fim</label>' +
+                        '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Até">' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="clear" style="height: 5px;"></div>' +
+                    '<div class="form-horizontal">' +
+                      '<div class="form-group bdqueimadas-form">' +
+                        '<label for="filter-satellite-export" class="col-sm-5 control-label text-left">Focos dos Sat&eacute;lites</label>' +
+                        '<div class="col-sm-7"><select multiple class="form-control" id="filter-satellite-export">"' + $('#filter-satellite').html() + '</select></div>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="form-horizontal">' +
+                      '<div class="form-group bdqueimadas-form">' +
+                      '<label for="exportation-type" class="col-sm-6 control-label text-left">Formato da exportação</label>' +
+                      '<div class="col-sm-6">' +
+                        '<select id="exportation-type" class="form-control">' +
+                          '<option value="">Selecione o formato</option>' +
+                          '<option value="geojson">GeoJSON</option>' +
+                          '<option value="shapefile">Shapefile</option>' +
+                          '<option value="csv">CSV</option>' +
+                        '</select>' +
+                      '</div>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="clear"></div>' +
+                    '<span class="help-block component-filter-error" id="filter-error-export"></span>' +
+                  '</div>' +
+                '</div>',
                 buttons: [
                   {
                     type: 'submit',
@@ -265,6 +276,9 @@ define(
               });
 
               $('#filter-date-from-export').blur();
+
+              $("#filter-date-from-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
+              $("#filter-date-to-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
 
               var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
@@ -505,6 +519,12 @@ define(
             return false;
           }
         });
+      });
+
+      // AttributesTable events
+
+      $('#filter-button-attributes-table').on('click', function() {
+        AttributesTable.updateAttributesTable(true);
       });
 
       // TerraMA2WebComponents events
@@ -803,7 +823,7 @@ define(
 
       var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
-      $("#filter-date-from").datepicker(datePickerOptions);
+      $(".filter-date-from").datepicker(datePickerOptions);
 
       datePickerOptions['onSelect'] = function (date) {
         var dateFrom = $('#filter-date-from').datepicker('getDate');
@@ -837,6 +857,39 @@ define(
       };
 
       $("#filter-date-to").datepicker(datePickerOptions);
+
+      datePickerOptions['onSelect'] = function (date) {
+        var dateFrom = $('#filter-date-from-attributes-table').datepicker('getDate');
+        var dateTo = $(this).datepicker('getDate');
+
+        if(dateFrom === null) {
+          vex.dialog.alert({
+            message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $("#filter-date-to-attributes-table").val('');
+        } else {
+          if(dateFrom > dateTo) {
+            vex.dialog.alert({
+              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+
+            $("#filter-date-to-attributes-table").val('');
+          }
+        }
+      };
+
+      $("#filter-date-to-attributes-table").datepicker(datePickerOptions);
     };
 
     /**
@@ -1020,10 +1073,14 @@ define(
           updateComponents();
         }, 60000);
 
-        setTimeout(function(){
+        setTimeout(function() {
           $('.sidebar-toggle').click();
           $('#main-sidebar-toggle').css('display', '');
         }, 15000);
+
+        setTimeout(function() {
+          Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
+        }, 16000);
       });
     };
 

@@ -75,6 +75,12 @@ body, .skin-queimadas {
   font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
 }
 
+.clear { clear: both; }
+
+.float-left { float: left; }
+
+.float-right { float: right; }
+
 #filter-box { color: black; }
 
 .left-content-box {
@@ -256,6 +262,54 @@ body, .skin-queimadas {
 #map-subtitle > .box > .box-body > ul > li > a > span { margin-left: 15px; }
 
 #box-attributes-table > div.box-body { overflow: auto; }
+
+.component-filter-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.component-filter-content {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.component-filter-error { color: #dd4b39; }
+
+#filter-satellite-export {
+  float: left;
+  max-width: 200px;
+}
+
+#filter-button-attributes-table {
+  float: left;
+  margin-left: 15px;
+}
+
+#filter-satellite-attributes-table {
+  float: left;
+  max-width: 200px;
+}
+
+.component-filter-content > label {
+  float: left;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-left: 15px;
+}
+
+.component-filter-content > input {
+  max-width: 150px;
+  float: left;
+}
+
+.div-date-filter-export > label {
+  float: left;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.div-date-filter-export > input { max-width: 150px; }
 
 .bdqueimadas-btn {
   color: #fff;

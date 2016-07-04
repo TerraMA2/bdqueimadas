@@ -8,6 +8,9 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
+ * @property {date} memberDateFrom - Current initial date filter.
+ * @property {date} memberDateTo - Current final date filter.
+ * @property {array} memberSatellites - Current satellites filter.
  */
 define(
   ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
@@ -15,6 +18,12 @@ define(
 
     // Attributes table object (DataTables)
     var memberAttributesTable = null;
+    // Current initial date filter
+    var memberDateFrom = null;
+    // Current final date filter
+    var memberDateTo = null;
+    // Current satellites filter
+    var memberSatellites = ["all"];
 
     /**
      * Creates and returns an array with the attributes table columns names.
@@ -75,6 +84,10 @@ define(
 
       $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
+      memberDateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
+      memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
+      memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+
       memberAttributesTable = $('#attributes-table').DataTable(
         {
           "order": getAttributesTableOrder(),
@@ -84,9 +97,9 @@ define(
             "url": Utils.getBaseUrl() + "get-attributes-table",
             "type": "POST",
             "data": function(data) {
-              data.dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
-              data.dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
-              data.satellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+              data.dateFrom = memberDateFrom;
+              data.dateTo = memberDateTo;
+              data.satellites = memberSatellites;
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
               data.states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
@@ -116,14 +129,26 @@ define(
 
     /**
      * Updates the attributes table.
+     * @param {boolean} useAttributesTableFilter - Flag that indicates if the attributes table filter should be used
      *
      * @function updateAttributesTable
      * @memberof AttributesTable(2)
      * @inner
      */
-    var updateAttributesTable = function() {
-      if($("#table-box").css('left') < '0px' && memberAttributesTable !== null)
+    var updateAttributesTable = function(useAttributesTableFilter) {
+      if(($("#table-box").css('left') < '0px' || useAttributesTableFilter) && memberAttributesTable !== null) {
+        if(useAttributesTableFilter) {
+          memberDateFrom = Utils.dateToString(Utils.stringToDate($('#filter-date-from-attributes-table').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          memberDateTo = Utils.dateToString(Utils.stringToDate($('#filter-date-to-attributes-table').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());
+        } else {
+          memberDateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
+          memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
+          memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+        }
+
         memberAttributesTable.ajax.reload();
+      }
     };
 
     /**
