@@ -281,12 +281,12 @@ body, .skin-queimadas {
   max-width: 200px;
 }
 
-#filter-button-attributes-table {
+#filter-button-attributes-table, #filter-button-graphics {
   float: left;
   margin-left: 15px;
 }
 
-#filter-satellite-attributes-table {
+#filter-satellite-attributes-table, #filter-satellite-graphics {
   float: left;
   max-width: 200px;
 }

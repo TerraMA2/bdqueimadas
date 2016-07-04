@@ -100,16 +100,26 @@ define(
 
     /**
      * Updates all the graphics.
+     * @param {boolean} useGraphicsFilter - Flag that indicates if the graphics filter should be used
      *
      * @function updateGraphics
      * @memberof Graphics(2)
      * @inner
      */
-    var updateGraphics = function() {
-      if($("#graph-box").css('left') < '0px') {
-        var dateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
-        var dateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
-        var satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+    var updateGraphics = function(useGraphicsFilter) {
+      if($("#graph-box").css('left') < '0px' || useGraphicsFilter) {
+        var dateFrom = useGraphicsFilter ?
+                       Utils.dateToString(Utils.stringToDate($('#filter-date-from-graphics').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) :
+                       Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
+
+        var dateTo = useGraphicsFilter ?
+                     Utils.dateToString(Utils.stringToDate($('#filter-date-to-graphics').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) :
+                     Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
+
+        var satellites = useGraphicsFilter ?
+                         (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
+                         Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
         $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
@@ -196,7 +206,7 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
-        updateGraphics();
+        updateGraphics(false);
       });
     };
 

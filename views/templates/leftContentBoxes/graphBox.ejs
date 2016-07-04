@@ -1,8 +1,43 @@
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <div class="fullscreen left-content-box" id="graph-box">
-  <br/>
+  <div class="box box-default">
+    <div class="box-header with-border">
+      <h3 class="box-title">Filtro</h3>
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="box-body">
+      <div class="component-filter">
+        <div class="component-filter-title">Confirme abaixo os filtros de datas e de sat&eacute;lites dos gr&aacute;ficos (os filtros espaciais devem ser parametrizados no filtro principal)</div>
+        <div class="component-filter-content">
+          <label for="filter-date-from-graphics">Início</label>
+          <input type="text" class="form-control date filter-date-from" id="filter-date-from-graphics" placeholder="De">
+          <label for="filter-date-to-graphics">Fim</label>
+          <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="Até">
+          <label for="filter-satellite-graphics">Focos dos Sat&eacute;lites</label>
+          <select multiple class="form-control" id="filter-satellite-graphics">
+            <option value="all" selected>TODOS</option>
+            <%
+            configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+              if(satellite.Current) {
+              %>
+              <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
+              <%
+              }
+            })
+            %>
+          </select>
+          <button class="btn btn-primary" id="filter-button-graphics">Aplicar</button>
+        </div>
+        <div class="clear"></div>
+        <span class="help-block component-filter-error" id="filter-error-graphics"></span>
+      </div>
+      <table class="table table-bordered table-hover" id="attributes-table"></table>
+    </div>
+  </div>
   <div id="graphics-container">
-    <div class="box box-default graphic-item">
+    <!--<div class="box box-default graphic-item">
       <div class="box-header with-border">
         <h3 class="box-title">D3</h3>
         <div class="box-tools pull-right">
@@ -10,12 +45,12 @@
         </div>
       </div>
       <div class="box-body" style="display: block;"><div id="wrapper"></div></div>
-    </div>
+    </div>-->
   </div>
 </div>
 <div id="time-series-dialog" title="S&eacute;ries Temporais"><div><canvas id="time-series"></canvas></div></div>
 <script>
-  var categories= ['','Accessories', 'Audiophile', 'Camera & Photo', 'Cell Phones', 'Computers','eBook Readers','Gadgets','GPS & Navigation','Home Audio','Office Electronics','Portable Audio','Portable Video','Security & Surveillance','Service','Television & Video','Car & Vehicle'];
+  /*var categories= ['','Accessories', 'Audiophile', 'Camera & Photo', 'Cell Phones', 'Computers','eBook Readers','Gadgets','GPS & Navigation','Home Audio','Office Electronics','Portable Audio','Portable Video','Security & Surveillance','Service','Television & Video','Car & Vehicle'];
   var dollars = [213,209,190,179,156,209,190,179,213,209,190,179,156,209,190,190];
   var colors = ['#0000b4','#0082ca','#0094ff','#0d4bcf','#0066AE','#074285','#00187B','#285964','#405F83','#416545','#4D7069','#6E9985','#7EBC89','#0283AF','#79BCBF','#99C19E'];
   var grid = d3.range(25).map(function(i) { return {'x1':0,'y1':0,'x2':0,'y2':480}; });
@@ -37,4 +72,5 @@
   var chart = canvas.append('g').attr("transform", "translate(150,0)").attr('id','bars').selectAll('rect').data(dollars).enter().append('rect').attr('height',19).attr({'x':0,'y':function(d,i){ return yscale(i)+19; }}).style('fill',function(d,i){ return colorScale(i); }).attr('width',function(d){ return 0; });
   var transit = d3.select("svg").selectAll("rect").data(dollars).transition().duration(1000).attr("width", function(d) {return xscale(d); });
   var transitext = d3.select('#bars').selectAll('text').data(dollars).enter().append('text').attr({'x':function(d) {return xscale(d)-200; },'y':function(d,i){ return yscale(i)+35; }}).text(function(d){ return d+"$"; }).style({'fill':'#fff','font-size':'14px'});
+*/
 </script>

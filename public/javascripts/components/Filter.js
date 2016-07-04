@@ -387,6 +387,9 @@ define(
 
       $('#filter-date-from-attributes-table').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
       $('#filter-date-to-attributes-table').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
+
+      $('#filter-date-from-graphics').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
+      $('#filter-date-to-graphics').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
     };
 
     /**
@@ -465,6 +468,7 @@ define(
       setSatellites($('#filter-satellite').val());
 
       $('#filter-satellite-attributes-table').val($('#filter-satellite').val());
+      $('#filter-satellite-graphics').val($('#filter-satellite').val());
 
       if(dates.length === 0) {
         updateDatesToCurrent();
@@ -476,6 +480,9 @@ define(
 
         $('#filter-date-from-attributes-table').val(filterDateFrom);
         $('#filter-date-to-attributes-table').val(filterDateTo);
+
+        $('#filter-date-from-graphics').val(filterDateFrom);
+        $('#filter-date-to-graphics').val(filterDateTo);
       }
 
       var cql = "";
