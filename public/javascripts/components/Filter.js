@@ -384,6 +384,9 @@ define(
 
       $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
       $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
+
+      $('#filter-date-from-attributes-table').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
+      $('#filter-date-to-attributes-table').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
     };
 
     /**
@@ -461,6 +464,8 @@ define(
 
       setSatellites($('#filter-satellite').val());
 
+      $('#filter-satellite-attributes-table').val($('#filter-satellite').val());
+
       if(dates.length === 0) {
         updateDatesToCurrent();
         var filterDateFrom = Filter.getFormattedDateFrom('YYYY/MM/DD');
@@ -468,6 +473,9 @@ define(
       } else {
         var filterDateFrom = dates[0];
         var filterDateTo = dates[1];
+
+        $('#filter-date-from-attributes-table').val(filterDateFrom);
+        $('#filter-date-to-attributes-table').val(filterDateTo);
       }
 
       var cql = "";

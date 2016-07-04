@@ -2,6 +2,32 @@
   <br/>
   <div class="box" id="box-attributes-table">
     <div class="box-body">
+      <div class="component-filter">
+        <div class="component-filter-title">Confirme abaixo os filtros de datas e de sat&eacute;lites da exporta&ccedil;&atilde;o (os filtros espaciais devem ser parametrizados no filtro principal)</div>
+        <div class="component-filter-content">
+          <label for="filter-date-from-attributes-table">Início</label>
+          <input type="text" class="form-control date filter-date-from" id="filter-date-from-attributes-table" placeholder="De">
+          <label for="filter-date-to-attributes-table">Fim</label>
+          <input type="text" class="form-control date filter-date-to" id="filter-date-to-attributes-table" placeholder="Até">
+          <label for="filter-satellite-attributes-table">Focos dos Sat&eacute;lites</label>
+          <select multiple class="form-control" id="filter-satellite-attributes-table">
+            <option value="all" selected>TODOS</option>
+            <%
+            configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+              if(satellite.Current) {
+              %>
+              <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
+              <%
+              }
+            })
+            %>
+          </select>
+          <button class="btn btn-primary" id="filter-button-attributes-table">Aplicar</button>
+        </div>
+        <div class="clear"></div>
+        <span class="help-block component-filter-error" id="filter-error-attributes-table"></span>
+        <hr/>
+      </div>
       <table class="table table-bordered table-hover" id="attributes-table"></table>
     </div>
   </div>
