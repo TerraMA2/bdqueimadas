@@ -40,7 +40,7 @@ define(
      */
     var updateComponents = function() {
       AttributesTable.updateAttributesTable(false);
-      Graphics.updateGraphics();
+      Graphics.updateGraphics(false);
     };
 
     /**
@@ -379,6 +379,10 @@ define(
 
       $('#show-time-series-graphic').on('click', function() {
         Graphics.setTimeSeriesTool();
+      });
+
+      $('#filter-button-graphics').on('click', function() {
+        Graphics.updateGraphics(true);
       });
 
       // Map Events
@@ -890,6 +894,39 @@ define(
       };
 
       $("#filter-date-to-attributes-table").datepicker(datePickerOptions);
+
+      datePickerOptions['onSelect'] = function (date) {
+        var dateFrom = $('#filter-date-from-graphics').datepicker('getDate');
+        var dateTo = $(this).datepicker('getDate');
+
+        if(dateFrom === null) {
+          vex.dialog.alert({
+            message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $("#filter-date-to-graphics").val('');
+        } else {
+          if(dateFrom > dateTo) {
+            vex.dialog.alert({
+              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+
+            $("#filter-date-to-graphics").val('');
+          }
+        }
+      };
+
+      $("#filter-date-to-graphics").datepicker(datePickerOptions);
     };
 
     /**
