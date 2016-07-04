@@ -9,4 +9,7 @@
 ###
 #########################################################################################
 
-python /ImportFires/ImportFires.py
+today=`date +%Y-%m-%d`
+yesterday=`date -d "yesterday" +%Y-%m-%d`
+
+python /home/jean/MyDevel/ImportFires/ImportFires.py $yesterday 00:00:00 $today 23:59:59
