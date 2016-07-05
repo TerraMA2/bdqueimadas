@@ -93,7 +93,7 @@ define(
       var layerName = Utils.processStringWithDatePattern(layer.Name);
       var layerTime = Utils.processStringWithDatePattern(layer.Time);
 
-      if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled))
+      if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
         TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
 
       if(!initialProcess) {
