@@ -1116,7 +1116,13 @@ define(
         }, 15000);
 
         setTimeout(function() {
-          Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
+          if($('#states').val() !== null && !Utils.stringInArray($('#states').val(), "")) {
+            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
+          } else if($('#countries').val() !== null && !Utils.stringInArray($('#countries').val(), "")) {
+            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
+          } else {
+            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
+          }
         }, 16000);
       });
     };
