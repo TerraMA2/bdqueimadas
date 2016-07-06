@@ -162,13 +162,7 @@ define(
             "<h3 class=\"box-title\">" + firesCount.title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
             "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
             "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
-            "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"";
-
-        if(firesCount.firesCount.rowCount > 0) {
-          htmlElements += " height=\"" + graphHeight + "px\"";
-        }
-
-        htmlElements += "></canvas><div id=\"fires-count-by-" + firesCount.key + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
+            "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"></canvas><div id=\"fires-count-by-" + firesCount.key + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
 
         $("#graphics-container").append(htmlElements);
         memberFiresCountGraphics[firesCount.key] = null;
@@ -200,6 +194,9 @@ define(
           memberFiresCountGraphics[firesCount.key].destroy();
 
         $("#fires-count-by-" + firesCount.key + "-graphic").attr('height', graphHeight + 'px');
+        $("#fires-count-by-" + firesCount.key + "-graphic").css('min-height', graphHeight + 'px');
+        $("#fires-count-by-" + firesCount.key + "-graphic").css('max-height', graphHeight + 'px');
+
         $("#fires-count-by-" + firesCount.key + "-graphic-message-container").hide();
         $("#fires-count-by-" + firesCount.key + "-graphic").show();
 
