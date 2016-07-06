@@ -149,13 +149,20 @@ define(
      * @inner
      */
     var loadFiresCountGraphic = function(firesCount) {
+      var graphHeight = firesCount.firesCount.rowCount * 40;
+
       if(memberFiresCountGraphics[firesCount.key] === undefined) {
         var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\">" +
             "<h3 class=\"box-title\">" + firesCount.title + "</h3><div class=\"box-tools pull-right\">" +
             "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
             "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
-            "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\" style=\"height: 300px;\"></canvas>" +
-            "<div id=\"fires-count-by-" + firesCount.key + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
+            "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"";
+
+        if(firesCount.firesCount.rowCount > 0) {
+          htmlElements += " height=\"" + graphHeight + "px\"";
+        }
+
+        htmlElements += "></canvas><div id=\"fires-count-by-" + firesCount.key + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
 
         $("#graphics-container").append(htmlElements);
         memberFiresCountGraphics[firesCount.key] = null;
@@ -166,7 +173,7 @@ define(
         var values = [];
 
         $.each(firesCount.firesCount.rows, function(i, firesCountItem) {
-          labels.push(firesCountItem.key);
+          labels.push(firesCountItem.key !== null && firesCountItem.key !== undefined && firesCountItem.key !== "" ? firesCountItem.key : "Não Identificado");
           values.push(firesCountItem.count);
         });
 
@@ -174,10 +181,10 @@ define(
           labels : labels,
           datasets : [
             {
-              fillColor : "rgba(151,187,205,0.5)",
-              strokeColor : "rgba(151,187,205,0.8)",
-              highlightFill : "rgba(151,187,205,0.75)",
-              highlightStroke : "rgba(151,187,205,1)",
+              backgroundColor : "rgba(151,187,205,0.5)",
+              borderColor : "rgba(151,187,205,0.8)",
+              hoverBackgroundColor : "rgba(151,187,205,0.75)",
+              hoverBorderColor : "rgba(151,187,205,1)",
               data : values
             }
           ]
@@ -186,10 +193,31 @@ define(
         if(memberFiresCountGraphics[firesCount.key] !== undefined && memberFiresCountGraphics[firesCount.key] !== null)
           memberFiresCountGraphics[firesCount.key].destroy();
 
+        $("#fires-count-by-" + firesCount.key + "-graphic").attr('height', graphHeight + 'px');
         $("#fires-count-by-" + firesCount.key + "-graphic-message-container").hide();
         $("#fires-count-by-" + firesCount.key + "-graphic").show();
+
         var htmlElement = $("#fires-count-by-" + firesCount.key + "-graphic").get(0).getContext("2d");
-        memberFiresCountGraphics[firesCount.key] = new Chart(htmlElement).Bar(firesCountGraphicData, { responsive : true, maintainAspectRatio: false });
+
+        memberFiresCountGraphics[firesCount.key] = new Chart(htmlElement, {
+          type: 'horizontalBar',
+          data: firesCountGraphicData,
+          options: {
+            responsive : true,
+            maintainAspectRatio: false,
+            tooltips: {
+              callbacks: {
+                label: function(tooltipItems, data) {
+                  var percentage = ((parseFloat(tooltipItems.xLabel) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(2);
+                  return tooltipItems.xLabel + ' - ' + percentage + '%';
+                }
+              }
+            },
+            legend: {
+              display: false
+            }
+          }
+        });
       } else {
         $("#fires-count-by-" + firesCount.key + "-graphic").hide();
         $("#fires-count-by-" + firesCount.key + "-graphic-message-container").show();

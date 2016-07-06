@@ -31,10 +31,14 @@ var Graphics = function(io) {
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
 
-      memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
+      memberGraphics.getFiresTotalCount(json.dateFrom, json.dateTo, options, function(err, firesTotalCount) {
         if(err) return console.error(err);
 
-        client.emit('graphicsFiresCountResponse', { firesCount: firesCount, key: json.key, title: json.title });
+        memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
+          if(err) return console.error(err);
+
+          client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, key: json.key, title: json.title });
+        });
       });
     });
   });
