@@ -132,9 +132,13 @@ define(
         // Elements sizes adjustments, accordingly with the sidebar width
         if($("body").hasClass('sidebar-collapse')) {
           $("#terrama2-map").removeClass('fullmenu');
+          $(this).attr('title', 'Diminuir Mapa');
+          $(this).find('> span').text('Diminuir Mapa');
           setReducedContentSize(300);
         } else {
           $("#terrama2-map").addClass('fullmenu');
+          $(this).attr('title', 'Expandir Mapa');
+          $(this).find('> span').text('Expandir Mapa');
           setFullContentSize(300);
         }
 
@@ -415,9 +419,11 @@ define(
         if($('#map-subtitle > div').hasClass('collapsed-box')) {
           $('#map-subtitle').animate({ 'width': '25%' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+          $(this).attr('title', 'Esconder Legendas');
         } else {
           $('#map-subtitle').animate({ 'width': '150px' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+          $(this).attr('title', 'Exibir Legendas');
         }
       });
 
