@@ -62,7 +62,7 @@ define(
             };
 
             if(configuration.LayerGroups[i].Layers[j].AddsInTheStart) {
-              if(configuration.UseLayerGroupsInTheLayerExplorer === "true") {
+              if(configuration.UseLayerGroupsInTheLayerExplorer) {
                 if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
                   TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
 
@@ -107,7 +107,8 @@ define(
         });
       }
 
-      $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
+      if(Utils.getConfigurations().mapConfigurations.EnableAddAndRemoveLayers)
+        $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
     };
 
     /**
@@ -131,7 +132,7 @@ define(
       if(layerToRemove !== null) {
         addNotAddedLayer(layerToRemove[0]);
 
-        if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer === "true") {
+        if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
           TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id, layerToRemove[0].LayerGroup.Id);
         } else {
           TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
