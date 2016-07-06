@@ -1111,10 +1111,10 @@ define(
         loadSocketsListeners();
         loadPlugins();
 
-        window.setInterval(function() {
+        /*window.setInterval(function() {
           updateSizeVars();
           updateComponents();
-        }, 60000);
+        }, 60000);*/
 
         setTimeout(function() {
           $('.sidebar-toggle').click();
