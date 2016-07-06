@@ -625,12 +625,17 @@ define(
     var updateSatellitesSelect = function() {
       var selectedOptions = $('#filter-satellite').val();
 
-      var elem = Utils.stringInArray(selectedOptions, "all") ? "<option value=\"all\" selected>TODOS</option>" : "<option value=\"all\">TODOS</option>";
+      var allOption = Utils.stringInArray(selectedOptions, "all") ? "<option value=\"all\" selected>TODOS</option>" : "<option value=\"all\">TODOS</option>";
+      var referenceSatellite = "";
+      var elem = "";
       var satellitesList = Utils.getConfigurations().filterConfigurations.Satellites;
 
       $.each(satellitesList, function(i, satelliteItem) {
         var satelliteBegin = new Date();
         var satelliteEnd = new Date();
+
+        var satelliteReferenceBegin = new Date();
+        var satelliteReferenceEnd = new Date();
 
         if(satelliteItem.Begin !== "") {
           var satelliteBeginArray = satelliteItem.Begin.split('-');
@@ -642,18 +647,36 @@ define(
           satelliteEnd = new Date(parseInt(satelliteEndArray[0]), parseInt(satelliteEndArray[1]) - 1, parseInt(satelliteEndArray[2]), 0, 0, 0);
         }
 
+        if(satelliteItem.ReferenceBegin !== "") {
+          var satelliteReferenceBeginArray = satelliteItem.ReferenceBegin.split('-');
+          satelliteReferenceBegin = new Date(parseInt(satelliteReferenceBeginArray[0]), parseInt(satelliteReferenceBeginArray[1]) - 1, parseInt(satelliteReferenceBeginArray[2]), 0, 0, 0);
+        }
+
+        if(satelliteItem.ReferenceEnd !== "") {
+          var satelliteReferenceEndArray = satelliteItem.ReferenceEnd.split('-');
+          satelliteReferenceEnd = new Date(parseInt(satelliteReferenceEndArray[0]), parseInt(satelliteReferenceEndArray[1]) - 1, parseInt(satelliteReferenceEndArray[2]), 0, 0, 0);
+        }
+
         if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
-          if(Utils.stringInArray(selectedOptions, satelliteItem.Name)) {
-            elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
+          if((satelliteReferenceBegin <= memberDateFrom && satelliteReferenceEnd >= memberDateTo) || (satelliteReferenceBegin <= memberDateFrom && satelliteItem.ReferenceCurrent)) {
+            if(Utils.stringInArray(selectedOptions, satelliteItem.Name)) {
+              referenceSatellite += "<option value=\"" + satelliteItem.Name + "\" selected>Refer&ecirc;ncia</option>";
+            } else {
+              referenceSatellite += "<option value=\"" + satelliteItem.Name + "\">Refer&ecirc;ncia</option>";
+            }
           } else {
-            elem += "<option value=\"" + satelliteItem.Name + "\">" + satelliteItem.Name + "</option>";
+            if(Utils.stringInArray(selectedOptions, satelliteItem.Name)) {
+              elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
+            } else {
+              elem += "<option value=\"" + satelliteItem.Name + "\">" + satelliteItem.Name + "</option>";
+            }
           }
         } else if(Utils.stringInArray(selectedOptions, satelliteItem.Name)) {
           elem += "<option value=\"" + satelliteItem.Name + "\" selected>" + satelliteItem.Name + "</option>";
         }
       });
 
-      $('#filter-satellite').empty().html(elem);
+      $('#filter-satellite').empty().html(allOption + referenceSatellite + elem);
     };
 
     /**

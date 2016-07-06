@@ -59,16 +59,44 @@
       <label for="filter-satellite" class="col-sm-6 control-label" style="text-align: left;">Focos dos Sat&eacute;lites</label>
       <div class="col-sm-6">
         <select multiple class="form-control" id="filter-satellite">
-          <option value="all" selected>TODOS</option>
           <%
+          var satelliteOptions = "";
+          var referenceSatellite = "";
+          var isSatelliteSelected = false;
+
           configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
             if(satellite.Current) {
-            %>
-            <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
-            <%
+              if(satellite.ReferenceCurrent) {
+                referenceSatellite += "<option value=\"" + satellite.Name + "\"";
+
+                if(satellite.Selected) {
+                  referenceSatellite += " selected>";
+
+                  if(!isSatelliteSelected) isSatelliteSelected = true;
+                } else {
+                  referenceSatellite += ">";
+                }
+
+                referenceSatellite += "Refer&ecirc;ncia</option>";
+              } else {
+                satelliteOptions += "<option value=\"" + satellite.Name + "\"";
+
+                if(satellite.Selected) {
+                  satelliteOptions += " selected>";
+
+                  if(!isSatelliteSelected) isSatelliteSelected = true;
+                } else {
+                  satelliteOptions += ">";
+                }
+
+                satelliteOptions += satellite.Name + "</option>";
+              }
             }
           })
           %>
+
+          <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+          <%- referenceSatellite + satelliteOptions %>
         </select>
       </div>
     </div>
