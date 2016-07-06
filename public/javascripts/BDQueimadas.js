@@ -434,7 +434,7 @@ define(
 
         $.each(Map.getNotAddedLayers(), function(i, layer) {
           if(layerId === layer.Id) {
-            if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer === "true") {
+            if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
               Map.addLayerToMap(layer, layer.LayerGroup.Id, false);
             } else {
               Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
