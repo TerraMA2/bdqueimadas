@@ -1129,6 +1129,9 @@ define(
           } else {
             Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
           }
+
+          Filter.applyFilter();
+          updateComponents();
         }, 16000);
       });
     };
