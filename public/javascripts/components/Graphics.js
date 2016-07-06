@@ -153,7 +153,7 @@ define(
 
       if(memberFiresCountGraphics[firesCount.key] === undefined) {
         var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\">" +
-            "<h3 class=\"box-title\">" + firesCount.title + "</h3><div class=\"box-tools pull-right\">" +
+            "<h3 class=\"box-title\">" + firesCount.title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
             "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
             "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
             "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"";
@@ -218,6 +218,9 @@ define(
             }
           }
         });
+
+        var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
+        $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
       } else {
         $("#fires-count-by-" + firesCount.key + "-graphic").hide();
         $("#fires-count-by-" + firesCount.key + "-graphic-message-container").show();
