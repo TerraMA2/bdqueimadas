@@ -107,7 +107,8 @@ define(
      * @inner
      */
     var updateGraphics = function(useGraphicsFilter) {
-      if($("#graph-box").css('left') < '0px' || useGraphicsFilter) {
+      //if($("#graph-box").css('left') < '0px' || useGraphicsFilter) {
+
         var dateFrom = useGraphicsFilter ?
                        Utils.dateToString(Utils.stringToDate($('#filter-date-from-graphics').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) :
                        Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
@@ -121,6 +122,11 @@ define(
                          Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
 
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
+
+        if(!useGraphicsFilter) {
+          $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
+          $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
+        }
 
         $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
           Utils.getSocket().emit(
@@ -137,7 +143,7 @@ define(
             }
           );
         });
-      }
+      //}
     };
 
     /**

@@ -136,7 +136,8 @@ define(
      * @inner
      */
     var updateAttributesTable = function(useAttributesTableFilter) {
-      if(($("#table-box").css('left') < '0px' || useAttributesTableFilter) && memberAttributesTable !== null) {
+      //if(($("#table-box").css('left') < '0px' || useAttributesTableFilter) && memberAttributesTable !== null) {
+      if(memberAttributesTable !== null) {
         if(useAttributesTableFilter) {
           memberDateFrom = Utils.dateToString(Utils.stringToDate($('#filter-date-from-attributes-table').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
           memberDateTo = Utils.dateToString(Utils.stringToDate($('#filter-date-to-attributes-table').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
@@ -145,6 +146,9 @@ define(
           memberDateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
           memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
           memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+
+          $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
+          $('#filter-date-to-attributes-table').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
         }
 
         memberAttributesTable.ajax.reload();
