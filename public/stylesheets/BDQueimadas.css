@@ -651,3 +651,5 @@ body, .skin-queimadas {
   margin: 0 15px;
   max-width: 100%;
 }
+
+.main-header > .logo:hover { background-color: #f49d1e !important; }
