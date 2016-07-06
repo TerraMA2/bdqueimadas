@@ -551,9 +551,11 @@ body, .skin-queimadas {
   transition: width 0.3s ease-in-out;
 }
 
+#terrama2-layerexplorer li { padding: 2px 0 !important; }
+
 #terrama2-layerexplorer li > span {
   padding: 0px !important;
-  padding-left: 12px!important;
+  padding-left: 12px !important;
 }
 
 .terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
