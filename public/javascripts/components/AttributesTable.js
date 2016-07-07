@@ -136,22 +136,35 @@ define(
      * @inner
      */
     var updateAttributesTable = function(useAttributesTableFilter) {
-      //if(($("#table-box").css('left') < '0px' || useAttributesTableFilter) && memberAttributesTable !== null) {
       if(memberAttributesTable !== null) {
-        if(useAttributesTableFilter) {
-          memberDateFrom = Utils.dateToString(Utils.stringToDate($('#filter-date-from-attributes-table').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-          memberDateTo = Utils.dateToString(Utils.stringToDate($('#filter-date-to-attributes-table').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-          memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());
-        } else {
-          memberDateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
-          memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
-          memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+        var dates = Utils.getFilterDates(true, (useAttributesTableFilter ? 1 : 0));
 
-          $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
-          $('#filter-date-to-attributes-table').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
+        if(dates !== null) {
+          if(dates.length === 0) {
+            vex.dialog.alert({
+              message: '<p class="text-center">Datas inválidas!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          } else {
+            memberDateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+            memberDateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+
+            if(useAttributesTableFilter) {
+              memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());
+            } else {
+              memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+
+              $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
+              $('#filter-date-to-attributes-table').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
+            }
+
+            memberAttributesTable.ajax.reload();
+          }
         }
-
-        memberAttributesTable.ajax.reload();
       }
     };
 

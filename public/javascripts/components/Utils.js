@@ -167,11 +167,11 @@ define(function() {
             }
           });
         } else if(patternFormat[0] === "INITIAL_DATE") {
-          var dates = getFilterDates();
+          var dates = getFilterDates(false, 0);
 
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[0], 'YYYY/MM/DD');
         } else if(patternFormat[0] === "FINAL_DATE") {
-          var dates = getFilterDates();
+          var dates = getFilterDates(false, 0);
 
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'YYYY/MM/DD');
         }
@@ -214,25 +214,34 @@ define(function() {
   /**
    * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
    * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
+   * @param {integer} filter - Number that indicates which filter fields should be used: 0 - main filter, 1 - attributes table filter, 2 - graphics filter
    * @returns {array} returnValue - Empy array, or an array with the dates, or a null value
    *
    * @function getFilterDates
    * @memberof Utils
    * @inner
    */
-  var getFilterDates = function(showAlerts) {
+  var getFilterDates = function(showAlerts, filter) {
     showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
 
-    var filterDateFrom = $('#filter-date-from').val();
-    var filterDateTo = $('#filter-date-to').val();
+    var filterFieldsExtention = '';
+
+    if(filter === 1) {
+      filterFieldsExtention = '-attributes-table';
+    } else if(filter === 2) {
+      filterFieldsExtention = '-graphics';
+    }
+
+    var filterDateFrom = $('#filter-date-from' + filterFieldsExtention);
+    var filterDateTo = $('#filter-date-to' + filterFieldsExtention);
 
     var returnValue = null;
 
-    if((filterDateFrom.length > 0 && filterDateTo.length > 0) || (filterDateFrom.length === 0 && filterDateTo.length === 0)) {
-      if(filterDateFrom.length === 0 && filterDateTo.length === 0) {
+    if((filterDateFrom.val().length > 0 && filterDateTo.val().length > 0) || (filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)) {
+      if(filterDateFrom.val().length === 0 && filterDateTo.val().length === 0) {
         returnValue = [];
       } else {
-        if($('#filter-date-from').datepicker('getDate') > $('#filter-date-to').datepicker('getDate')) {
+        if(filterDateFrom.datepicker('getDate') > filterDateTo.datepicker('getDate')) {
           if(showAlerts) {
             vex.dialog.alert({
               message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
@@ -244,17 +253,32 @@ define(function() {
             });
           }
 
-          $('#filter-date-to').val('');
+          filterDateTo.val('');
         } else {
-          returnValue = [filterDateFrom, filterDateTo];
+          returnValue = [filterDateFrom.val(), filterDateTo.val()];
         }
       }
     } else {
-      if(filterDateFrom.length === 0) {
-        $("#filter-date-from").parent(":not([class*='has-error'])").addClass('has-error');
+      if(filterDateFrom.val().length === 0) {
+        vex.dialog.alert({
+          message: '<p class="text-center">Data inicial inválida!</p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok',
+            className: 'bdqueimadas-btn'
+          }]
+        });
       }
-      if(filterDateTo.length === 0) {
-        $("#filter-date-to").parent(":not([class*='has-error'])").addClass('has-error');
+
+      if(filterDateTo.val().length === 0) {
+        vex.dialog.alert({
+          message: '<p class="text-center">Data final inválida!</p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok',
+            className: 'bdqueimadas-btn'
+          }]
+        });
       }
     }
 

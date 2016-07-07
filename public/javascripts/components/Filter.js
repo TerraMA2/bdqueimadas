@@ -463,55 +463,57 @@ define(
      * @inner
      */
     var applyFilter = function() {
-      var dates = Utils.getFilterDates(true);
+      var dates = Utils.getFilterDates(true, 0);
 
-      setSatellites($('#filter-satellite').val());
-
-      $('#filter-satellite-attributes-table').val($('#filter-satellite').val());
-      $('#filter-satellite-graphics').val($('#filter-satellite').val());
-
-      if(dates.length === 0) {
-        updateDatesToCurrent();
-        var filterDateFrom = Filter.getFormattedDateFrom('YYYY/MM/DD');
-        var filterDateTo = Filter.getFormattedDateTo('YYYY/MM/DD');
-      } else {
-        var filterDateFrom = dates[0];
-        var filterDateTo = dates[1];
+      if(dates !== null) {
+        if(dates.length === 0) {
+          updateDatesToCurrent();
+          var filterDateFrom = getFormattedDateFrom('YYYY/MM/DD');
+          var filterDateTo = getFormattedDateTo('YYYY/MM/DD');
+        } else {
+          var filterDateFrom = dates[0];
+          var filterDateTo = dates[1];
+        }
 
         $('#filter-date-from-attributes-table').val(filterDateFrom);
         $('#filter-date-to-attributes-table').val(filterDateTo);
 
         $('#filter-date-from-graphics').val(filterDateFrom);
         $('#filter-date-to-graphics').val(filterDateTo);
+
+        setSatellites($('#filter-satellite').val());
+
+        $('#filter-satellite-attributes-table').val($('#filter-satellite').val());
+        $('#filter-satellite-graphics').val($('#filter-satellite').val());
+
+        var cql = "";
+
+        if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
+          updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
+          cql += createDateFilter() + " AND ";
+
+          if(Map.getLayers().length > 0) processLayers(Map.getLayers());
+        }
+
+        if(!Utils.stringInArray(memberSatellites, "all")) {
+          cql += createSatellitesFilter() + " AND ";
+        }
+
+        if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
+          cql += createCountriesFilter() + " AND ";
+        }
+
+        if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
+          cql += createStatesFilter() + " AND ";
+        }
+
+        if(cql.length > 5) {
+          cql = cql.substring(0, cql.length - 5);
+        }
+
+        updateSatellitesSelect();
+        TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
       }
-
-      var cql = "";
-
-      if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
-        updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
-        cql += createDateFilter() + " AND ";
-
-        if(Map.getLayers().length > 0) processLayers(Map.getLayers());
-      }
-
-      if(!Utils.stringInArray(memberSatellites, "all")) {
-        cql += createSatellitesFilter() + " AND ";
-      }
-
-      if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
-        cql += createCountriesFilter() + " AND ";
-      }
-
-      if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
-        cql += createStatesFilter() + " AND ";
-      }
-
-      if(cql.length > 5) {
-        cql = cql.substring(0, cql.length - 5);
-      }
-
-      updateSatellitesSelect();
-      TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
     };
 
     /**
