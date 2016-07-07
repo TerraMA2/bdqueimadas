@@ -1108,6 +1108,8 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        $('#footer-brasil a').attr('target', '_blank');
+
         updateSizeVars();
         setFullContentSize(300);
 
