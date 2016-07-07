@@ -107,43 +107,50 @@ define(
      * @inner
      */
     var updateGraphics = function(useGraphicsFilter) {
-      //if($("#graph-box").css('left') < '0px' || useGraphicsFilter) {
+      var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
 
-        var dateFrom = useGraphicsFilter ?
-                       Utils.dateToString(Utils.stringToDate($('#filter-date-from-graphics').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) :
-                       Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
+      if(dates !== null) {
+        if(dates.length === 0) {
+          vex.dialog.alert({
+            message: '<p class="text-center">Datas inválidas!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        } else {
+          var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
 
-        var dateTo = useGraphicsFilter ?
-                     Utils.dateToString(Utils.stringToDate($('#filter-date-to-graphics').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) :
-                     Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
+          var satellites = useGraphicsFilter ?
+                           (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
+                           Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
 
-        var satellites = useGraphicsFilter ?
-                         (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
-                         Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+          var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
-        var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
+          if(!useGraphicsFilter) {
+            $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
+            $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
+          }
 
-        if(!useGraphicsFilter) {
-          $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
-          $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
+          $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
+            Utils.getSocket().emit(
+              'graphicsFiresCountRequest',
+              {
+                dateFrom: dateFrom,
+                dateTo: dateTo,
+                key: firesCountGraphicsConfig.Key,
+                title: firesCountGraphicsConfig.Title,
+                satellites: satellites,
+                extent: extent,
+                countries: (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString()),
+                states: (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString())
+              }
+            );
+          });
         }
-
-        $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
-          Utils.getSocket().emit(
-            'graphicsFiresCountRequest',
-            {
-              dateFrom: dateFrom,
-              dateTo: dateTo,
-              key: firesCountGraphicsConfig.Key,
-              title: firesCountGraphicsConfig.Title,
-              satellites: satellites,
-              extent: extent,
-              countries: (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString()),
-              states: (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString())
-            }
-          );
-        });
-      //}
+      }
     };
 
     /**
@@ -158,11 +165,16 @@ define(
       var graphHeight = firesCount.firesCount.rowCount * 40;
 
       if(memberFiresCountGraphics[firesCount.key] === undefined) {
-        var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\">" +
-            "<h3 class=\"box-title\">" + firesCount.title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
-            "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
-            "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
-            "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"></canvas><div id=\"fires-count-by-" + firesCount.key + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
+        var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                           firesCount.title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
+                           $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
+                           "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
+                           "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
+                           "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"></canvas>" +
+                           "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-key=\"" + firesCount.key + "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                           "<div id=\"fires-count-by-" + firesCount.key +
+                           "-graphic-message-container\" class=\"text-center\">" +
+                           "</div></div></div></div>";
 
         $("#graphics-container").append(htmlElements);
         memberFiresCountGraphics[firesCount.key] = null;
@@ -224,10 +236,49 @@ define(
 
         var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
         $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
+
+        $(".export-graphic-data").show();
       } else {
+        $(".export-graphic-data").hide();
+        $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(" | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val());
         $("#fires-count-by-" + firesCount.key + "-graphic").hide();
         $("#fires-count-by-" + firesCount.key + "-graphic-message-container").show();
         $("#fires-count-by-" + firesCount.key + "-graphic-message-container").html("Não existem dados a serem exibidos!");
+      }
+    };
+
+    /**
+     * Exports graphic data in csv format.
+     * @param {string} key - Graphic key
+     *
+     * @function exportGraphicData
+     * @memberof Graphics(2)
+     * @inner
+     */
+    var exportGraphicData = function(key) {
+      var dates = Utils.getFilterDates(true, 2);
+
+      if(dates !== null) {
+        if(dates.length === 0) {
+          vex.dialog.alert({
+            message: '<p class="text-center">Datas inválidas!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        } else {
+          var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
+          var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString();
+          var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
+          var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
+
+          var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&extent=" + extent + "&countries=" + countries + "&states=" + states + "&key=" + key;
+          location.href = exportLink;
+        }
       }
     };
 
@@ -248,6 +299,7 @@ define(
       setTimeSeriesTool: setTimeSeriesTool,
       updateGraphics: updateGraphics,
       loadFiresCountGraphic: loadFiresCountGraphic,
+      exportGraphicData: exportGraphicData,
       init: init
     };
   }
