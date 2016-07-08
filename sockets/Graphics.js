@@ -30,6 +30,7 @@ var Graphics = function(io) {
       if(json.extent !== '') options.extent = json.extent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
+      if(json.limit !== null) options.limit = json.limit;
 
       memberGraphics.getFiresTotalCount(json.dateFrom, json.dateTo, options, function(err, firesTotalCount) {
         if(err) return console.error(err);

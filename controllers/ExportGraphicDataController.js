@@ -35,6 +35,7 @@ var ExportGraphicDataController = function(app) {
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
+    if(request.query.limit !== '') options.limit = request.query.limit;
 
     memberGraphics.getFiresTotalCount(request.query.dateFrom, request.query.dateTo, options, function(err, firesTotalCount) {
       if(err) return console.error(err);
