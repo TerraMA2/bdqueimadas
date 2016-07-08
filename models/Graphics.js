@@ -97,7 +97,13 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        query += " group by " + key + " order by count desc;";
+        query += " group by " + key + " order by count desc";
+
+        // If the 'options.limit' parameter exists, a limit clause is created
+        if(options.limit !== undefined) {
+          query += " limit $" + (parameter++);
+          params.push(options.limit);
+        }
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -174,6 +180,12 @@ var Graphics = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.limit' parameter exists, a limit clause is created
+        if(options.limit !== undefined) {
+          query += " limit $" + (parameter++);
+          params.push(options.limit);
         }
 
         // Execution of the query

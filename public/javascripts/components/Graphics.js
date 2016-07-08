@@ -135,19 +135,30 @@ define(
           }
 
           $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
-            Utils.getSocket().emit(
-              'graphicsFiresCountRequest',
-              {
-                dateFrom: dateFrom,
-                dateTo: dateTo,
-                key: firesCountGraphicsConfig.Key,
-                title: firesCountGraphicsConfig.Title,
-                satellites: satellites,
-                extent: extent,
-                countries: (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString()),
-                states: (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString())
-              }
-            );
+
+            var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
+            var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
+
+            if(firesCountGraphicsConfig.Key === Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName && states === '') {
+              hideGraphic(firesCountGraphicsConfig.Key);
+            } else if(firesCountGraphicsConfig.Key === Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName && countries === '') {
+              hideGraphic(firesCountGraphicsConfig.Key);
+            } else {
+              Utils.getSocket().emit(
+                'graphicsFiresCountRequest',
+                {
+                  dateFrom: dateFrom,
+                  dateTo: dateTo,
+                  key: firesCountGraphicsConfig.Key,
+                  limit: firesCountGraphicsConfig.Limit,
+                  title: firesCountGraphicsConfig.Title,
+                  satellites: satellites,
+                  extent: extent,
+                  countries: countries,
+                  states: states
+                }
+              );
+            }
           });
         }
       }
@@ -239,23 +250,37 @@ define(
 
         $(".export-graphic-data").show();
       } else {
-        $(".export-graphic-data").hide();
-        $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(" | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val());
-        $("#fires-count-by-" + firesCount.key + "-graphic").hide();
-        $("#fires-count-by-" + firesCount.key + "-graphic-message-container").show();
-        $("#fires-count-by-" + firesCount.key + "-graphic-message-container").html("Não existem dados a serem exibidos!");
+        hideGraphic(firesCount.key);
       }
+    };
+
+    /**
+     * Hides the graphic with the given key.
+     * @param {string} key - Graphic key
+     *
+     * @private
+     * @function hideGraphic
+     * @memberof Graphics(2)
+     * @inner
+     */
+    var hideGraphic = function(key) {
+      $(".export-graphic-data").hide();
+      $("#fires-count-by-" + key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(" | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val());
+      $("#fires-count-by-" + key + "-graphic").hide();
+      $("#fires-count-by-" + key + "-graphic-message-container").show();
+      $("#fires-count-by-" + key + "-graphic-message-container").html("Não existem dados a serem exibidos!");
     };
 
     /**
      * Exports graphic data in csv format.
      * @param {string} key - Graphic key
+     * @param {integer} limit - Limit number of rows
      *
      * @function exportGraphicData
      * @memberof Graphics(2)
      * @inner
      */
-    var exportGraphicData = function(key) {
+    var exportGraphicData = function(key, limit) {
       var dates = Utils.getFilterDates(true, 2);
 
       if(dates !== null) {
@@ -276,7 +301,7 @@ define(
           var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
           var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
 
-          var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&extent=" + extent + "&countries=" + countries + "&states=" + states + "&key=" + key;
+          var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&extent=" + extent + "&countries=" + countries + "&states=" + states + "&key=" + key + "&limit=" + limit;
           location.href = exportLink;
         }
       }
