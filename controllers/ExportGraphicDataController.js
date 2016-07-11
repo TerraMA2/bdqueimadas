@@ -35,7 +35,7 @@ var ExportGraphicDataController = function(app) {
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
-    if(request.query.limit !== '') options.limit = request.query.limit;
+    if(request.query.limit !== '' && request.query.limit !== null && request.query.limit !== 'null') options.limit = request.query.limit;
 
     memberGraphics.getFiresTotalCount(request.query.dateFrom, request.query.dateTo, options, function(err, firesTotalCount) {
       if(err) return console.error(err);
@@ -49,7 +49,7 @@ var ExportGraphicDataController = function(app) {
         require('crypto').randomBytes(24, function(err, buffer) {
           var csvPath = path.join(__dirname, '../tmp/graphic-csv-' + buffer.toString('hex') + '.csv');
 
-          memberFs.writeFile(csvPath, csv, 'utf8', function(err) {
+          memberFs.writeFile(csvPath, csv, 'ascii', function(err) {
             if(err) return console.error(err);
 
             response.download(csvPath, 'Focos por ' + request.query.key + ' - de ' + request.query.dateFrom + ' a ' + request.query.dateTo + '.csv', function(err) {
@@ -77,7 +77,7 @@ var ExportGraphicDataController = function(app) {
     var csv = "Campo,Valor,Percentagem do Total de Focos\n";
 
     firesCount.rows.forEach(function(item) {
-      csv += item.key + ',' + item.count + ',' + ((parseFloat(item.count) / parseFloat(firesTotalCount.rows[0].count)) * 100).toFixed(2) + '%\n';
+      csv += ((item.key !== null && item.key !== "") ? item.key : "Não Identificado") + ',' + item.count + ',' + ((parseFloat(item.count) / parseFloat(firesTotalCount.rows[0].count)) * 100).toFixed(2) + '%\n';
     });
 
     return csv;
