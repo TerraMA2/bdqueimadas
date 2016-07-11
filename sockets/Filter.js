@@ -96,6 +96,24 @@ var Filter = function(io) {
         client.emit('statesByCountriesResponse', { states: states });
       });
     });
+
+    // Get satellites request event
+    client.on('getSatellitesRequest', function(json) {
+      // Object responsible for keep several information to be used in the database query
+      var options = {};
+
+      // Verifications of the 'options' object items
+      if(json.satellites !== '') options.satellites = json.satellites;
+      if(json.extent !== '') options.extent = json.extent;
+      if(json.countries !== null && json.countries !== '') options.countries = json.countries;
+      if(json.states !== null && json.states !== '') options.states = json.states;
+
+      memberFilter.getSatellites(json.dateFrom, json.dateTo, options, function(err, satellitesList) {
+        if(err) return console.error(err);
+
+        client.emit('getSatellitesResponse', { satellitesList: satellitesList });
+      });
+    });
   });
 };
 

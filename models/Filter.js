@@ -510,6 +510,85 @@ var Filter = function() {
       } else return callback(err);
     });
   };
+
+  /**
+   * Returns the satellites for the given filter.
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {json} options - Filtering options
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getSatellites
+   * @memberof Filter
+   * @inner
+   */
+  this.getSatellites = function(dateFrom, dateTo, options, callback) {
+    // Connection with the PostgreSQL database
+    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+      if(!err) {
+        // Counter of the query parameters
+        var parameter = 1;
+
+        // Creation of the query
+        var query = "select distinct " + memberTablesConfig.Fires.SatelliteFieldName + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
+            " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateFrom, dateTo];
+
+        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
+        if(options.satellites !== undefined) {
+          var satellitesArray = options.satellites.split(',');
+          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+
+          for(var i = 0; i < satellitesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(satellitesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.extent' parameter exists, a extent 'where' clause is created
+        if(options.extent !== undefined) {
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
+          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
+        }
+
+        // If the 'options.countries' parameter exists, a countries 'where' clause is created
+        if(options.countries !== undefined) {
+          var countriesArray = options.countries.split(',');
+          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
+
+          for(var i = 0; i < countriesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countriesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.states' parameter exists, a states 'where' clause is created
+        if(options.states !== undefined) {
+          var statesArray = options.states.split(',');
+          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
+
+          for(var i = 0; i < statesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
 };
 
 module.exports = Filter;
