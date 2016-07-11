@@ -49,7 +49,7 @@ var Proxy = function(io) {
         });
 
       }).on("error", function(e) {
-        console.log("Got error: " + e.message);
+        console.error(e.message);
       });
     });
   });

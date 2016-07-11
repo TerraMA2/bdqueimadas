@@ -173,7 +173,7 @@ define(
      * @inner
      */
     var loadFiresCountGraphic = function(firesCount) {
-      var graphHeight = firesCount.firesCount.rowCount * 40;
+      var graphHeight = (firesCount.firesCount.rowCount * 40) + 100;
 
       if(memberFiresCountGraphics[firesCount.key] === undefined) {
         var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
@@ -182,7 +182,8 @@ define(
                            "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
                            "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
                            "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"></canvas>" +
-                           "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-key=\"" + firesCount.key + "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                           "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-key=\"" + firesCount.key + "\" data-limit=\"" + firesCount.limit +
+                           "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
                            "<div id=\"fires-count-by-" + firesCount.key +
                            "-graphic-message-container\" class=\"text-center\">" +
                            "</div></div></div></div>";
@@ -247,8 +248,8 @@ define(
 
         var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
         $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
-
-        $(".export-graphic-data").show();
+        $("#fires-count-by-" + firesCount.key + "-graphic").parent().children('.export-graphic-data').show();
+        $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').show();
       } else {
         hideGraphic(firesCount.key);
       }
@@ -264,11 +265,12 @@ define(
      * @inner
      */
     var hideGraphic = function(key) {
-      $(".export-graphic-data").hide();
+      $("#fires-count-by-" + key + "-graphic").parent().children('.export-graphic-data').hide();
       $("#fires-count-by-" + key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(" | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val());
       $("#fires-count-by-" + key + "-graphic").hide();
       $("#fires-count-by-" + key + "-graphic-message-container").show();
-      $("#fires-count-by-" + key + "-graphic-message-container").html("Não existem dados a serem exibidos!");
+      $("#fires-count-by-" + key + "-graphic-message-container").html('Não existem dados a serem exibidos!');
+      $("#fires-count-by-" + key + "-graphic").parents('.graphic-item').hide();
     };
 
     /**

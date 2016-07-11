@@ -281,6 +281,8 @@ body, .skin-queimadas {
   max-width: 200px;
 }
 
+.export-graphic-data { margin-top: 20px; }
+
 #filter-button-attributes-table, #filter-button-graphics {
   float: left;
   margin-left: 15px;
