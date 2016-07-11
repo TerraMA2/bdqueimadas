@@ -236,6 +236,8 @@ define(
       $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
         elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><span style=\"font-weight: bold;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
 
+        var liStyle = mapSubtitleItem.LayerId === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId ? "display: none;" : "";
+
         $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
           var css = "";
 
@@ -248,7 +250,17 @@ define(
           if(layerSubtitleItem.Image !== null)
             css += "background: url(" + layerSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
 
-          elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
+          elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + " subtitle-item";
+
+          if(mapSubtitleItem.LayerId === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId)
+            elem += " satellite-subtitle-item";
+
+          elem += "\"";
+
+          if(layerSubtitleItem.SubtitleId !== null)
+            elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
+
+          elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
         });
       });
 
@@ -256,6 +268,57 @@ define(
 
       setSubtitlesVisibility();
       updateZoomTop(false);
+    };
+
+    /**
+     * Calls the socket method that returns the list of satellites for the subtitles.
+     * @param {array} satellites - Satellites filter
+     * @param {array} countriesBdqNames - Countries filter
+     * @param {array} statesBdqNames - States filter
+     *
+     * @function getSubtitlesSatellites
+     * @memberof Map
+     * @inner
+     */
+    var getSubtitlesSatellites = function(satellites, countriesBdqNames, statesBdqNames) {
+      var dates = Utils.getFilterDates(true, 0);
+
+      if(dates !== null) {
+        var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+        var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+        var satellites = Utils.stringInArray(satellites, "all") ? '' : satellites.toString();
+        var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
+        var countries = (Utils.stringInArray(countriesBdqNames, "") || countriesBdqNames.length === 0 ? '' : countriesBdqNames.toString());
+        var states = (Utils.stringInArray(statesBdqNames, "") || statesBdqNames.length === 0 ? '' : statesBdqNames.toString());
+
+        Utils.getSocket().emit(
+          'getSatellitesRequest',
+          {
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+            satellites: satellites,
+            extent: extent,
+            countries: countries,
+            states: states
+          }
+        );
+      }
+    };
+
+    /**
+     * Updates the subtitles.
+     * @param {array} satellites - Satellites list
+     *
+     * @function updateSubtitles
+     * @memberof Map
+     * @inner
+     */
+    var updateSubtitles = function(satellites) {
+      $(".satellite-subtitle-item").hide();
+
+      $.each(satellites, function(i, satellite) {
+        $("#" + satellite.satelite).show();
+      });
     };
 
     /**
@@ -290,7 +353,7 @@ define(
      * @inner
      */
     var showSubtitle = function(layerId) {
-      if(!$("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
+      if(!$("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").is(":visible") && ($("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === "" || $("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === undefined))
         $("#map-subtitle-items > li." + layerId.replace(':', '')).show();
 
       updateZoomTop(false);
@@ -306,7 +369,8 @@ define(
      * @inner
      */
     var hideSubtitle = function(layerId) {
-      $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
+      if($("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === "" || $("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === undefined)
+        $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
 
       updateZoomTop(false);
     };
@@ -354,6 +418,8 @@ define(
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,
       activateGetFeatureInfoTool: activateGetFeatureInfoTool,
+      getSubtitlesSatellites: getSubtitlesSatellites,
+      updateSubtitles: updateSubtitles,
       activateMoveMapTool: activateMoveMapTool,
       setSubtitlesVisibility: setSubtitlesVisibility,
       updateZoomTop: updateZoomTop,

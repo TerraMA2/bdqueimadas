@@ -41,6 +41,7 @@ define(
     var updateComponents = function() {
       AttributesTable.updateAttributesTable(false);
       Graphics.updateGraphics(false);
+      Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getCountriesBdqNames(), Filter.getStatesBdqNames());
     };
 
     /**
@@ -771,6 +772,10 @@ define(
         } else {
           $('#states').val($('#states').attr('data-value'));
         }
+      });
+
+      Utils.getSocket().on('getSatellitesResponse', function(result) {
+        Map.updateSubtitles(result.satellitesList.rows);
       });
 
       // Graphics Listeners
