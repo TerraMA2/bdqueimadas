@@ -235,8 +235,8 @@ define(
             tooltips: {
               callbacks: {
                 label: function(tooltipItems, data) {
-                  var percentage = ((parseFloat(tooltipItems.xLabel) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(2);
-                  return tooltipItems.xLabel + ' - ' + percentage + '%';
+                  var percentage = ((parseFloat(tooltipItems.xLabel) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(1);
+                  return tooltipItems.xLabel + ' F | ' + percentage + '%';
                 }
               }
             },
