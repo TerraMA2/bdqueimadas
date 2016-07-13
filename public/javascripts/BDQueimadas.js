@@ -192,7 +192,7 @@ define(
       $('#export').on('click', function() {
         vex.dialog.alert({
           message: '<div class="component-filter">' +
-            '<div class="component-filter-title">Confirme abaixo os filtros de datas e de satélites da exportação (os filtros espaciais devem ser parametrizados no filtro principal)</div>' +
+            '<div class="component-filter-title">Confirme abaixo as datas e os satélites da exportação. Para alterar a região, use a página principal de filtros.</div>' +
             '<div class="component-filter-content">' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
