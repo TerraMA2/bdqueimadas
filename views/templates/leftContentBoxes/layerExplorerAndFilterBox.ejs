@@ -3,13 +3,23 @@
     <div class="form-group bdqueimadas-form">
       <label for="continents" class="col-sm-3 control-label" style="padding-left: 0px; padding-right: 0px;">Continentes</label>
       <div class="col-sm-9">
-        <!--<select id="continents" name="continents" class="form-control">
+        <select id="continents" name="continents" class="form-control">
           <option value="">Selecione o continente</option>
           <% continents.rows.forEach(function(continent, index) { %>
-            <option value="<%- continent.id %>"><%- continent.name %></option>
+            <% if(continent.name === "Americas") { %>
+              <option value="<%- continent.id %>">Am&eacute;ricas</option>
+            <% } else if(continent.name === "Europe") { %>
+              <option value="<%- continent.id %>">Europa</option>
+            <% } else if(continent.name === "Africa") { %>
+              <option value="<%- continent.id %>">&Aacute;frica</option>
+            <% } else if(continent.name === "South_America") { %>
+              <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
+            <% } else { %>
+              <option value="<%- continent.id %>"><%- continent.name %></option>
+            <% } %>
           <% }) %>
-        </select>-->
-        <select id="continents" name="continents" class="form-control">
+        </select>
+        <!--<select id="continents" name="continents" class="form-control">
           <option value="">Selecione o continente</option>
           <option value="América do Sul">América do Sul</option>
           <option value="América Central">América Central</option>
@@ -23,7 +33,7 @@
           <option value="Sul da Europa">Europa-Sul</option>
           <option value="Europa Ocidental">Europa-Ocidental</option>
           <option value="Europa Oriental">Europa-Oriental</option>
-        </select>
+        </select>-->
       </div>
     </div>
   </div>

@@ -40,7 +40,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%américa%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europa%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%áfrica%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
+        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, function(err, result) {
@@ -68,7 +68,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Continents.IdFieldName + " as id, a." + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " a inner join " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " b on (a." + memberTablesConfig.Continents.IdFieldName + " = b." + memberTablesConfig.Countries.ContinentFieldName + ") where b." + memberTablesConfig.Countries.IdFieldName + " = $1;",
             params = [country];
 
         // Execution of the query
@@ -97,7 +97,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select a." + memberTablesConfig.Continents.IdFieldName + " as id, a." + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " a inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName + ") where b." + memberTablesConfig.States.IdFieldName + " = $1;",
+        var query = "select a." + memberTablesConfig.Continents.IdFieldName + " as id, a." + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " a inner join " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " b on (a." + memberTablesConfig.Continents.IdFieldName + " = b." + memberTablesConfig.Countries.ContinentFieldName + ") inner join " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " c on (b." + memberTablesConfig.Countries.IdFieldName + " = c." + memberTablesConfig.Countries.IdFieldName + ") where c." + memberTablesConfig.States.IdFieldName + " = $1;",
             params = [state];
 
         // Execution of the query
@@ -129,9 +129,11 @@ var Filter = function() {
 
         // Creation of the query
         var query = "select a." + memberTablesConfig.Countries.IdFieldName + " as id, a." + memberTablesConfig.Countries.NameFieldName + " as name, a." +
-                    memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name, a." + memberTablesConfig.Continents.IdFieldName + " as continent from " +
+                    memberTablesConfig.Countries.BdqNameFieldName + " as bdq_name, c." + memberTablesConfig.Continents.IdFieldName + " as continent from " +
                     memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " a inner join " + memberTablesConfig.States.Schema + "." +
                     memberTablesConfig.States.TableName + " b on (a." + memberTablesConfig.Countries.IdFieldName + " = b." + memberTablesConfig.Countries.IdFieldName +
+                    ") inner join " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName +
+                    " c on (a." + memberTablesConfig.Countries.ContinentFieldName + " = c." + memberTablesConfig.Continents.IdFieldName +
                     ") where b." + memberTablesConfig.States.IdFieldName + " in (";
 
         for(var i = 0; i < states.length; i++) {
@@ -167,7 +169,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
+        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
             params = [continent];
 
         // Execution of the query
