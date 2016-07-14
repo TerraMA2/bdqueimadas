@@ -301,18 +301,17 @@ define(
 
         var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
-        $("#filter-date-from-export").datepicker(datePickerOptions);
-
         datePickerOptions['onSelect'] = function(date) {
           var dateFrom = $('#filter-date-from-export').datepicker('getDate');
-          var dateTo = $(this).datepicker('getDate');
+          var dateTo = $('#filter-date-to-export').datepicker('getDate');
 
           if(dateFrom === null) {
             $("#filter-error-export").text('A data inicial deve ser preenchida primeiro!');
             $("#filter-date-to-export").val('');
           } else {
-            if(dateFrom > dateTo) {
+            if(dateFrom > dateTo && dateTo !== null) {
               $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
+              $("#filter-date-from-export").val('');
               $("#filter-date-to-export").val('');
             } else {
               $("#filter-error-export").text('');
@@ -320,6 +319,7 @@ define(
           }
         };
 
+        $("#filter-date-from-export").datepicker(datePickerOptions);
         $("#filter-date-to-export").datepicker(datePickerOptions);
 
         $("#filter-satellite-export").val($("#filter-satellite").val());
@@ -847,11 +847,9 @@ define(
 
       var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
-      $(".filter-date-from").datepicker(datePickerOptions);
-
       datePickerOptions['onSelect'] = function (date) {
         var dateFrom = $('#filter-date-from').datepicker('getDate');
-        var dateTo = $(this).datepicker('getDate');
+        var dateTo = $('#filter-date-to').datepicker('getDate');
 
         if(dateFrom === null) {
           vex.dialog.alert({
@@ -865,7 +863,7 @@ define(
 
           $("#filter-date-to").val('');
         } else {
-          if(dateFrom > dateTo) {
+          if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
               message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
               buttons: [{
@@ -875,16 +873,18 @@ define(
               }]
             });
 
+            $("#filter-date-from").val('');
             $("#filter-date-to").val('');
           }
         }
       };
 
+      $("#filter-date-from").datepicker(datePickerOptions);
       $("#filter-date-to").datepicker(datePickerOptions);
 
       datePickerOptions['onSelect'] = function (date) {
         var dateFrom = $('#filter-date-from-attributes-table').datepicker('getDate');
-        var dateTo = $(this).datepicker('getDate');
+        var dateTo = $('#filter-date-to-attributes-table').datepicker('getDate');
 
         if(dateFrom === null) {
           vex.dialog.alert({
@@ -898,7 +898,7 @@ define(
 
           $("#filter-date-to-attributes-table").val('');
         } else {
-          if(dateFrom > dateTo) {
+          if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
               message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
               buttons: [{
@@ -908,16 +908,18 @@ define(
               }]
             });
 
+            $("#filter-date-from-attributes-table").val('');
             $("#filter-date-to-attributes-table").val('');
           }
         }
       };
 
+      $("#filter-date-from-attributes-table").datepicker(datePickerOptions);
       $("#filter-date-to-attributes-table").datepicker(datePickerOptions);
 
       datePickerOptions['onSelect'] = function (date) {
         var dateFrom = $('#filter-date-from-graphics').datepicker('getDate');
-        var dateTo = $(this).datepicker('getDate');
+        var dateTo = $('#filter-date-to-graphics').datepicker('getDate');
 
         if(dateFrom === null) {
           vex.dialog.alert({
@@ -931,7 +933,7 @@ define(
 
           $("#filter-date-to-graphics").val('');
         } else {
-          if(dateFrom > dateTo) {
+          if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
               message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
               buttons: [{
@@ -941,11 +943,13 @@ define(
               }]
             });
 
+            $("#filter-date-from-graphics").val('');
             $("#filter-date-to-graphics").val('');
           }
         }
       };
 
+      $("#filter-date-from-graphics").datepicker(datePickerOptions);
       $("#filter-date-to-graphics").datepicker(datePickerOptions);
     };
 
