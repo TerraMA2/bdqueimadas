@@ -572,6 +572,42 @@ body, .skin-queimadas {
 
 #page-second-title > .text { padding-left: 82px; }
 
+#languages-main {
+  position: absolute;
+  right: 5px;
+  line-height: 27px;
+}
+
+#languages-main > .languages-item {
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 30px;
+  text-indent: 35px;
+  cursor: pointer;
+}
+
+#languages-secondary {
+  border-right: solid 2px #333;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+#languages-secondary > .languages-item {
+  background-repeat: no-repeat;
+  background-size: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  float: left;
+}
+
+.languages-item.portuguese { background-image: url('../images/brazil.png'); }
+
+.languages-item.english { background-image: url('../images/usa.png'); }
+
+.languages-item.spanish { background-image: url('../images/spain.png'); }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
