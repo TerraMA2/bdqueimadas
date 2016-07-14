@@ -266,7 +266,7 @@ body, .skin-queimadas {
 .component-filter-title {
   text-align: center;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .component-filter-content {
@@ -539,6 +539,14 @@ body, .skin-queimadas {
   margin-top: -3px;
   margin-right: -1px;
 }
+
+#feature-info-box {
+  width: 100% !important;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.feature-info-box .ui-dialog-title { font-size: 13px; }
 
 /* TerraMA2Components styles */
 
