@@ -173,7 +173,7 @@ define(
      * @inner
      */
     var loadFiresCountGraphic = function(firesCount) {
-      var graphHeight = (firesCount.firesCount.rowCount * 40) + 100;
+      var graphHeight = (firesCount.firesCount.rowCount * 20) + 100;
 
       if(memberFiresCountGraphics[firesCount.key] === undefined) {
         var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +

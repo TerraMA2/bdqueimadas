@@ -40,7 +40,16 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName + " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' order by " + memberTablesConfig.Continents.NameFieldName + " asc;";
+        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName +
+        " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where lower(" + memberTablesConfig.Continents.NameFieldName +
+        ") like '%america%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' or lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' order by " +
+        "case " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%south_america%' then 1 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' then 2 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' then 3 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' then 4 " +
+        "else 5 " +
+        "end, " + memberTablesConfig.Continents.NameFieldName + ";";
 
         // Execution of the query
         client.query(query, function(err, result) {
