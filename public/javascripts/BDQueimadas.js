@@ -136,12 +136,16 @@ define(
           $(this).attr('title', 'Diminuir Mapa');
           $(this).find('> span').text('Diminuir Mapa');
           $('#page-second-title').css('display', '');
+          $('#languages-main').css('display', 'none');
+          $('#languages-secondary').css('display', '');
           setReducedContentSize(300);
         } else {
           $("#terrama2-map").addClass('fullmenu');
           $(this).attr('title', 'Expandir Mapa');
           $(this).find('> span').text('Expandir Mapa');
           $('#page-second-title').css('display', 'none');
+          $('#languages-main').css('display', '');
+          $('#languages-secondary').css('display', 'none');
           setFullContentSize(300);
         }
 
@@ -323,6 +327,11 @@ define(
         $("#filter-date-to-export").datepicker(datePickerOptions);
 
         $("#filter-satellite-export").val($("#filter-satellite").val());
+      });
+
+      // Language change event
+      $('.languages-item').on('click', function() {
+        //console.log($(this).attr('class').split(' ')[1]);
       });
 
       // Filter Events
