@@ -791,8 +791,7 @@ define(
           var featureInfo = JSON.parse(result.msg);
 
           if(featureInfo.features.length > 0) {
-            var firesAttributes = "<h4 class=\"text-center\"><strong>" + (featureInfo.features.length > 1 ? "Atributos dos focos:" : "Atributos do foco:") + "</strong></h4>";
-            firesAttributes += "<div style=\"max-height: 400px; overflow: auto;\">";
+            var firesAttributes = "";
 
             $.each(featureInfo.features, function(i, feature) {
               firesAttributes += "<strong>Id:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
@@ -806,23 +805,27 @@ define(
               firesAttributes += "<br/><strong>Município:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName];
               firesAttributes += "<br/><strong>Estado:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName];
               firesAttributes += "<br/><strong>País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
-              firesAttributes += "<br/><strong>Precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
+              firesAttributes += "<br/><strong>Precipitação 24h:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
               firesAttributes += "<br/><strong>Número de dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
-              firesAttributes += "<br/><strong>Risco:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName];
+              firesAttributes += "<br/><strong>Risco de Fogo:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName];
               firesAttributes += "<br/><strong>Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
               firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
               if(featureInfo.features.length > (i + 1)) firesAttributes += "<hr/>";
             });
 
-            firesAttributes += "</div>";
+            $('#feature-info-box').html(firesAttributes);
 
-            vex.dialog.alert({
-              message: firesAttributes,
-              buttons: [{
-                type: 'submit',
-                text: 'Fechar',
-                className: 'bdqueimadas-btn'
-              }]
+            $('#feature-info-box').dialog({
+              dialogClass: "feature-info-box",
+              title: (featureInfo.features.length > 1 ? "Atributos dos focos" : "Atributos do foco"),
+              width: 310,
+              height: 370,
+              modal: false,
+              resizable: true,
+              draggable: true,
+              closeOnEscape: true,
+              closeText: "",
+              position: { my: 'top', at: 'top+15' }
             });
           }
         }
