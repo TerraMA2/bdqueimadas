@@ -135,11 +135,13 @@ define(
           $("#terrama2-map").removeClass('fullmenu');
           $(this).attr('title', 'Diminuir Mapa');
           $(this).find('> span').text('Diminuir Mapa');
+          $('#page-second-title').css('display', '');
           setReducedContentSize(300);
         } else {
           $("#terrama2-map").addClass('fullmenu');
           $(this).attr('title', 'Expandir Mapa');
           $(this).find('> span').text('Expandir Mapa');
+          $('#page-second-title').css('display', 'none');
           setFullContentSize(300);
         }
 
@@ -1049,7 +1051,13 @@ define(
      * @inner
      */
     var closeAllLeftContentBoxes = function() {
-      $("#page-title").html("Banco de Dados de Queimadas");
+      $("#page-title").html(
+        "Banco de Dados de Queimadas<span id=\"page-second-title\" style=\"" + ($("body").hasClass('sidebar-collapse') ? "" : "display: none;") + "\"> | " +
+        "<span class=\"inpe-image\"></span>" +
+        "<span class=\"programa-queimadas-image\"></span>" +
+        "<span class=\"text\">INPE - Programa Queimadas</span></span>"
+      );
+
       $(".left-content-box").removeClass('active');
       $(".left-content-box").removeClass('fullmenu');
       $(".left-content-box").animate({ left: '-100%' }, { duration: 300, queue: false });

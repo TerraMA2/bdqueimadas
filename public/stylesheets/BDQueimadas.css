@@ -548,6 +548,30 @@ body, .skin-queimadas {
 
 .feature-info-box .ui-dialog-title { font-size: 13px; }
 
+#page-second-title > .inpe-image {
+  position: absolute;
+  background-image: url('../images/inpe.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 40px;
+  margin-left: 4px;
+  margin-top: -2px;
+}
+
+#page-second-title > .programa-queimadas-image {
+  position: absolute;
+  background-image: url('../images/programa_queimadas.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 27px;
+  margin-left: 48px;
+  margin-top: -3px;
+}
+
+#page-second-title > .text { padding-left: 82px; }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
