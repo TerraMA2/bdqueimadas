@@ -66,12 +66,12 @@ define(
             datasets: [
               {
                 label: "Séries Temporais",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
+                fillColor: "rgb(220,75,56)",
+                strokeColor: "rgb(220,75,56)",
+                pointColor: "rgb(220,75,56)",
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
+                pointHighlightStroke: "rgb(220,75,56)",
                 data: data.result.attributes[0].values
               }
             ]
@@ -205,10 +205,10 @@ define(
           labels : labels,
           datasets : [
             {
-              backgroundColor : "rgba(151,187,205,0.5)",
-              borderColor : "rgba(151,187,205,0.8)",
-              hoverBackgroundColor : "rgba(151,187,205,0.75)",
-              hoverBorderColor : "rgba(151,187,205,1)",
+              backgroundColor : "rgba(220,75,56,0.5)",
+              borderColor : "rgba(220,75,56,0.8)",
+              hoverBackgroundColor : "rgba(220,75,56,0.75)",
+              hoverBorderColor : "rgba(220,75,56,1)",
               data : values
             }
           ]

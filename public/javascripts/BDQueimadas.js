@@ -367,6 +367,19 @@ define(
         }
       });
 
+      $('#initial-filter-button').on('click', function() {
+        Map.resetMapMouseTools();
+        Map.initialExtent();
+        Map.activateMoveMapTool();
+        Filter.resetDropdowns();
+
+        Filter.updateDatesToCurrent();
+        $('#filter-satellite').val('all');
+
+        Filter.applyFilter();
+        updateComponents();
+      });
+
       $('#continents').change(function() {
         if($(this).val() !== "")
           Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent', filterForm: false });
@@ -1027,7 +1040,12 @@ define(
         $("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
       }
 
-      $("#page-title").html(headerText);
+      $("#page-title").html(
+        headerText + "<span id=\"page-second-title\" style=\"" + ($("body").hasClass('sidebar-collapse') ? "" : "display: none;") + "\"> | " +
+        "<span class=\"inpe-image\"></span>" +
+        "<span class=\"programa-queimadas-image\"></span>" +
+        "<span class=\"text\">INPE - Programa Queimadas</span></span>"
+      );
     };
 
     /**
