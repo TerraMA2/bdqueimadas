@@ -7,23 +7,20 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionString - 'PgConnectionString' module.
+ * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
  * @property {json} memberAttributesTableConfig - Attributes table configuration.
  * @property {json} memberTablesConfig - Tables configuration.
- * @property {object} memberPg - 'pg' module.
  */
 var AttributesTable = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // 'PgConnectionString' module
-  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString.js')))();
+  // 'PgConnectionPool' module
+  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Attributes table configuration
   var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
-  // 'pg' module
-  var memberPg = require('pg');
 
   /**
    * Returns data of the attributes table accordingly with the received parameters.
@@ -72,7 +69,7 @@ var AttributesTable = function() {
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -163,7 +160,7 @@ var AttributesTable = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -243,7 +240,7 @@ var AttributesTable = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query

@@ -7,20 +7,17 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionString - 'PgConnectionString' module.
+ * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
  * @property {json} memberTablesConfig - Tables configuration.
- * @property {object} memberPg - 'pg' module.
  */
 var Graphics = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // 'PgConnectionString' module
-  var memberPgConnectionString = new (require(memberPath.join(__dirname, '../modules/PgConnectionString.js')))();
+  // 'PgConnectionPool' module
+  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
-  // 'pg' module
-  var memberPg = require('pg');
 
   /**
    * Callback of the database operations.
@@ -43,7 +40,7 @@ var Graphics = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -129,7 +126,7 @@ var Graphics = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPg.connect(memberPgConnectionString.getConnectionString(), function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
