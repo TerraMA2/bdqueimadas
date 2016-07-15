@@ -135,30 +135,40 @@ define(
           }
 
           $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
+            if(memberFiresCountGraphics[firesCountGraphicsConfig.Key] === undefined) {
+              var htmlElements = "<div class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                                 firesCountGraphicsConfig.Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
+                                 $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
+                                 "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
+                                 "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
+                                 "<canvas id=\"fires-count-by-" + firesCountGraphicsConfig.Key + "-graphic\"></canvas>" +
+                                 "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-key=\"" + firesCountGraphicsConfig.Key + "\" data-limit=\"" + firesCountGraphicsConfig.Limit +
+                                 "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                                 "<div id=\"fires-count-by-" + firesCountGraphicsConfig.Key +
+                                 "-graphic-message-container\" class=\"text-center\">" +
+                                 "</div></div></div></div>";
+
+              $("#graphics-container").append(htmlElements);
+              memberFiresCountGraphics[firesCountGraphicsConfig.Key] = null;
+            }
 
             var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
             var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
 
-            if(firesCountGraphicsConfig.Key === Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName && states === '') {
-              hideGraphic(firesCountGraphicsConfig.Key);
-            } else if(firesCountGraphicsConfig.Key === Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName && countries === '') {
-              hideGraphic(firesCountGraphicsConfig.Key);
-            } else {
-              Utils.getSocket().emit(
-                'graphicsFiresCountRequest',
-                {
-                  dateFrom: dateFrom,
-                  dateTo: dateTo,
-                  key: firesCountGraphicsConfig.Key,
-                  limit: firesCountGraphicsConfig.Limit,
-                  title: firesCountGraphicsConfig.Title,
-                  satellites: satellites,
-                  extent: extent,
-                  countries: countries,
-                  states: states
-                }
-              );
-            }
+            Utils.getSocket().emit(
+              'graphicsFiresCountRequest',
+              {
+                dateFrom: dateFrom,
+                dateTo: dateTo,
+                key: firesCountGraphicsConfig.Key,
+                limit: firesCountGraphicsConfig.Limit,
+                title: firesCountGraphicsConfig.Title,
+                satellites: satellites,
+                extent: extent,
+                countries: countries,
+                states: states
+              }
+            );
           });
         }
       }
@@ -174,83 +184,75 @@ define(
      */
     var loadFiresCountGraphic = function(firesCount) {
       var graphHeight = (firesCount.firesCount.rowCount * 20) + 100;
+      var labels = [];
+      var values = [];
 
-      if(memberFiresCountGraphics[firesCount.key] === undefined) {
-        var htmlElements = "<div class=\"box box-default graphic-item\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
-                           firesCount.title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
-                           $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
-                           "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
-                           "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
-                           "<canvas id=\"fires-count-by-" + firesCount.key + "-graphic\"></canvas>" +
-                           "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-key=\"" + firesCount.key + "\" data-limit=\"" + firesCount.limit +
-                           "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                           "<div id=\"fires-count-by-" + firesCount.key +
-                           "-graphic-message-container\" class=\"text-center\">" +
-                           "</div></div></div></div>";
+      $.each(firesCount.firesCount.rows, function(i, firesCountItem) {
+        labels.push(firesCountItem.key !== null && firesCountItem.key !== undefined && firesCountItem.key !== "" ? firesCountItem.key : "Não Identificado");
+        values.push(firesCountItem.count);
+      });
 
-        $("#graphics-container").append(htmlElements);
-        memberFiresCountGraphics[firesCount.key] = null;
-      }
-
-      if(firesCount.firesCount.rowCount > 0) {
-        var labels = [];
-        var values = [];
-
-        $.each(firesCount.firesCount.rows, function(i, firesCountItem) {
-          labels.push(firesCountItem.key !== null && firesCountItem.key !== undefined && firesCountItem.key !== "" ? firesCountItem.key : "Não Identificado");
-          values.push(firesCountItem.count);
-        });
-
-        var firesCountGraphicData = {
-          labels : labels,
-          datasets : [
-            {
-              backgroundColor : "rgba(220,75,56,0.5)",
-              borderColor : "rgba(220,75,56,0.8)",
-              hoverBackgroundColor : "rgba(220,75,56,0.75)",
-              hoverBorderColor : "rgba(220,75,56,1)",
-              data : values
-            }
-          ]
-        };
-
-        if(memberFiresCountGraphics[firesCount.key] !== undefined && memberFiresCountGraphics[firesCount.key] !== null)
-          memberFiresCountGraphics[firesCount.key].destroy();
-
-        $("#fires-count-by-" + firesCount.key + "-graphic").attr('height', graphHeight + 'px');
-        $("#fires-count-by-" + firesCount.key + "-graphic").css('min-height', graphHeight + 'px');
-        $("#fires-count-by-" + firesCount.key + "-graphic").css('max-height', graphHeight + 'px');
-
-        $("#fires-count-by-" + firesCount.key + "-graphic-message-container").hide();
-        $("#fires-count-by-" + firesCount.key + "-graphic").show();
-
-        var htmlElement = $("#fires-count-by-" + firesCount.key + "-graphic").get(0).getContext("2d");
-
-        memberFiresCountGraphics[firesCount.key] = new Chart(htmlElement, {
-          type: 'horizontalBar',
-          data: firesCountGraphicData,
-          options: {
-            responsive : true,
-            maintainAspectRatio: false,
-            tooltips: {
-              callbacks: {
-                label: function(tooltipItems, data) {
-                  var percentage = ((parseFloat(tooltipItems.xLabel) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(1);
-                  return tooltipItems.xLabel + ' F | ' + percentage + '%';
-                }
-              }
-            },
-            legend: {
-              display: false
-            }
+      var firesCountGraphicData = {
+        labels : labels,
+        datasets : [
+          {
+            backgroundColor : "rgba(220,75,56,0.5)",
+            borderColor : "rgba(220,75,56,0.8)",
+            hoverBackgroundColor : "rgba(220,75,56,0.75)",
+            hoverBorderColor : "rgba(220,75,56,1)",
+            data : values
           }
-        });
+        ]
+      };
 
-        var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
-        $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
-        $("#fires-count-by-" + firesCount.key + "-graphic").parent().children('.export-graphic-data').show();
-        $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').show();
-      } else {
+      if(memberFiresCountGraphics[firesCount.key] !== undefined && memberFiresCountGraphics[firesCount.key] !== null)
+        memberFiresCountGraphics[firesCount.key].destroy();
+
+      $("#fires-count-by-" + firesCount.key + "-graphic").attr('height', graphHeight + 'px');
+      $("#fires-count-by-" + firesCount.key + "-graphic").css('min-height', graphHeight + 'px');
+      $("#fires-count-by-" + firesCount.key + "-graphic").css('max-height', graphHeight + 'px');
+      $("#fires-count-by-" + firesCount.key + "-graphic-message-container").hide();
+      $("#fires-count-by-" + firesCount.key + "-graphic").show();
+
+      var htmlElement = $("#fires-count-by-" + firesCount.key + "-graphic").get(0).getContext("2d");
+
+      memberFiresCountGraphics[firesCount.key] = new Chart(htmlElement, {
+        type: 'horizontalBar',
+        data: firesCountGraphicData,
+        options: {
+          responsive : true,
+          maintainAspectRatio: false,
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItems, data) {
+                var percentage = ((parseFloat(tooltipItems.xLabel) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(1);
+                return tooltipItems.xLabel + ' F | ' + percentage + '%';
+              }
+            }
+          },
+          legend: {
+            display: false
+          }
+        }
+      });
+
+      var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
+      $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
+      $("#fires-count-by-" + firesCount.key + "-graphic").parent().children('.export-graphic-data').show();
+      $("#fires-count-by-" + firesCount.key + "-graphic").parents('.graphic-item').show();
+
+      var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
+      var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
+
+      if(firesCount.firesCount.rowCount === 0) {
+        hideGraphic(firesCount.key);
+      } else if(firesCount.key === Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName && states === '') {
+        hideGraphic(firesCount.key);
+      } else if(firesCount.key === Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName && countries === '') {
+        hideGraphic(firesCount.key);
+      } else if(firesCount.key === Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName && countries !== '' && firesCount.firesCount.rowCount === 1) {
+        hideGraphic(firesCount.key);
+      } else if(firesCount.key === Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName && states !== '' && firesCount.firesCount.rowCount === 1) {
         hideGraphic(firesCount.key);
       }
     };
