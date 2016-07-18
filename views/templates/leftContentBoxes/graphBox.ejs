@@ -18,7 +18,7 @@
             configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
               if(satellite.Current) {
                 if(satellite.ReferenceCurrent) {
-                  referenceSatellite += "<option value=\"" + satellite.Name + "\"";
+                  referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
                   if(satellite.Selected) {
                     referenceSatellite += " selected>";
@@ -30,7 +30,7 @@
 
                   referenceSatellite += "Refer&ecirc;ncia</option>";
                 } else {
-                  satelliteOptions += "<option value=\"" + satellite.Name + "\"";
+                  satelliteOptions += "<option value=\"" + satellite.Id + "\"";
 
                   if(satellite.Selected) {
                     satelliteOptions += " selected>";
