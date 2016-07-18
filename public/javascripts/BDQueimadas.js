@@ -228,10 +228,9 @@ define(
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left;">Formato da exportação</label>' +
                 '<div class="col-sm-6">' +
                   '<select id="exportation-type" class="form-control">' +
-                    '<option value="">Selecione o formato</option>' +
+                    '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
                     '<option value="shapefile">Shapefile</option>' +
-                    '<option value="csv">CSV</option>' +
                   '</select>' +
                 '</div>' +
                 '</div>' +
