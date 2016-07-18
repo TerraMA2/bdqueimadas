@@ -89,6 +89,19 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
+        if(options.biomes !== undefined) {
+          var biomesArray = options.biomes.split(',');
+          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
+
+          for(var i = 0; i < biomesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(biomesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         // If the 'options.extent' parameter exists, a extent 'where' clause is created
         if(options.extent !== undefined) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
@@ -180,6 +193,19 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
+        if(options.biomes !== undefined) {
+          var biomesArray = options.biomes.split(',');
+          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
+
+          for(var i = 0; i < biomesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(biomesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         // If the 'options.extent' parameter exists, a extent 'where' clause is created
         if(options.extent !== undefined) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
@@ -255,6 +281,19 @@ var AttributesTable = function() {
           for(var i = 0; i < satellitesArray.length; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
+        if(options.biomes !== undefined) {
+          var biomesArray = options.biomes.split(',');
+          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
+
+          for(var i = 0; i < biomesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(biomesArray[i]);
           }
 
           query = query.substring(0, (query.length - 1)) + ")";

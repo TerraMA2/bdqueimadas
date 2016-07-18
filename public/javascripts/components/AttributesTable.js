@@ -11,6 +11,7 @@
  * @property {date} memberDateFrom - Current initial date filter.
  * @property {date} memberDateTo - Current final date filter.
  * @property {array} memberSatellites - Current satellites filter.
+ * @property {array} memberBiomes - Current biomes filter.
  */
 define(
   ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
@@ -24,6 +25,8 @@ define(
     var memberDateTo = null;
     // Current satellites filter
     var memberSatellites = ["all"];
+    // Current biomes filter
+    var memberBiomes = ["all"];
 
     /**
      * Creates and returns an array with the attributes table columns names.
@@ -87,6 +90,7 @@ define(
       memberDateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
       memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
       memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+      memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
 
       memberAttributesTable = $('#attributes-table').DataTable(
         {
@@ -100,6 +104,7 @@ define(
               data.dateFrom = memberDateFrom;
               data.dateTo = memberDateTo;
               data.satellites = memberSatellites;
+              data.biomes = memberBiomes;
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
               data.states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
@@ -155,8 +160,10 @@ define(
 
             if(useAttributesTableFilter) {
               memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());
+              memberBiomes = (Utils.stringInArray($('#filter-biome-attributes-table').val(), "all") ? '' : $('#filter-biome-attributes-table').val().toString());
             } else {
               memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+              memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
 
               $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
               $('#filter-date-to-attributes-table').val(Filter.getFormattedDateTo('YYYY/MM/DD'));

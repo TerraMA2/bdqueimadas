@@ -270,16 +270,16 @@ body, .skin-queimadas {
 }
 
 .component-filter-content {
-  max-width: 840px;
+  max-width: 1185px;
   margin: 0 auto;
 }
 
 .component-filter-error { color: #dd4b39; }
 
-#filter-satellite-export {
+/*#filter-satellite-export {
   float: left;
   max-width: 200px;
-}
+}*/
 
 .export-graphic-data { margin-top: 20px; }
 
@@ -288,7 +288,7 @@ body, .skin-queimadas {
   margin-left: 15px;
 }
 
-#filter-satellite-attributes-table, #filter-satellite-graphics {
+#filter-satellite-attributes-table, #filter-satellite-graphics, #filter-biome-attributes-table, #filter-biome-graphics {
   float: left;
   max-width: 200px;
 }

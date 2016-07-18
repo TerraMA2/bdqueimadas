@@ -10,6 +10,7 @@
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
  * @property {array} memberSatellites - Current satellites.
+ * @property {array} memberBiomes - Current biomes.
  * @property {string} memberContinent - Current continent.
  * @property {array} memberCountries - Current countries.
  * @property {array} memberCountriesBdqNames - Current countries BDQ names.
@@ -26,6 +27,8 @@ define(
     var memberDateTo = null;
     // Current satellites
     var memberSatellites = ["all"];
+    // Current biomes
+    var memberBiomes = ["all"];
     // Current continent
     var memberContinent = null;
     // Current countries
@@ -65,7 +68,7 @@ define(
 
     /**
      * Sets the satellites array.
-     * @param {string} satellites - Satellites array
+     * @param {array} satellites - Satellites array
      *
      * @function setSatellites
      * @memberof Filter(2)
@@ -77,7 +80,7 @@ define(
 
     /**
      * Returns the satellites array.
-     * @returns {string} memberSatellites - Satellites array
+     * @returns {array} memberSatellites - Satellites array
      *
      * @function getSatellites
      * @memberof Filter(2)
@@ -85,6 +88,30 @@ define(
      */
     var getSatellites = function() {
       return memberSatellites;
+    };
+
+    /**
+     * Sets the biomes array.
+     * @param {array} biomes - Biomes array
+     *
+     * @function setBiomes
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setBiomes = function(biomes) {
+      memberBiomes = biomes;
+    };
+
+    /**
+     * Returns the biomes array.
+     * @returns {array} memberBiomes - Biomes array
+     *
+     * @function getBiomes
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getBiomes = function() {
+      return memberBiomes;
     };
 
     /**
@@ -414,6 +441,27 @@ define(
     };
 
     /**
+     * Creates the biomes filter.
+     * @returns {string} cql - Biomes cql filter
+     *
+     * @private
+     * @function createBiomesFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createBiomesFilter = function() {
+      var cql = "(";
+
+      for(var i = 0; i < memberBiomes.length; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + "='" + memberBiomes[i] + "' OR ";
+      }
+
+      cql = cql.substring(0, cql.length - 4) + ")";
+
+      return cql;
+    };
+
+    /**
      * Creates the countries filter.
      * @returns {string} cql - Countries cql filter
      *
@@ -456,7 +504,7 @@ define(
     };
 
     /**
-     * Applies the dates and the satellites filters.
+     * Applies the dates, the satellites and the biomes filters.
      *
      * @function applyFilter
      * @memberof Filter(2)
@@ -486,6 +534,11 @@ define(
         $('#filter-satellite-attributes-table').val($('#filter-satellite').val());
         $('#filter-satellite-graphics').val($('#filter-satellite').val());
 
+        setBiomes($('#filter-biome').val());
+
+        $('#filter-biome-attributes-table').val($('#filter-biome').val());
+        $('#filter-biome-graphics').val($('#filter-biome').val());
+
         var cql = "";
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
@@ -497,6 +550,10 @@ define(
 
         if(!Utils.stringInArray(memberSatellites, "all")) {
           cql += createSatellitesFilter() + " AND ";
+        }
+
+        if(!Utils.stringInArray(memberBiomes, "all")) {
+          cql += createBiomesFilter() + " AND ";
         }
 
         if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
@@ -587,7 +644,7 @@ define(
 
           TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
         } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellites, layer.Id);
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellites, memberBiomes, layer.Id);
         }
       });
     };
@@ -598,13 +655,14 @@ define(
      * @param {int} end - Final date
      * @param {array} countries - Countries ids
      * @param {array} satellites - Satellites
+     * @param {array} biomes - Biomes
      * @param {string} layer - Layer id
      *
      * @function applyCurrentSituationFilter
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, countries, satellites, layer) {
+    var applyCurrentSituationFilter = function(begin, end, countries, satellites, biomes, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
@@ -613,6 +671,10 @@ define(
 
       if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) {
         currentSituationFilter += ";satellites:'" + Utils.replaceAll(satellites.toString(), ',', '\'\\,\'') + "'";
+      }
+
+      if(biomes !== undefined && biomes !== null && biomes !== "" && biomes !== '' && biomes !== [] && !Utils.stringInArray(biomes, "all")) {
+        currentSituationFilter += ";biomes:'" + Utils.replaceAll(biomes.toString(), ',', '\'\\,\'') + "'";
       }
 
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
@@ -788,6 +850,8 @@ define(
       getFormattedDateTo: getFormattedDateTo,
       setSatellites: setSatellites,
       getSatellites: getSatellites,
+      setBiomes: setBiomes,
+      getBiomes: getBiomes,
       setContinent: setContinent,
       getContinent: getContinent,
       setCountries: setCountries,

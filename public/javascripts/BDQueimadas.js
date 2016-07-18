@@ -41,7 +41,7 @@ define(
     var updateComponents = function() {
       AttributesTable.updateAttributesTable(false);
       Graphics.updateGraphics(false);
-      Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getCountriesBdqNames(), Filter.getStatesBdqNames());
+      Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountriesBdqNames(), Filter.getStatesBdqNames());
     };
 
     /**
@@ -213,13 +213,19 @@ define(
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
-                  '<label for="filter-satellite-export" class="col-sm-5 control-label text-left">Focos dos Sat&eacute;lites</label>' +
-                  '<div class="col-sm-7"><select multiple class="form-control" id="filter-satellite-export">"' + $('#filter-satellite').html() + '</select></div>' +
+                  '<label for="filter-satellite-export" class="col-sm-5 control-label" style="text-align: left;">Focos dos Sat&eacute;lites</label>' +
+                  '<div class="col-sm-7"><select multiple class="form-control" id="filter-satellite-export">' + $('#filter-satellite').html() + '</select></div>' +
                 '</div>' +
               '</div>' +
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
-                '<label for="exportation-type" class="col-sm-6 control-label text-left">Formato da exportação</label>' +
+                  '<label for="filter-biome-export" class="col-sm-5 control-label" style="text-align: left;">Focos dos Biomas</label>' +
+                  '<div class="col-sm-7"><select multiple class="form-control" id="filter-biome-export">' + $('#filter-biome').html() + '</select></div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="form-horizontal">' +
+                '<div class="form-group bdqueimadas-form">' +
+                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left;">Formato da exportação</label>' +
                 '<div class="col-sm-6">' +
                   '<select id="exportation-type" class="form-control">' +
                     '<option value="">Selecione o formato</option>' +
@@ -253,6 +259,8 @@ define(
                   $("#filter-error-export").text('Data final inválida!');
                 } else if($('#filter-satellite-export').val() === null) {
                   $("#filter-error-export").text('Selecione algum satélite!');
+                } else if($('#filter-biome-export').val() === null) {
+                  $("#filter-error-export").text('Selecione algum bioma!');
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
@@ -263,6 +271,7 @@ define(
                       dateFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
                       dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
+                      biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
                       extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
                       countries: (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : ''),
                       states: (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '')
@@ -272,6 +281,7 @@ define(
                         var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
                                          "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
+                                         "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
                                          "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                                          "&countries=" + (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '') +
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
@@ -327,6 +337,7 @@ define(
         $("#filter-date-to-export").datepicker(datePickerOptions);
 
         $("#filter-satellite-export").val($("#filter-satellite").val());
+        $('#filter-biome-export').val($('#filter-biome').val());
       });
 
       // Language change event
@@ -362,6 +373,7 @@ define(
           }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
+          $('#filter-biome').val(Filter.getBiomes());
         }
       });
 
@@ -373,6 +385,7 @@ define(
 
         Filter.updateDatesToCurrent();
         $('#filter-satellite').val('all');
+        $('#filter-biome').val('all');
 
         Filter.applyFilter();
         updateComponents();
