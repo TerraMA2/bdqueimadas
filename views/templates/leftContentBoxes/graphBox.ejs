@@ -10,16 +10,54 @@
           <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="Até">
           <label for="filter-satellite-graphics">Focos dos Sat&eacute;lites</label>
           <select multiple class="form-control" id="filter-satellite-graphics">
-            <option value="all" selected>TODOS</option>
             <%
+            var satelliteOptions = "";
+            var referenceSatellite = "";
+            var isSatelliteSelected = false;
+
             configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
               if(satellite.Current) {
-              %>
-              <option value="<%- satellite.Name %>"<%- satellite.Selected ? " selected" : "" %>><%- satellite.Name %></option>
-              <%
+                if(satellite.ReferenceCurrent) {
+                  referenceSatellite += "<option value=\"" + satellite.Name + "\"";
+
+                  if(satellite.Selected) {
+                    referenceSatellite += " selected>";
+
+                    if(!isSatelliteSelected) isSatelliteSelected = true;
+                  } else {
+                    referenceSatellite += ">";
+                  }
+
+                  referenceSatellite += "Refer&ecirc;ncia</option>";
+                } else {
+                  satelliteOptions += "<option value=\"" + satellite.Name + "\"";
+
+                  if(satellite.Selected) {
+                    satelliteOptions += " selected>";
+
+                    if(!isSatelliteSelected) isSatelliteSelected = true;
+                  } else {
+                    satelliteOptions += ">";
+                  }
+
+                  satelliteOptions += satellite.Name + "</option>";
+                }
               }
             })
             %>
+
+            <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+            <%- referenceSatellite + satelliteOptions %>
+          </select>
+          <label for="filter-biome-graphics">Focos dos Biomas</label>
+          <select multiple class="form-control" id="filter-biome-graphics">
+            <option value="all" selected>TODOS</option>
+            <option value="Amazonia">Amaz&ocirc;nia</option>
+            <option value="Caatinga">Caatinga</option>
+            <option value="Cerrado">Cerrado</option>
+            <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+            <option value="Pampa">Pampa</option>
+            <option value="Pantanal">Pantanal</option>
           </select>
           <button class="btn btn-primary" id="filter-button-graphics">Aplicar</button>
         </div>

@@ -273,6 +273,7 @@ define(
     /**
      * Calls the socket method that returns the list of satellites for the subtitles.
      * @param {array} satellites - Satellites filter
+     * @param {array} biomes - Biomes filter
      * @param {array} countriesBdqNames - Countries filter
      * @param {array} statesBdqNames - States filter
      *
@@ -280,13 +281,14 @@ define(
      * @memberof Map
      * @inner
      */
-    var getSubtitlesSatellites = function(satellites, countriesBdqNames, statesBdqNames) {
+    var getSubtitlesSatellites = function(satellites, biomes, countriesBdqNames, statesBdqNames) {
       var dates = Utils.getFilterDates(true, 0);
 
       if(dates !== null) {
         var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
         var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
         var satellites = Utils.stringInArray(satellites, "all") ? '' : satellites.toString();
+        var biomes = Utils.stringInArray(biomes, "all") ? '' : biomes.toString();
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
         var countries = (Utils.stringInArray(countriesBdqNames, "") || countriesBdqNames.length === 0 ? '' : countriesBdqNames.toString());
         var states = (Utils.stringInArray(statesBdqNames, "") || statesBdqNames.length === 0 ? '' : statesBdqNames.toString());
@@ -297,6 +299,7 @@ define(
             dateFrom: dateFrom,
             dateTo: dateTo,
             satellites: satellites,
+            biomes: biomes,
             extent: extent,
             countries: countries,
             states: states
