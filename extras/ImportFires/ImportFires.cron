@@ -1,0 +1,9 @@
+crontab -e
+
+0 0 * * * /ImportFires/ImportFires.sh
+0 3 * * * /ImportFires/ImportFires.sh
+0 9 * * * /ImportFires/ImportFires.sh
+0 12 * * * /ImportFires/ImportFires.sh
+0 15 * * * /ImportFires/ImportFires.sh
+0 18 * * * /ImportFires/ImportFires.sh
+0 21 * * * /ImportFires/ImportFires.sh

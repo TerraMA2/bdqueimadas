@@ -1,4 +1,4 @@
-$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+$('.main-sidebar').attr("style", "padding-top: " + ($('#header').outerHeight() + $('.navbar').outerHeight() + 33) + "px");
 
 $(".sidebar-toggle").on('click', function(){
   if(!$("body").hasClass('sidebar-collapse')) {

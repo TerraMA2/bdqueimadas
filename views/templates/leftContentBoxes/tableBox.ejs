@@ -2,6 +2,69 @@
   <br/>
   <div class="box" id="box-attributes-table">
     <div class="box-body">
+      <div class="component-filter">
+        <div class="component-filter-title">Confirme abaixo as datas e os sat&eacute;lites da tabela de atributos. Para alterar a regi&atilde;o, use a p&aacute;gina principal de filtros.</div>
+        <div class="component-filter-content">
+          <label for="filter-date-from-attributes-table">Início</label>
+          <input type="text" class="form-control date filter-date-from" id="filter-date-from-attributes-table" placeholder="De">
+          <label for="filter-date-to-attributes-table">Fim</label>
+          <input type="text" class="form-control date filter-date-to" id="filter-date-to-attributes-table" placeholder="Até">
+          <label for="filter-satellite-attributes-table">Focos dos Sat&eacute;lites</label>
+          <select multiple class="form-control" id="filter-satellite-attributes-table">
+            <%
+            var satelliteOptions = "";
+            var referenceSatellite = "";
+            var isSatelliteSelected = false;
+
+            configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+              if(satellite.Current) {
+                if(satellite.ReferenceCurrent) {
+                  referenceSatellite += "<option value=\"" + satellite.Id + "\"";
+
+                  if(satellite.Selected) {
+                    referenceSatellite += " selected>";
+
+                    if(!isSatelliteSelected) isSatelliteSelected = true;
+                  } else {
+                    referenceSatellite += ">";
+                  }
+
+                  referenceSatellite += "Refer&ecirc;ncia</option>";
+                } else {
+                  satelliteOptions += "<option value=\"" + satellite.Id + "\"";
+
+                  if(satellite.Selected) {
+                    satelliteOptions += " selected>";
+
+                    if(!isSatelliteSelected) isSatelliteSelected = true;
+                  } else {
+                    satelliteOptions += ">";
+                  }
+
+                  satelliteOptions += satellite.Name + "</option>";
+                }
+              }
+            })
+            %>
+
+            <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+            <%- referenceSatellite + satelliteOptions %>
+          </select>
+          <label for="filter-biome-attributes-table">Focos dos Biomas</label>
+          <select multiple class="form-control" id="filter-biome-attributes-table">
+            <option value="all" selected>TODOS</option>
+            <option value="Amazonia">Amaz&ocirc;nia</option>
+            <option value="Caatinga">Caatinga</option>
+            <option value="Cerrado">Cerrado</option>
+            <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+            <option value="Pampa">Pampa</option>
+            <option value="Pantanal">Pantanal</option>
+          </select>
+          <button class="btn btn-primary" id="filter-button-attributes-table">Aplicar</button>
+        </div>
+        <div class="clear"></div>
+        <hr/>
+      </div>
       <table class="table table-bordered table-hover" id="attributes-table"></table>
     </div>
   </div>

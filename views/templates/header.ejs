@@ -1,57 +1,56 @@
 <header class="main-header">
   <% include brasilGovHeader %>
-  <!-- Logo -->
-  <a href="#" class="logo">
-    <!-- mini logo for sidebar mini 50x50 pixels -->
+  <span class="logo">
     <span class="logo-mini"></span>
-    <!-- logo for regular state and mobile devices -->
     <span class="logo-lg">BDQueimadas</span>
-  </a>
-  <!-- Header Navbar: style can be found in header.less -->
+  </span>
   <nav class="navbar navbar-static-top" role="navigation">
-    <!-- Sidebar toggle button-->
-    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="main-sidebar-toggle" style="display: none;">
-      <span class="sr-only">Toggle navigation</span>
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" id="main-sidebar-toggle" style="display: none;" title="Diminuir Mapa">
+      <span class="sr-only">Diminuir Mapa</span>
     </a>
+    <div id="page-title">
+      Banco de Dados de Queimadas<span id="page-second-title" style="display: none"> |
+      <span class="inpe-image"></span>
+      <span class="programa-queimadas-image"></span>
+      <span class="text">INPE - Programa Queimadas</span></span>
+    </div>
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
-        <li id="continents-dropdown" class="dropdown notifications-menu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="continents-title">Continentes</a>
-          <ul class="dropdown-menu">
-            <li>
-              <ul class="menu" id="continents">
-                <% continents.rows.forEach(function(continent, index) { %>
-                  <li class="continent-item" id="<%- continent.id %>">
-                    <a href="#">
-                      <%- continent.name %>
-                    </a>
-                  </li>
-                <% }) %>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="separator">></li>
-        <li id="countries-dropdown" class="dropdown notifications-menu dropdown-closed">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="countries-title">Países</a>
-          <ul class="dropdown-menu">
-            <li>
-              <ul class="menu" id="countries"></ul>
-            </li>
-          </ul>
-        </li>
-        <li class="separator">></li>
-        <li id="states-dropdown" class="dropdown notifications-menu dropdown-closed">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="states-title">Estados</a>
-          <ul class="dropdown-menu">
-            <li>
-              <ul class="menu" id="states"></ul>
-            </li>
-          </ul>
+        <li id="languages-secondary" style="display: none;">
+          <div class="languages-item portuguese" title="Portugu&ecirc;s"></div>
+          <div class="languages-item english" title="English"></div>
+          <div class="languages-item spanish" title="Espan&otilde;l"></div>
         </li>
         <li>
-          <a id="control-sidebar-btn" href="#" data-toggle="control-sidebar" title="Barra de Ferramentas"><i class="fa fa-gears"></i></a>
+          <a href="#" class="mouse-function-btn" id="moveMap" alt="Arrastar Tela" title="Arrastar Tela">
+            <i class="fa fa-hand-rock-o active"></i>
+          </a>
         </li>
+        <li>
+          <a href="#" class="mouse-function-btn" id="dragbox" alt="Selecionar Ret&acirc;ngulo" title="Selecionar Ret&acirc;ngulo">
+            <i class="fa fa-crop"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="mouse-function-btn" id="initialExtent" alt="Extens&atilde;o Inicial" title="Extens&atilde;o Inicial">
+            <i class="fa fa-arrows-alt"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="mouse-function-btn" id="getAttributes" alt="Obter Atributos dos Focos" title="Obter Atributos dos Focos">
+            <i class="fa fa-info"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="mouse-function-btn" id="updateComponents" alt="Atualizar Dados" title="Atualizar Dados">
+            <i class="fa fa-refresh"></i>
+          </a>
+        </li>
+        <!--<li>
+          <a href="#" class="mouse-function-btn" id="show-time-series-graphic" alt="S&eacute;ries Temporais" title="S&eacute;ries Temporais">
+            <i class="fa fa-bar-chart"></i>
+          </a>
+        </li>-->
       </ul>
     </div>
   </nav>

@@ -5,10 +5,42 @@
  * @class Map
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
+ *
+ * @property {array} memberLayers - Layers currently present in the map.
+ * @property {array} memberNotAddedLayers - Layers not present in the map.
  */
 define(
-  ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
-  function(Utils, Filter, TerraMA2WebComponents) {
+  ['components/Utils', 'TerraMA2WebComponents'],
+  function(Utils, TerraMA2WebComponents) {
+
+    // Layers currently present in the map
+    var memberLayers = [];
+    // Layers not present in the map
+    var memberNotAddedLayers = [];
+
+    /**
+     * Returns the array of layers currently present in the map.
+     * @returns {array} memberLayers - Layers currently present in the map
+     *
+     * @function getLayers
+     * @memberof Map
+     * @inner
+     */
+    var getLayers = function() {
+      return memberLayers;
+    };
+
+    /**
+     * Returns the array of layers not present in the map.
+     * @returns {array} memberNotAddedLayers - Layers not present in the map
+     *
+     * @function getNotAddedLayers
+     * @memberof Map
+     * @inner
+     */
+    var getNotAddedLayers = function() {
+      return memberNotAddedLayers;
+    };
 
     /**
      * Adds the layers from the map configuration file to the map.
@@ -21,33 +53,104 @@ define(
     var addLayersToMap = function() {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
-        if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
+      if(configuration.LayerGroups.length > 0) {
+        for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
+          for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
+            configuration.LayerGroups[i].Layers[j]["LayerGroup"] = {
+              "Id": configuration.LayerGroups[i].Id,
+              "Name": configuration.LayerGroups[i].Name
+            };
 
-        for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
-          var layerName = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Name);
-          var layerTime = Utils.processStringWithDatePattern(configuration.LayerGroups[i].Layers[j].Time);
+            if(configuration.LayerGroups[i].Layers[j].AddsInTheStart) {
+              if(configuration.UseLayerGroupsInTheLayerExplorer) {
+                if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
+                  TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
 
-          if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(configuration.LayerGroups[i].Layers[j].Url, configuration.LayerGroups[i].Layers[j].ServerType, configuration.LayerGroups[i].Layers[j].Id, layerName, configuration.LayerGroups[i].Layers[j].Visible, configuration.LayerGroups[i].Layers[j].MinResolution, configuration.LayerGroups[i].Layers[j].MaxResolution, configuration.LayerGroups[i].Id, layerTime))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Layers[j].Id, configuration.LayerGroups[i].Id);
-
-          if(configuration.LayerGroups[i].Layers[j].Id === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId) {
-            var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.InitialDate);
-            var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.LayerToFilter.FinalDate);
-            var filter = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + initialDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + finalDate + " and " + Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='AQUA_M-T'";
-
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(filter, configuration.LayerGroups[i].Layers[j].Id);
-
-            Filter.updateDates(initialDate, finalDate, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-          } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, configuration.LayerGroups[i].Layers[j].Id)) {
-            var initialDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.InitialDate);
-            var finalDate = Utils.processStringWithDatePattern(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.FinalDate);
-
-            Filter.applyCurrentSituationFilter(initialDate, finalDate, $('#countries-title').attr('item-id'), 'AQUA_M-T', configuration.LayerGroups[i].Layers[j].Id);
+                addLayerToMap(configuration.LayerGroups[i].Layers[j], configuration.LayerGroups[i].Id, true);
+              } else {
+                addLayerToMap(configuration.LayerGroups[i].Layers[j], 'terrama2-layerexplorer', true);
+              }
+            } else {
+              addNotAddedLayer(configuration.LayerGroups[i].Layers[j]);
+            }
           }
         }
       }
+    };
+
+    /**
+     * Adds a given layer to the Map and to the LayerExplorer.
+     * @param {object} layer - Object with the layer data
+     * @param {string} parent - Parent id
+     *
+     * @function addLayerToMap
+     * @memberof Map
+     * @inner
+     */
+    var addLayerToMap = function(layer, parent, initialProcess) {
+      memberLayers.push(layer);
+
+      var layerName = Utils.processStringWithDatePattern(layer.Name);
+      var layerTime = Utils.processStringWithDatePattern(layer.Time);
+
+      if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
+        TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
+
+      if(!initialProcess) {
+        $.event.trigger({type: "applyFilter"});
+
+        $.each(memberNotAddedLayers, function(i, notAddedLayer) {
+          if(notAddedLayer.Id === layer.Id) {
+            memberNotAddedLayers.splice(i, 1);
+            return false;
+          }
+        });
+      }
+
+      if(Utils.getConfigurations().mapConfigurations.EnableAddAndRemoveLayers)
+        $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
+    };
+
+    /**
+     * Removes a layer with a given id from the Map.
+     * @param {string} layerId - Layer id
+     *
+     * @function removeLayerFromMap
+     * @memberof Map
+     * @inner
+     */
+    var removeLayerFromMap = function(layerId) {
+      var layerToRemove = null;
+
+      $.each(memberLayers, function(i, layer) {
+        if(layerId === layer.Id) {
+          layerToRemove = memberLayers.splice(i, 1);
+          return false;
+        }
+      });
+
+      if(layerToRemove !== null) {
+        addNotAddedLayer(layerToRemove[0]);
+
+        if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
+          TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id, layerToRemove[0].LayerGroup.Id);
+        } else {
+          TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
+        }
+      }
+    };
+
+    /**
+     * Adds a given layer to the array of layers not present in the map.
+     * @param {object} layer - Layer
+     *
+     * @private
+     * @function addNotAddedLayer
+     * @memberof Map
+     * @inner
+     */
+    var addNotAddedLayer = function(layer) {
+      memberNotAddedLayers.push(layer);
     };
 
     /**
@@ -60,7 +163,7 @@ define(
     var resetMapMouseTools = function() {
       TerraMA2WebComponents.MapDisplay.unsetMapSingleClickEvent();
       TerraMA2WebComponents.MapDisplay.removeZoomDragBox();
-      $('.mouse-function-btn > i').removeClass('active');
+      $('.mouse-function-btn').removeClass('active');
       $('#terrama2-map').removeClass('cursor-crosshair');
       $('#terrama2-map').removeClass('cursor-move');
       $('#terrama2-map').removeClass('cursor-pointer');
@@ -74,7 +177,7 @@ define(
      * @inner
      */
     var activateMoveMapTool = function() {
-      $('#moveMap > i').addClass('active');
+      $('#moveMap').addClass('active');
       $('#terrama2-map').addClass('cursor-move');
     };
 
@@ -86,7 +189,7 @@ define(
      * @inner
      */
     var initialExtent = function() {
-      Utils.getSocket().emit('spatialFilterRequest', { id: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, text: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent' });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
     };
 
     /**
@@ -97,9 +200,25 @@ define(
      * @inner
      */
     var activateDragboxTool = function() {
-      $('#dragbox > i').addClass('active');
+      $('#dragbox').addClass('active');
       $('#terrama2-map').addClass('cursor-crosshair');
       TerraMA2WebComponents.MapDisplay.addZoomDragBox();
+    };
+
+    /**
+     * Activates the GetFeatureInfo tool.
+     *
+     * @function activateGetFeatureInfoTool
+     * @memberof Map
+     * @inner
+     */
+    var activateGetFeatureInfoTool = function() {
+      $('#getAttributes').addClass('active');
+      $('#terrama2-map').addClass('cursor-pointer');
+
+      TerraMA2WebComponents.MapDisplay.setGetFeatureInfoUrlOnClick(Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId, function(url) {
+        if(url !== null) Utils.getSocket().emit('proxyRequest', { url: url, requestId: 'GetFeatureInfoTool' });
+      });
     };
 
     /**
@@ -117,6 +236,8 @@ define(
       $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
         elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><span style=\"font-weight: bold;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
 
+        var liStyle = mapSubtitleItem.LayerId === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId ? "display: none;" : "";
+
         $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
           var css = "";
 
@@ -129,7 +250,17 @@ define(
           if(layerSubtitleItem.Image !== null)
             css += "background: url(" + layerSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
 
-          elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
+          elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + " subtitle-item";
+
+          if(mapSubtitleItem.LayerId === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId)
+            elem += " satellite-subtitle-item";
+
+          elem += "\"";
+
+          if(layerSubtitleItem.SubtitleId !== null)
+            elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
+
+          elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
         });
       });
 
@@ -137,6 +268,60 @@ define(
 
       setSubtitlesVisibility();
       updateZoomTop(false);
+    };
+
+    /**
+     * Calls the socket method that returns the list of satellites for the subtitles.
+     * @param {array} satellites - Satellites filter
+     * @param {array} biomes - Biomes filter
+     * @param {array} countriesBdqNames - Countries filter
+     * @param {array} statesBdqNames - States filter
+     *
+     * @function getSubtitlesSatellites
+     * @memberof Map
+     * @inner
+     */
+    var getSubtitlesSatellites = function(satellites, biomes, countriesBdqNames, statesBdqNames) {
+      var dates = Utils.getFilterDates(true, 0);
+
+      if(dates !== null) {
+        var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+        var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+        var satellites = Utils.stringInArray(satellites, "all") ? '' : satellites.toString();
+        var biomes = Utils.stringInArray(biomes, "all") ? '' : biomes.toString();
+        var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
+        var countries = (Utils.stringInArray(countriesBdqNames, "") || countriesBdqNames.length === 0 ? '' : countriesBdqNames.toString());
+        var states = (Utils.stringInArray(statesBdqNames, "") || statesBdqNames.length === 0 ? '' : statesBdqNames.toString());
+
+        Utils.getSocket().emit(
+          'getSatellitesRequest',
+          {
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+            satellites: satellites,
+            biomes: biomes,
+            extent: extent,
+            countries: countries,
+            states: states
+          }
+        );
+      }
+    };
+
+    /**
+     * Updates the subtitles.
+     * @param {array} satellites - Satellites list
+     *
+     * @function updateSubtitles
+     * @memberof Map
+     * @inner
+     */
+    var updateSubtitles = function(satellites) {
+      $(".satellite-subtitle-item").hide();
+
+      $.each(satellites, function(i, satellite) {
+        $("#" + satellite.satelite).show();
+      });
     };
 
     /**
@@ -171,7 +356,7 @@ define(
      * @inner
      */
     var showSubtitle = function(layerId) {
-      if(!$("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
+      if(!$("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").is(":visible") && ($("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === "" || $("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === undefined))
         $("#map-subtitle-items > li." + layerId.replace(':', '')).show();
 
       updateZoomTop(false);
@@ -187,7 +372,7 @@ define(
      * @inner
      */
     var hideSubtitle = function(layerId) {
-      if($("#map-subtitle-items > li." + layerId.replace(':', '')).is(":visible"))
+      if($("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === "" || $("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === undefined)
         $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
 
       updateZoomTop(false);
@@ -217,15 +402,27 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        TerraMA2WebComponents.MapDisplay.disableDoubleClickZoom();
+        TerraMA2WebComponents.MapDisplay.addMousePosition();
+        TerraMA2WebComponents.MapDisplay.addScale();
+
         addLayersToMap();
         addSubtitles();
+        activateMoveMapTool();
       });
     };
 
     return {
+      getLayers: getLayers,
+      getNotAddedLayers: getNotAddedLayers,
+      addLayerToMap: addLayerToMap,
+      removeLayerFromMap: removeLayerFromMap,
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,
+      activateGetFeatureInfoTool: activateGetFeatureInfoTool,
+      getSubtitlesSatellites: getSubtitlesSatellites,
+      updateSubtitles: updateSubtitles,
       activateMoveMapTool: activateMoveMapTool,
       setSubtitlesVisibility: setSubtitlesVisibility,
       updateZoomTop: updateZoomTop,

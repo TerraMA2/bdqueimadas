@@ -23,10 +23,10 @@ var Filter = function(io) {
     // Spatial filter request event
     client.on('spatialFilterRequest', function(json) {
       var functionName = "get" + json.key + "Extent";
-      memberFilter[functionName](json.id, function(err, extent) {
+      memberFilter[functionName](json.ids, function(err, extent) {
         if(err) return console.error(err);
 
-        client.emit('spatialFilterResponse', { key: json.key, id: json.id, text: json.text, extent: extent });
+        client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, extent: extent });
       });
     });
 
@@ -58,14 +58,14 @@ var Filter = function(io) {
     });
 
     // Country by state request event
-    client.on('countryByStateRequest', function(json) {
-      memberFilter.getCountryByState(json.state, function(err, country) {
+    client.on('countriesByStatesRequest', function(json) {
+      memberFilter.getCountriesByStates(json.states, function(err, countriesByStates) {
         if(err) return console.error(err);
 
-        memberFilter.getCountriesByContinent(country.rows[0].continent, function(err, countries) {
+        memberFilter.getCountriesByContinent(countriesByStates.rows[0].continent, function(err, countries) {
           if(err) return console.error(err);
 
-          client.emit('countryByStateResponse', { country: country, countries: countries });
+          client.emit('countriesByStatesResponse', { countriesByStates: countriesByStates, countries: countries });
         });
       });
     });
@@ -85,6 +85,34 @@ var Filter = function(io) {
         if(err) return console.error(err);
 
         client.emit('statesByCountryResponse', { states: states });
+      });
+    });
+
+    // States by countries request event
+    client.on('statesByCountriesRequest', function(json) {
+      memberFilter.getStatesByCountries(json.countries, function(err, states) {
+        if(err) return console.error(err);
+
+        client.emit('statesByCountriesResponse', { states: states });
+      });
+    });
+
+    // Get satellites request event
+    client.on('getSatellitesRequest', function(json) {
+      // Object responsible for keep several information to be used in the database query
+      var options = {};
+
+      // Verifications of the 'options' object items
+      if(json.satellites !== '') options.satellites = json.satellites;
+      if(json.biomes !== '') options.biomes = json.biomes;
+      if(json.extent !== '') options.extent = json.extent;
+      if(json.countries !== null && json.countries !== '') options.countries = json.countries;
+      if(json.states !== null && json.states !== '') options.states = json.states;
+
+      memberFilter.getSatellites(json.dateFrom, json.dateTo, options, function(err, satellitesList) {
+        if(err) return console.error(err);
+
+        client.emit('getSatellitesResponse', { satellitesList: satellitesList });
       });
     });
   });

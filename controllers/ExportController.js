@@ -34,10 +34,11 @@ var ExportController = function(app) {
     var options = {};
 
     // Verifications of the 'options' object items
-    if(request.query.satellite !== '') options.satellite = request.query.satellite;
+    if(request.query.satellites !== '') options.satellites = request.query.satellites;
+    if(request.query.biomes !== '') options.biomes = request.query.biomes;
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
-    if(request.query.country !== '') options.country = request.query.country;
-    if(request.query.state !== '') options.state = request.query.state;
+    if(request.query.countries !== '') options.countries = request.query.countries;
+    if(request.query.states !== '') options.states = request.query.states;
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
     memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {

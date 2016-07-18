@@ -26,15 +26,21 @@ var Graphics = function(io) {
       var options = {};
 
       // Verifications of the 'options' object items
-      if(json.satellite !== '') options.satellite = json.satellite;
+      if(json.satellites !== '') options.satellites = json.satellites;
+      if(json.biomes !== '') options.biomes = json.biomes;
       if(json.extent !== '') options.extent = json.extent;
-      if(json.country !== null && json.country !== '') options.country = json.country;
-      if(json.state !== null && json.state !== '') options.state = json.state;
+      if(json.countries !== null && json.countries !== '') options.countries = json.countries;
+      if(json.states !== null && json.states !== '') options.states = json.states;
+      if(json.limit !== null) options.limit = json.limit;
 
-      memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
+      memberGraphics.getFiresTotalCount(json.dateFrom, json.dateTo, options, function(err, firesTotalCount) {
         if(err) return console.error(err);
 
-        client.emit('graphicsFiresCountResponse', { firesCount: firesCount, key: json.key, title: json.title });
+        memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, options, function(err, firesCount) {
+          if(err) return console.error(err);
+
+          client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, key: json.key, title: json.title, limit: json.limit });
+        });
       });
     });
   });

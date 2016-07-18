@@ -71,6 +71,16 @@
 
 /* BDQueimadas styles */
 
+body, .skin-queimadas {
+  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
+}
+
+.clear { clear: both; }
+
+.float-left { float: left; }
+
+.float-right { float: right; }
+
 #filter-box { color: black; }
 
 .left-content-box {
@@ -175,7 +185,7 @@
   width: 100%;
   height: 100%;
   z-index: 9999;
-  background: url('../images/welcome.jpg');
+  background-image: url('../images/welcome.jpg');
   background-size: 100%;
   left: 0;
 }
@@ -230,6 +240,7 @@
 #map-subtitle {
   position: absolute;
   z-index: 1300;
+  cursor: auto;
   top: 20px;
   right: 0;
 }
@@ -251,6 +262,56 @@
 #map-subtitle > .box > .box-body > ul > li > a > span { margin-left: 15px; }
 
 #box-attributes-table > div.box-body { overflow: auto; }
+
+.component-filter-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.component-filter-content {
+  max-width: 1185px;
+  margin: 0 auto;
+}
+
+.component-filter-error { color: #dd4b39; }
+
+/*#filter-satellite-export {
+  float: left;
+  max-width: 200px;
+}*/
+
+.export-graphic-data { margin-top: 20px; }
+
+#filter-button-attributes-table, #filter-button-graphics {
+  float: left;
+  margin-left: 15px;
+}
+
+#filter-satellite-attributes-table, #filter-satellite-graphics, #filter-biome-attributes-table, #filter-biome-graphics {
+  float: left;
+  max-width: 200px;
+}
+
+.component-filter-content > label {
+  float: left;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-left: 15px;
+}
+
+.component-filter-content > input {
+  max-width: 150px;
+  float: left;
+}
+
+.div-date-filter-export > label {
+  float: left;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.div-date-filter-export > input { max-width: 150px; }
 
 .bdqueimadas-btn {
   color: #fff;
@@ -281,13 +342,13 @@
 }
 
 #footer-image {
-  background: url('../images/footer.png');
+  background-image: url('../images/footer.png');
   background-size: 80%;
-  height: 135px;
   background-repeat: no-repeat;
+  background-position: center;
+  height: 135px;
   width: 100%;
   padding: 0 !important;
-  background-position: center;
   margin: 0 !important;
   max-width: 100% !important;
   margin-top: 30px !important;
@@ -299,13 +360,13 @@
 }
 
 #programa-cerrado-image {
-  background: url('../images/about/header.png');
+  background-image: url('../images/about/header.png');
   background-size: 800px;
-  height: 830px;
   background-repeat: no-repeat;
+  background-position: initial;
+  height: 830px;
   width: 100%;
   padding: 0 !important;
-  background-position: initial;
   margin: 0 !important;
   max-width: 100%;
   margin-top: 4px !important;
@@ -323,37 +384,29 @@
 }
 
 #projeto-inpe-image {
-  background: url('../images/about/inpe.png');
+  background-image: url('../images/about/inpe.png');
   background-size: 700px;
-  height: 130px;
   background-repeat: no-repeat;
+  background-position: center;
+  height: 130px;
   width: 100%;
   padding: 0 !important;
-  background-position: center;
   margin: 0 !important;
   max-width: 100%;
   margin-top: 4px !important;
 }
 
 #realizacao-image {
-  background: url('../images/about/realizacao.png');
+  background-image: url('../images/about/realizacao.png');
   background-size: 700px;
-  height: 130px;
   background-repeat: no-repeat;
+  background-position: center;
+  height: 130px;
   width: 100%;
   padding: 0 !important;
-  background-position: center;
   margin: 0 !important;
   max-width: 100%;
   margin-top: 4px !important;
-}
-
-#about-btn {
-  color: black;
-  font-size: 16px;
-  float: right;
-  margin-bottom: 10px;
-  margin-top: 65px;
 }
 
 #bdqueimadas-description {
@@ -371,11 +424,6 @@
   width: 650px;
   position: absolute;
   right: 0;
-}
-
-.blockUI {
-  z-index: 9999999 !important;
-  cursor: wait !important;
 }
 
 #loading-span {
@@ -398,6 +446,168 @@
   left: 40%;
 }
 
+.mouse-function-btn {
+  background: #f8b802 !important;
+}
+
+.mouse-function-btn:hover {
+  background: #E0A602 !important;
+}
+
+.mouse-function-btn.active {
+  background: #E0A602 !important;
+}
+
+#page-title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  float: left;
+  margin-left: 5px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.layer-explorer-and-filters-title {
+  font-weight: 900;
+  color: #03316f;
+}
+
+.bdqueimadas-form {
+  margin-bottom: 5px;
+}
+
+#footer > p {
+  text-align: center;
+  bottom: 16px;
+  position: absolute;
+  width: 100%;
+  font-size: 17px;
+  color: #03316f !important;
+  font-weight: 900;
+}
+
+.remove-layer {
+  float: right;
+  margin-top: -28px;
+  color: #555;
+  cursor: pointer;
+  margin-right: 2px;
+}
+
+.new-layer {
+  float: right;
+  cursor: pointer;
+}
+
+#add-layer {
+  float: right;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+#available-layers {
+  max-height: 400px;
+  overflow: auto;
+  padding-right: 20px;
+}
+
+#available-layers ul { list-style: none; }
+
+#available-layers li {
+  list-style-type: none;
+  padding: 5px 0;
+  position: relative;
+  margin-left: 11px;
+}
+
+#available-layers > span {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#available-layers .layer-group-plus {
+  float: left;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+#available-layers .layer-group-minus {
+  float: left;
+  font-size: 45px;
+  margin-top: -3px;
+  margin-right: -1px;
+}
+
+#feature-info-box {
+  width: 100% !important;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.feature-info-box .ui-dialog-title { font-size: 13px; }
+
+#page-second-title > .inpe-image {
+  position: absolute;
+  background-image: url('../images/inpe.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 40px;
+  margin-left: 4px;
+  margin-top: -2px;
+}
+
+#page-second-title > .programa-queimadas-image {
+  position: absolute;
+  background-image: url('../images/programa_queimadas.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 27px;
+  margin-left: 48px;
+  margin-top: -3px;
+}
+
+#page-second-title > .text { padding-left: 82px; }
+
+#languages-main {
+  position: absolute;
+  right: 5px;
+  line-height: 27px;
+}
+
+#languages-main > .languages-item {
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 30px;
+  text-indent: 35px;
+  cursor: pointer;
+}
+
+#languages-secondary {
+  border-right: solid 2px #333;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+#languages-secondary > .languages-item {
+  background-repeat: no-repeat;
+  background-size: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  float: left;
+}
+
+.languages-item.portuguese { background-image: url('../images/brazil.png'); }
+
+.languages-item.english { background-image: url('../images/usa.png'); }
+
+.languages-item.spanish { background-image: url('../images/spain.png'); }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
@@ -410,6 +620,15 @@
   -o-transition: width 0.3s ease-in-out;
   transition: width 0.3s ease-in-out;
 }
+
+#terrama2-layerexplorer li { padding: 2px 0 !important; }
+
+#terrama2-layerexplorer li > span {
+  padding: 0px !important;
+  padding-left: 12px !important;
+}
+
+.terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
 
 /* AdminLTEQueimadas general adjustments */
 
@@ -444,14 +663,12 @@
 
 #graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
 
-.sidebar-menu > li > a > span { padding-left: 22px; }
+.skin-queimadas .main-header #gov-header #header input.searchButton { background-image: url("../externals/adminlte/img/sprite.png") 0 2px; }
 
-.skin-queimadas .main-header #gov-header #header input.searchButton{background:url("../externals/adminlte/img/sprite.png") 0 2px;}
-
-.skin-queimadas .main-header #gov-header #header #social-icons li a{background:url("../externals/adminlte/img/sprite.png");}
+.skin-queimadas .main-header #gov-header #header #social-icons li a { background-image: url("../externals/adminlte/img/sprite.png"); }
 
 .skin-queimadas .main-header #gov-header #header #logo #portal-title {
-  background: url("../externals/adminlte/img/logo_queimadas.png");
+  background-image: url("../externals/adminlte/img/logo_queimadas.png");
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -481,3 +698,28 @@
 .dropdown-closed > .dropdown-menu { display: none !important; }
 
 .control-sidebar > .tab-content { text-align: center; }
+
+.skin-queimadas #footer>div { margin-top: 0px !important; }
+
+.skin-queimadas #footer>div.clear { margin: 0px !important; }
+
+.skin-queimadas #footer { padding: 10px 0 !important; }
+
+.skin-queimadas .sidebar-menu>li>a {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.skin-queimadas .sidebar-menu>li>a:hover {
+  overflow: visible !important;
+  white-space: normal !important;
+  height: auto !important;
+}
+
+.skin-queimadas #footer .footer-logos>div {
+  position: relative;
+  margin: 0 15px;
+  max-width: 100%;
+}
+
+.main-header > .logo:hover { background-color: #f49d1e !important; }
