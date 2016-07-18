@@ -396,6 +396,14 @@ define(
           Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent', filterForm: false });
       });
 
+      $('#countries').change(function() {
+        $('#filter-button').click();
+      });
+
+      $('#states').change(function() {
+        $('#filter-button').click();
+      });
+
       $('.filter-date').on('focus', function() {
         if($(this).parent().hasClass('has-error')) {
           $(this).parent().removeClass('has-error');
