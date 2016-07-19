@@ -155,10 +155,6 @@ define(
 
       // Window resize event
       $(window).resize(function() {
-        // Closes any open left content box and the left content box background
-        closeAllLeftContentBoxes();
-        closeLeftContentBoxBackground();
-
         // Updates the variables that keep DOM elements sizes
         updateSizeVars();
 
