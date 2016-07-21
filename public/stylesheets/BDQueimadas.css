@@ -96,7 +96,7 @@ body, .skin-queimadas {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 0 20px 0 20px;
+  padding: 0 20px 20px 20px;
   top: 0;
   bottom: 0;
   width: 350px;
