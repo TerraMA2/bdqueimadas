@@ -76,6 +76,8 @@ define(
           }
         }
       }
+
+      TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer');
     };
 
     /**

@@ -18,8 +18,6 @@ requirejs(
     Graphics.init();
     Map.init();
 
-    TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer');
-
     Filter.applyFilter();
     $.event.trigger({type: "updateComponents"});
   }
