@@ -65,7 +65,7 @@ def connect():
 # Function responsible for executing the query with a range of given dates
 def executeQueryRange(begin, end):
     try:
-        query = "select id, LAT, LON, Data, Satelite, Municipio, Estado, Regiao, Pais, Precipitacao, NumDiasSemPrecip, Risco, BiomaBrasileiro from " + MYSQL_TABLE + " where Data between %s and %s;"
+        query = "select id, LAT, LON, Data, Satelite, Municipio, Estado, Regiao, Pais, Vegetacao, Suscetibilidade, Precipitacao, NumDiasSemPrecip, Risco, BiomaBrasileiro, SateliteRef from " + MYSQL_TABLE + " where Data between %s and %s;"
         MYSQL_CURSOR.execute(query, [begin, end])
 
         return True
@@ -78,7 +78,7 @@ def executeQueryRange(begin, end):
 # Function responsible for executing the query with dates bigger than a given date
 def executeQueryBiggerThan(date):
     try:
-        query = "select id, LAT, LON, Data, Satelite, Municipio, Estado, Regiao, Pais, Precipitacao, NumDiasSemPrecip, Risco, BiomaBrasileiro from " + MYSQL_TABLE + " where Data >= %s;"
+        query = "select id, LAT, LON, Data, Satelite, Municipio, Estado, Regiao, Pais, Vegetacao, Suscetibilidade, Precipitacao, NumDiasSemPrecip, Risco, BiomaBrasileiro, SateliteRef from " + MYSQL_TABLE + " where Data >= %s;"
         MYSQL_CURSOR.execute(query, [date])
 
         return True
@@ -91,7 +91,7 @@ def executeQueryBiggerThan(date):
 # Retrieves the register with the bigger date/time from the PostgreSQL database
 def getLastDateTime():
     try:
-        query = "select data, horagmt from " + PGSQL_TABLE + " order by data desc, horagmt desc limit 1;"
+        query = "select data, hora from " + PGSQL_TABLE + " order by data desc, hora desc limit 1;"
         PGSQL_CURSOR.execute(query)
 
         return True
@@ -144,24 +144,28 @@ def insertData():
     rows = MYSQL_CURSOR.fetchall()
 
     for i in range(0, int(MYSQL_CURSOR.rowcount)):
-        dateHour = str(rows[i][3]).split(' ')
-        date = dateHour[0].replace('-', '')
-        hour = dateHour[1].replace(':', '')
+        if rows[i][3] is not None:
+            dateHour = str(rows[i][3]).split(' ')
+            date = dateHour[0]
+            hour = dateHour[1]
 
-        insertParameters = [ rows[i][0], rows[i][1], rows[i][2], convertLatitudeToDMS(rows[i][1]), convertLongitudeToDMS(rows[i][2]), date, hour, rows[i][4], rows[i][5], rows[i][6], rows[i][7][:3], rows[i][8], rows[i][9], rows[i][10], rows[i][11], rows[i][12], rows[i][2], rows[i][1] ]
+            insertParameters = [ rows[i][0], rows[i][1], rows[i][2], convertLatitudeToDMS(rows[i][1]), convertLongitudeToDMS(rows[i][2]), date, hour, rows[i][4], rows[i][5], rows[i][6], rows[i][7], rows[i][8], rows[i][9], rows[i][10], rows[i][11], rows[i][12], rows[i][13], rows[i][14], rows[i][15], rows[i][2], rows[i][1] ]
 
-        try:
-            query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, latgms, longms, data, horagmt, satelite, municipio, uf, regiao, pais, prec, ndiasschuv, risco, bioma, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
-            PGSQL_CURSOR.execute(query, insertParameters)
-            PGSQL_DB.commit()
-        except Exception as e:
-            if str(e).split('\n')[0] == 'duplicate key value violates unique constraint "' + PGSQL_UNIQUE_KEY + '"':
-                PGSQL_DB.rollback()
-            else:
-                global EXCEPTION
-                EXCEPTION = str(e)
+            try:
+                query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, lat_gms, lon_gms, data, hora, satelite, municipio, estado, regiao, pais, vegetacao, suscetibilidade, precipitacao, num_dias_sem_precipitacao, risco, bioma_brasileiro, satelite_referencia, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
+                PGSQL_CURSOR.execute(query, insertParameters)
+            except Exception as e:
+                if str(e).split('\n')[0] == 'duplicate key value violates unique constraint "' + PGSQL_UNIQUE_KEY + '"':
+                    PGSQL_DB.rollback()
+                else:
+                    global EXCEPTION
+                    EXCEPTION = str(e)
 
-                return False
+                    return False
+        else:
+            appendIntoResult("Error inserting the following record: " + rows[i])
+
+    PGSQL_DB.commit()
 
     return True
 
