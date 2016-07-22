@@ -6,6 +6,7 @@ configurations/Database.*
 configurations/Filter.*
 configurations/Graphics.*
 configurations/Map.*
+configurations/Piwik.*
 configurations/Tables.*
 public/dist
 public/docs

@@ -868,6 +868,10 @@ define(
           }
         }
       });
+
+      Utils.getSocket().on('piwikDataResponse', function(result) {
+        $('#number-of-accesses').text(result.piwikData[0].nb_visits);
+      });
     };
 
     /**
@@ -1173,6 +1177,8 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        Utils.getSocket().emit('piwikDataRequest');
+
         $('#footer-brasil a').attr('target', '_blank');
 
         updateSizeVars();
