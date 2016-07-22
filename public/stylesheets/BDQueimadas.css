@@ -71,9 +71,7 @@
 
 /* BDQueimadas styles */
 
-body, .skin-queimadas {
-  font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
-}
+body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important; }
 
 .clear { clear: both; }
 
@@ -175,9 +173,7 @@ body, .skin-queimadas {
 }
 
 @media only screen and (max-width: 991px) {
-  #welcome {
-    margin-top: -90px !important;
-  }
+  #welcome { margin-top: -90px !important; }
 }
 
 #welcome-image {
@@ -191,9 +187,7 @@ body, .skin-queimadas {
 }
 
 @media only screen and (max-height: 600px) {
-  #welcome > #welcome-text {
-    margin-top: 30px;
-  }
+  #welcome > #welcome-text { margin-top: 30px; }
 
   #welcome > #welcome-text > p.title {
     font-size: 40px !important;
@@ -441,17 +435,11 @@ body, .skin-queimadas {
   left: 40%;
 }
 
-.mouse-function-btn {
-  background: #f8b802 !important;
-}
+.mouse-function-btn { background: #f8b802 !important; }
 
-.mouse-function-btn:hover {
-  background: #E0A602 !important;
-}
+.mouse-function-btn:hover { background: #E0A602 !important; }
 
-.mouse-function-btn.active {
-  background: #E0A602 !important;
-}
+.mouse-function-btn.active { background: #E0A602 !important; }
 
 #page-title {
   padding-top: 10px;
@@ -467,9 +455,11 @@ body, .skin-queimadas {
   color: #03316f;
 }
 
-.bdqueimadas-form {
-  margin-bottom: 5px;
-}
+.bdqueimadas-form { margin-bottom: 5px; }
+
+#layer-explorer-and-filter-box h4 { margin: 10px 0 15px 0; }
+
+#layer-explorer-and-filter-box hr { margin: 15px 0 10px 0; }
 
 #footer > p {
   text-align: center;
