@@ -49,68 +49,60 @@
     </div>
   </div>
   <div style="clear: both; height: 5px;"></div>
-  <div class="form-horizontal">
-    <div class="form-group bdqueimadas-form">
-      <label for="filter-satellite" class="col-sm-6 control-label" style="text-align: left;">Focos dos Sat&eacute;lites</label>
-      <div class="col-sm-6">
-        <select multiple class="form-control" id="filter-satellite">
-          <%
-          var satelliteOptions = "";
-          var referenceSatellite = "";
-          var isSatelliteSelected = false;
+  <div class="form-group bdqueimadas-form float-left">
+    <label for="filter-satellite">Focos dos Sat&eacute;lites</label>
+    <select multiple class="form-control" id="filter-satellite">
+      <%
+      var satelliteOptions = "";
+      var referenceSatellite = "";
+      var isSatelliteSelected = false;
 
-          configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
-            if(satellite.Current) {
-              if(satellite.ReferenceCurrent) {
-                referenceSatellite += "<option value=\"" + satellite.Id + "\"";
+      configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+        if(satellite.Current) {
+          if(satellite.ReferenceCurrent) {
+            referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
-                if(satellite.Selected) {
-                  referenceSatellite += " selected>";
+            if(satellite.Selected) {
+              referenceSatellite += " selected>";
 
-                  if(!isSatelliteSelected) isSatelliteSelected = true;
-                } else {
-                  referenceSatellite += ">";
-                }
-
-                referenceSatellite += "Refer&ecirc;ncia</option>";
-              } else {
-                satelliteOptions += "<option value=\"" + satellite.Id + "\"";
-
-                if(satellite.Selected) {
-                  satelliteOptions += " selected>";
-
-                  if(!isSatelliteSelected) isSatelliteSelected = true;
-                } else {
-                  satelliteOptions += ">";
-                }
-
-                satelliteOptions += satellite.Name + "</option>";
-              }
+              if(!isSatelliteSelected) isSatelliteSelected = true;
+            } else {
+              referenceSatellite += ">";
             }
-          })
-          %>
 
-          <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
-          <%- referenceSatellite + satelliteOptions %>
-        </select>
-      </div>
-    </div>
+            referenceSatellite += "Refer&ecirc;ncia</option>";
+          } else {
+            satelliteOptions += "<option value=\"" + satellite.Id + "\"";
+
+            if(satellite.Selected) {
+              satelliteOptions += " selected>";
+
+              if(!isSatelliteSelected) isSatelliteSelected = true;
+            } else {
+              satelliteOptions += ">";
+            }
+
+            satelliteOptions += satellite.Name + "</option>";
+          }
+        }
+      })
+      %>
+
+      <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+      <%- referenceSatellite + satelliteOptions %>
+    </select>
   </div>
-  <div class="form-horizontal">
-    <div class="form-group bdqueimadas-form">
-      <label for="filter-biome" class="col-sm-6 control-label" style="text-align: left;">Focos dos Biomas</label>
-      <div class="col-sm-6">
-        <select multiple class="form-control" id="filter-biome">
-          <option value="all" selected>TODOS</option>
-          <option value="Amazonia">Amaz&ocirc;nia</option>
-          <option value="Caatinga">Caatinga</option>
-          <option value="Cerrado">Cerrado</option>
-          <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
-          <option value="Pampa">Pampa</option>
-          <option value="Pantanal">Pantanal</option>
-        </select>
-      </div>
-    </div>
+  <div class="form-group bdqueimadas-form float-right">
+    <label for="filter-biome">Focos dos Biomas</label>
+    <select multiple class="form-control" id="filter-biome">
+      <option value="all" selected>TODOS</option>
+      <option value="Amazonia">Amaz&ocirc;nia</option>
+      <option value="Caatinga">Caatinga</option>
+      <option value="Cerrado">Cerrado</option>
+      <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+      <option value="Pampa">Pampa</option>
+      <option value="Pantanal">Pantanal</option>
+    </select>
   </div>
   <button class="btn btn-primary" id="filter-button">Aplicar</button>
   <button class="btn btn-primary" id="initial-filter-button">Tela Inicial</button>
@@ -123,6 +115,5 @@
       }
     %>
   </h4>
-  <br/>
   <div id="terrama2-layerexplorer" style="max-height: 250px;overflow: auto;"></div>
 </div>
