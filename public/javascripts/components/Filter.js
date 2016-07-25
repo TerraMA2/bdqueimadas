@@ -663,7 +663,7 @@ define(
      * @inner
      */
     var applyCurrentSituationFilter = function(begin, end, countries, satellites, biomes, layer) {
-      var currentSituationFilter = "begin:" + begin + ";end:" + end;
+      var currentSituationFilter = "begin:'" + begin + "';end:'" + end + "'";
 
       if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
         currentSituationFilter += ";countries:" + Utils.replaceAll(countries.toString(), ',', '\\,');
@@ -676,7 +676,7 @@ define(
       if(biomes !== undefined && biomes !== null && biomes !== "" && biomes !== '' && biomes !== [] && !Utils.stringInArray(biomes, "all")) {
         currentSituationFilter += ";biomes:'" + Utils.replaceAll(biomes.toString(), ',', '\'\\,\'') + "'";
       }
-console.log(currentSituationFilter);
+
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
     };
 
