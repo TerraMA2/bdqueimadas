@@ -45,7 +45,11 @@ var AttributesTable = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-      columns += memberAttributesTableConfig.Columns[i].Name + ", ";
+      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateFieldName) {
+        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY-MM-DD'), ";
+      } else {
+        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
+      }
     }
     columns = columns.substring(0, (columns.length - 2));
 
