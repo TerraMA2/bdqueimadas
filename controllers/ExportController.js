@@ -86,7 +86,7 @@ var ExportController = function(app) {
           });
         } else if(request.query.format === 'csv') {
           var csvPath = path.join(__dirname, '../tmp/BDQueimadas-CSV.csv');
-          var csvGenerationCommand = "ogr2ogr -F \"CSV\" " + csvPath + " " + geoJsonPath + " ENCODING=UTF-8";
+          var csvGenerationCommand = "ogr2ogr -F \"CSV\" " + csvPath + " " + geoJsonPath;
 
           memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
             if(err) return console.error(err);
