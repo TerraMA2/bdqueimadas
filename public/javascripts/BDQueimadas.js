@@ -192,7 +192,8 @@ define(
 
       // new
 
-      $('#exportation-link').on('click', function() {
+      $('#exportation-link').on('click', function(e) {
+        e.preventDefault();
         window.open($(this).attr('href'), '_blank');
       });
 
