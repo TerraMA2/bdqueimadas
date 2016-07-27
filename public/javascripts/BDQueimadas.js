@@ -190,6 +190,14 @@ define(
         }
       });
 
+      // new
+
+      $('#exportation-link').on('click', function() {
+        window.open($(this).attr('href'), '_blank');
+      });
+
+      // new
+
       // Export click event
       $('#export').on('click', function() {
         vex.dialog.alert({
@@ -283,7 +291,9 @@ define(
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
 
-                        window.open(exportLink, '_blank');
+                        $('#exportation-link').attr('href', exportLink);
+                        $('#exportation-link').click();
+                        $('#exportation-link').attr('href', '');
 
                         vex.close();
                       } else {
