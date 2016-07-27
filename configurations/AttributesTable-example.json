@@ -1,9 +1,21 @@
 {
   "Columns": [
     {
+      "Name": "data",
+      "Alias": "",
+      "Order": "desc",
+      "String": false
+    },
+    {
+      "Name": "hora",
+      "Alias": "",
+      "Order": "desc",
+      "String": true
+    },
+    {
       "Name": "satelite",
       "Alias": "",
-      "Order": "asc",
+      "Order": null,
       "String": true
     },
     {
@@ -11,6 +23,30 @@
       "Alias": "",
       "Order": null,
       "String": true
+    },
+    {
+      "Name": "estado",
+      "Alias": "",
+      "Order": null,
+      "String": true
+    },
+    {
+      "Name": "municipio",
+      "Alias": "",
+      "Order": null,
+      "String": true
+    },
+    {
+      "Name": "lat",
+      "Alias": "",
+      "Order": null,
+      "String": false
+    },
+    {
+      "Name": "lon",
+      "Alias": "",
+      "Order": null,
+      "String": false
     }
   ]
 }

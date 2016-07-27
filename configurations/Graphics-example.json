@@ -1,16 +1,29 @@
 {
   "FiresCount": [
     {
+      "Key": "pais",
+      "Title": "Focos por País",
+      "Limit": null
+    },
+    {
+      "Key": "estado",
+      "Title": "Focos por Estado",
+      "Limit": null
+    },
+    {
+      "Key": "municipio",
+      "Title": "Focos por Município",
+      "Limit": null
+    },
+    {
+      "Key": "bioma_brasileiro",
+      "Title": "Focos por Bioma",
+      "Limit": null
+    },
+    {
       "Key": "satelite",
-      "Title": "Focos por Satélite"
-    },
-    {
-      "Key": "uf",
-      "Title": "Focos por Estado"
-    },
-    {
-      "Key": "bioma",
-      "Title": "Focos por Bioma"
+      "Title": "Focos por Satélite",
+      "Limit": null
     }
   ],
   "TimeSeries": {

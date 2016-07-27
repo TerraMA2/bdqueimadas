@@ -155,10 +155,6 @@ define(
 
       // Window resize event
       $(window).resize(function() {
-        // Closes any open left content box and the left content box background
-        closeAllLeftContentBoxes();
-        closeLeftContentBoxBackground();
-
         // Updates the variables that keep DOM elements sizes
         updateSizeVars();
 
@@ -230,6 +226,7 @@ define(
                   '<select id="exportation-type" class="form-control">' +
                     '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
+                    '<option value="kml">KML</option>' +
                     '<option value="shapefile">Shapefile</option>' +
                   '</select>' +
                 '</div>' +
@@ -243,7 +240,7 @@ define(
             {
               type: 'submit',
               text: 'Cancelar',
-              className: 'bdqueimadas-btn'
+              className: 'bdqueimadas-btn teste123'
             },
             {
               type: 'button',
@@ -264,6 +261,7 @@ define(
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
                   $.ajax({
+                    async: false,
                     url: Utils.getBaseUrl() + "exists-data-to-export",
                     type: "GET",
                     data: {
@@ -286,7 +284,7 @@ define(
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
 
-                        location.href = exportLink;
+                        window.open(exportLink, '_blank');
 
                         vex.close();
                       } else {
@@ -350,7 +348,10 @@ define(
         var dates = Utils.getFilterDates(true, 0);
 
         if(dates !== null) {
-          if(!Utils.areArraysEqual(Filter.getCountries(), $('#countries').val(), false)) {
+          var countriesField = $('#countries').val();
+          var statesField = $('#states').val();
+
+          if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
             if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -359,7 +360,7 @@ define(
               Filter.clearCountries();
               Filter.clearStates();
             }
-          } else if(!Utils.areArraysEqual(Filter.getStates(), $('#states').val(), false)) {
+          } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && statesField[0] == "") ? [] : statesField), false)) {
             if(!Utils.stringInArray($('#states').val(), "") && $('#states').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
             } else {
@@ -367,8 +368,7 @@ define(
               Filter.clearStates();
             }
           } else {
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
           }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
@@ -418,8 +418,7 @@ define(
       });
 
       $(document).on("applyFilter", function() {
-        Filter.applyFilter();
-        updateComponents();
+        Filter.checkFiresCount();
       });
 
       // Graphics Events
@@ -570,8 +569,7 @@ define(
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
             layer.Name = self.parent().html();
 
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
 
             return false;
           }
@@ -666,28 +664,23 @@ define(
         if(result.key === 'Countries') {
           if(!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0) {
             Filter.updateBdqNames(function() {
-              Filter.applyFilter();
-              updateComponents();
+              Filter.checkFiresCount();
             });
           } else {
             Filter.setCountriesBdqNames([]);
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
           }
         } else if(result.key === 'States') {
           if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
             Filter.updateBdqNames(function() {
-              Filter.applyFilter();
-              updateComponents();
+              Filter.checkFiresCount();
             });
           } else {
             Filter.setStatesBdqNames([]);
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
           }
         } else {
-          Filter.applyFilter();
-          updateComponents();
+          Filter.checkFiresCount();
         }
       });
 
@@ -751,8 +744,7 @@ define(
 
           Filter.enableDropdown('countries', countriesIds);
 
-          Filter.applyFilter();
-          updateComponents();
+          Filter.checkFiresCount();
         });
       });
 
@@ -871,6 +863,31 @@ define(
             });
           }
         }
+      });
+
+      Utils.getSocket().on('piwikDataResponse', function(result) {
+        $('#number-of-accesses').text(result.piwikData[0].nb_visits);
+      });
+
+      Utils.getSocket().on('checkFiresCountResponse', function(result) {
+        if(result.firesCount.rows[0].count >= 2000000) {
+          $('#filter-satellite').val(Filter.getSatellites());
+          $('#filter-biome').val(Filter.getBiomes());
+
+          Filter.updateDatesToCurrent();
+
+          vex.dialog.alert({
+            message: '<p class="text-center">O número de focos para esse filtro ultrapassa o limite, diminua o período filtrado!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        }
+
+        Filter.applyFilter();
+        updateComponents();
       });
     };
 
@@ -1141,7 +1158,9 @@ define(
       $('.content-wrapper').animate({ "min-height": (memberHeight - (memberHeaderHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
       $('#terrama2-map').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-      $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight + 10) + "px" }, { duration: duration, queue: false });
+      $('#box-attributes-table').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
+
+      $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
       $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
     };
 
@@ -1158,7 +1177,9 @@ define(
       $('.content-wrapper').animate({ "min-height": (memberHeight - (memberNavbarHeight + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
       $('#terrama2-map').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
 
-      $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight + 10) + "px" }, { duration: duration, queue: false });
+      $('#box-attributes-table').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
+
+      $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
       $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
     };
 
@@ -1173,6 +1194,8 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        Utils.getSocket().emit('piwikDataRequest');
+
         $('#footer-brasil a').attr('target', '_blank');
 
         updateSizeVars();
@@ -1201,8 +1224,7 @@ define(
             Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
           }
 
-          Filter.applyFilter();
-          updateComponents();
+          Filter.checkFiresCount();
         }, 16000);
       });
     };

@@ -3,5 +3,7 @@
   "Host": "127.0.0.1",
   "Database": "test",
   "User": "postgres",
-  "Password": "postgres"
+  "Password": "postgres",
+  "MaxNumberOfClientsInThePool": 10,
+  "IdleTimeoutMillis": 30000
 }
