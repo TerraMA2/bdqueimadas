@@ -98,6 +98,20 @@ var ExportController = function(app) {
               memberFs.unlink(csvPath);
             });
           });
+        } else if(request.query.format === 'kml') {
+          var kmlPath = path.join(__dirname, '../tmp/BDQueimadas-KML.kml');
+          var kmlGenerationCommand = "ogr2ogr -F \"KML\" " + kmlPath + " " + geoJsonPath;
+
+          memberExec(kmlGenerationCommand, function(err, kmlGenerationCommandResult, kmlGenerationCommandError) {
+            if(err) return console.error(err);
+
+            response.download(kmlPath, 'BDQueimadas-KML.kml', function(err) {
+              if(err) return console.error(err);
+
+              memberFs.unlink(geoJsonPath);
+              memberFs.unlink(kmlPath);
+            });
+          });
         } else {
           response.download(geoJsonPath, 'BDQueimadas-GeoJSON.json', function(err) {
             if(err) return console.error(err);

@@ -28,6 +28,10 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by the received key.
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {string} key - Key
+   * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
    *
@@ -127,6 +131,9 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires.
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
    *
