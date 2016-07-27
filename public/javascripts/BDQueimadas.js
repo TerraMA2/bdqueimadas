@@ -226,6 +226,7 @@ define(
                   '<select id="exportation-type" class="form-control">' +
                     '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
+                    '<option value="kml">KML</option>' +
                     '<option value="shapefile">Shapefile</option>' +
                   '</select>' +
                 '</div>' +
@@ -346,7 +347,10 @@ define(
         var dates = Utils.getFilterDates(true, 0);
 
         if(dates !== null) {
-          if(!Utils.areArraysEqual(Filter.getCountries(), $('#countries').val(), false)) {
+          var countriesField = $('#countries').val();
+          var statesField = $('#states').val();
+
+          if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
             if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -355,7 +359,7 @@ define(
               Filter.clearCountries();
               Filter.clearStates();
             }
-          } else if(!Utils.areArraysEqual(Filter.getStates(), $('#states').val(), false)) {
+          } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && statesField[0] == "") ? [] : statesField), false)) {
             if(!Utils.stringInArray($('#states').val(), "") && $('#states').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
             } else {
@@ -363,8 +367,7 @@ define(
               Filter.clearStates();
             }
           } else {
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
           }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
@@ -414,8 +417,7 @@ define(
       });
 
       $(document).on("applyFilter", function() {
-        Filter.applyFilter();
-        updateComponents();
+        Filter.checkFiresCount();
       });
 
       // Graphics Events
@@ -566,8 +568,7 @@ define(
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
             layer.Name = self.parent().html();
 
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
 
             return false;
           }
@@ -662,28 +663,23 @@ define(
         if(result.key === 'Countries') {
           if(!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0) {
             Filter.updateBdqNames(function() {
-              Filter.applyFilter();
-              updateComponents();
+              Filter.checkFiresCount();
             });
           } else {
             Filter.setCountriesBdqNames([]);
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
           }
         } else if(result.key === 'States') {
           if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
             Filter.updateBdqNames(function() {
-              Filter.applyFilter();
-              updateComponents();
+              Filter.checkFiresCount();
             });
           } else {
             Filter.setStatesBdqNames([]);
-            Filter.applyFilter();
-            updateComponents();
+            Filter.checkFiresCount();
           }
         } else {
-          Filter.applyFilter();
-          updateComponents();
+          Filter.checkFiresCount();
         }
       });
 
@@ -747,8 +743,7 @@ define(
 
           Filter.enableDropdown('countries', countriesIds);
 
-          Filter.applyFilter();
-          updateComponents();
+          Filter.checkFiresCount();
         });
       });
 
@@ -871,6 +866,27 @@ define(
 
       Utils.getSocket().on('piwikDataResponse', function(result) {
         $('#number-of-accesses').text(result.piwikData[0].nb_visits);
+      });
+
+      Utils.getSocket().on('checkFiresCountResponse', function(result) {
+        if(result.firesCount.rows[0].count >= 2000000) {
+          $('#filter-satellite').val(Filter.getSatellites());
+          $('#filter-biome').val(Filter.getBiomes());
+
+          Filter.updateDatesToCurrent();
+
+          vex.dialog.alert({
+            message: '<p class="text-center">O número de focos para esse filtro ultrapassa o limite, diminua o período filtrado!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        }
+
+        Filter.applyFilter();
+        updateComponents();
       });
     };
 
@@ -1207,8 +1223,7 @@ define(
             Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
           }
 
-          Filter.applyFilter();
-          updateComponents();
+          Filter.checkFiresCount();
         }, 16000);
       });
     };

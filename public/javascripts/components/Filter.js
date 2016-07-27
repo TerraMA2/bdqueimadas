@@ -571,6 +571,39 @@ define(
         updateSatellitesSelect();
         TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
       }
+
+      if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
+    };
+
+    /**
+     * Checks the number of fires for the current filters.
+     *
+     * @function checkFiresCount
+     * @memberof Filter(2)
+     * @inner
+     */
+    var checkFiresCount = function() {
+      if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
+
+      var dates = Utils.getFilterDates(true, 0);
+
+      var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+      var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+      var satellites = Utils.stringInArray(getSatellites(), "all") ? '' : getSatellites().toString();
+      var biomes = Utils.stringInArray(getBiomes(), "all") ? '' : getBiomes().toString();
+      var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
+      var countries = (Utils.stringInArray(getCountriesBdqNames(), "") || getCountriesBdqNames().length === 0 ? '' : getCountriesBdqNames().toString());
+      var states = (Utils.stringInArray(getStatesBdqNames(), "") || getStatesBdqNames().length === 0 ? '' : getStatesBdqNames().toString());
+
+      Utils.getSocket().emit('checkFiresCountRequest', {
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        satellites: satellites,
+        biomes: biomes,
+        extent: extent,
+        countries: countries,
+        states: states
+      });
     };
 
     /**
@@ -870,6 +903,7 @@ define(
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
+      checkFiresCount: checkFiresCount,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       selectContinentItem: selectContinentItem,
       selectCountries: selectCountries,
