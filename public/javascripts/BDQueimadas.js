@@ -190,15 +190,6 @@ define(
         }
       });
 
-      // new
-
-      $('#exportation-link').on('click', function(e) {
-        e.preventDefault();
-        window.open($(this).attr('href'), '_blank');
-      });
-
-      // new
-
       // Export click event
       $('#export').on('click', function() {
         vex.dialog.alert({
@@ -249,7 +240,7 @@ define(
             {
               type: 'submit',
               text: 'Cancelar',
-              className: 'bdqueimadas-btn'
+              className: 'bdqueimadas-btn teste123'
             },
             {
               type: 'button',
@@ -270,6 +261,7 @@ define(
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
                   $.ajax({
+                    async: false,
                     url: Utils.getBaseUrl() + "exists-data-to-export",
                     type: "GET",
                     data: {
@@ -292,9 +284,7 @@ define(
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
 
-                        $('#exportation-link').attr('href', exportLink);
-                        $('#exportation-link').click();
-                        $('#exportation-link').attr('href', '');
+                        window.open(exportLink, '_blank');
 
                         vex.close();
                       } else {
