@@ -283,7 +283,7 @@ define(
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
 
-                        location.href = exportLink;
+                        window.open(exportLink, '_blank');
 
                         vex.close();
                       } else {
