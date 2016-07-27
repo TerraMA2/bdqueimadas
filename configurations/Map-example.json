@@ -1,10 +1,11 @@
 {
   "Subtitles": [
     {
-      "LayerId": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
-      "LayerName": "Camada: Situação Atual - Países",
+      "LayerId": "BDQueimadas:current_situation_countries",
+      "LayerName": "Camada: Focos-Total Espacial - Países",
       "Subtitles": [
         {
+          "SubtitleId": null,
           "SubtitleText": "0 focos",
           "FillColor": "#FFEBCD",
           "BorderColor": "black",
@@ -13,6 +14,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 1 a 100 focos",
           "FillColor": "#FFC387",
           "BorderColor": "black",
@@ -21,6 +23,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 101 a 500 focos",
           "FillColor": "#FAA046",
           "BorderColor": "black",
@@ -29,6 +32,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 1001 a 5000 focos",
           "FillColor": "#FA5C25",
           "BorderColor": "black",
@@ -37,6 +41,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 5001 a 25000 focos",
           "FillColor": "#C34231",
           "BorderColor": "black",
@@ -45,6 +50,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 25001 a 50000 focos",
           "FillColor": "#A21C0D",
           "BorderColor": "black",
@@ -55,10 +61,11 @@
       ]
     },
     {
-      "LayerId": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05",
-      "LayerName": "Camada: Situação Atual - Estados",
+      "LayerId": "BDQueimadas:current_situation_states",
+      "LayerName": "Camada: Focos-Total Espacial - Estados",
       "Subtitles": [
         {
+          "SubtitleId": null,
           "SubtitleText": "0 focos",
           "FillColor": "#FFEBCD",
           "BorderColor": "black",
@@ -67,6 +74,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 1 a 100 focos",
           "FillColor": "#FFC387",
           "BorderColor": "black",
@@ -75,6 +83,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 101 a 500 focos",
           "FillColor": "#FAA046",
           "BorderColor": "black",
@@ -83,6 +92,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 1001 a 5000 focos",
           "FillColor": "#FA5C25",
           "BorderColor": "black",
@@ -91,6 +101,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 5001 a 25000 focos",
           "FillColor": "#C34231",
           "BorderColor": "black",
@@ -99,6 +110,7 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": null,
           "SubtitleText": "De 25001 a 50000 focos",
           "FillColor": "#A21C0D",
           "BorderColor": "black",
@@ -109,44 +121,336 @@
       ]
     },
     {
-      "LayerId": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
+      "LayerId": "BDQueimadas:focos",
       "LayerName": "Camada: Focos",
       "Subtitles": [
         {
-          "SubtitleText": "Focos",
+          "SubtitleId": "AQUA-M",
+          "SubtitleText": "AQUA-M",
           "FillColor": null,
           "BorderColor": null,
-          "Image": "images/subtitles/fire.png",
+          "Image": "images/satellitesIcons/aqua-m.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "AQUA-MEX",
+          "SubtitleText": "AQUA-MEX",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/aqua-mex.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "AQUA_M-M",
+          "SubtitleText": "AQUA_M-M",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/aqua-m-m.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "AQUA_M-T",
+          "SubtitleText": "AQUA_M-T",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/aqua-m-t.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "AQUA-T",
+          "SubtitleText": "AQUA-T",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/aqua-t.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "ATSR",
+          "SubtitleText": "ATSR",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/atsr.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "GOES-08",
+          "SubtitleText": "GOES-08",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/goes-08.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "GOES-10",
+          "SubtitleText": "GOES-10",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/goes-10.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "GOES-12",
+          "SubtitleText": "GOES-12",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/goes-12.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "GOES-13",
+          "SubtitleText": "GOES-13",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/goes-13.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "METEOSAT-02",
+          "SubtitleText": "METEOSAT-03",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/meteosat-02.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-12",
+          "SubtitleText": "NOAA-12",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-12.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-12D",
+          "SubtitleText": "NOAA-12D",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-12d.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-14",
+          "SubtitleText": "NOAA-14",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-14.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-15",
+          "SubtitleText": "NOAA-15",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-15.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-15D",
+          "SubtitleText": "NOAA-15D",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-15d.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-16",
+          "SubtitleText": "NOAA-16",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-16.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-16N",
+          "SubtitleText": "NOAA-16N",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-16n.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-17",
+          "SubtitleText": "NOAA-17",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-17.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-18",
+          "SubtitleText": "NOAA-18",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-18.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-18D",
+          "SubtitleText": "NOAA-18D",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-18d.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-19",
+          "SubtitleText": "NOAA-19",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-19.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NOAA-19D",
+          "SubtitleText": "NOAA-19D",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/noaa-19d.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NPP",
+          "SubtitleText": "NPP",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/npp.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "NPP_375",
+          "SubtitleText": "NPP_375",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/npp-375.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "TERRA-M",
+          "SubtitleText": "TERRA-M",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/terra-m.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "TERRA-MEX",
+          "SubtitleText": "TERRA-MEX",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/terra-mex.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "TERRA_M-M",
+          "SubtitleText": "TERRA_M-M",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/terra-m-m.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "TERRA_M-T",
+          "SubtitleText": "TERRA_M-T",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/terra-m-t.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "TERRA-T",
+          "SubtitleText": "TERRA-T",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/terra-t.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": "TRMM",
+          "SubtitleText": "TRMM",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/trmm.png",
           "MinResolution": 0,
           "MaxResolution": "Infinity"
         }
       ]
     }
   ],
+  "UseLayerGroupsInTheLayerExplorer": false,
+  "EnableAddAndRemoveLayers": false,
   "LayerGroups": [
     {
-      "Id": "camadas",
+      "Id": "layers",
       "Name": "Camadas",
       "Layers": [
         {
-          "Id": "BDQueimadas:focos_de_2016_04_01_a_2016_05_05",
+          "Id": "BDQueimadas:municipios_pnt",
+          "Name": "pnt",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 256
+        },
+        {
+          "Id": "BDQueimadas:focos",
           "Name": "Focos",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
           "MaxResolution": "Infinity",
-          "Time": null
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
         },
         {
-          "Id": "BDQueimadas:paises",
+          "Id": "BDQueimadas:paises_multi",
           "Name": "Países",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
           "Visible": true,
           "MinResolution": 0,
           "MaxResolution": "Infinity",
-          "Time": null
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
         },
         {
           "Id": "BDQueimadas:estados",
@@ -156,43 +460,107 @@
           "Visible": true,
           "MinResolution": 0,
           "MaxResolution": "Infinity",
-          "Time": null
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
         },
         {
-          "Id": "BDQueimadas:current_situation_states_from_2016_04_01_to_2016_05_05",
-          "Name": "Situação Atual - Estados",
+          "Id": "BDQueimadas:municipios",
+          "Name": "Municípios",
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
-          "Visible": false,
-          "MinResolution": 0.015,
-          "MaxResolution": 0.050,
-          "Time": null
-        },
-        {
-          "Id": "BDQueimadas:current_situation_countries_from_2016_04_01_to_2016_05_05",
-          "Name": "Situação Atual - Países",
-          "Url": "http://localhost:8080/geoserver/ows",
-          "ServerType": "geoserver",
-          "Visible": false,
-          "MinResolution": 0.025,
+          "Visible": true,
+          "MinResolution": 0,
           "MaxResolution": "Infinity",
-          "Time": null
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "BDQueimadas:current_situation_states",
+          "Name": "Focos-Total Espacial - Estados",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "BDQueimadas:current_situation_countries",
+          "Name": "Focos-Total Espacial - Países",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
         }
       ]
     },
     {
-      "Id": "imagens_satelite",
-      "Name": "Imagens de Satélite",
+      "Id": "satellites_images",
+      "Name": "Imagens de Satélites",
       "Layers": [
         {
-          "Id": "aqua_250m_truecolor",
-          "Name": "Modis Aqua {{INITIAL_DATE=YYYY/MM/DD}}",
+          "Id": "suomi_npp_250m_truecolor",
+          "Name": "Suomi NPP {{FINAL_DATE=YYYY/MM/DD}}",
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
           "Visible": true,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "goes",
+          "Name": "GOES {{FINAL_DATE=YYYY/MM/DD}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": true,
+          "AddsInTheStart": false,
+          "Buffer": null
+        },
+        {
+          "Id": "msg",
+          "Name": "MSG {{FINAL_DATE=YYYY/MM/DD}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": true,
+          "AddsInTheStart": false,
+          "Buffer": null
+        },
+        {
+          "Id": "aqua_250m_truecolor",
+          "Name": "Modis Aqua {{INITIAL_DATE=YYYY/MM/DD}}",
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": false,
+          "Buffer": null
         },
         {
           "Id": "terra_250m_truecolor",
@@ -202,37 +570,10 @@
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
-        },
-        {
-          "Id": "suomi_npp_250m_truecolor",
-          "Name": "Suomi NPP {{FINAL_DATE=YYYY/MM/DD}}",
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
-        },
-        {
-          "Id": "quicklook_noaa12",
-          "Name": "NOAA-12 {{FINAL_DATE=YYYY/MM/DD}}",
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
-        },
-        {
-          "Id": "quicklook_noaa15",
-          "Name": "NOAA-15 {{FINAL_DATE=YYYY/MM/DD}}",
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": false,
+          "Buffer": null
         },
         {
           "Id": "quicklook_noaa16",
@@ -242,7 +583,10 @@
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": false,
+          "Buffer": null
         },
         {
           "Id": "quicklook_noaa18",
@@ -252,7 +596,10 @@
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": false,
+          "Buffer": null
         },
         {
           "Id": "quicklook_noaa19",
@@ -262,13 +609,16 @@
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}"
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": false,
+          "Buffer": null
         }
       ]
     },
     {
-      "Id": "riscoFogo",
-      "Name": "Risco de Fogo",
+      "Id": "meteorology",
+      "Name": "Meteorologia",
       "Layers": [
         {
           "Id": "mrp0",
@@ -278,7 +628,29 @@
           "Visible": false,
           "MinResolution": 0,
           "MaxResolution": "Infinity",
-          "Time": null
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": false,
+          "Buffer": null
+        }
+      ]
+    },
+    {
+      "Id": "backgrounds",
+      "Name": "Planos de Fundo",
+      "Layers": [
+        {
+          "Id": "BDQueimadas:pyr_nasa",
+          "Name": "Plano de Fundo",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": true,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
         }
       ]
     }

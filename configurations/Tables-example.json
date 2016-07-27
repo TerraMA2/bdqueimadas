@@ -1,23 +1,24 @@
 {
   "Continents": {
-    "Schema": "public",
-    "TableName": "paises",
-    "IdFieldName": "unregion1",
-    "NameFieldName": "unregion1",
+    "Schema": "dados_geo",
+    "TableName": "continentes",
+    "IdFieldName": "id",
+    "NameFieldName": "nome",
     "GeometryFieldName": "geom"
   },
   "Countries": {
-    "Schema": "public",
+    "Schema": "dados_geo",
     "TableName": "paises",
     "IdFieldName": "id_0",
     "NameFieldName": "name_0",
     "BdqNameFieldName": "nome_bdq",
+    "ContinentFieldName": "continente_id",
     "GeometryFieldName": "geom"
   },
   "States": {
-    "Schema": "public",
+    "Schema": "dados_geo",
     "TableName": "estados",
-    "IdFieldName": "gid",
+    "IdFieldName": "complete_id",
     "NameFieldName": "name_1",
     "BdqNameFieldName": "nome_bdq",
     "GeometryFieldName": "geom"
@@ -27,11 +28,12 @@
     "TableName": "focos",
     "IdFieldName": "gid",
     "DateFieldName": "data",
-    "TimeFieldName": "horagmt",
+    "TimeFieldName": "hora",
     "SatelliteFieldName": "satelite",
     "CountryFieldName": "pais",
-    "StateFieldName": "uf",
+    "StateFieldName": "estado",
+    "BiomeFieldName": "bioma_brasileiro",
     "GeometryFieldName": "geom",
-    "DateFormat": "YYYYMMDD"
+    "DateFormat": "YYYY-MM-DD"
   }
 }
