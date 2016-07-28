@@ -70,7 +70,7 @@ var Proxy = function(io) {
           month = ((date.getMonth() + 1) < 10) ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1),
           day = (date.getDate() < 10) ? "0" + date.getDate() : date.getDate();
 
-      var url = memberPiwikConfigurations.Url + "?module=API&method=API.getBulkRequest&format=json&token_auth=" + memberPiwikConfigurations.TokenAuth + "&urls[0]=method=VisitsSummary.get&idSite=" + memberPiwikConfigurations.IdSite + "&period=range&date=2016-07-25," + year + "-" + month + "-" + day;
+      var url = memberPiwikConfigurations.Url + "/index.php?module=API&method=API.getBulkRequest&format=json&token_auth=" + memberPiwikConfigurations.TokenAuth + "&urls[0]=method=VisitsSummary.get&idSite=" + memberPiwikConfigurations.IdSite + "&period=range&date=2016-07-25," + year + "-" + month + "-" + day;
 
       // Http request to the Piwik url
       memberHttp.get(url, function(resp) {
