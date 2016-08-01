@@ -517,39 +517,50 @@ define(
           "LayerGroupsNames": []
         };
 
-        $.each(Map.getNotAddedLayers(), function(i, layer) {
-          var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer.Name) + "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span></li>";
+        if(Map.getNotAddedLayers().length > 0) {
+          $.each(Map.getNotAddedLayers(), function(i, layer) {
+            var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer.Name) + "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span></li>";
 
-          if(layerGroups[layer.LayerGroup.Id] !== undefined) {
-            layerGroups[layer.LayerGroup.Id] += layerHtml;
-          } else {
-            layerGroups[layer.LayerGroup.Id] = layerHtml;
+            if(layerGroups[layer.LayerGroup.Id] !== undefined) {
+              layerGroups[layer.LayerGroup.Id] += layerHtml;
+            } else {
+              layerGroups[layer.LayerGroup.Id] = layerHtml;
 
-            layerGroups.LayerGroupsIds.push(layer.LayerGroup.Id);
-            layerGroups.LayerGroupsNames.push(layer.LayerGroup.Name);
-          }
-        });
+              layerGroups.LayerGroupsIds.push(layer.LayerGroup.Id);
+              layerGroups.LayerGroupsNames.push(layer.LayerGroup.Name);
+            }
+          });
 
-        var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
-        availableLayers += "<div id=\"available-layers\">";
+          var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
+          availableLayers += "<div id=\"available-layers\">";
 
-        $.each(layerGroups.LayerGroupsIds, function(i, layerGroupId) {
-          availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroupId + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
-          availableLayers += "<ul id=\"layer-group-" + layerGroupId + "\">" + layerGroups[layerGroupId] + "</ul>";
-        });
+          $.each(layerGroups.LayerGroupsIds, function(i, layerGroupId) {
+            availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroupId + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
+            availableLayers += "<ul id=\"layer-group-" + layerGroupId + "\">" + layerGroups[layerGroupId] + "</ul>";
+          });
 
-        availableLayers += "</div>";
+          availableLayers += "</div>";
 
-        $('#available-layers li').hide();
+          $('#available-layers li').hide();
 
-        vex.dialog.alert({
-          message: availableLayers,
-          buttons: [{
-            type: 'submit',
-            text: 'Fechar',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+          vex.dialog.alert({
+            message: availableLayers,
+            buttons: [{
+              type: 'submit',
+              text: 'Fechar',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        } else {
+          vex.dialog.alert({
+            message: '<p class="text-center">Não existem camadas disponíveis para adicionar ao mapa!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        }
       });
 
       $(document).on('click', '#available-layers > span.span-group-name', function(ev) {

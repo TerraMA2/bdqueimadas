@@ -84,16 +84,13 @@ define(
           }
         }
       } else {
-        if(layer.AddsInTheStart) {
-          addLayerToMap(layer, parentId, true);
-        } else {
-          layer["LayerGroup"] = {
-            "Id": parentId,
-            "Name": parentName
-          };
+        layer["LayerGroup"] = {
+          "Id": parentId,
+          "Name": parentName
+        };
 
-          addNotAddedLayer(layer);
-        }
+        if(layer.AddsInTheStart) addLayerToMap(layer, parentId, true);
+        else addNotAddedLayer(layer);
       }
     };
 

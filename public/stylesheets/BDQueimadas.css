@@ -612,6 +612,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
 
+.terrama2-layerexplorer-checkbox-span { cursor: move !important; }
+
 /* AdminLTEQueimadas general adjustments */
 
 .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu { display: none !important; }
