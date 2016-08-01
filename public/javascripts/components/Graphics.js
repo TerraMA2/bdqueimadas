@@ -127,9 +127,9 @@ define(
                            (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
                            Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
 
-         var biomes = useGraphicsFilter ?
-                      (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
-                      Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
+          var biomes = useGraphicsFilter ?
+                       (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
+                       Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
 
           var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
 
