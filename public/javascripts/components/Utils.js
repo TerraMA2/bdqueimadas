@@ -254,6 +254,33 @@ define(function() {
           }
 
           filterDateTo.val('');
+
+        } else if(filterDateFrom.datepicker('getDate') > new Date()) {
+          if(showAlerts) {
+            vex.dialog.alert({
+              message: '<p class="text-center">Data inicial posterior à atual - corrigir!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+
+          filterDateFrom.val('');
+        } else if(filterDateTo.datepicker('getDate') > new Date()) {
+          if(showAlerts) {
+            vex.dialog.alert({
+              message: '<p class="text-center">Data final posterior à atual - corrigir!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+
+          filterDateTo.val('');
         } else {
           returnValue = [filterDateFrom.val(), filterDateTo.val()];
         }

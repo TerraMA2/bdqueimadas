@@ -253,6 +253,15 @@ define(
                   $("#filter-error-export").text('Data inicial inválida!');
                 } else if($("#filter-date-to-export").val() === "") {
                   $("#filter-error-export").text('Data final inválida!');
+                } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
+                  $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
+                  $("#filter-date-to-export").val('');
+                } else if($("#filter-date-from-export").datepicker('getDate') > new Date()) {
+                  $("#filter-error-export").text('Data inicial posterior à atual - corrigir!');
+                  $("#filter-date-from-export").val('');
+                } else if($("#filter-date-to-export").datepicker('getDate') > new Date()) {
+                  $("#filter-error-export").text('Data final posterior à atual - corrigir!');
+                  $("#filter-date-to-export").val('');
                 } else if($('#filter-satellite-export').val() === null) {
                   $("#filter-error-export").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
@@ -866,7 +875,10 @@ define(
       });
 
       Utils.getSocket().on('piwikDataResponse', function(result) {
-        $('#number-of-accesses').text(result.piwikData[0].nb_visits);
+        if(result.piwikData[0] !== undefined && result.piwikData[0] !== null && result.piwikData[0].nb_visits !== undefined && result.piwikData[0].nb_visits !== null) {
+          $('#number-of-accesses > span').text(result.piwikData[0].nb_visits);
+          $('#number-of-accesses').show();
+        }
       });
 
       Utils.getSocket().on('checkFiresCountResponse', function(result) {
