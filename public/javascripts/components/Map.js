@@ -53,33 +53,51 @@ define(
     var addLayersToMap = function() {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      if(configuration.LayerGroups.length > 0) {
-        for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
-          for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
-            configuration.LayerGroups[i].Layers[j]["LayerGroup"] = {
-              "Id": configuration.LayerGroups[i].Id,
-              "Name": configuration.LayerGroups[i].Name
-            };
-
-            if(configuration.LayerGroups[i].Layers[j].AddsInTheStart) {
-              if(configuration.UseLayerGroupsInTheLayerExplorer) {
-                if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
-                  TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
-
-                addLayerToMap(configuration.LayerGroups[i].Layers[j], configuration.LayerGroups[i].Id, true);
-              } else {
-                addLayerToMap(configuration.LayerGroups[i].Layers[j], 'terrama2-layerexplorer', true);
-              }
-            } else {
-              addNotAddedLayer(configuration.LayerGroups[i].Layers[j]);
-            }
-          }
+      if(configuration.Layers.length > 0) {
+        for(var i = configuration.Layers.length - 1; i >= 0; i--) {
+          processLayer(configuration.Layers[i], 'terrama2-layerexplorer', 'Camadas Principais');
         }
       }
 
       if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer', true))
         TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer', true);
+
+      $('.children:empty').parent().hide();
     };
+
+    // new
+
+    var processLayer = function(layer, parentId, parentName) {
+      var configuration = Utils.getConfigurations().mapConfigurations;
+
+      if(layer.LayerGroup) {
+        if(configuration.UseLayerGroupsInTheLayerExplorer) {
+          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId);
+        }
+
+        for(var j = layer.Layers.length - 1; j >= 0; j--) {
+          if(configuration.UseLayerGroupsInTheLayerExplorer) {
+            processLayer(layer.Layers[j], layer.Id, layer.Name);
+          } else {
+            processLayer(layer.Layers[j], parentId, parentName);
+          }
+        }
+      } else {
+        if(layer.AddsInTheStart) {
+          addLayerToMap(layer, parentId, true);
+        } else {
+          layer["LayerGroup"] = {
+            "Id": parentId,
+            "Name": parentName
+          };
+
+          addNotAddedLayer(layer);
+        }
+      }
+    };
+
+    // new
 
     /**
      * Adds a given layer to the Map and to the LayerExplorer.

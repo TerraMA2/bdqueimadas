@@ -486,6 +486,10 @@ define(
 
       $(document).on('click', '.remove-layer', function() {
         Map.removeLayerFromMap($(this).parent().data('layerid'));
+
+        $('.children:empty').parent().find(' > span > div').addClass('terrama2-layerexplorer-plus').removeClass('terrama2-layerexplorer-minus').html('+');
+        $('.children:empty').parent().removeClass('open');
+        $('.children:empty').parent().hide();
       });
 
       $(document).on('click', '.new-layer', function() {
@@ -497,6 +501,7 @@ define(
           if(layerId === layer.Id) {
             if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
               Map.addLayerToMap(layer, layer.LayerGroup.Id, false);
+              $('#' + layer.LayerGroup.Id.replace(':', '')).show();
             } else {
               Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
             }
