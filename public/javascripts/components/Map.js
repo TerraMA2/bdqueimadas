@@ -65,8 +65,17 @@ define(
       $('.children:empty').parent().hide();
     };
 
-    // new
-
+    /**
+     * Recursive function that processes a given layer or layer group.
+     * @param {object} layer - Object with the layer data
+     * @param {string} parentId - Parent id
+     * @param {string} parentName - Parent name
+     *
+     * @private
+     * @function processLayer
+     * @memberof Map
+     * @inner
+     */
     var processLayer = function(layer, parentId, parentName) {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
@@ -93,8 +102,6 @@ define(
         else addNotAddedLayer(layer);
       }
     };
-
-    // new
 
     /**
      * Adds a given layer to the Map and to the LayerExplorer.
