@@ -473,7 +473,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .remove-layer {
   float: right;
-  margin-top: -28px;
+  margin-top: -16px;
   color: #555;
   cursor: pointer;
   margin-right: 2px;
@@ -608,10 +608,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 #terrama2-layerexplorer li { padding: 2px 0 !important; }
 
-#terrama2-layerexplorer li > span {
-  padding: 0px !important;
-  padding-left: 12px !important;
-}
+#terrama2-layerexplorer li > span { padding: 0px 0px 0px 10.5px !important; }
 
 .terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
 
