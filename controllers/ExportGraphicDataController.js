@@ -61,24 +61,51 @@ var ExportGraphicDataController = function(app) {
     memberGraphics.getFiresTotalCount(request.query.dateFrom, request.query.dateTo, filterRules, options, function(err, firesTotalCount) {
       if(err) return console.error(err);
 
-      memberGraphics.getFiresCount(request.query.dateFrom, request.query.dateTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+      if(graphicConfigurations.Key === "week") {
+        memberGraphics.getFiresCountByWeek(request.query.dateFrom, request.query.dateTo, filterRules, options, function(err, firesCount) {
+          if(err) return console.error(err);
+
+          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateFrom, request.query.dateTo, response);
+        });
+      } else {
+        memberGraphics.getFiresCount(request.query.dateFrom, request.query.dateTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+          if(err) return console.error(err);
+
+          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateFrom, request.query.dateTo, response);
+        });
+      }
+    });
+  };
+
+  /**
+   * Downloads the csv file.
+   * @param {json} firesTotalCount - Total fires count for the given filters
+   * @param {json} firesCount - Fires count for the given filters grouped by the given key
+   * @param {string} y - Y label of the graphic
+   * @param {string} key - Graphic key
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {object} response - Response object
+   *
+   * @private
+   * @function downloadCsvFiresCount
+   * @memberof ExportGraphicDataController
+   * @inner
+   */
+  var downloadCsvFiresCount = function(firesTotalCount, firesCount, y, key, dateFrom, dateTo, response) {
+    var csv = createCsvFiresCount(firesTotalCount, firesCount, y);
+    var path = require('path');
+
+    require('crypto').randomBytes(24, function(err, buffer) {
+      var csvPath = path.join(__dirname, '../tmp/graphic-csv-' + buffer.toString('hex') + '.csv');
+
+      memberFs.writeFile(csvPath, csv, 'ascii', function(err) {
         if(err) return console.error(err);
 
-        var csv = createCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y);
-        var path = require('path');
+        response.download(csvPath, 'Focos por ' + key + ' - de ' + dateFrom + ' a ' + dateTo + '.csv', function(err) {
+          if(err) return console.error(err);
 
-        require('crypto').randomBytes(24, function(err, buffer) {
-          var csvPath = path.join(__dirname, '../tmp/graphic-csv-' + buffer.toString('hex') + '.csv');
-
-          memberFs.writeFile(csvPath, csv, 'ascii', function(err) {
-            if(err) return console.error(err);
-
-            response.download(csvPath, 'Focos por ' + graphicConfigurations.Key + ' - de ' + request.query.dateFrom + ' a ' + request.query.dateTo + '.csv', function(err) {
-              if(err) return console.error(err);
-
-              memberFs.unlink(csvPath);
-            });
-          });
+          memberFs.unlink(csvPath);
         });
       });
     });
