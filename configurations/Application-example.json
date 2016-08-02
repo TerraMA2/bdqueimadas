@@ -2,6 +2,7 @@
   "BaseUrl": "/",
   "InitialContinentToFilter": 8,
   "DatePickerDefaultOptions": {
+    "maxDate": 0,
     "markerClassName": "hasDatepicker",
     "dateFormat": "yy/mm/dd",
     "dayNames": ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"],

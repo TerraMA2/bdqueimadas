@@ -696,7 +696,7 @@ define(
      * @inner
      */
     var applyCurrentSituationFilter = function(begin, end, countries, satellites, biomes, layer) {
-      var currentSituationFilter = "begin:'" + begin + "';end:'" + end + "'";
+      var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
         currentSituationFilter += ";countries:" + Utils.replaceAll(countries.toString(), ',', '\\,');

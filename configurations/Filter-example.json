@@ -26,9 +26,9 @@
       "BDQueimadas:current_situation_countries",
       "BDQueimadas:current_situation_states"
     ],
-    "DateFormat": "YYYYMMDD",
-    "InitialDate": "{{-|1|d=YYYYMMDD}}",
-    "FinalDate": "{{0=YYYYMMDD}}"
+    "DateFormat": "YYYY-MM-DD",
+    "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
+    "FinalDate": "{{0=YYYY-MM-DD}}"
   },
   "CountriesLayer": {
     "Id": "BDQueimadas:paises_multi",
