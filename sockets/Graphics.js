@@ -37,11 +37,19 @@ var Graphics = function(io) {
       memberGraphics.getFiresTotalCount(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesTotalCount) {
         if(err) return console.error(err);
 
-        memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
-          if(err) return console.error(err);
+        if(json.key === "week") {
+          memberGraphics.getFiresCountByWeek(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesCount) {
+            if(err) return console.error(err);
 
-          client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
-        });
+            client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
+          });
+        } else {
+          memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
+            if(err) return console.error(err);
+
+            client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
+          });
+        }
       });
     });
   });
