@@ -8,6 +8,8 @@
  *
  * @property {object} memberGraphics - 'Graphics' model.
  * @property {object} memberFs - 'fs' module.
+ * @property {object} memberPath - 'path' module.
+ * @property {object} memberGraphicsConfigurations - Graphics configuration.
  */
 var ExportGraphicDataController = function(app) {
 
@@ -15,6 +17,10 @@ var ExportGraphicDataController = function(app) {
   var memberGraphics = new (require('../models/Graphics.js'))();
   // 'fs' module
   var memberFs = require('fs');
+  // 'path' module
+  var memberPath = require('path');
+  // Graphics configuration
+  var memberGraphicsConfigurations = require(memberPath.join(__dirname, '../configurations/Graphics.json'));
 
   /**
    * Processes the request and returns a response.
@@ -36,15 +42,29 @@ var ExportGraphicDataController = function(app) {
     if(request.query.extent !== '') options.extent = request.query.extent.split(',');
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
-    if(request.query.limit !== '' && request.query.limit !== null && request.query.limit !== 'null') options.limit = request.query.limit;
 
-    memberGraphics.getFiresTotalCount(request.query.dateFrom, request.query.dateTo, options, function(err, firesTotalCount) {
+    var graphicConfigurations = getGraphicConfigurations(request.query.id);
+
+    if(graphicConfigurations.Limit !== null) options.limit = graphicConfigurations.Limit;
+    options.y = graphicConfigurations.Y;
+
+    var filterRules = {
+      ignoreCountryFilter: graphicConfigurations.IgnoreCountryFilter,
+      ignoreStateFilter: graphicConfigurations.IgnoreStateFilter,
+      ignoreExtent: graphicConfigurations.IgnoreExtent,
+      showOnlyIfThereIsACountryFiltered: graphicConfigurations.ShowOnlyIfThereIsACountryFiltered,
+      showOnlyIfThereIsNoCountryFiltered: graphicConfigurations.ShowOnlyIfThereIsNoCountryFiltered,
+      showOnlyIfThereIsAStateFiltered: graphicConfigurations.ShowOnlyIfThereIsAStateFiltered,
+      showOnlyIfThereIsNoStateFiltered: graphicConfigurations.ShowOnlyIfThereIsNoStateFiltered
+    };
+
+    memberGraphics.getFiresTotalCount(request.query.dateFrom, request.query.dateTo, filterRules, options, function(err, firesTotalCount) {
       if(err) return console.error(err);
 
-      memberGraphics.getFiresCount(request.query.dateFrom, request.query.dateTo, request.query.key, options, function(err, firesCount) {
+      memberGraphics.getFiresCount(request.query.dateFrom, request.query.dateTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
         if(err) return console.error(err);
 
-        var csv = createCsvFiresCount(firesTotalCount, firesCount);
+        var csv = createCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y);
         var path = require('path');
 
         require('crypto').randomBytes(24, function(err, buffer) {
@@ -53,7 +73,7 @@ var ExportGraphicDataController = function(app) {
           memberFs.writeFile(csvPath, csv, 'ascii', function(err) {
             if(err) return console.error(err);
 
-            response.download(csvPath, 'Focos por ' + request.query.key + ' - de ' + request.query.dateFrom + ' a ' + request.query.dateTo + '.csv', function(err) {
+            response.download(csvPath, 'Focos por ' + graphicConfigurations.Key + ' - de ' + request.query.dateFrom + ' a ' + request.query.dateTo + '.csv', function(err) {
               if(err) return console.error(err);
 
               memberFs.unlink(csvPath);
@@ -68,20 +88,48 @@ var ExportGraphicDataController = function(app) {
    * Creates the csv file content for the fires count graphic exportation.
    * @param {json} firesTotalCount - Total fires count for the given filters
    * @param {json} firesCount - Fires count for the given filters grouped by the given key
+   * @param {string} y - Y label of the graphic
    *
    * @private
    * @function createCsvFiresCount
    * @memberof ExportGraphicDataController
    * @inner
    */
-  var createCsvFiresCount = function(firesTotalCount, firesCount) {
+  var createCsvFiresCount = function(firesTotalCount, firesCount, y) {
     var csv = "Campo,Valor,Percentagem do Total de Focos\n";
+    var yFields = y.match(/[^{\}]+(?=})/g);
 
     firesCount.rows.forEach(function(item) {
-      csv += ((item.key !== null && item.key !== "") ? item.key : "Não Identificado") + ',' + item.count + ',' + ((parseFloat(item.count) / parseFloat(firesTotalCount.rows[0].count)) * 100).toFixed(2) + '%\n';
+      var label = y;
+
+      for(var i = 0, count = yFields.length; i < count; i++) {
+        var field = (item[yFields[i]] !== null && item[yFields[i]] !== undefined && item[yFields[i]] !== "" ? item[yFields[i]]: "Não Identificado");
+
+        label = label.replace("{" + yFields[i] + "}", field);
+      }
+
+      csv += label + ',' + item.count + ',' + ((parseFloat(item.count) / parseFloat(firesTotalCount.rows[0].count)) * 100).toFixed(2) + '%\n';
     });
 
     return csv;
+  };
+
+  /**
+   * Returns the graphic configurations accordingly with given id.
+   * @param {string} id - Graphic id
+   * @returns {json} configurations - Graphic configurations
+   *
+   * @private
+   * @function getGraphicConfigurations
+   * @memberof ExportGraphicDataController
+   * @inner
+   */
+  var getGraphicConfigurations = function(id) {
+    for(var i = 0, count = memberGraphicsConfigurations.FiresCount.length; i < count; i++) {
+      if(id === memberGraphicsConfigurations.FiresCount[i].Id) {
+        return memberGraphicsConfigurations.FiresCount[i];
+      }
+    }
   };
 
   return exportGraphicDataController;

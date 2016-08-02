@@ -31,6 +31,7 @@ var Graphics = function() {
    * @param {string} dateFrom - Initial date
    * @param {string} dateTo - Final date
    * @param {string} key - Key
+   * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
@@ -39,7 +40,7 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCount = function(dateFrom, dateTo, key, options, callback) {
+  this.getFiresCount = function(dateFrom, dateTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -47,8 +48,22 @@ var Graphics = function() {
     memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
+        var fields = key + ", count(*) as count";
+        var group = key;
+
+        if(options.y !== undefined) {
+          var yFields = options.y.match(/[^{\}]+(?=})/g);
+          var index = yFields.indexOf(key);
+          if(index > -1) yFields.splice(index, 1);
+
+          if(yFields.length > 0) {
+            fields += ", " + yFields.toString();
+            group += ", " + yFields.toString();
+          }
+        }
+
         // Creation of the query
-        var query = "select " + key + " as key, count(*) as count from " +
+        var query = "select " + fields + " from " +
         memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
@@ -80,13 +95,13 @@ var Graphics = function() {
         }
 
         // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
+        if(options.extent !== undefined && !filterRules.ignoreExtent) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
+        if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
@@ -99,7 +114,7 @@ var Graphics = function() {
         }
 
         // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
+        if(options.states !== undefined && !filterRules.ignoreStateFilter) {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
@@ -111,7 +126,7 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        query += " group by " + key + " order by count desc";
+        query += " group by " + group + " order by count desc, " + key + " asc";
 
         // If the 'options.limit' parameter exists, a limit clause is created
         if(options.limit !== undefined) {
@@ -133,6 +148,7 @@ var Graphics = function() {
    * Returns the count of the fires.
    * @param {string} dateFrom - Initial date
    * @param {string} dateTo - Final date
+   * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
@@ -141,7 +157,7 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresTotalCount = function(dateFrom, dateTo, options, callback) {
+  this.getFiresTotalCount = function(dateFrom, dateTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -181,13 +197,13 @@ var Graphics = function() {
         }
 
         // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
+        if(options.extent !== undefined && !filterRules.ignoreExtent) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
+        if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
@@ -200,7 +216,7 @@ var Graphics = function() {
         }
 
         // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
+        if(options.states !== undefined && !filterRules.ignoreStateFilter) {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
