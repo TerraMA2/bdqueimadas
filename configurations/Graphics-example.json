@@ -83,6 +83,20 @@
       "ShowOnlyIfThereIsNoCountryFiltered": false,
       "ShowOnlyIfThereIsAStateFiltered": false,
       "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Id": "firesByWeek",
+      "Y": "{start} - {end}",
+      "Key": "week",
+      "Title": "Focos por Semana",
+      "Limit": null,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreExtent": false,
+      "ShowOnlyIfThereIsACountryFiltered": false,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     }
   ],
   "TimeSeries": {
