@@ -1,29 +1,88 @@
 {
   "FiresCount": [
     {
+      "Id": "firesByCountry",
+      "Y": "{pais}",
       "Key": "pais",
       "Title": "Focos por País",
-      "Limit": null
+      "Limit": null,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreExtent": false,
+      "ShowOnlyIfThereIsACountryFiltered": false,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Id": "firesByState",
+      "Y": "{estado}",
       "Key": "estado",
       "Title": "Focos por Estado",
-      "Limit": null
+      "Limit": null,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreExtent": false,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Id": "firesByCity",
+      "Y": "{municipio}",
       "Key": "municipio",
       "Title": "Focos por Município",
-      "Limit": null
+      "Limit": null,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreExtent": false,
+      "ShowOnlyIfThereIsACountryFiltered": false,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": true,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Id": "firesByBiome",
+      "Y": "{bioma_brasileiro}",
       "Key": "bioma_brasileiro",
       "Title": "Focos por Bioma",
-      "Limit": null
+      "Limit": null,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreExtent": false,
+      "ShowOnlyIfThereIsACountryFiltered": false,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Id": "firesBySatellite",
+      "Y": "{satelite}",
       "Key": "satelite",
       "Title": "Focos por Satélite",
-      "Limit": null
+      "Limit": null,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreExtent": false,
+      "ShowOnlyIfThereIsACountryFiltered": false,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Id": "citiesWithTheBiggestNumberOfFires",
+      "Y": "{municipio} / {estado}",
+      "Key": "municipio",
+      "Title": "Municípios com mais focos (<= 30)",
+      "Limit": 30,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": true,
+      "IgnoreExtent": true,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     }
   ],
   "TimeSeries": {

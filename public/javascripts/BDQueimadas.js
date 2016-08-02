@@ -441,7 +441,7 @@ define(
       });
 
       $('#graph-box').on('click', '.export-graphic-data', function() {
-        Graphics.exportGraphicData($(this).data('key'), $(this).data('limit'));
+        Graphics.exportGraphicData($(this).data('id'));
       });
 
       // Map Events
