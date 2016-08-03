@@ -18,6 +18,34 @@ define(
     // Layers not present in the map
     var memberNotAddedLayers = [];
 
+    // new
+
+    var memberVisibleLayers = [];
+
+    var addVisibleLayer = function(layerId, elementId, parentId, name) {
+      memberVisibleLayers.push({
+        layerId: layerId,
+        elementId: elementId,
+        parentId: parentId,
+        name: name
+      });
+    };
+
+    var removeVisibleLayer = function(layerId) {
+      for(var i = 0, count = memberVisibleLayers.length; i < count; i++) {
+        if(memberVisibleLayers[i].layerId === layerId) {
+          memberVisibleLayers.splice(i, 1);
+          break;
+        }
+      }
+    };
+
+    var getVisibleLayers = function() {
+      return memberVisibleLayers;
+    };
+
+    // new
+
     /**
      * Returns the array of layers currently present in the map.
      * @returns {array} memberLayers - Layers currently present in the map
@@ -134,6 +162,8 @@ define(
 
       if(Utils.getConfigurations().mapConfigurations.EnableAddAndRemoveLayers)
         $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
+
+      if(layer.Visible) addVisibleLayer(layer.Id, layer.Id.replace(':', ''), parent, layerName);
     };
 
     /**
@@ -438,6 +468,9 @@ define(
     };
 
     return {
+      addVisibleLayer: addVisibleLayer,
+      removeVisibleLayer: removeVisibleLayer,
+      getVisibleLayers: getVisibleLayers,
       getLayers: getLayers,
       getNotAddedLayers: getNotAddedLayers,
       addLayerToMap: addLayerToMap,

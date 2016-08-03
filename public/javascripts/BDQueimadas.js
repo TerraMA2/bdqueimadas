@@ -662,6 +662,27 @@ define(
       TerraMA2WebComponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
         Map.setSubtitlesVisibility(layerId);
       });
+
+      // new
+
+      $('#terrama2-layerexplorer').on('click', 'input.terrama2-layerexplorer-checkbox', function(ev) {
+        if($(this).is(":checked")) {
+          Map.addVisibleLayer(
+            $(this).parent().data('layerid'),
+            $(this).parent().attr('id'),
+            $(this).parent().data('parentid'),
+            $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html()
+          );
+        } else {
+          Map.removeVisibleLayer($(this).parent().data('layerid'));
+        }
+
+        console.log(Map.getVisibleLayers());
+
+        ev.stopPropagation();
+      });
+
+      // new
     };
 
     /**
