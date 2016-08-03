@@ -241,6 +241,9 @@ define(function() {
       if(filterDateFrom.val().length === 0 && filterDateTo.val().length === 0) {
         returnValue = [];
       } else {
+        var timeDiffBetweenDates = Math.abs(filterDateTo.datepicker('getDate').getTime() - filterDateFrom.datepicker('getDate').getTime());
+        var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+
         if(filterDateFrom.datepicker('getDate') > filterDateTo.datepicker('getDate')) {
           if(showAlerts) {
             vex.dialog.alert({
@@ -254,7 +257,6 @@ define(function() {
           }
 
           filterDateTo.val('');
-
         } else if(filterDateFrom.datepicker('getDate') > new Date()) {
           if(showAlerts) {
             vex.dialog.alert({
@@ -280,6 +282,20 @@ define(function() {
             });
           }
 
+          filterDateTo.val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          if(showAlerts) {
+            vex.dialog.alert({
+              message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
+          }
+
+          filterDateFrom.val('');
           filterDateTo.val('');
         } else {
           returnValue = [filterDateFrom.val(), filterDateTo.val()];

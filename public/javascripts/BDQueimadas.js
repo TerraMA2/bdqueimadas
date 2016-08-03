@@ -249,6 +249,13 @@ define(
               click: function() {
                 $("#filter-error-export").text('');
 
+                if($("#filter-date-to-export").datepicker('getDate') !== null && $("#filter-date-from-export").datepicker('getDate') !== null) {
+                  var timeDiffBetweenDates = Math.abs($("#filter-date-to-export").datepicker('getDate').getTime() - $("#filter-date-from-export").datepicker('getDate').getTime());
+                  var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+                } else {
+                  var diffDaysBetweenDates = 0;
+                }
+
                 if($("#filter-date-from-export").val() === "") {
                   $("#filter-error-export").text('Data inicial inválida!');
                 } else if($("#filter-date-to-export").val() === "") {
@@ -261,6 +268,10 @@ define(
                   $("#filter-date-from-export").val('');
                 } else if($("#filter-date-to-export").datepicker('getDate') > new Date()) {
                   $("#filter-error-export").text('Data final posterior à atual - corrigir!');
+                  $("#filter-date-to-export").val('');
+                } else if(diffDaysBetweenDates >= 365) {
+                  $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
+                  $("#filter-date-from-export").val('');
                   $("#filter-date-to-export").val('');
                 } else if($('#filter-satellite-export').val() === null) {
                   $("#filter-error-export").text('Selecione algum satélite!');
@@ -325,8 +336,19 @@ define(
           var dateFrom = $('#filter-date-from-export').datepicker('getDate');
           var dateTo = $('#filter-date-to-export').datepicker('getDate');
 
+          if(dateTo !== null && dateFrom !== null) {
+            var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+            var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+          } else {
+            var diffDaysBetweenDates = 0;
+          }
+
           if(dateFrom === null) {
             $("#filter-error-export").text('A data inicial deve ser preenchida primeiro!');
+            $("#filter-date-to-export").val('');
+          } else if(diffDaysBetweenDates >= 365) {
+            $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
+            $("#filter-date-from-export").val('');
             $("#filter-date-to-export").val('');
           } else {
             if(dateFrom > dateTo && dateTo !== null) {
@@ -877,7 +899,7 @@ define(
             $('#feature-info-box').dialog({
               dialogClass: "feature-info-box",
               title: (featureInfo.features.length > 1 ? "Atributos dos focos" : "Atributos do foco"),
-              width: 290,
+              width: 300,
               height: 370,
               modal: false,
               resizable: true,
@@ -898,14 +920,14 @@ define(
       });
 
       Utils.getSocket().on('checkFiresCountResponse', function(result) {
-        if(result.firesCount.rows[0].count >= 2000000) {
-          $('#filter-satellite').val(Filter.getSatellites());
-          $('#filter-biome').val(Filter.getBiomes());
+        if(result.firesCount.rows[0].count >= 200000) {
+          //$('#filter-satellite').val(Filter.getSatellites());
+          //$('#filter-biome').val(Filter.getBiomes());
 
-          Filter.updateDatesToCurrent();
+          //Filter.updateDatesToCurrent();
 
           vex.dialog.alert({
-            message: '<p class="text-center">O número de focos para esse filtro ultrapassa o limite, diminua o período filtrado!</p>',
+            message: '<p class="text-center">Atenção! O número de focos para esse filtro é alto, esse procedimento pode demorar.</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
@@ -936,6 +958,13 @@ define(
         var dateFrom = $('#filter-date-from').datepicker('getDate');
         var dateTo = $('#filter-date-to').datepicker('getDate');
 
+        if(dateTo !== null && dateFrom !== null) {
+          var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+        } else {
+          var diffDaysBetweenDates = 0;
+        }
+
         if(dateFrom === null) {
           vex.dialog.alert({
             message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
@@ -946,6 +975,18 @@ define(
             }]
           });
 
+          $("#filter-date-to").val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          vex.dialog.alert({
+            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#filter-date-from').val('');
           $("#filter-date-to").val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
@@ -971,6 +1012,13 @@ define(
         var dateFrom = $('#filter-date-from-attributes-table').datepicker('getDate');
         var dateTo = $('#filter-date-to-attributes-table').datepicker('getDate');
 
+        if(dateTo !== null && dateFrom !== null) {
+          var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+        } else {
+          var diffDaysBetweenDates = 0;
+        }
+
         if(dateFrom === null) {
           vex.dialog.alert({
             message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
@@ -982,6 +1030,18 @@ define(
           });
 
           $("#filter-date-to-attributes-table").val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          vex.dialog.alert({
+            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#filter-date-from-attributes-table').val('');
+          $('#filter-date-to-attributes-table').val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
@@ -1006,6 +1066,13 @@ define(
         var dateFrom = $('#filter-date-from-graphics').datepicker('getDate');
         var dateTo = $('#filter-date-to-graphics').datepicker('getDate');
 
+        if(dateTo !== null && dateFrom !== null) {
+          var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+        } else {
+          var diffDaysBetweenDates = 0;
+        }
+
         if(dateFrom === null) {
           vex.dialog.alert({
             message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
@@ -1017,6 +1084,18 @@ define(
           });
 
           $("#filter-date-to-graphics").val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          vex.dialog.alert({
+            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#filter-date-from-graphics').val('');
+          $('#filter-date-to-graphics').val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
