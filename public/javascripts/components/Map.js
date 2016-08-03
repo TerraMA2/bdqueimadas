@@ -8,6 +8,7 @@
  *
  * @property {array} memberLayers - Layers currently present in the map.
  * @property {array} memberNotAddedLayers - Layers not present in the map.
+ * @property {array} memberVisibleLayers - Currently visible layers.
  */
 define(
   ['components/Utils', 'TerraMA2WebComponents'],
@@ -17,34 +18,8 @@ define(
     var memberLayers = [];
     // Layers not present in the map
     var memberNotAddedLayers = [];
-
-    // new
-
+    // Currently visible layers
     var memberVisibleLayers = [];
-
-    var addVisibleLayer = function(layerId, elementId, parentId, name) {
-      memberVisibleLayers.push({
-        layerId: layerId,
-        elementId: elementId,
-        parentId: parentId,
-        name: name
-      });
-    };
-
-    var removeVisibleLayer = function(layerId) {
-      for(var i = 0, count = memberVisibleLayers.length; i < count; i++) {
-        if(memberVisibleLayers[i].layerId === layerId) {
-          memberVisibleLayers.splice(i, 1);
-          break;
-        }
-      }
-    };
-
-    var getVisibleLayers = function() {
-      return memberVisibleLayers;
-    };
-
-    // new
 
     /**
      * Returns the array of layers currently present in the map.
@@ -68,6 +43,63 @@ define(
      */
     var getNotAddedLayers = function() {
       return memberNotAddedLayers;
+    };
+
+    /**
+     * Adds a layer to the visible layers array.
+     * @param {string} layerId - Layer id
+     * @param {string} elementId - Html element id
+     * @param {string} parentId - Parent id
+     * @param {string} name - Layer name
+     *
+     * @function addVisibleLayer
+     * @memberof Map
+     * @inner
+     */
+    var addVisibleLayer = function(layerId, elementId, parentId, name) {
+      memberVisibleLayers.push({
+        layerId: layerId,
+        elementId: elementId,
+        parentId: parentId,
+        name: name
+      });
+
+      if($('#layers-infos > div').width() > 0) {
+        $.event.trigger({type: "updateMapInformationsBox"});
+      }
+    };
+
+    /**
+     * Removes a layer from the visible layers array.
+     * @param {string} layerId - Layer id
+     *
+     * @function removeVisibleLayer
+     * @memberof Map
+     * @inner
+     */
+    var removeVisibleLayer = function(layerId) {
+      for(var i = 0, count = memberVisibleLayers.length; i < count; i++) {
+        if(memberVisibleLayers[i].layerId === layerId) {
+          memberVisibleLayers.splice(i, 1);
+          break;
+        }
+      }
+
+      if($('#layers-infos > div').width() > 0) {
+        $.event.trigger({type: "updateMapInformationsBox"});
+      }
+    };
+
+    /**
+     * Returns the array of currently visible layers.
+     * @returns {array} memberVisibleLayers - Currently visible layers
+     *
+     * @function getVisibleLayers
+     * @memberof Map
+     * @inner
+     */
+    var getVisibleLayers = function() {
+      return memberVisibleLayers;
     };
 
     /**
@@ -192,6 +224,8 @@ define(
         } else {
           TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
         }
+
+        removeVisibleLayer(layerToRemove[0].Id);
       }
     };
 
@@ -468,11 +502,11 @@ define(
     };
 
     return {
+      getLayers: getLayers,
+      getNotAddedLayers: getNotAddedLayers,
       addVisibleLayer: addVisibleLayer,
       removeVisibleLayer: removeVisibleLayer,
       getVisibleLayers: getVisibleLayers,
-      getLayers: getLayers,
-      getNotAddedLayers: getNotAddedLayers,
       addLayerToMap: addLayerToMap,
       removeLayerFromMap: removeLayerFromMap,
       resetMapMouseTools: resetMapMouseTools,
