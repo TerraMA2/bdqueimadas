@@ -382,6 +382,8 @@ define(
           var countriesField = $('#countries').val();
           var statesField = $('#states').val();
 
+          if(dates.length === 0) Filter.updateDatesToCurrent();
+
           if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
             if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
