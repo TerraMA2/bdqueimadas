@@ -506,6 +506,49 @@ define(
         }
       });
 
+      $(document).on("updateMapInformationsBox", function() {
+        updateMapInformationsBox();
+      });
+
+      $('#layers-infos > button, #layers-infos > i').on('click', function() {
+        if($('#layers-infos > div').width() === 0) {
+          $('#layers-infos > button').hide();
+          $('#layers-infos > i').show();
+          $('#layers-infos > div').show();
+
+          $('#layers-infos').css('min-height', '100px');
+
+          updateMapInformationsBox();
+        } else {
+          $('#layers-infos').css('height', '');
+          $('#layers-infos > div > div').html('');
+          $('#layers-infos').css('width', '36px');
+          $('#layers-infos > div').css('width', 0);
+          $('#layers-infos > div').css('height', 0);
+
+          $('#layers-infos').css('min-height', '0');
+
+          $('#layers-infos > i').hide();
+          $('#layers-infos > div').hide();
+          $('#layers-infos > button').show();
+        }
+      });
+
+      $('#terrama2-layerexplorer').on('click', 'input.terrama2-layerexplorer-checkbox', function(ev) {
+        if($(this).is(":checked")) {
+          Map.addVisibleLayer(
+            $(this).parent().data('layerid'),
+            $(this).parent().attr('id'),
+            $(this).parent().data('parentid'),
+            $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html()
+          );
+        } else {
+          Map.removeVisibleLayer($(this).parent().data('layerid'));
+        }
+
+        ev.stopPropagation();
+      });
+
       // LayerExplorer events
 
       $(document).on('click', '.remove-layer', function() {
@@ -662,27 +705,6 @@ define(
       TerraMA2WebComponents.MapDisplay.setLayerVisibilityChangeEvent(function(layerId) {
         Map.setSubtitlesVisibility(layerId);
       });
-
-      // new
-
-      $('#terrama2-layerexplorer').on('click', 'input.terrama2-layerexplorer-checkbox', function(ev) {
-        if($(this).is(":checked")) {
-          Map.addVisibleLayer(
-            $(this).parent().data('layerid'),
-            $(this).parent().attr('id'),
-            $(this).parent().data('parentid'),
-            $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html()
-          );
-        } else {
-          Map.removeVisibleLayer($(this).parent().data('layerid'));
-        }
-
-        console.log(Map.getVisibleLayers());
-
-        ev.stopPropagation();
-      });
-
-      // new
     };
 
     /**
@@ -1311,6 +1333,41 @@ define(
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
       $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+    };
+
+    /**
+     * Updates the box of map informations.
+     *
+     * @private
+     * @function updateMapInformationsBox
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var updateMapInformationsBox = function() {
+      var visibleLayers = Map.getVisibleLayers();
+
+      if(visibleLayers.length > 0) {
+        $('#layers-infos').css('height', '');
+
+        var html = '';
+        for(var i = 0, count = visibleLayers.length; i < count; i++) html += visibleLayers[i].name + '<br/>';
+
+        $('#layers-infos').css('width', '200px');
+        $('#layers-infos > div').css('width', '100%');
+        $('#layers-infos > div').css('height', '100%');
+        $('#layers-infos > div > div').html(html);
+        $('#layers-infos').css('height', $('#layers-infos').outerHeight() + 'px');
+      } else {
+        $('#layers-infos').css('height', '');
+
+        $('#layers-infos > div > div').empty().append('Nenhuma camada a ser exibida.');
+
+        $('#layers-infos').css('width', '200px');
+        $('#layers-infos > div').css('width', '100%');
+        $('#layers-infos > div').css('height', '100%');
+
+        $('#layers-infos').css('height', $('#layers-infos').outerHeight() + 'px');
+      }
     };
 
     /**
