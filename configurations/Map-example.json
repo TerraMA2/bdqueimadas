@@ -410,20 +410,6 @@
   "EnableAddAndRemoveLayers": false,
   "Layers": [
     {
-      "Id": "BDQueimadas:municipios_pnt",
-      "Name": "pnt",
-      "LayerGroup": false,
-      "Url": "http://localhost:8080/geoserver/ows",
-      "ServerType": "geoserver",
-      "Visible": true,
-      "MinResolution": 0,
-      "MaxResolution": "Infinity",
-      "Time": null,
-      "Disabled": false,
-      "AddsInTheStart": true,
-      "Buffer": 256
-    },
-    {
       "Id": "BDQueimadas:focos",
       "Name": "Focos",
       "LayerGroup": false,
@@ -480,22 +466,22 @@
       "Buffer": null
     },
     {
-      "Id": "BDQueimadas:current_situation_states",
-      "Name": "Focos-Total Espacial - Estados",
+      "Id": "BDQueimadas:municipios_pnt",
+      "Name": "Nomes dos Municípios",
       "LayerGroup": false,
       "Url": "http://localhost:8080/geoserver/ows",
       "ServerType": "geoserver",
-      "Visible": false,
+      "Visible": true,
       "MinResolution": 0,
       "MaxResolution": "Infinity",
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": 256
     },
     {
-      "Id": "BDQueimadas:current_situation_countries",
-      "Name": "Focos-Total Espacial - Países",
+      "Id": "BDQueimadas:biomas_brasileiros",
+      "Name": "Biomas Brasileiros",
       "LayerGroup": false,
       "Url": "http://localhost:8080/geoserver/ows",
       "ServerType": "geoserver",
@@ -505,20 +491,48 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": 256
     },
     {
       "Id": "satellites_images",
-      "Name": "Imagens de Satélites",
+      "Name": "Satélites",
       "LayerGroup": true,
       "Layers": [
         {
-          "Id": "suomi_npp_250m_truecolor",
-          "Name": "Suomi NPP {{FINAL_DATE=YYYY/MM/DD}}",
+          "Id": "quicklook_noaa16",
+          "Name": "NOAA-15 / AVHRR {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": true,
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "quicklook_noaa18",
+          "Name": "NOAA-18 / AVHRR {{FINAL_DATE=YYYY/MM/DD}}",
+          "LayerGroup": false,
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": null,
+          "MaxResolution": null,
+          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "quicklook_noaa19",
+          "Name": "NOAA-19 / AVHRR {{FINAL_DATE=YYYY/MM/DD}}",
+          "LayerGroup": false,
+          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "ServerType": "mapserver",
+          "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
@@ -528,7 +542,7 @@
         },
         {
           "Id": "goes",
-          "Name": "GOES {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "GOES / Imager {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
@@ -537,26 +551,12 @@
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": true,
-          "AddsInTheStart": false,
-          "Buffer": null
-        },
-        {
-          "Id": "msg",
-          "Name": "MSG {{FINAL_DATE=YYYY/MM/DD}}",
-          "LayerGroup": false,
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
-          "Disabled": true,
-          "AddsInTheStart": false,
+          "AddsInTheStart": true,
           "Buffer": null
         },
         {
           "Id": "aqua_250m_truecolor",
-          "Name": "Modis Aqua {{INITIAL_DATE=YYYY/MM/DD}}",
+          "Name": "Aqua / Modis {{INITIAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
@@ -565,12 +565,12 @@
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
-          "AddsInTheStart": false,
+          "AddsInTheStart": true,
           "Buffer": null
         },
         {
           "Id": "terra_250m_truecolor",
-          "Name": "Modis Terra {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "Terra / Modis {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
@@ -579,12 +579,12 @@
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
-          "AddsInTheStart": false,
+          "AddsInTheStart": true,
           "Buffer": null
         },
         {
-          "Id": "quicklook_noaa16",
-          "Name": "NOAA-16 {{FINAL_DATE=YYYY/MM/DD}}",
+          "Id": "msg",
+          "Name": "MSG / SEVIRI {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
@@ -592,73 +592,80 @@
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
-          "Disabled": false,
-          "AddsInTheStart": false,
+          "Disabled": true,
+          "AddsInTheStart": true,
           "Buffer": null
         },
         {
-          "Id": "quicklook_noaa18",
-          "Name": "NOAA-18 {{FINAL_DATE=YYYY/MM/DD}}",
+          "Id": "suomi_npp_250m_truecolor",
+          "Name": "NPP / VIIRRS {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
           "ServerType": "mapserver",
-          "Visible": false,
+          "Visible": true,
           "MinResolution": null,
           "MaxResolution": null,
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
-          "AddsInTheStart": false,
-          "Buffer": null
-        },
-        {
-          "Id": "quicklook_noaa19",
-          "Name": "NOAA-19 {{FINAL_DATE=YYYY/MM/DD}}",
-          "LayerGroup": false,
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
-          "ServerType": "mapserver",
-          "Visible": false,
-          "MinResolution": null,
-          "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
-          "Disabled": false,
-          "AddsInTheStart": false,
+          "AddsInTheStart": true,
           "Buffer": null
         }
       ]
     },
     {
-      "Id": "meteorology",
-      "Name": "Meteorologia",
+      "Id": "protected_areas",
+      "Name": "Áreas Protegidas",
       "LayerGroup": true,
       "Layers": [
         {
-          "Id": "mrp0",
-          "Name": "Risco Observado",
+          "Id": "BDQueimadas:unidades_conservacao_estaduais",
+          "Name": "Unidades de Conservação Estaduais",
           "LayerGroup": false,
-          "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
-          "ServerType": "mapserver",
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
           "Visible": false,
           "MinResolution": 0,
           "MaxResolution": "Infinity",
           "Time": null,
           "Disabled": false,
-          "AddsInTheStart": false,
+          "AddsInTheStart": true,
           "Buffer": null
-        }
-      ]
-    },
-    {
-      "Id": "backgrounds",
-      "Name": "Planos de Fundo",
-      "LayerGroup": true,
-      "Layers": [
+        },
         {
-          "Id": "BDQueimadas:pyr_nasa",
-          "Name": "Plano de Fundo",
+          "Id": "BDQueimadas:unidades_conservacao_federais",
+          "Name": "Unidades de Conservação Federais",
           "LayerGroup": false,
           "Url": "http://localhost:8080/geoserver/ows",
           "ServerType": "geoserver",
-          "Visible": true,
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "BDQueimadas:terras_indigenas",
+          "Name": "Terras Indígenas",
+          "LayerGroup": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "BDQueimadas:protectedplanet",
+          "Name": "Áreas Protegidas das Américas",
+          "LayerGroup": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
           "MinResolution": 0,
           "MaxResolution": "Infinity",
           "Time": null,
@@ -667,6 +674,76 @@
           "Buffer": null
         }
       ]
+    },
+    {
+      "Id": "meteorology",
+      "Name": "Risco de Fogo / Meteorologia",
+      "LayerGroup": true,
+      "Layers": [
+        {
+          "Id": "mrp0",
+          "Name": "Risco de Fogo",
+          "LayerGroup": false,
+          "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
+          "ServerType": "mapserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        }
+      ]
+    },
+    {
+      "Id": "fires_spatial_map",
+      "Name": "Mapa Espacial de Focos",
+      "LayerGroup": true,
+      "Layers": [
+        {
+          "Id": "BDQueimadas:current_situation_countries",
+          "Name": "Países",
+          "LayerGroup": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        },
+        {
+          "Id": "BDQueimadas:current_situation_states",
+          "Name": "Estados",
+          "LayerGroup": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null
+        }
+      ]
+    },
+    {
+      "Id": "BDQueimadas:pyr_nasa",
+      "Name": "Blue Marble",
+      "LayerGroup": false,
+      "Url": "http://localhost:8080/geoserver/ows",
+      "ServerType": "geoserver",
+      "Visible": true,
+      "MinResolution": 0,
+      "MaxResolution": "Infinity",
+      "Time": null,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "Buffer": null
     }
   ]
 }
