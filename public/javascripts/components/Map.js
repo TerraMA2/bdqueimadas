@@ -351,7 +351,7 @@ define(
             css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
 
           if(layerSubtitleItem.Image !== null)
-            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
+            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
 
           elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + " subtitle-item";
 

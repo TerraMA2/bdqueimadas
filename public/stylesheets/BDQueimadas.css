@@ -244,11 +244,14 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   overflow: auto;
 }
 
-#map-subtitle > .box > .box-body > ul > li > a { cursor: default; }
+#map-subtitle > .box > .box-body > ul > li > a {
+  padding: 2px;
+  cursor: default;
+}
 
 #map-subtitle > .box > .box-body > ul > li > a > div {
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   margin-left: 5px;
   display: inline-block;
 }
