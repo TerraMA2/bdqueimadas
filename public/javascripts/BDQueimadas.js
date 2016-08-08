@@ -483,40 +483,47 @@ define(
       });
 
       $(document).on("updateMapInformationsBox", function() {
-        updateMapInformationsBox();
+        var html = getVisibleLayers();
+
+        $('#map-info-box').html(html);
       });
 
-      $('#layers-infos > button, #layers-infos > i').on('click', function() {
-        if($('#layers-infos > div').width() === 0) {
-          $('#layers-infos > button').hide();
-          $('#layers-infos > i').show();
-          $('#layers-infos > div').show();
+      $('#map-info-button > button').on('click', function() {
+        var html = getVisibleLayers();
 
-          $('#layers-infos').css('min-height', '100px');
-
-          updateMapInformationsBox();
-        } else {
-          $('#layers-infos').css('height', '');
-          $('#layers-infos > div > div').html('');
-          $('#layers-infos').css('width', '36px');
-          $('#layers-infos > div').css('width', 0);
-          $('#layers-infos > div').css('height', 0);
-
-          $('#layers-infos').css('min-height', '0');
-
-          $('#layers-infos > i').hide();
-          $('#layers-infos > div').hide();
-          $('#layers-infos > button').show();
-        }
+        $('#map-info-box').html(html);
+        $('#map-info-box').dialog({
+          dialogClass: "map-info-box",
+          title: "Informações do Mapa",
+          width: 230,
+          maxHeight: 300,
+          modal: false,
+          resizable: true,
+          draggable: true,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
       });
 
       $('#terrama2-layerexplorer').on('click', 'input.terrama2-layerexplorer-checkbox', function(ev) {
         if($(this).is(":checked")) {
+          var parents = $(this).parents('.parent_li').find(' > .group-name > span'),
+              parentsLength = parents.length,
+              parentsString = "";
+
+          if(parentsLength > 0) {
+            for(var i = 0; i < parentsLength; i++) {
+              parentsString += parents[i].innerText + " > ";
+            }
+          }
+
           Map.addVisibleLayer(
             $(this).parent().data('layerid'),
-            $(this).parent().attr('id'),
+            $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html(),
             $(this).parent().data('parentid'),
-            $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html()
+            (parentsString !== "" ? parentsString : null),
+            $(this).parent().attr('id')
           );
         } else {
           Map.removeVisibleLayer($(this).parent().data('layerid'));
@@ -969,7 +976,7 @@ define(
           //Filter.updateDatesToCurrent();
 
           vex.dialog.alert({
-            message: '<p class="text-center">Atenção! O número de focos para esse filtro é alto, esse procedimento pode demorar.</p>',
+            message: '<p class="text-center">Atenção! O número de focos para esse filtro passou de 200.000, esse procedimento vai demorar.</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
@@ -1333,38 +1340,27 @@ define(
     };
 
     /**
-     * Updates the box of map informations.
+     * Returns the names of the visible layers.
      *
      * @private
-     * @function updateMapInformationsBox
+     * @function getVisibleLayers
      * @memberof BDQueimadas
      * @inner
      */
-    var updateMapInformationsBox = function() {
+    var getVisibleLayers = function() {
       var visibleLayers = Map.getVisibleLayers();
+      var html = '';
 
       if(visibleLayers.length > 0) {
-        $('#layers-infos').css('height', '');
-
-        var html = '';
-        for(var i = 0, count = visibleLayers.length; i < count; i++) html += visibleLayers[i].name + '<br/>';
-
-        $('#layers-infos').css('width', '200px');
-        $('#layers-infos > div').css('width', '100%');
-        $('#layers-infos > div').css('height', '100%');
-        $('#layers-infos > div > div').html(html);
-        $('#layers-infos').css('height', $('#layers-infos').outerHeight() + 'px');
+        for(var i = 0, count = visibleLayers.length; i < count; i++) {
+          if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
+          html += visibleLayers[i].layerName + '<br/>';
+        }
       } else {
-        $('#layers-infos').css('height', '');
-
-        $('#layers-infos > div > div').empty().append('Nenhuma camada a ser exibida.');
-
-        $('#layers-infos').css('width', '200px');
-        $('#layers-infos > div').css('width', '100%');
-        $('#layers-infos > div').css('height', '100%');
-
-        $('#layers-infos').css('height', $('#layers-infos').outerHeight() + 'px');
+        html = '<strong>Nenhuma camada a ser exibida.</strong>';
       }
+
+      return html;
     };
 
     /**
