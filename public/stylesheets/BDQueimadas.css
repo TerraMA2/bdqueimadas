@@ -447,8 +447,12 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .layer-explorer-and-filters-title {
-  font-weight: 900;
-  color: #03316f;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  position: relative;
+  padding-right: 20px;
 }
 
 .bdqueimadas-form { margin-bottom: 5px; }
@@ -481,9 +485,11 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 #add-layer {
-  float: right;
-  margin-top: 2px;
   cursor: pointer;
+  position: absolute;
+  margin-top: 0px;
+  right: 0px;
+  top: 5px;
 }
 
 #available-layers {
