@@ -48,23 +48,25 @@ define(
     /**
      * Adds a layer to the visible layers array.
      * @param {string} layerId - Layer id
-     * @param {string} elementId - Html element id
+     * @param {string} layerName - Layer name
      * @param {string} parentId - Parent id
-     * @param {string} name - Layer name
+     * @param {string} parentName - Parent name
+     * @param {string} elementId - Html element id
      *
      * @function addVisibleLayer
      * @memberof Map
      * @inner
      */
-    var addVisibleLayer = function(layerId, elementId, parentId, name) {
+    var addVisibleLayer = function(layerId, layerName, parentId, parentName, elementId) {
       memberVisibleLayers.push({
         layerId: layerId,
-        elementId: elementId,
+        layerName: layerName,
         parentId: parentId,
-        name: name
+        parentName: parentName,
+        elementId: elementId
       });
 
-      if($('#layers-infos > div').width() > 0) {
+      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
         $.event.trigger({type: "updateMapInformationsBox"});
       }
     };
@@ -85,7 +87,7 @@ define(
         }
       }
 
-      if($('#layers-infos > div').width() > 0) {
+      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
         $.event.trigger({type: "updateMapInformationsBox"});
       }
     };
@@ -195,7 +197,19 @@ define(
       if(Utils.getConfigurations().mapConfigurations.EnableAddAndRemoveLayers)
         $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
 
-      if(layer.Visible) addVisibleLayer(layer.Id, layer.Id.replace(':', ''), parent, layerName);
+      if(layer.Visible) {
+        var parents = $("#" + layer.Id.replace(':', '')).parents('.parent_li').find(' > .group-name > span'),
+            parentsLength = parents.length,
+            parentsString = "";
+
+        if(parentsLength > 0) {
+          for(var i = 0; i < parentsLength; i++) {
+            parentsString += parents[i].innerText + " > ";
+          }
+        }
+
+        addVisibleLayer(layer.Id, layerName, parent, parentsString, layer.Id.replace(':', ''));
+      }
     };
 
     /**
