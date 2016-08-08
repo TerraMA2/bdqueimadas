@@ -474,7 +474,7 @@ define(
         Map.updateZoomTop(true);
 
         if($('#map-subtitle > div').hasClass('collapsed-box')) {
-          $('#map-subtitle').animate({ 'width': '25%' }, { duration: 500, queue: false });
+          $('#map-subtitle').animate({ 'width': '350px' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
         } else {
           $('#map-subtitle').animate({ 'width': '150px' }, { duration: 500, queue: false });
