@@ -31,6 +31,8 @@
     <select multiple id="states" name="states" class="form-control" style="width: 140px;"></select>
   </div>
   <div style="clear: both; height: 5px;"></div>
+  <hr/>
+  <div style="clear: both; height: 5px;"></div>
   <div class="form-group bdqueimadas-form">
     <div style="float: left;">
       <label for="filter-date-from" style="float: left; margin-right: 10px; margin-top: 5px;">Início</label>
@@ -41,7 +43,7 @@
       <input type="text" style="width: 96px; float: left;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="Até">
     </div>
   </div>
-  <div style="clear: both; height: 5px;"></div>
+  <div style="clear: both;"></div>
   <div class="form-group bdqueimadas-form float-left">
     <label for="filter-satellite">Focos dos Sat&eacute;lites</label>
     <select multiple class="form-control" id="filter-satellite" style="width: 140px;">
@@ -86,7 +88,7 @@
     </select>
   </div>
   <div class="form-group bdqueimadas-form float-right">
-    <label for="filter-biome">Focos dos Biomas</label>
+    <label for="filter-biome">Focos nos Biomas</label>
     <select multiple class="form-control" id="filter-biome" style="width: 140px;">
       <option value="all" selected>TODOS</option>
       <option value="Amazonia">Amaz&ocirc;nia</option>
@@ -97,8 +99,10 @@
       <option value="Pantanal">Pantanal</option>
     </select>
   </div>
+  <div style="clear: both; height: 5px;"></div>
   <button class="btn btn-primary" id="filter-button">Aplicar</button>
   <button class="btn btn-primary" id="initial-filter-button">Mapa Inicial</button>
+  <div style="clear: both; height: 5px;"></div>
   <hr/>
   <h4 class="layer-explorer-and-filters-title"<%- configurations.mapConfigurations.EnableAddAndRemoveLayers ? '' : ' style="padding: 0px !important;"' %>>
     Camadas (mova a camada p/ cima se ela não aparecer)

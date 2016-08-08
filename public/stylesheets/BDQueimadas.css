@@ -455,11 +455,20 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   padding-right: 20px;
 }
 
-.bdqueimadas-form { margin-bottom: 5px; }
+.bdqueimadas-form { margin-bottom: 0px; }
 
-#layer-explorer-and-filter-box h4 { margin: 10px 0 15px 0; }
+#layer-explorer-and-filter-box h4 { margin: 0 0 5px 0; }
 
-#layer-explorer-and-filter-box hr { margin: 15px 0 10px 0; }
+#layer-explorer-and-filter-box hr {
+  -moz-border-bottom-colors: none;
+  -moz-border-image: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #969393;
+  border-style: solid none;
+  margin: 5px 0 5px 0;
+}
 
 #footer > p {
   text-align: center;
@@ -820,3 +829,5 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .main-header > .logo:hover { background-color: #f49d1e !important; }
+
+label { margin-bottom: 0px !important; }

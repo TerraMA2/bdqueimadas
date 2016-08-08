@@ -831,7 +831,7 @@ define(
               countriesCount = result.countries.rowCount;
 
           for(var i = 0; i < countriesCount; i++) {
-            html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
+            html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
           }
 
           $('#countries').empty().html(html);
@@ -849,7 +849,7 @@ define(
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
+          html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
         }
 
         // todo: correct bellows block
