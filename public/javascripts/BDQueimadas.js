@@ -923,20 +923,15 @@ define(
 
             $.each(featureInfo.features, function(i, feature) {
               firesAttributes += "<strong>Id:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
-              firesAttributes += "<br/><strong>Latitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName];
-              firesAttributes += "<br/><strong>Longitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName];
-              firesAttributes += "<br/><strong>Latitude GMS:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
-              firesAttributes += "<br/><strong>Longitude GMS:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
-              firesAttributes += "<br/><strong>Data:</strong> " + Utils.dateToString(Utils.stringToDate(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat), "YYYY/MM/DD");
-              firesAttributes += "<br/><strong>Hora:</strong> " + Utils.formatTime(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFieldName], Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFormat, "HH:MM:SS");
+              firesAttributes += "<br/><strong>Latitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + ' - ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Longitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + ' - ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Data / Hora:</strong> " + Utils.dateToString(Utils.stringToDate(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat), "YYYY/MM/DD") + ' ' + Utils.formatTime(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFieldName], Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFormat, "HH:MM:SS");
               firesAttributes += "<br/><strong>Satélite:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
               firesAttributes += "<br/><strong>Município:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName];
-              firesAttributes += "<br/><strong>Estado:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName];
-              firesAttributes += "<br/><strong>País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
+              firesAttributes += "<br/><strong>Estado / País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName] + ' / ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
               firesAttributes += "<br/><strong>Precipitação 24h:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
               firesAttributes += "<br/><strong>Nº dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
-              firesAttributes += "<br/><strong>Risco de Fogo:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName];
-              firesAttributes += "<br/><strong>Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
+              firesAttributes += "<br/><strong>Risco Fogo / Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName] + ' / ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
               firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
               if(featureInfo.features.length > (i + 1)) firesAttributes += "<hr/>";
             });
@@ -947,7 +942,7 @@ define(
               dialogClass: "feature-info-box",
               title: (featureInfo.features.length > 1 ? "Atributos dos focos" : "Atributos do foco"),
               width: 300,
-              height: 370,
+              height: 280,
               modal: false,
               resizable: true,
               draggable: true,
