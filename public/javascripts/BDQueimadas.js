@@ -59,9 +59,6 @@ define(
         $('#about-dialog').dialog({
           width: 800,
           height: 900,
-          modal: true,
-          resizable: false,
-          draggable: false,
           closeOnEscape: true,
           closeText: "",
           position: { my: 'top', at: 'top+15' }
@@ -166,28 +163,9 @@ define(
         }
 
         // Updates the padding top of the sidebar
-        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+        //$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
-      });
-
-      // Control sidebar toggle click event
-      $('#control-sidebar-btn').on('click', function() {
-
-        // Adjusts the position of the zoom control, attribution button and subtitle when the control sidebar opens or closes
-        if($('.control-sidebar').hasClass('control-sidebar-open')) {
-          $('.ol-zoom').animate({ 'right': '60px' }, { duration: 300, queue: false });
-          $('.ol-attribution').animate({ 'right': '60px' }, { duration: 300, queue: false });
-          $('#map-subtitle').animate({ 'right': '45px' }, { duration: 300, queue: false });
-          $('.ol-scale-line').animate({ 'right': '60px' }, { duration: 300, queue: false });
-          $('#terrama2-map-info').animate({ 'right': '60px' }, { duration: 300, queue: false });
-        } else {
-          $('.ol-zoom').animate({ 'right': '15px' }, { duration: 300, queue: false });
-          $('.ol-attribution').animate({ 'right': '15px' }, { duration: 300, queue: false });
-          $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
-          $('.ol-scale-line').animate({ 'right': '15px' }, { duration: 300, queue: false });
-          $('#terrama2-map-info').animate({ 'right': '15px' }, { duration: 300, queue: false });
-        }
       });
 
       // Export click event
@@ -498,11 +476,9 @@ define(
         if($('#map-subtitle > div').hasClass('collapsed-box')) {
           $('#map-subtitle').animate({ 'width': '25%' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-          $(this).attr('title', 'Esconder Legendas');
         } else {
           $('#map-subtitle').animate({ 'width': '150px' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
-          $(this).attr('title', 'Exibir Legendas');
         }
       });
 
@@ -672,6 +648,32 @@ define(
 
       $('#filter-button-attributes-table').on('click', function() {
         AttributesTable.updateAttributesTable(true);
+      });
+
+      // Navbar logos events
+
+      $("#page-title").on('click', '.inpe-image', function() {
+        window.open('http://www.inpe.br/', '_blank');
+      });
+
+      $("#page-title").on('click', '.programa-queimadas-image', function() {
+        window.open('http://www.inpe.br/queimadas/', '_blank');
+      });
+
+      $("#page-title").on('click', '.defra-image', function() {
+        window.open('https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs', '_blank');
+      });
+
+      $("#page-title").on('click', '.banco-mundial-image', function() {
+        window.open('http://www.worldbank.org/', '_blank');
+      });
+
+      $("#page-title").on('click', '.mma-image', function() {
+        window.open('http://www.mma.gov.br/', '_blank');
+      });
+
+      $("#page-title").on('click', '.funcate-image', function() {
+        window.open('https://www.funcate.org.br/', '_blank');
       });
 
       // TerraMA2WebComponents events
@@ -1227,12 +1229,13 @@ define(
         $("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
       }
 
-      $("#page-title").html(
-        headerText + "<span id=\"page-second-title\" style=\"" + ($("body").hasClass('sidebar-collapse') ? "" : "display: none;") + "\"> | " +
-        "<span class=\"inpe-image\"></span>" +
-        "<span class=\"programa-queimadas-image\"></span>" +
-        "<span class=\"text\">INPE - Programa Queimadas</span></span>"
-      );
+      $("#page-title > .dynamic-text").html(headerText);
+
+      if($("body").hasClass('sidebar-collapse')) {
+        $("#page-second-title").show();
+      } else {
+        $("#page-second-title").hide();
+      }
     };
 
     /**
@@ -1269,12 +1272,13 @@ define(
      * @inner
      */
     var closeAllLeftContentBoxes = function() {
-      $("#page-title").html(
-        "Banco de Dados de Queimadas<span id=\"page-second-title\" style=\"" + ($("body").hasClass('sidebar-collapse') ? "" : "display: none;") + "\"> | " +
-        "<span class=\"inpe-image\"></span>" +
-        "<span class=\"programa-queimadas-image\"></span>" +
-        "<span class=\"text\">INPE - Programa Queimadas</span></span>"
-      );
+      $("#page-title > .dynamic-text").html("Banco de Dados de Queimadas");
+
+      if($("body").hasClass('sidebar-collapse')) {
+        $("#page-second-title").show();
+      } else {
+        $("#page-second-title").hide();
+      }
 
       $(".left-content-box").removeClass('active');
       $(".left-content-box").removeClass('fullmenu');
@@ -1313,7 +1317,6 @@ define(
       $('#box-attributes-table').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
-      $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
     };
 
     /**
@@ -1332,7 +1335,6 @@ define(
       $('#box-attributes-table').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
-      $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
     };
 
     /**
@@ -1386,23 +1388,25 @@ define(
         $('#footer-brasil a').attr('target', '_blank');
 
         updateSizeVars();
-        setFullContentSize(300);
+        setReducedContentSize(300);
 
         loadEvents();
         loadSocketsListeners();
         loadPlugins();
+
+        TerraMA2WebComponents.MapDisplay.updateMapSize();
 
         /*window.setInterval(function() {
           updateSizeVars();
           updateComponents();
         }, 60000);*/
 
-        setTimeout(function() {
+        /*setTimeout(function() {
           $('.sidebar-toggle').click();
           $('#main-sidebar-toggle').css('display', '');
-        }, 15000);
+        }, 15000);*/
 
-        setTimeout(function() {
+        /*setTimeout(function() {
           if($('#states').val() !== null && !Utils.stringInArray($('#states').val(), "")) {
             Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
           } else if($('#countries').val() !== null && !Utils.stringInArray($('#countries').val(), "")) {
@@ -1412,7 +1416,7 @@ define(
           }
 
           Filter.checkFiresCount();
-        }, 16000);
+        }, 16000);*/
       });
     };
 

@@ -443,6 +443,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-left: 5px;
   font-size: 20px;
   font-weight: 900;
+  white-space: nowrap;
 }
 
 .layer-explorer-and-filters-title {
@@ -537,6 +538,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   background-size: 40px;
   margin-left: 4px;
   margin-top: -2px;
+  cursor: pointer;
 }
 
 #page-second-title > .programa-queimadas-image {
@@ -548,6 +550,55 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   background-size: 27px;
   margin-left: 48px;
   margin-top: -3px;
+  cursor: pointer;
+}
+
+#page-second-title > .defra-image {
+  position: absolute;
+  background-image: url('../images/defra.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 45px;
+  margin-left: 8px;
+  margin-top: -3px;
+  cursor: pointer;
+}
+
+#page-second-title > .banco-mundial-image {
+  position: absolute;
+  background-image: url('../images/banco_mundial.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 42px;
+  margin-left: 58px;
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+#page-second-title > .mma-image {
+  position: absolute;
+  background-image: url('../images/mma.png');
+  width: 55px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-size: 52px;
+  margin-left: 108px;
+  margin-top: 7px;
+  cursor: pointer;
+}
+
+#page-second-title > .funcate-image {
+  position: absolute;
+  background-image: url('../images/funcate.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 37px;
+  margin-left: 170px;
+  margin-top: -3px;
+  cursor: pointer;
 }
 
 #page-second-title > .text { padding-left: 82px; }
@@ -644,6 +695,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   top: 10px;
   left: 12px;
 }
+
+.main-sidebar { padding-top: 50px !important; }
 
 /* TerraMA2Components styles */
 
