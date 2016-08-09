@@ -623,6 +623,17 @@ define(
       var countries = (Utils.stringInArray(getCountriesBdqNames(), "") || getCountriesBdqNames().length === 0 ? '' : getCountriesBdqNames().toString());
       var states = (Utils.stringInArray(getStatesBdqNames(), "") || getStatesBdqNames().length === 0 ? '' : getStatesBdqNames().toString());
 
+      if((memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
+        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+        var initialContinentCountriesLength = initialContinentCountries.length;
+
+        for(var i = 0; i < initialContinentCountriesLength; i++) {
+          countries += initialContinentCountries[i].Name + ',';
+        }
+
+        countries = countries.substring(0, countries.length - 1);
+      }
+
       Utils.getSocket().emit('checkFiresCountRequest', {
         dateFrom: dateFrom,
         dateTo: dateTo,
