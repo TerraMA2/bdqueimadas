@@ -258,6 +258,19 @@ define(
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
+                  var countries = (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '');
+
+                  if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
+                    var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+                    var initialContinentCountriesLength = initialContinentCountries.length;
+
+                    for(var i = 0; i < initialContinentCountriesLength; i++) {
+                      countries += initialContinentCountries[i].Name + ',';
+                    }
+
+                    countries = countries.substring(0, countries.length - 1);
+                  }
+
                   $.ajax({
                     async: false,
                     url: Utils.getBaseUrl() + "exists-data-to-export",
@@ -268,7 +281,7 @@ define(
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
                       extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
-                      countries: (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : ''),
+                      countries: countries,
                       states: (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '')
                     },
                     success: function(existsDataToExport) {
@@ -278,7 +291,7 @@ define(
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
                                          "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
-                                         "&countries=" + (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '') +
+                                         "&countries=" + countries +
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
 

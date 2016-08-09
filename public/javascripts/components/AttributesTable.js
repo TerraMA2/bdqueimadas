@@ -107,6 +107,18 @@ define(
               data.biomes = memberBiomes;
               data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
+
+              if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && data.countries === '') {
+                var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+                var initialContinentCountriesLength = initialContinentCountries.length;
+
+                for(var i = 0; i < initialContinentCountriesLength; i++) {
+                  data.countries += initialContinentCountries[i].Name + ',';
+                }
+
+                data.countries = data.countries.substring(0, data.countries.length - 1);
+              }
+
               data.states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
             }
           },

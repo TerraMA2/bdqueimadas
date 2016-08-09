@@ -159,6 +159,17 @@ define(
             var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
             var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
 
+            if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
+              var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+              var initialContinentCountriesLength = initialContinentCountries.length;
+
+              for(var i = 0; i < initialContinentCountriesLength; i++) {
+                countries += initialContinentCountries[i].Name + ',';
+              }
+
+              countries = countries.substring(0, countries.length - 1);
+            }
+
             Utils.getSocket().emit(
               'graphicsFiresCountRequest',
               {

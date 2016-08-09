@@ -483,6 +483,30 @@ define(
     };
 
     /**
+     * Creates the continent filter, valid only for the initial continent.
+     * @returns {string} cql - Countries cql filter
+     *
+     * @private
+     * @function createContinentFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createContinentFilter = function() {
+      var cql = "(";
+
+      var countries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+      var countriesLength = countries.length;
+
+      for(var i = 0; i < countriesLength; i++) {
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + countries[i].Name + "' OR ";
+      }
+
+      cql = cql.substring(0, cql.length - 4) + ")";
+
+      return cql;
+    };
+
+    /**
      * Creates the states filter.
      * @returns {string} cql - States cql filter
      *
@@ -554,6 +578,10 @@ define(
 
         if(!Utils.stringInArray(memberBiomes, "all")) {
           cql += createBiomesFilter() + " AND ";
+        }
+
+        if((memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && (Utils.stringInArray(memberCountries, "") || memberCountries.length === 0)) {
+          cql += createContinentFilter() + " AND ";
         }
 
         if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
@@ -677,7 +705,18 @@ define(
 
           TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
         } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), $('#countries').val(), memberSatellites, memberBiomes, layer.Id);
+          var countries = $('#countries').val();
+
+          if(memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter && (Utils.stringInArray(countries, "") || countries.length === 0)) {
+            var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+            var initialContinentCountriesLength = initialContinentCountries.length;
+
+            countries = [];
+
+            for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i].Id);
+          }
+
+          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), countries, memberSatellites, memberBiomes, layer.Id);
         }
       });
     };
