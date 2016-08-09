@@ -32,7 +32,6 @@ var GetAttributesTableController = function(app) {
     // Verifications of the 'options' object items
     if(request.body.satellites !== '') options.satellites = request.body.satellites;
     if(request.body.biomes !== '') options.biomes = request.body.biomes;
-    if(request.body.extent !== '') options.extent = request.body.extent;
     if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
 

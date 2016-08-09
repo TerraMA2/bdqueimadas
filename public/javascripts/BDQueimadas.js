@@ -280,7 +280,6 @@ define(
                       dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
-                      extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
                       countries: countries,
                       states: (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '')
                     },
@@ -290,7 +289,6 @@ define(
                                          "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
-                                         "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
                                          "&countries=" + countries +
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
@@ -431,10 +429,6 @@ define(
         if($(this).parent().hasClass('has-error')) {
           $(this).parent().removeClass('has-error');
         }
-      });
-
-      $('#updateComponents').on('click', function() {
-        updateComponents();
       });
 
       $(document).on("updateComponents", function() {

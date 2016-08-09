@@ -28,7 +28,6 @@ var Graphics = function(io) {
       // Verifications of the 'options' object items
       if(json.satellites !== '') options.satellites = json.satellites;
       if(json.biomes !== '') options.biomes = json.biomes;
-      if(json.extent !== '') options.extent = json.extent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
       if(json.limit !== null) options.limit = json.limit;

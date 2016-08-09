@@ -105,7 +105,6 @@ define(
               data.dateTo = memberDateTo;
               data.satellites = memberSatellites;
               data.biomes = memberBiomes;
-              data.extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
               data.countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
 
               if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && data.countries === '') {

@@ -131,8 +131,6 @@ define(
                        (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
                        Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
 
-          var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-
           if(!useGraphicsFilter) {
             $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
             $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
@@ -182,13 +180,11 @@ define(
                 title: firesCountGraphicsConfig.Title,
                 satellites: satellites,
                 biomes: biomes,
-                extent: extent,
                 countries: countries,
                 states: states,
                 filterRules: {
                   ignoreCountryFilter: firesCountGraphicsConfig.IgnoreCountryFilter,
                   ignoreStateFilter: firesCountGraphicsConfig.IgnoreStateFilter,
-                  ignoreExtent: firesCountGraphicsConfig.IgnoreExtent,
                   showOnlyIfThereIsACountryFiltered: firesCountGraphicsConfig.ShowOnlyIfThereIsACountryFiltered,
                   showOnlyIfThereIsNoCountryFiltered: firesCountGraphicsConfig.ShowOnlyIfThereIsNoCountryFiltered,
                   showOnlyIfThereIsAStateFiltered: firesCountGraphicsConfig.ShowOnlyIfThereIsAStateFiltered,
@@ -339,11 +335,10 @@ define(
           var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
-          var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString();
           var countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
           var states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
 
-          var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&extent=" + extent + "&countries=" + countries + "&states=" + states + "&id=" + id;
+          var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + countries + "&states=" + states + "&id=" + id;
           location.href = exportLink;
         }
       }
