@@ -65,6 +65,26 @@ define(
         });
       });
 
+      $('#frequently-asked-questions-btn').on('click', function() {
+        $('#frequently-asked-questions').dialog({
+          width: 800,
+          height: 900,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
+      });
+
+      $('#presentation-btn').on('click', function() {
+        $('#presentation').dialog({
+          width: 800,
+          height: 900,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
+      });
+
       // Sidebar buttons click event
       $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();
@@ -1171,6 +1191,15 @@ define(
 
       $("#filter-date-from-graphics").datepicker(datePickerOptions);
       $("#filter-date-to-graphics").datepicker(datePickerOptions);
+
+      $(".sidebar-menu").mousemove(function(e) {
+        $(".sidebar-menu").scrollTop(function(i, v) {
+          var h = $(window).height();
+          var y = e.clientY - h / 2;
+
+          return v + y * 0.1;
+        });
+      });
     };
 
     /**
@@ -1326,6 +1355,8 @@ define(
       $('#box-attributes-table').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+
+      $('.sidebar-menu').animate({ "max-height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
     };
 
     /**
@@ -1344,6 +1375,8 @@ define(
       $('#box-attributes-table').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+
+      $('.sidebar-menu').animate({ "max-height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
     };
 
     /**
