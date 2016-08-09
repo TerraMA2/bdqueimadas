@@ -534,6 +534,10 @@ define(
       });
 
       $('#terrama2-layerexplorer').on('click', 'input.terrama2-layerexplorer-checkbox', function(ev) {
+        setTimeout(function() {
+          $('.ol-viewport a').attr('target', '_blank');
+        }, 2000);
+
         if($(this).is(":checked")) {
           var parents = $(this).parents('.parent_li').find(' > .group-name > span'),
               parentsLength = parents.length,
@@ -1416,7 +1420,10 @@ define(
       $(document).ready(function() {
         Utils.getSocket().emit('piwikDataRequest');
 
-        $('#footer-brasil a').attr('target', '_blank');
+        setTimeout(function() {
+          $('#footer-brasil a').attr('target', '_blank');
+          $('.ol-viewport a').attr('target', '_blank');
+        }, 2000);
 
         updateSizeVars();
         setReducedContentSize(300);
