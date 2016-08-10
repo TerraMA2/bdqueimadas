@@ -24,7 +24,8 @@
   "CurrentSituationLayers": {
     "Layers": [
       "BDQueimadas:current_situation_countries",
-      "BDQueimadas:current_situation_states"
+      "BDQueimadas:current_situation_states",
+      "BDQueimadas:current_situation_cities"
     ],
     "DateFormat": "YYYY-MM-DD",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
