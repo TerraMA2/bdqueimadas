@@ -727,7 +727,20 @@ define(
             for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i].Id);
           }
 
-          applyCurrentSituationFilter(Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat), countries, memberSatellites, memberBiomes, layer.Id);
+          var states = $('#states').val();
+
+          updateBdqNames(function() {
+            applyCurrentSituationFilter(
+              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
+              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
+              countries,
+              states,
+              memberStatesBdqNames,
+              memberSatellites,
+              memberBiomes,
+              layer.Id
+            );
+          });
         }
       });
     };
@@ -737,6 +750,8 @@ define(
      * @param {int} begin - Initial date
      * @param {int} end - Final date
      * @param {array} countries - Countries ids
+     * @param {array} states - States ids
+     * @param {array} statesNames - States names
      * @param {array} satellites - Satellites
      * @param {array} biomes - Biomes
      * @param {string} layer - Layer id
@@ -745,11 +760,16 @@ define(
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, countries, satellites, biomes, layer) {
+    var applyCurrentSituationFilter = function(begin, end, countries, states, statesNames, satellites, biomes, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
         currentSituationFilter += ";countries:" + Utils.replaceAll(countries.toString(), ',', '\\,');
+      }
+
+      if(states !== undefined && states !== null && states !== "" && states !== '' && states !== [] && !Utils.stringInArray(states, "")) {
+        currentSituationFilter += ";states:'" + Utils.replaceAll(states.toString(), ',', '\'\\,\'') + "'";
+        currentSituationFilter += ";statesnames:'" + Utils.replaceAll(statesNames.toString(), ',', '\'\\,\'') + "'";
       }
 
       if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) {
