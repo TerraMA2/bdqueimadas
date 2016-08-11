@@ -121,9 +121,6 @@ define(
         }
       }
 
-      if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer', true))
-        TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer', true);
-
       $('.children:empty').parent().hide();
     };
 
@@ -180,8 +177,13 @@ define(
       var layerName = Utils.processStringWithDatePattern(layer.Name);
       var layerTime = Utils.processStringWithDatePattern(layer.Time);
 
-      if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
-        TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
+      if(layer.TerraMA2WebComponentsFunction !== null) {
+        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layer.Visible, parent, layer.AppendAtTheEnd))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd);
+      } else {
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
+      }
 
       if(!initialProcess) {
         $.event.trigger({type: "applyFilter"});
@@ -254,6 +256,41 @@ define(
      */
     var addNotAddedLayer = function(layer) {
       memberNotAddedLayers.push(layer);
+    };
+
+    /**
+     * Sets the visibility of the background layers when the user set a layer visible.
+     * @param {string} selectedLayerId - Id of the selected layer
+     *
+     * @function setBackgroundsVisibility
+     * @memberof Map
+     * @inner
+     */
+    var setBackgroundsVisibility = function(selectedLayerId) {
+      var layersLength = memberLayers.length,
+          backgroundLayers = [],
+          isThisABackgroundLayer = false;
+
+      for(var i = 0; i < layersLength; i++) {
+        if(memberLayers[i].Background) {
+          if(memberLayers[i].Id === selectedLayerId) {
+            isThisABackgroundLayer = true;
+          } else {
+            backgroundLayers.push(memberLayers[i].Id);
+          }
+        }
+      }
+
+      if(isThisABackgroundLayer) {
+        var backgroundLayersLength = backgroundLayers.length;
+
+        for(var i = 0; i < backgroundLayersLength; i++) {
+          if($('#' + backgroundLayers[i].replace(':', '') + ' > input').is(":checked")) {
+            TerraMA2WebComponents.MapDisplay.setLayerVisibilityById(backgroundLayers[i], false);
+            $('#' + backgroundLayers[i].replace(':', '') + ' > input').attr('checked', false);
+          }
+        }
+      }
     };
 
     /**
@@ -523,6 +560,7 @@ define(
       getVisibleLayers: getVisibleLayers,
       addLayerToMap: addLayerToMap,
       removeLayerFromMap: removeLayerFromMap,
+      setBackgroundsVisibility: setBackgroundsVisibility,
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,

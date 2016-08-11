@@ -539,6 +539,8 @@ define(
         }, 2000);
 
         if($(this).is(":checked")) {
+          Map.setBackgroundsVisibility($(this).parent().data('layerid'));
+
           var parents = $(this).parents('.parent_li').find(' > .group-name > span'),
               parentsLength = parents.length,
               parentsString = "";
