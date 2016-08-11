@@ -10,7 +10,7 @@
 <script type="text/javascript" src="<%- BASE_URL %>externals/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
 <script type="text/javascript" src="<%- BASE_URL %>externals/bootstrap/js/bootstrap.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
+<!-- jQuery UI 1.12.0 -->
 <script type="text/javascript" src="<%- BASE_URL %>externals/jQueryUI/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script type="text/javascript">
@@ -55,12 +55,12 @@
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u="//prodwww-queimadas.dgi.inpe.br/piwik/";
+    var u="<%- configurations.piwikUrl %>/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', 2]);
+    _paq.push(['setSiteId', <%- configurations.piwikIdsite %>]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="//prodwww-queimadas.dgi.inpe.br/piwik/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="<%- configurations.piwikUrl %>/piwik.php?idsite=<%- configurations.piwikIdsite %>" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->

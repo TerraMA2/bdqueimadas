@@ -1,5 +1,5 @@
 {
-  "Url": "http://example.com/piwik/index.php",
+  "Url": "http://example.com/piwik",
   "TokenAuth": "token123",
   "IdSite": 1
 }

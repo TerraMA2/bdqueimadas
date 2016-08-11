@@ -1,8 +1,8 @@
 <div class="left-content-box" id="layer-explorer-and-filter-box">
   <div class="form-horizontal">
     <div class="form-group bdqueimadas-form">
-      <label for="continents" class="col-sm-3 control-label" style="padding-left: 0px; padding-right: 0px;">Continentes</label>
-      <div class="col-sm-9">
+      <label for="continents" class="col-sm-3 control-label" style="padding-left: 0px; padding-right: 0px; margin-left: 5px; float: left;">Continentes</label>
+      <div class="col-sm-9" style="float: right; width: 73%;">
         <select id="continents" name="continents" class="form-control">
           <option value="">Selecione o continente</option>
           <% continents.rows.forEach(function(continent, index) { %>
@@ -22,36 +22,31 @@
       </div>
     </div>
   </div>
-  <div class="form-horizontal">
-    <div class="form-group bdqueimadas-form">
-      <label for="countries" class="col-sm-3 control-label" style="padding-left: 0px; padding-right: 0px;">Países</label>
-      <div class="col-sm-9">
-        <select multiple id="countries" name="countries" class="form-control"></select>
-      </div>
-    </div>
+  <div class="form-group bdqueimadas-form float-left">
+    <label for="countries">Países</label>
+    <select multiple id="countries" name="countries" class="form-control" style="width: 140px;"></select>
   </div>
-  <div class="form-horizontal">
-    <div class="form-group bdqueimadas-form">
-      <label for="states" class="col-sm-3 control-label" style="padding-left: 0px; padding-right: 0px;">Estados</label>
-      <div class="col-sm-9">
-        <select multiple id="states" name="states" class="form-control"></select>
-      </div>
-    </div>
+  <div class="form-group bdqueimadas-form float-right">
+    <label for="states">Estados</label>
+    <select multiple id="states" name="states" class="form-control" style="width: 140px;"></select>
   </div>
+  <div style="clear: both; height: 5px;"></div>
+  <hr/>
+  <div style="clear: both; height: 5px;"></div>
   <div class="form-group bdqueimadas-form">
     <div style="float: left;">
       <label for="filter-date-from" style="float: left; margin-right: 10px; margin-top: 5px;">Início</label>
-      <input type="text" style="max-width: 100px; float: left;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="De">
+      <input type="text" style="width: 96px; float: left;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="De">
     </div>
     <div style="float: right;">
-      <label for="filter-date-to" style="float: left; margin-right: 10px; margin-top: 5px;">Fim</label>
-      <input type="text" style="max-width: 100px; float: left;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="Até">
+      <label for="filter-date-to" style="float: left; margin-right: 20px; margin-top: 5px;">Fim</label>
+      <input type="text" style="width: 96px; float: left;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="Até">
     </div>
   </div>
-  <div style="clear: both; height: 5px;"></div>
+  <div style="clear: both;"></div>
   <div class="form-group bdqueimadas-form float-left">
     <label for="filter-satellite">Focos dos Sat&eacute;lites</label>
-    <select multiple class="form-control" id="filter-satellite">
+    <select multiple class="form-control" id="filter-satellite" style="width: 140px;">
       <%
       var satelliteOptions = "";
       var referenceSatellite = "";
@@ -93,8 +88,8 @@
     </select>
   </div>
   <div class="form-group bdqueimadas-form float-right">
-    <label for="filter-biome">Focos dos Biomas</label>
-    <select multiple class="form-control" id="filter-biome">
+    <label for="filter-biome">Focos nos Biomas</label>
+    <select multiple class="form-control" id="filter-biome" style="width: 140px;">
       <option value="all" selected>TODOS</option>
       <option value="Amazonia">Amaz&ocirc;nia</option>
       <option value="Caatinga">Caatinga</option>
@@ -104,11 +99,13 @@
       <option value="Pantanal">Pantanal</option>
     </select>
   </div>
+  <div style="clear: both; height: 5px;"></div>
   <button class="btn btn-primary" id="filter-button">Aplicar</button>
-  <button class="btn btn-primary" id="initial-filter-button">Tela Inicial</button>
+  <button class="btn btn-primary" id="initial-filter-button">Mapa Inicial</button>
+  <div style="clear: both; height: 5px;"></div>
   <hr/>
-  <h4 class="layer-explorer-and-filters-title">
-    Camadas
+  <h4 class="layer-explorer-and-filters-title"<%- configurations.mapConfigurations.EnableAddAndRemoveLayers ? '' : ' style="padding: 0px !important;"' %>>
+    Camadas (mova a camada p/ cima se ela não aparecer)
     <%
       if(configurations.mapConfigurations.EnableAddAndRemoveLayers) {
         %> <i class="fa fa-fw fa-plus" id="add-layer"></i><%

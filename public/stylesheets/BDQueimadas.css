@@ -244,11 +244,14 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   overflow: auto;
 }
 
-#map-subtitle > .box > .box-body > ul > li > a { cursor: default; }
+#map-subtitle > .box > .box-body > ul > li > a {
+  padding: 2px;
+  cursor: default;
+}
 
 #map-subtitle > .box > .box-body > ul > li > a > div {
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   margin-left: 5px;
   display: inline-block;
 }
@@ -416,23 +419,18 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 #loading-span {
-  position: absolute;
-  width: 150px;
+  background-image: url('../images/loader.gif');
   background-color: rgba(255,255,255,0.7);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+  position: absolute;
+  border-radius: 8px;
+  width: 150px;
   height: 70px;
   z-index: 99;
-  border-radius: 8px;
   top: 46%;
   left: 46%;
-}
-
-#loading-span > i {
-  position: absolute;
-  z-index: 9999;
-  color: #000;
-  top: 20%;
-  font-size: 40px;
-  left: 40%;
 }
 
 .mouse-function-btn { background: #f8b802 !important; }
@@ -448,18 +446,32 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-left: 5px;
   font-size: 20px;
   font-weight: 900;
+  white-space: nowrap;
 }
 
 .layer-explorer-and-filters-title {
-  font-weight: 900;
-  color: #03316f;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  position: relative;
+  padding-right: 20px;
 }
 
-.bdqueimadas-form { margin-bottom: 5px; }
+.bdqueimadas-form { margin-bottom: 0px; }
 
-#layer-explorer-and-filter-box h4 { margin: 10px 0 15px 0; }
+#layer-explorer-and-filter-box h4 { margin: 0 0 5px 0; }
 
-#layer-explorer-and-filter-box hr { margin: 15px 0 10px 0; }
+#layer-explorer-and-filter-box hr {
+  -moz-border-bottom-colors: none;
+  -moz-border-image: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #969393;
+  border-style: solid none;
+  margin: 5px 0 5px 0;
+}
 
 #footer > p {
   text-align: center;
@@ -473,7 +485,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .remove-layer {
   float: right;
-  margin-top: -28px;
+  margin-top: -16px;
   color: #555;
   cursor: pointer;
   margin-right: 2px;
@@ -485,9 +497,11 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 #add-layer {
-  float: right;
-  margin-top: 2px;
   cursor: pointer;
+  position: absolute;
+  margin-top: 0px;
+  right: 0px;
+  top: 5px;
 }
 
 #available-layers {
@@ -525,13 +539,36 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-right: -1px;
 }
 
-#feature-info-box {
+#feature-info-box, #map-info-box {
   width: 100% !important;
   white-space: nowrap;
   font-size: 13px;
 }
 
-.feature-info-box .ui-dialog-title { font-size: 13px; }
+.feature-info-box .ui-dialog-title, .map-info-box .ui-dialog-title { font-size: 13px; }
+
+#map-info-button {
+  bottom: 130px;
+  z-index: 9999;
+  position: absolute;
+  background-color: rgba(255,255,255,.4);
+  border-radius: 2px;
+  right: 15px;
+  padding: 3px;
+  max-height: 350px;
+}
+
+#map-info-button > button {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(241,241,241,.8);
+  font-size: 1.14em;
+  border: none;
+  border-radius: 2px;
+  outline: 0;
+}
+
+#map-info-button > button:hover { background-color: rgba(241,241,241,1); }
 
 #page-second-title > .inpe-image {
   position: absolute;
@@ -542,6 +579,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   background-size: 40px;
   margin-left: 4px;
   margin-top: -2px;
+  cursor: pointer;
 }
 
 #page-second-title > .programa-queimadas-image {
@@ -553,6 +591,55 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   background-size: 27px;
   margin-left: 48px;
   margin-top: -3px;
+  cursor: pointer;
+}
+
+#page-second-title > .defra-image {
+  position: absolute;
+  background-image: url('../images/defra.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 45px;
+  margin-left: 8px;
+  margin-top: -3px;
+  cursor: pointer;
+}
+
+#page-second-title > .banco-mundial-image {
+  position: absolute;
+  background-image: url('../images/banco_mundial.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 42px;
+  margin-left: 58px;
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+#page-second-title > .mma-image {
+  position: absolute;
+  background-image: url('../images/mma.png');
+  width: 55px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-size: 52px;
+  margin-left: 108px;
+  margin-top: 7px;
+  cursor: pointer;
+}
+
+#page-second-title > .funcate-image {
+  position: absolute;
+  background-image: url('../images/funcate.png');
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-size: 37px;
+  margin-left: 170px;
+  margin-top: -3px;
+  cursor: pointer;
 }
 
 #page-second-title > .text { padding-left: 82px; }
@@ -593,6 +680,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .languages-item.spanish { background-image: url('../images/spain.png'); }
 
+.main-sidebar { padding-top: 50px !important; }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
@@ -608,12 +697,13 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 #terrama2-layerexplorer li { padding: 2px 0 !important; }
 
-#terrama2-layerexplorer li > span {
-  padding: 0px !important;
-  padding-left: 12px !important;
-}
+#terrama2-layerexplorer li > span { padding: 0px 0px 0px 10.5px !important; }
 
 .terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
+
+.terrama2-layerexplorer-checkbox-span { cursor: move !important; }
+
+#terrama2-layerexplorer ul.children span.group-name { padding-left: 0px !important; }
 
 /* AdminLTEQueimadas general adjustments */
 
@@ -708,3 +798,5 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .main-header > .logo:hover { background-color: #f49d1e !important; }
+
+label { margin-bottom: 0px !important; }

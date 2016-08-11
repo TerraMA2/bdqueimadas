@@ -8,6 +8,7 @@
  *
  * @property {array} memberLayers - Layers currently present in the map.
  * @property {array} memberNotAddedLayers - Layers not present in the map.
+ * @property {array} memberVisibleLayers - Currently visible layers.
  */
 define(
   ['components/Utils', 'TerraMA2WebComponents'],
@@ -17,6 +18,8 @@ define(
     var memberLayers = [];
     // Layers not present in the map
     var memberNotAddedLayers = [];
+    // Currently visible layers
+    var memberVisibleLayers = [];
 
     /**
      * Returns the array of layers currently present in the map.
@@ -43,6 +46,65 @@ define(
     };
 
     /**
+     * Adds a layer to the visible layers array.
+     * @param {string} layerId - Layer id
+     * @param {string} layerName - Layer name
+     * @param {string} parentId - Parent id
+     * @param {string} parentName - Parent name
+     * @param {string} elementId - Html element id
+     *
+     * @function addVisibleLayer
+     * @memberof Map
+     * @inner
+     */
+    var addVisibleLayer = function(layerId, layerName, parentId, parentName, elementId) {
+      memberVisibleLayers.push({
+        layerId: layerId,
+        layerName: layerName,
+        parentId: parentId,
+        parentName: parentName,
+        elementId: elementId
+      });
+
+      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
+        $.event.trigger({type: "updateMapInformationsBox"});
+      }
+    };
+
+    /**
+     * Removes a layer from the visible layers array.
+     * @param {string} layerId - Layer id
+     *
+     * @function removeVisibleLayer
+     * @memberof Map
+     * @inner
+     */
+    var removeVisibleLayer = function(layerId) {
+      for(var i = 0, count = memberVisibleLayers.length; i < count; i++) {
+        if(memberVisibleLayers[i].layerId === layerId) {
+          memberVisibleLayers.splice(i, 1);
+          break;
+        }
+      }
+
+      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
+        $.event.trigger({type: "updateMapInformationsBox"});
+      }
+    };
+
+    /**
+     * Returns the array of currently visible layers.
+     * @returns {array} memberVisibleLayers - Currently visible layers
+     *
+     * @function getVisibleLayers
+     * @memberof Map
+     * @inner
+     */
+    var getVisibleLayers = function() {
+      return memberVisibleLayers;
+    };
+
+    /**
      * Adds the layers from the map configuration file to the map.
      *
      * @private
@@ -53,32 +115,51 @@ define(
     var addLayersToMap = function() {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      if(configuration.LayerGroups.length > 0) {
-        for(var i = configuration.LayerGroups.length - 1; i >= 0; i--) {
-          for(var j = configuration.LayerGroups[i].Layers.length - 1; j >= 0; j--) {
-            configuration.LayerGroups[i].Layers[j]["LayerGroup"] = {
-              "Id": configuration.LayerGroups[i].Id,
-              "Name": configuration.LayerGroups[i].Name
-            };
-
-            if(configuration.LayerGroups[i].Layers[j].AddsInTheStart) {
-              if(configuration.UseLayerGroupsInTheLayerExplorer) {
-                if(TerraMA2WebComponents.MapDisplay.addLayerGroup(configuration.LayerGroups[i].Id, configuration.LayerGroups[i].Name))
-                  TerraMA2WebComponents.LayerExplorer.addLayersFromMap(configuration.LayerGroups[i].Id, 'terrama2-layerexplorer');
-
-                addLayerToMap(configuration.LayerGroups[i].Layers[j], configuration.LayerGroups[i].Id, true);
-              } else {
-                addLayerToMap(configuration.LayerGroups[i].Layers[j], 'terrama2-layerexplorer', true);
-              }
-            } else {
-              addNotAddedLayer(configuration.LayerGroups[i].Layers[j]);
-            }
-          }
+      if(configuration.Layers.length > 0) {
+        for(var i = configuration.Layers.length - 1; i >= 0; i--) {
+          processLayer(configuration.Layers[i], 'terrama2-layerexplorer', 'Camadas Principais');
         }
       }
 
-      if(TerraMA2WebComponents.MapDisplay.addOSMLayer('osm', 'OpenStreetMap', false, 'terrama2-layerexplorer', true))
-        TerraMA2WebComponents.LayerExplorer.addLayersFromMap('osm', 'terrama2-layerexplorer', true);
+      $('.children:empty').parent().hide();
+    };
+
+    /**
+     * Recursive function that processes a given layer or layer group.
+     * @param {object} layer - Object with the layer data
+     * @param {string} parentId - Parent id
+     * @param {string} parentName - Parent name
+     *
+     * @private
+     * @function processLayer
+     * @memberof Map
+     * @inner
+     */
+    var processLayer = function(layer, parentId, parentName) {
+      var configuration = Utils.getConfigurations().mapConfigurations;
+
+      if(layer.LayerGroup) {
+        if(configuration.UseLayerGroupsInTheLayerExplorer) {
+          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId);
+        }
+
+        for(var j = layer.Layers.length - 1; j >= 0; j--) {
+          if(configuration.UseLayerGroupsInTheLayerExplorer) {
+            processLayer(layer.Layers[j], layer.Id, layer.Name);
+          } else {
+            processLayer(layer.Layers[j], parentId, parentName);
+          }
+        }
+      } else {
+        layer["LayerGroup"] = {
+          "Id": parentId,
+          "Name": parentName
+        };
+
+        if(layer.AddsInTheStart) addLayerToMap(layer, parentId, true);
+        else addNotAddedLayer(layer);
+      }
     };
 
     /**
@@ -96,8 +177,13 @@ define(
       var layerName = Utils.processStringWithDatePattern(layer.Name);
       var layerTime = Utils.processStringWithDatePattern(layer.Time);
 
-      if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
-        TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
+      if(layer.TerraMA2WebComponentsFunction !== null) {
+        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layer.Visible, parent, layer.AppendAtTheEnd))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd);
+      } else {
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
+      }
 
       if(!initialProcess) {
         $.event.trigger({type: "applyFilter"});
@@ -112,6 +198,20 @@ define(
 
       if(Utils.getConfigurations().mapConfigurations.EnableAddAndRemoveLayers)
         $(".layer:not(:has(.remove-layer))").append("<i class=\"fa fa-fw fa-remove remove-layer\"></i>");
+
+      if(layer.Visible) {
+        var parents = $("#" + layer.Id.replace(':', '')).parents('.parent_li').find(' > .group-name > span'),
+            parentsLength = parents.length,
+            parentsString = "";
+
+        if(parentsLength > 0) {
+          for(var i = 0; i < parentsLength; i++) {
+            parentsString += parents[i].innerText + " > ";
+          }
+        }
+
+        addVisibleLayer(layer.Id, layerName, parent, parentsString, layer.Id.replace(':', ''));
+      }
     };
 
     /**
@@ -140,6 +240,8 @@ define(
         } else {
           TerraMA2WebComponents.LayerExplorer.removeLayer(layerToRemove[0].Id);
         }
+
+        removeVisibleLayer(layerToRemove[0].Id);
       }
     };
 
@@ -154,6 +256,41 @@ define(
      */
     var addNotAddedLayer = function(layer) {
       memberNotAddedLayers.push(layer);
+    };
+
+    /**
+     * Sets the visibility of the background layers when the user set a layer visible.
+     * @param {string} selectedLayerId - Id of the selected layer
+     *
+     * @function setBackgroundsVisibility
+     * @memberof Map
+     * @inner
+     */
+    var setBackgroundsVisibility = function(selectedLayerId) {
+      var layersLength = memberLayers.length,
+          backgroundLayers = [],
+          isThisABackgroundLayer = false;
+
+      for(var i = 0; i < layersLength; i++) {
+        if(memberLayers[i].Background) {
+          if(memberLayers[i].Id === selectedLayerId) {
+            isThisABackgroundLayer = true;
+          } else {
+            backgroundLayers.push(memberLayers[i].Id);
+          }
+        }
+      }
+
+      if(isThisABackgroundLayer) {
+        var backgroundLayersLength = backgroundLayers.length;
+
+        for(var i = 0; i < backgroundLayersLength; i++) {
+          if($('#' + backgroundLayers[i].replace(':', '') + ' > input').is(":checked")) {
+            TerraMA2WebComponents.MapDisplay.setLayerVisibilityById(backgroundLayers[i], false);
+            $('#' + backgroundLayers[i].replace(':', '') + ' > input').attr('checked', false);
+          }
+        }
+      }
     };
 
     /**
@@ -251,7 +388,7 @@ define(
             css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
 
           if(layerSubtitleItem.Image !== null)
-            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 15px;background-position: center;background-repeat: no-repeat;";
+            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
 
           elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + " subtitle-item";
 
@@ -418,8 +555,12 @@ define(
     return {
       getLayers: getLayers,
       getNotAddedLayers: getNotAddedLayers,
+      addVisibleLayer: addVisibleLayer,
+      removeVisibleLayer: removeVisibleLayer,
+      getVisibleLayers: getVisibleLayers,
       addLayerToMap: addLayerToMap,
       removeLayerFromMap: removeLayerFromMap,
+      setBackgroundsVisibility: setBackgroundsVisibility,
       resetMapMouseTools: resetMapMouseTools,
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,

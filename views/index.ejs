@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="<%- BASE_URL %>/favicon.ico" type="image/x-icon" />
     <% include templates/stylesheets %>
     <title>Banco de Dados de Queimadas</title>
   </head>
-  <body class="skin-queimadas sidebar-mini wysihtml5-supported">
+  <body class="skin-queimadas sidebar-mini wysihtml5-supported sidebar-collapse">
     <div class="wrapper">
       <% include templates/header %>
       <% include templates/leftbar %>
@@ -15,14 +16,15 @@
       <div class="content-wrapper">
         <section class="content">
           <div class="row">
-            <div id="terrama2-map" class="terrama2-map fullmenu cursor-move">
-              <span id="loading-span" class="hide"><i class="fa fa-refresh fa-spin"></i></span>
+            <div id="terrama2-map" class="terrama2-map cursor-move">
+              <div id="map-info-button"><button type="button" title="Informações do Mapa"><i class="fa fa-info"></i></button></div>
+              <span id="loading-span" class="hide"></span>
               <div id="map-subtitle" class="col-md-3" style="width: 150px">
                 <div class="box box-solid collapsed-box">
                   <div class="box-header with-border">
                     <h3 class="box-title">Legendas</h3>
                     <div class="box-tools">
-                      <button type="button" class="btn btn-box-tool map-subtitle-toggle" data-widget="collapse" title="Exibir Legendas"><i class="fa fa-chevron-down"></i></button>
+                      <button type="button" class="btn btn-box-tool map-subtitle-toggle" data-widget="collapse"><i class="fa fa-chevron-down"></i></button>
                     </div>
                   </div>
                   <div class="box-body no-padding"><ul class="nav nav-pills nav-stacked" id="map-subtitle-items"></ul></div>
@@ -34,6 +36,30 @@
       </div>
     </div>
     <% include templates/footer %>
+    <div id="map-info-box"></div>
+    <div id="feature-info-box"></div>
+    <div id="about-dialog" title="Sobre">
+      <div id="programa-cerrado-image"></div>
+      <p>
+        <span>
+          Projeto <em>Platform of Monitoring and Warning of Forest Fires in the Cerrado</em> (ProCerrado INPE)
+        </span>
+        <br/><br/>
+        Este projeto &eacute; parte integrante do Programa Cerrado, uma iniciativa de
+        coopera&ccedil;&atilde;o entre os governos do Brasil e do Reino Unido, com apoio do Banco Mundial. O Ministério do Meio Ambiente (MMA), por
+        meio de sua Secretaria de Mudan&ccedil;as Clim&aacute;ticas e Qualidade Ambiental (SMCQ), &eacute; o respons&aacute;vel pela coordena&ccedil;&atilde;o geral do programa.
+        O objetivo da iniciativa &eacute; contribuir para a mitiga&ccedil;&atilde;o da mudan&ccedil;a do clima e para melhoria da gest&atilde;o de recursos naturais no bioma
+        Cerrado por meio do aprimoramento de pol&iacute;ticas p&uacute;blicas e de pr&aacute;ticas de produtores rurais.
+      </p>
+      <p><span>PROJETO INPE</span></p>
+      <div id="projeto-inpe-image"></div>
+      <p><span>REALIZA&Ccedil;&Atilde;O</span></p>
+      <div id="realizacao-image"></div>
+      <p style="margin-top: 40px;"><span>Plataforma digital para monitoramento e alerta de fogo na vegeta&ccedil;&atilde;o no Cerrado brasileiro (Banco Mundial TF018566)</span></p>
+      <p id="number-of-accesses" style="margin: 10px; text-align: center; margin-top: 40px; font-size: 15px; font-weight: bold; display: none;">N&uacute;mero de acessos desde 2016/07/25: <span></span></p>
+    </div>
+    <div id="frequently-asked-questions" title="Perguntas Frequentes"></div>
+    <div id="presentation" title="Apresenta&ccedil;&atilde;o"></div>
     <% include templates/javascripts %>
   </body>
 </html>

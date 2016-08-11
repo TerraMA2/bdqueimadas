@@ -59,9 +59,26 @@ define(
         $('#about-dialog').dialog({
           width: 800,
           height: 900,
-          modal: true,
-          resizable: false,
-          draggable: false,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
+      });
+
+      $('#frequently-asked-questions-btn').on('click', function() {
+        $('#frequently-asked-questions').dialog({
+          width: 800,
+          height: 900,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
+      });
+
+      $('#presentation-btn').on('click', function() {
+        $('#presentation').dialog({
+          width: 800,
+          height: 900,
           closeOnEscape: true,
           closeText: "",
           position: { my: 'top', at: 'top+15' }
@@ -166,28 +183,9 @@ define(
         }
 
         // Updates the padding top of the sidebar
-        $('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
+        //$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
-      });
-
-      // Control sidebar toggle click event
-      $('#control-sidebar-btn').on('click', function() {
-
-        // Adjusts the position of the zoom control, attribution button and subtitle when the control sidebar opens or closes
-        if($('.control-sidebar').hasClass('control-sidebar-open')) {
-          $('.ol-zoom').animate({ 'right': '60px' }, { duration: 300, queue: false });
-          $('.ol-attribution').animate({ 'right': '60px' }, { duration: 300, queue: false });
-          $('#map-subtitle').animate({ 'right': '45px' }, { duration: 300, queue: false });
-          $('.ol-scale-line').animate({ 'right': '60px' }, { duration: 300, queue: false });
-          $('#terrama2-map-info').animate({ 'right': '60px' }, { duration: 300, queue: false });
-        } else {
-          $('.ol-zoom').animate({ 'right': '15px' }, { duration: 300, queue: false });
-          $('.ol-attribution').animate({ 'right': '15px' }, { duration: 300, queue: false });
-          $('#map-subtitle').animate({ 'right': '0' }, { duration: 300, queue: false });
-          $('.ol-scale-line').animate({ 'right': '15px' }, { duration: 300, queue: false });
-          $('#terrama2-map-info').animate({ 'right': '15px' }, { duration: 300, queue: false });
-        }
       });
 
       // Export click event
@@ -249,10 +247,30 @@ define(
               click: function() {
                 $("#filter-error-export").text('');
 
+                if($("#filter-date-to-export").datepicker('getDate') !== null && $("#filter-date-from-export").datepicker('getDate') !== null) {
+                  var timeDiffBetweenDates = Math.abs($("#filter-date-to-export").datepicker('getDate').getTime() - $("#filter-date-from-export").datepicker('getDate').getTime());
+                  var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+                } else {
+                  var diffDaysBetweenDates = 0;
+                }
+
                 if($("#filter-date-from-export").val() === "") {
                   $("#filter-error-export").text('Data inicial inválida!');
                 } else if($("#filter-date-to-export").val() === "") {
                   $("#filter-error-export").text('Data final inválida!');
+                } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
+                  $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
+                  $("#filter-date-to-export").val('');
+                } else if($("#filter-date-from-export").datepicker('getDate') > new Date()) {
+                  $("#filter-error-export").text('Data inicial posterior à atual - corrigir!');
+                  $("#filter-date-from-export").val('');
+                } else if($("#filter-date-to-export").datepicker('getDate') > new Date()) {
+                  $("#filter-error-export").text('Data final posterior à atual - corrigir!');
+                  $("#filter-date-to-export").val('');
+                } else if(diffDaysBetweenDates >= 365) {
+                  $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
+                  $("#filter-date-from-export").val('');
+                  $("#filter-date-to-export").val('');
                 } else if($('#filter-satellite-export').val() === null) {
                   $("#filter-error-export").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
@@ -260,6 +278,19 @@ define(
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
+                  var countries = (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '');
+
+                  if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
+                    var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+                    var initialContinentCountriesLength = initialContinentCountries.length;
+
+                    for(var i = 0; i < initialContinentCountriesLength; i++) {
+                      countries += initialContinentCountries[i].Name + ',';
+                    }
+
+                    countries = countries.substring(0, countries.length - 1);
+                  }
+
                   $.ajax({
                     async: false,
                     url: Utils.getBaseUrl() + "exists-data-to-export",
@@ -269,8 +300,7 @@ define(
                       dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
-                      extent: TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString(),
-                      countries: (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : ''),
+                      countries: countries,
                       states: (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '')
                     },
                     success: function(existsDataToExport) {
@@ -279,8 +309,7 @@ define(
                                          "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
-                                         "&extent=" + TerraMA2WebComponents.MapDisplay.getCurrentExtent().toString() +
-                                         "&countries=" + (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '') +
+                                         "&countries=" + countries +
                                          "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
                                          "&format=" + $("#exportation-type").val();
 
@@ -316,8 +345,19 @@ define(
           var dateFrom = $('#filter-date-from-export').datepicker('getDate');
           var dateTo = $('#filter-date-to-export').datepicker('getDate');
 
+          if(dateTo !== null && dateFrom !== null) {
+            var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+            var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+          } else {
+            var diffDaysBetweenDates = 0;
+          }
+
           if(dateFrom === null) {
             $("#filter-error-export").text('A data inicial deve ser preenchida primeiro!');
+            $("#filter-date-to-export").val('');
+          } else if(diffDaysBetweenDates >= 365) {
+            $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
+            $("#filter-date-from-export").val('');
             $("#filter-date-to-export").val('');
           } else {
             if(dateFrom > dateTo && dateTo !== null) {
@@ -350,6 +390,8 @@ define(
         if(dates !== null) {
           var countriesField = $('#countries').val();
           var statesField = $('#states').val();
+
+          if(dates.length === 0) Filter.updateDatesToCurrent();
 
           if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
             if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
@@ -409,10 +451,6 @@ define(
         }
       });
 
-      $('#updateComponents').on('click', function() {
-        updateComponents();
-      });
-
       $(document).on("updateComponents", function() {
         updateComponents();
       });
@@ -432,7 +470,7 @@ define(
       });
 
       $('#graph-box').on('click', '.export-graphic-data', function() {
-        Graphics.exportGraphicData($(this).data('key'), $(this).data('limit'));
+        Graphics.exportGraphicData($(this).data('id'));
       });
 
       // Map Events
@@ -463,20 +501,78 @@ define(
         Map.updateZoomTop(true);
 
         if($('#map-subtitle > div').hasClass('collapsed-box')) {
-          $('#map-subtitle').animate({ 'width': '25%' }, { duration: 500, queue: false });
+          $('#map-subtitle').animate({ 'width': '350px' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-          $(this).attr('title', 'Esconder Legendas');
         } else {
           $('#map-subtitle').animate({ 'width': '150px' }, { duration: 500, queue: false });
           $('.map-subtitle-toggle > i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
-          $(this).attr('title', 'Exibir Legendas');
         }
+      });
+
+      $(document).on("updateMapInformationsBox", function() {
+        var html = getVisibleLayers();
+
+        $('#map-info-box').html(html);
+      });
+
+      $('#map-info-button > button').on('click', function() {
+        var html = getVisibleLayers();
+
+        $('#map-info-box').html(html);
+        $('#map-info-box').dialog({
+          dialogClass: "map-info-box",
+          title: "Informações do Mapa",
+          width: 230,
+          maxHeight: 300,
+          modal: false,
+          resizable: true,
+          draggable: true,
+          closeOnEscape: true,
+          closeText: "",
+          position: { my: 'top', at: 'top+15' }
+        });
+      });
+
+      $('#terrama2-layerexplorer').on('click', 'input.terrama2-layerexplorer-checkbox', function(ev) {
+        setTimeout(function() {
+          $('.ol-viewport a').attr('target', '_blank');
+        }, 2000);
+
+        if($(this).is(":checked")) {
+          Map.setBackgroundsVisibility($(this).parent().data('layerid'));
+
+          var parents = $(this).parents('.parent_li').find(' > .group-name > span'),
+              parentsLength = parents.length,
+              parentsString = "";
+
+          if(parentsLength > 0) {
+            for(var i = 0; i < parentsLength; i++) {
+              parentsString += parents[i].innerText + " > ";
+            }
+          }
+
+          Map.addVisibleLayer(
+            $(this).parent().data('layerid'),
+            $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html(),
+            $(this).parent().data('parentid'),
+            (parentsString !== "" ? parentsString : null),
+            $(this).parent().attr('id')
+          );
+        } else {
+          Map.removeVisibleLayer($(this).parent().data('layerid'));
+        }
+
+        ev.stopPropagation();
       });
 
       // LayerExplorer events
 
       $(document).on('click', '.remove-layer', function() {
         Map.removeLayerFromMap($(this).parent().data('layerid'));
+
+        $('.children:empty').parent().find(' > span > div').addClass('terrama2-layerexplorer-plus').removeClass('terrama2-layerexplorer-minus').html('+');
+        $('.children:empty').parent().removeClass('open');
+        $('.children:empty').parent().hide();
       });
 
       $(document).on('click', '.new-layer', function() {
@@ -488,6 +584,7 @@ define(
           if(layerId === layer.Id) {
             if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
               Map.addLayerToMap(layer, layer.LayerGroup.Id, false);
+              $('#' + layer.LayerGroup.Id.replace(':', '')).show();
             } else {
               Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
             }
@@ -503,39 +600,50 @@ define(
           "LayerGroupsNames": []
         };
 
-        $.each(Map.getNotAddedLayers(), function(i, layer) {
-          var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer.Name) + "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span></li>";
+        if(Map.getNotAddedLayers().length > 0) {
+          $.each(Map.getNotAddedLayers(), function(i, layer) {
+            var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer.Name) + "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span></li>";
 
-          if(layerGroups[layer.LayerGroup.Id] !== undefined) {
-            layerGroups[layer.LayerGroup.Id] += layerHtml;
-          } else {
-            layerGroups[layer.LayerGroup.Id] = layerHtml;
+            if(layerGroups[layer.LayerGroup.Id] !== undefined) {
+              layerGroups[layer.LayerGroup.Id] += layerHtml;
+            } else {
+              layerGroups[layer.LayerGroup.Id] = layerHtml;
 
-            layerGroups.LayerGroupsIds.push(layer.LayerGroup.Id);
-            layerGroups.LayerGroupsNames.push(layer.LayerGroup.Name);
-          }
-        });
+              layerGroups.LayerGroupsIds.push(layer.LayerGroup.Id);
+              layerGroups.LayerGroupsNames.push(layer.LayerGroup.Name);
+            }
+          });
 
-        var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
-        availableLayers += "<div id=\"available-layers\">";
+          var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
+          availableLayers += "<div id=\"available-layers\">";
 
-        $.each(layerGroups.LayerGroupsIds, function(i, layerGroupId) {
-          availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroupId + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
-          availableLayers += "<ul id=\"layer-group-" + layerGroupId + "\">" + layerGroups[layerGroupId] + "</ul>";
-        });
+          $.each(layerGroups.LayerGroupsIds, function(i, layerGroupId) {
+            availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroupId + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
+            availableLayers += "<ul id=\"layer-group-" + layerGroupId + "\">" + layerGroups[layerGroupId] + "</ul>";
+          });
 
-        availableLayers += "</div>";
+          availableLayers += "</div>";
 
-        $('#available-layers li').hide();
+          $('#available-layers li').hide();
 
-        vex.dialog.alert({
-          message: availableLayers,
-          buttons: [{
-            type: 'submit',
-            text: 'Fechar',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+          vex.dialog.alert({
+            message: availableLayers,
+            buttons: [{
+              type: 'submit',
+              text: 'Fechar',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        } else {
+          vex.dialog.alert({
+            message: '<p class="text-center">Não existem camadas disponíveis para adicionar ao mapa!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        }
       });
 
       $(document).on('click', '#available-layers > span.span-group-name', function(ev) {
@@ -580,6 +688,32 @@ define(
 
       $('#filter-button-attributes-table').on('click', function() {
         AttributesTable.updateAttributesTable(true);
+      });
+
+      // Navbar logos events
+
+      $("#page-title").on('click', '.inpe-image', function() {
+        window.open('http://www.inpe.br/', '_blank');
+      });
+
+      $("#page-title").on('click', '.programa-queimadas-image', function() {
+        window.open('http://www.inpe.br/queimadas/', '_blank');
+      });
+
+      $("#page-title").on('click', '.defra-image', function() {
+        window.open('https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs', '_blank');
+      });
+
+      $("#page-title").on('click', '.banco-mundial-image', function() {
+        window.open('http://www.worldbank.org/', '_blank');
+      });
+
+      $("#page-title").on('click', '.mma-image', function() {
+        window.open('http://www.mma.gov.br/', '_blank');
+      });
+
+      $("#page-title").on('click', '.funcate-image', function() {
+        window.open('https://www.funcate.org.br/', '_blank');
       });
 
       // TerraMA2WebComponents events
@@ -737,7 +871,7 @@ define(
               countriesCount = result.countries.rowCount;
 
           for(var i = 0; i < countriesCount; i++) {
-            html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
+            html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
           }
 
           $('#countries').empty().html(html);
@@ -755,7 +889,7 @@ define(
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<option value='" + result.countries.rows[i].id + "'>" + result.countries.rows[i].name + "</option>";
+          html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
         }
 
         // todo: correct bellows block
@@ -829,20 +963,15 @@ define(
 
             $.each(featureInfo.features, function(i, feature) {
               firesAttributes += "<strong>Id:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
-              firesAttributes += "<br/><strong>Latitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName];
-              firesAttributes += "<br/><strong>Longitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName];
-              firesAttributes += "<br/><strong>Latitude GMS:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
-              firesAttributes += "<br/><strong>Longitude GMS:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
-              firesAttributes += "<br/><strong>Data:</strong> " + Utils.dateToString(Utils.stringToDate(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat), "YYYY/MM/DD");
-              firesAttributes += "<br/><strong>Hora:</strong> " + Utils.formatTime(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFieldName], Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFormat, "HH:MM:SS");
+              firesAttributes += "<br/><strong>Latitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + ' - ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Longitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + ' - ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Data / Hora:</strong> " + Utils.dateToString(Utils.stringToDate(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat), "YYYY/MM/DD") + ' ' + Utils.formatTime(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFieldName], Utils.getConfigurations().filterConfigurations.LayerToFilter.TimeFormat, "HH:MM:SS");
               firesAttributes += "<br/><strong>Satélite:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
               firesAttributes += "<br/><strong>Município:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName];
-              firesAttributes += "<br/><strong>Estado:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName];
-              firesAttributes += "<br/><strong>País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
+              firesAttributes += "<br/><strong>Estado / País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName] + ' / ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
               firesAttributes += "<br/><strong>Precipitação 24h:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
-              firesAttributes += "<br/><strong>Número de dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
-              firesAttributes += "<br/><strong>Risco de Fogo:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName];
-              firesAttributes += "<br/><strong>Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
+              firesAttributes += "<br/><strong>Nº dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
+              firesAttributes += "<br/><strong>Risco Fogo / Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName] + ' / ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
               firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
               if(featureInfo.features.length > (i + 1)) firesAttributes += "<hr/>";
             });
@@ -852,8 +981,8 @@ define(
             $('#feature-info-box').dialog({
               dialogClass: "feature-info-box",
               title: (featureInfo.features.length > 1 ? "Atributos dos focos" : "Atributos do foco"),
-              width: 310,
-              height: 370,
+              width: 300,
+              height: 280,
               modal: false,
               resizable: true,
               draggable: true,
@@ -866,18 +995,21 @@ define(
       });
 
       Utils.getSocket().on('piwikDataResponse', function(result) {
-        $('#number-of-accesses').text(result.piwikData[0].nb_visits);
+        if(result.piwikData[0] !== undefined && result.piwikData[0] !== null && result.piwikData[0].nb_visits !== undefined && result.piwikData[0].nb_visits !== null) {
+          $('#number-of-accesses > span').text(result.piwikData[0].nb_visits);
+          $('#number-of-accesses').show();
+        }
       });
 
       Utils.getSocket().on('checkFiresCountResponse', function(result) {
-        if(result.firesCount.rows[0].count >= 2000000) {
-          $('#filter-satellite').val(Filter.getSatellites());
-          $('#filter-biome').val(Filter.getBiomes());
+        if(result.firesCount.rows[0].count >= 200000) {
+          //$('#filter-satellite').val(Filter.getSatellites());
+          //$('#filter-biome').val(Filter.getBiomes());
 
-          Filter.updateDatesToCurrent();
+          //Filter.updateDatesToCurrent();
 
           vex.dialog.alert({
-            message: '<p class="text-center">O número de focos para esse filtro ultrapassa o limite, diminua o período filtrado!</p>',
+            message: '<p class="text-center">Atenção! O número de focos para esse filtro passou de 200.000, esse procedimento vai demorar.</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
@@ -908,6 +1040,13 @@ define(
         var dateFrom = $('#filter-date-from').datepicker('getDate');
         var dateTo = $('#filter-date-to').datepicker('getDate');
 
+        if(dateTo !== null && dateFrom !== null) {
+          var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+        } else {
+          var diffDaysBetweenDates = 0;
+        }
+
         if(dateFrom === null) {
           vex.dialog.alert({
             message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
@@ -918,6 +1057,18 @@ define(
             }]
           });
 
+          $("#filter-date-to").val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          vex.dialog.alert({
+            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#filter-date-from').val('');
           $("#filter-date-to").val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
@@ -943,6 +1094,13 @@ define(
         var dateFrom = $('#filter-date-from-attributes-table').datepicker('getDate');
         var dateTo = $('#filter-date-to-attributes-table').datepicker('getDate');
 
+        if(dateTo !== null && dateFrom !== null) {
+          var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+        } else {
+          var diffDaysBetweenDates = 0;
+        }
+
         if(dateFrom === null) {
           vex.dialog.alert({
             message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
@@ -954,6 +1112,18 @@ define(
           });
 
           $("#filter-date-to-attributes-table").val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          vex.dialog.alert({
+            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#filter-date-from-attributes-table').val('');
+          $('#filter-date-to-attributes-table').val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
@@ -978,6 +1148,13 @@ define(
         var dateFrom = $('#filter-date-from-graphics').datepicker('getDate');
         var dateTo = $('#filter-date-to-graphics').datepicker('getDate');
 
+        if(dateTo !== null && dateFrom !== null) {
+          var timeDiffBetweenDates = Math.abs(dateTo.getTime() - dateFrom.getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+        } else {
+          var diffDaysBetweenDates = 0;
+        }
+
         if(dateFrom === null) {
           vex.dialog.alert({
             message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
@@ -989,6 +1166,18 @@ define(
           });
 
           $("#filter-date-to-graphics").val('');
+        } else if(diffDaysBetweenDates >= 365) {
+          vex.dialog.alert({
+            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#filter-date-from-graphics').val('');
+          $('#filter-date-to-graphics').val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
             vex.dialog.alert({
@@ -1008,6 +1197,15 @@ define(
 
       $("#filter-date-from-graphics").datepicker(datePickerOptions);
       $("#filter-date-to-graphics").datepicker(datePickerOptions);
+
+      $(".sidebar-menu").mousemove(function(e) {
+        $(".sidebar-menu").scrollTop(function(i, v) {
+          var h = $(window).height();
+          var y = e.clientY - h / 2;
+
+          return v + y * 0.1;
+        });
+      });
     };
 
     /**
@@ -1075,12 +1273,13 @@ define(
         $("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
       }
 
-      $("#page-title").html(
-        headerText + "<span id=\"page-second-title\" style=\"" + ($("body").hasClass('sidebar-collapse') ? "" : "display: none;") + "\"> | " +
-        "<span class=\"inpe-image\"></span>" +
-        "<span class=\"programa-queimadas-image\"></span>" +
-        "<span class=\"text\">INPE - Programa Queimadas</span></span>"
-      );
+      $("#page-title > .dynamic-text").html(headerText);
+
+      if($("body").hasClass('sidebar-collapse')) {
+        $("#page-second-title").show();
+      } else {
+        $("#page-second-title").hide();
+      }
     };
 
     /**
@@ -1117,12 +1316,13 @@ define(
      * @inner
      */
     var closeAllLeftContentBoxes = function() {
-      $("#page-title").html(
-        "Banco de Dados de Queimadas<span id=\"page-second-title\" style=\"" + ($("body").hasClass('sidebar-collapse') ? "" : "display: none;") + "\"> | " +
-        "<span class=\"inpe-image\"></span>" +
-        "<span class=\"programa-queimadas-image\"></span>" +
-        "<span class=\"text\">INPE - Programa Queimadas</span></span>"
-      );
+      $("#page-title > .dynamic-text").html("Banco de Dados de Queimadas");
+
+      if($("body").hasClass('sidebar-collapse')) {
+        $("#page-second-title").show();
+      } else {
+        $("#page-second-title").hide();
+      }
 
       $(".left-content-box").removeClass('active');
       $(".left-content-box").removeClass('fullmenu');
@@ -1161,7 +1361,8 @@ define(
       $('#box-attributes-table').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
-      $('.control-sidebar').animate({ "padding-top": (memberHeaderHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+
+      $('.sidebar-menu').animate({ "max-height": (memberHeight - ((memberHeaderHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
     };
 
     /**
@@ -1180,7 +1381,32 @@ define(
       $('#box-attributes-table').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight + 60)) + "px" }, { duration: duration, queue: false });
 
       $('.left-content-box').animate({ "height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px", "margin-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
-      $('.control-sidebar').animate({ "padding-top": (memberNavbarHeight + memberContentHeaderHeight) + "px" }, { duration: duration, queue: false });
+
+      $('.sidebar-menu').animate({ "max-height": (memberHeight - ((memberNavbarHeight + memberContentHeaderHeight) + memberReducedFooterHeight)) + "px" }, { duration: duration, queue: false });
+    };
+
+    /**
+     * Returns the names of the visible layers.
+     *
+     * @private
+     * @function getVisibleLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var getVisibleLayers = function() {
+      var visibleLayers = Map.getVisibleLayers();
+      var html = '';
+
+      if(visibleLayers.length > 0) {
+        for(var i = 0, count = visibleLayers.length; i < count; i++) {
+          if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
+          html += visibleLayers[i].layerName + '<br/>';
+        }
+      } else {
+        html = '<strong>Nenhuma camada a ser exibida.</strong>';
+      }
+
+      return html;
     };
 
     /**
@@ -1196,26 +1422,31 @@ define(
       $(document).ready(function() {
         Utils.getSocket().emit('piwikDataRequest');
 
-        $('#footer-brasil a').attr('target', '_blank');
+        setTimeout(function() {
+          $('#footer-brasil a').attr('target', '_blank');
+          $('.ol-viewport a').attr('target', '_blank');
+        }, 2000);
 
         updateSizeVars();
-        setFullContentSize(300);
+        setReducedContentSize(300);
 
         loadEvents();
         loadSocketsListeners();
         loadPlugins();
+
+        TerraMA2WebComponents.MapDisplay.updateMapSize();
 
         /*window.setInterval(function() {
           updateSizeVars();
           updateComponents();
         }, 60000);*/
 
-        setTimeout(function() {
+        /*setTimeout(function() {
           $('.sidebar-toggle').click();
           $('#main-sidebar-toggle').css('display', '');
-        }, 15000);
+        }, 15000);*/
 
-        setTimeout(function() {
+        /*setTimeout(function() {
           if($('#states').val() !== null && !Utils.stringInArray($('#states').val(), "")) {
             Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
           } else if($('#countries').val() !== null && !Utils.stringInArray($('#countries').val(), "")) {
@@ -1225,7 +1456,7 @@ define(
           }
 
           Filter.checkFiresCount();
-        }, 16000);
+        }, 16000);*/
       });
     };
 

@@ -106,12 +106,6 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
-        }
-
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined) {
           var countriesArray = options.countries.split(',');
@@ -210,12 +204,6 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
-        }
-
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined) {
           var countriesArray = options.countries.split(',');
@@ -301,12 +289,6 @@ var AttributesTable = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
