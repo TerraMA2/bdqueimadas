@@ -16,6 +16,7 @@
  * @property {array} memberCountriesBdqNames - Current countries BDQ names.
  * @property {array} memberStates - Current states.
  * @property {array} memberStatesBdqNames - Current states BDQ names.
+ * @property {array} memberSpecialRegions - Current special regions.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -39,6 +40,8 @@ define(
     var memberStates = [];
     // Current states BDQ names
     var memberStatesBdqNames = [];
+    // Current special regions
+    var memberSpecialRegions = [];
 
     /**
      * Returns the initial date formatted with the received format.
@@ -354,6 +357,30 @@ define(
           if(callback !== null) callback();
         }
       });
+    };
+
+    /**
+     * Sets the special regions array.
+     * @param {array} specialRegions - Special regions array
+     *
+     * @function setSpecialRegions
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setSpecialRegions = function(specialRegions) {
+      memberSpecialRegions = specialRegions;
+    };
+
+    /**
+     * Returns the special regions array.
+     * @returns {array} memberSpecialRegions - Special regions array
+     *
+     * @function getSpecialRegions
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegions = function() {
+      return memberSpecialRegions;
     };
 
     /**
@@ -970,6 +997,8 @@ define(
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
       updateBdqNames: updateBdqNames,
+      setSpecialRegions: setSpecialRegions,
+      getSpecialRegions: getSpecialRegions,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,

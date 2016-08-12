@@ -41,12 +41,26 @@ var Filter = function(io) {
 
     // Spatial filter request event
     client.on('spatialFilterRequest', function(json) {
-      var functionName = "get" + json.key + "Extent";
-      memberFilter[functionName](json.ids, function(err, extent) {
-        if(err) return console.error(err);
+      if(json.key === 'States' && json.specialRegions.length > 0 && json.ids.length > 0) {
+        memberFilter.getStatesAndSpecialRegionsExtent(json.ids, json.specialRegions, function(err, extent) {
+          if(err) return console.error(err);
 
-        client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, extent: extent });
-      });
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
+        });
+      } else if(json.key === 'States' && json.specialRegions.length > 0 && json.ids.length === 0) {
+        memberFilter.getSpecialRegionsExtent(json.specialRegions, function(err, extent) {
+          if(err) return console.error(err);
+
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
+        });
+      } else {
+        var functionName = "get" + json.key + "Extent";
+        memberFilter[functionName](json.ids, function(err, extent) {
+          if(err) return console.error(err);
+
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
+        });
+      }
     });
 
     // Data by intersection request event
@@ -100,19 +114,31 @@ var Filter = function(io) {
 
     // States by country request event
     client.on('statesByCountryRequest', function(json) {
+      // aqui
+
       memberFilter.getStatesByCountry(json.country, function(err, states) {
         if(err) return console.error(err);
 
-        client.emit('statesByCountryResponse', { states: states });
+        memberFilter.getSpecialRegions(function(err, specialRegions) {
+          if(err) return console.error(err);
+
+          client.emit('statesByCountryResponse', { states: states, specialRegions: specialRegions });
+        });
       });
     });
 
     // States by countries request event
     client.on('statesByCountriesRequest', function(json) {
+      // aqui
+
       memberFilter.getStatesByCountries(json.countries, function(err, states) {
         if(err) return console.error(err);
 
-        client.emit('statesByCountriesResponse', { states: states });
+        memberFilter.getSpecialRegions(function(err, specialRegions) {
+          if(err) return console.error(err);
+
+          client.emit('statesByCountriesResponse', { states: states, specialRegions: specialRegions });
+        });
       });
     });
 

@@ -404,7 +404,19 @@ define(
             }
           } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && statesField[0] == "") ? [] : statesField), false)) {
             if(!Utils.stringInArray($('#states').val(), "") && $('#states').val().length > 0) {
-              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
+              var states = $('#states').val(),
+                  filterStates = [],
+                  specialRegions = [];
+
+              $('#states > option').each(function() {
+                if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
+                  specialRegions.push($(this).val());
+                } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
+                  filterStates.push($(this).val());
+                }
+              });
+
+              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: specialRegions, key: 'States', filterForm: true });
             } else {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -788,8 +800,9 @@ define(
             Filter.enableDropdown('states', '');
           } else {
             Filter.setStates(result.ids);
+            Filter.setSpecialRegions(result.specialRegions);
 
-            Filter.enableDropdown('states', result.ids);
+            Filter.enableDropdown('states', $.merge(result.ids, result.specialRegions));
           }
         } else {
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
@@ -903,6 +916,8 @@ define(
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
+        console.log(result.specialRegions);
+
         var initialValue = $('#states').val();
 
         var html = "<option value=\"\" selected>Todos os estados</option>",
@@ -923,6 +938,8 @@ define(
       });
 
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
+        console.log(result.specialRegions);
+
         var initialValue = $('#states').val();
 
         var html = "<option value=\"\" selected>Todos os estados</option>",
@@ -930,6 +947,14 @@ define(
 
         for(var i = 0; i < statesCount; i++) {
           html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
+        }
+
+        if(result.specialRegions !== undefined && result.specialRegions !== null) {
+          var specialRegionsCount = result.specialRegions.rowCount;
+
+          for(var i = 0; i < specialRegionsCount; i++) {
+            html += "<option value='" + result.specialRegions.rows[i].id + "' data-special-region='true'>" + result.specialRegions.rows[i].name + "</option>";
+          }
         }
 
         // todo: correct bellows block
