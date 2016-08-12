@@ -554,6 +554,42 @@ define(
       return cql;
     };
 
+    // new
+
+    var createSpecialRegionsFilter = function() {
+      var cql = "";
+
+      for(var i = 0; i < memberSpecialRegions.length; i++) {
+        for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
+          if(memberSpecialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
+            if(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length > 0) {
+              cql += "(";
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++) {
+                cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x] + "' OR ";
+              }
+
+              cql = cql.substring(0, cql.length - 4) + ") AND ";
+            }
+
+            if(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length > 0) {
+              cql += "(";
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++) {
+                cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x] + "' OR ";
+              }
+
+              cql = cql.substring(0, cql.length - 4) + ") AND ";
+            }
+          }
+        }
+      }
+
+      return cql;
+    };
+
+    // new
+
     /**
      * Applies the dates, the satellites and the biomes filters.
      *
@@ -619,9 +655,16 @@ define(
           cql += createStatesFilter() + " AND ";
         }
 
+        if(memberSpecialRegions.length > 0) {
+          cql += createSpecialRegionsFilter();
+        }
+
         if(cql.length > 5) {
           cql = cql.substring(0, cql.length - 5);
         }
+
+        //console.log(memberStates);
+        //console.log(cql);
 
         updateSatellitesSelect();
         TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
@@ -754,14 +797,12 @@ define(
             for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i].Id);
           }
 
-          var states = $('#states').val();
-
           updateBdqNames(function() {
             applyCurrentSituationFilter(
               Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
               Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
               countries,
-              states,
+              memberStates,
               memberStatesBdqNames,
               memberSatellites,
               memberBiomes,

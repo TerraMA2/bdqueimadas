@@ -799,10 +799,17 @@ define(
             Filter.enableDropdown('countries', result.ids);
             Filter.enableDropdown('states', '');
           } else {
+            console.log('aqui');
+            console.log(result.ids);
             Filter.setStates(result.ids);
             Filter.setSpecialRegions(result.specialRegions);
 
-            Filter.enableDropdown('states', $.merge(result.ids, result.specialRegions));
+            var arrayOne = JSON.parse(JSON.stringify(result.ids));
+            var arrayTwo = JSON.parse(JSON.stringify(result.specialRegions));
+
+            Filter.enableDropdown('states', $.merge(arrayOne, arrayTwo));
+
+            console.log(Filter.getStates());
           }
         } else {
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
@@ -916,8 +923,6 @@ define(
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
-        console.log(result.specialRegions);
-
         var initialValue = $('#states').val();
 
         var html = "<option value=\"\" selected>Todos os estados</option>",
@@ -938,8 +943,6 @@ define(
       });
 
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
-        console.log(result.specialRegions);
-
         var initialValue = $('#states').val();
 
         var html = "<option value=\"\" selected>Todos os estados</option>",
