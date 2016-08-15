@@ -501,6 +501,7 @@ define(
 
     /**
      * Creates the countries filter.
+     * @param {array} specialRegionsCountries - Special regions countries
      * @returns {string} cql - Countries cql filter
      *
      * @private
@@ -508,21 +509,17 @@ define(
      * @memberof Filter(2)
      * @inner
      */
-    var createCountriesFilter = function() {
+    var createCountriesFilter = function(specialRegionsCountries) {
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
-      for(var i = 0; i < memberCountriesBdqNames.length; i++) {
-        cql += "'" + memberCountriesBdqNames[i] + "',";
+      if(!Utils.stringInArray(memberCountries, "")) {
+        for(var i = 0; i < memberCountriesBdqNames.length; i++) {
+          cql += "'" + memberCountriesBdqNames[i] + "',";
+        }
       }
 
-      for(var i = 0; i < memberSpecialRegions.length; i++) {
-        for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
-          if(memberSpecialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
-            for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++) {
-              cql += "'" + Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x] + "',";
-            }
-          }
-        }
+      for(var i = 0; i < specialRegionsCountries.length; i++) {
+        cql += "'" + specialRegionsCountries[i] + "',";
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -556,6 +553,7 @@ define(
 
     /**
      * Creates the states filter.
+     * @param {array} specialRegionsStates - Special regions states
      * @returns {string} cql - States cql filter
      *
      * @private
@@ -563,11 +561,17 @@ define(
      * @memberof Filter(2)
      * @inner
      */
-    var createStatesFilter = function() {
+    var createStatesFilter = function(specialRegionsStates) {
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
 
-      for(var i = 0; i < memberStatesBdqNames.length; i++) {
-        cql += "'" + memberStatesBdqNames[i] + "',";
+      if(!Utils.stringInArray(memberStates, "")) {
+        for(var i = 0; i < memberStatesBdqNames.length; i++) {
+          cql += "'" + memberStatesBdqNames[i] + "',";
+        }
+      }
+
+      for(var i = 0; i < specialRegionsStates.length; i++) {
+        cql += "'" + specialRegionsStates[i] + "',";
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -576,42 +580,23 @@ define(
     };
 
     /**
-     * Creates the special regions filter.
-     * @returns {string} cql - Special regions cql filter
+     * Creates the cities filter.
+     * @param {array} specialRegionsCities - Special regions cities
+     * @returns {string} cql - States cql filter
      *
      * @private
-     * @function createSpecialRegionsFilter
+     * @function createCitiesFilter
      * @memberof Filter(2)
      * @inner
      */
-    var createSpecialRegionsFilter = function() {
-      var cql = "";
+    var createCitiesFilter = function(specialRegionsCities) {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + " in (";
 
-      for(var i = 0; i < memberSpecialRegions.length; i++) {
-        for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
-          if(memberSpecialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
-            if(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length > 0) {
-              cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
-
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++) {
-                cql += "'" + Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x] + "',";
-              }
-
-              cql = cql.substring(0, cql.length - 1) + ") AND ";
-            }
-
-            if(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length > 0) {
-              cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + " in (";
-
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++) {
-                cql += "'" + Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x] + "',";
-              }
-
-              cql = cql.substring(0, cql.length - 1) + ") AND ";
-            }
-          }
-        }
+      for(var i = 0; i < specialRegionsCities.length; i++) {
+        cql += "'" + specialRegionsCities[i] + "',";
       }
+
+      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -654,6 +639,30 @@ define(
 
         var cql = "";
 
+        var specialRegionsCountries = [];
+        var specialRegionsStates = [];
+        var specialRegionsCities = [];
+
+        if(memberSpecialRegions.length > 0) {
+          for(var i = 0; i < memberSpecialRegions.length; i++) {
+            for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
+              if(memberSpecialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
+                for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++) {
+                  specialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
+                }
+
+                for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++) {
+                  specialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
+                }
+
+                for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++) {
+                  specialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
+                }
+              }
+            }
+          }
+        }
+
         if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
           cql += createDateFilter() + " AND ";
@@ -673,16 +682,16 @@ define(
           cql += createContinentFilter() + " AND ";
         }
 
-        if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
-          cql += createCountriesFilter() + " AND ";
+        if((!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) || specialRegionsCountries.length > 0) {
+          cql += createCountriesFilter(specialRegionsCountries) + " AND ";
         }
 
-        if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
-          cql += createStatesFilter() + " AND ";
+        if((!Utils.stringInArray(memberStates, "") && memberStates.length > 0) || specialRegionsStates.length > 0) {
+          cql += createStatesFilter(specialRegionsStates) + " AND ";
         }
 
-        if(memberSpecialRegions.length > 0) {
-          cql += createSpecialRegionsFilter();
+        if(specialRegionsCities.length > 0) {
+          cql += createCitiesFilter(specialRegionsCities) + " AND ";
         }
 
         if(cql.length > 5) {

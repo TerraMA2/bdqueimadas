@@ -403,10 +403,11 @@ define(
               Filter.clearStates();
             }
           } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && (statesField[0] == "" || statesField[0] == "0")) ? [] : statesField), false) || Filter.getSpecialRegions().length > 0) {
-            var states = $('#states').val();
-
-            var index = states.indexOf("0");
-            if(index > -1) states.splice(index, 1);
+            if($('#states').val() !== null) {
+              var states = $('#states').val();
+              var index = states.indexOf("0");
+              if(index > -1) states.splice(index, 1);
+            }
 
             if(!Utils.stringInArray(states, "") && states.length > 0) {
               var filterStates = [],
@@ -817,8 +818,10 @@ define(
 
             var statesArray = JSON.parse(JSON.stringify(result.ids));
 
-            var index = $('#states').val().indexOf("0");
-            if(index > -1) statesArray.push("0");
+            if($('#states').val() !== null) {
+              var index = $('#states').val().indexOf("0");
+              if(index > -1) statesArray.push("0");
+            }
 
             var arrayOne = JSON.parse(JSON.stringify(statesArray));
             var arrayTwo = JSON.parse(JSON.stringify(result.specialRegions));
@@ -855,7 +858,7 @@ define(
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
         if(result.data.rowCount > 0) {
           if(result.data.rows[0].key === "States") {
-            var index = $('#states').val().indexOf("0");
+            var index = $('#states').val() !== null ? $('#states').val().indexOf("0") : -1;
 
             if(index > -1) {
               Filter.setStates(["0", result.data.rows[0].id]);
