@@ -868,8 +868,8 @@ define(
               cqlFilter += memberCountries[count] + ",";
             }
 
-            for(var count = 0; count < memberSpecialRegionsCountries.length; count++) {
-              cqlFilter += memberSpecialRegionsCountries[count] + ",";
+            for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
+              cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
             }
 
             cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
@@ -899,7 +899,7 @@ define(
               cqlFilter += "0)";
             }
           } else {
-            if(memberStates.length > 0 || memberSpecialRegionsStates.length > 0) {
+            if(memberStates.length > 0 || memberSpecialRegionsStatesIds.length > 0) {
               var statesCqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + " in (";
               var citiesCqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField + " in (";
 
@@ -909,21 +909,21 @@ define(
                 statesCqlFilter += ids[1] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsCountries.length; count++) {
-                cqlFilter += memberSpecialRegionsCountries[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
+                cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsStates.length; count++) {
-                statesCqlFilter += memberSpecialRegionsStates[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++) {
+                statesCqlFilter += memberSpecialRegionsStatesIds[count] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsCities.length; count++) {
-                citiesCqlFilter += memberSpecialRegionsCities[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++) {
+                citiesCqlFilter += memberSpecialRegionsCitiesIds[count] + ",";
               }
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
 
-              if(memberSpecialRegionsCities.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
+              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
             } else {
               cqlFilter += "0)";
             }
@@ -951,7 +951,7 @@ define(
               cqlFilter += "0)";
             }
           } else {
-            if(memberStates.length > 0 || memberSpecialRegionsStates.length > 0) {
+            if(memberStates.length > 0 || memberSpecialRegionsStatesIds.length > 0) {
               var statesCqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField + " in (";
               var citiesCqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField + " in (";
 
@@ -961,21 +961,21 @@ define(
                 statesCqlFilter += ids[1] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsCountries.length; count++) {
-                cqlFilter += memberSpecialRegionsCountries[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
+                cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsStates.length; count++) {
-                statesCqlFilter += memberSpecialRegionsStates[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++) {
+                statesCqlFilter += memberSpecialRegionsStatesIds[count] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsCities.length; count++) {
-                citiesCqlFilter += memberSpecialRegionsCities[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++) {
+                citiesCqlFilter += memberSpecialRegionsCitiesIds[count] + ",";
               }
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
 
-              if(memberSpecialRegionsCities.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
+              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
             } else {
               cqlFilter += "0)";
             }
