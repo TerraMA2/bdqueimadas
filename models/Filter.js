@@ -793,6 +793,7 @@ var Filter = function() {
 
   /**
    * Returns the special regions.
+   * @param {array} countries - Filtered countries
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -800,13 +801,33 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSpecialRegions = function(callback) {
+  this.getSpecialRegions = function(countries, callback) {
     // Connection with the PostgreSQL database
     memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
+        var specialRegions = "";
+
+        for(var i = 0, specialRegionsLength = memberFilterConfig.SpecialRegions.length; i < specialRegionsLength; i++) {
+          var inArray = false;
+
+          for(var j = 0, countriesLength = countries.length; j < countriesLength; j++) {
+            for(var x = 0, specialRegionsCountriesLength = memberFilterConfig.SpecialRegions[i].CountriesIds.length; x < specialRegionsCountriesLength; x++) {
+              if(countries[j] == memberFilterConfig.SpecialRegions[i].CountriesIds[x]) {
+                inArray = true;
+                break;
+              }
+            }
+
+            if(inArray) break;
+          }
+
+          if(inArray) specialRegions += memberFilterConfig.SpecialRegions[i].Id + ",";
+        }
+
+        specialRegions = specialRegions != "" ? specialRegions.substring(0, specialRegions.length - 1) : "0";
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where gid in (" + specialRegions + ") order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
 
         // Execution of the query
         client.query(query, function(err, result) {

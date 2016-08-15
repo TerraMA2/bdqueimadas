@@ -58,7 +58,7 @@ var Filter = function(io) {
         memberFilter[functionName](json.ids, function(err, extent) {
           if(err) return console.error(err);
 
-          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: [], extent: extent });
         });
       }
     });
@@ -114,12 +114,10 @@ var Filter = function(io) {
 
     // States by country request event
     client.on('statesByCountryRequest', function(json) {
-      // aqui
-
       memberFilter.getStatesByCountry(json.country, function(err, states) {
         if(err) return console.error(err);
 
-        memberFilter.getSpecialRegions(function(err, specialRegions) {
+        memberFilter.getSpecialRegions([json.country], function(err, specialRegions) {
           if(err) return console.error(err);
 
           client.emit('statesByCountryResponse', { states: states, specialRegions: specialRegions });
@@ -129,12 +127,10 @@ var Filter = function(io) {
 
     // States by countries request event
     client.on('statesByCountriesRequest', function(json) {
-      // aqui
-
       memberFilter.getStatesByCountries(json.countries, function(err, states) {
         if(err) return console.error(err);
 
-        memberFilter.getSpecialRegions(function(err, specialRegions) {
+        memberFilter.getSpecialRegions(json.countries, function(err, specialRegions) {
           if(err) return console.error(err);
 
           client.emit('statesByCountriesResponse', { states: states, specialRegions: specialRegions });
