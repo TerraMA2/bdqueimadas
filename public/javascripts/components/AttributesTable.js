@@ -105,7 +105,15 @@ define(
               data.dateTo = memberDateTo;
               data.satellites = memberSatellites;
               data.biomes = memberBiomes;
-              data.countries = (Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? '' : Filter.getCountriesBdqNames().toString());
+
+              var countries = Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? [] : Filter.getCountriesBdqNames();
+
+              var arrayOne = JSON.parse(JSON.stringify(countries));
+              var arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsCountries()));
+
+              countries = $.merge(arrayOne, arrayTwo);
+
+              data.countries = countries.toString();
 
               if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && data.countries === '') {
                 var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
@@ -118,7 +126,14 @@ define(
                 data.countries = data.countries.substring(0, data.countries.length - 1);
               }
 
-              data.states = (Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? '' : Filter.getStatesBdqNames().toString());
+              var states = Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? [] : Filter.getStatesBdqNames();
+
+              var arrayOne = JSON.parse(JSON.stringify(states));
+              var arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsStates()));
+
+              states = $.merge(arrayOne, arrayTwo);
+
+              data.states = states.toString();
             }
           },
           "columns": getAttributesTableColumnNamesArray(),
