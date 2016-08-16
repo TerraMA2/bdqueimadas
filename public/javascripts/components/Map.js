@@ -181,7 +181,7 @@ define(
         if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layer.Visible, parent, layer.AppendAtTheEnd))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd);
       } else {
-        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer))
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent);
       }
 
