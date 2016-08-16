@@ -424,7 +424,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "BDQueimadas:paises_multi",
@@ -441,7 +444,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "BDQueimadas:estados",
@@ -458,7 +464,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "BDQueimadas:municipios",
@@ -475,7 +484,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "BDQueimadas:municipios_pnt",
@@ -492,7 +504,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": 256
+      "Buffer": 256,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "BDQueimadas:biomas_brasileiros",
@@ -509,7 +524,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": 256
+      "Buffer": 256,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "protected_areas",
@@ -531,7 +549,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
@@ -548,7 +569,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": 512
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:unidades_conservacao_federais",
@@ -565,7 +589,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_federais",
@@ -582,7 +609,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": 512
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:terras_indigenas",
@@ -599,7 +629,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:labels_terras_indigenas",
@@ -616,7 +649,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": 512
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:protectedplanet",
@@ -633,7 +669,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:labels_protectedplanet",
@@ -650,7 +689,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": 512
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         }
       ]
     },
@@ -674,11 +716,14 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "aqua_250m_truecolor",
-          "Name": "Aqua / Modis {{INITIAL_DATE=YYYY/MM/DD}}",
+          "Name": "Aqua / Modis {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -691,14 +736,17 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
-          "Id": "terra_250m_truecolor",
+          "Id": "MODIS_Terra_CorrectedReflectance_TrueColor",
           "Name": "Terra / Modis {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "Url": "http://localhost:38000/wms-proxy",
           "TerraMA2WebComponentsFunction": null,
           "AppendAtTheEnd": null,
           "ServerType": "mapserver",
@@ -708,7 +756,15 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": "1.1.0",
+          "Format": "image/jpeg",
+          "TileGrid": {
+            "origin": [-180, 90],
+            "resolutions": [0.5625, 0.28125, 0.140625, 0.0703125, 0.03515625, 0.017578125, 0.0087890625, 0.00439453125, 0.002197265625],
+            "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            "tileSize": 512
+          }
         },
         {
           "Id": "quicklook_noaa16",
@@ -725,7 +781,10 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "quicklook_noaa18",
@@ -742,7 +801,10 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "quicklook_noaa19",
@@ -759,11 +821,14 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "goes",
-          "Name": "GOES / Imager {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "GOES / Imager (No Futuro) {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -776,11 +841,14 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": true,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "msg",
-          "Name": "MSG / SEVIRI {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "MSG / SEVIRI (No Futuro) {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -793,7 +861,10 @@
           "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
           "Disabled": true,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         }
       ]
     },
@@ -817,7 +888,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "ndsc",
@@ -839,7 +913,10 @@
               "Time": null,
               "Disabled": false,
               "AddsInTheStart": true,
-              "Buffer": null
+              "Buffer": null,
+              "Version": null,
+              "Format": null,
+              "TileGrid": null
             },
             {
               "Id": "observacao_ndsc_obssat",
@@ -856,7 +933,10 @@
               "Time": null,
               "Disabled": false,
               "AddsInTheStart": true,
-              "Buffer": null
+              "Buffer": null,
+              "Version": null,
+              "Format": null,
+              "TileGrid": null
             }
           ]
         }
@@ -882,7 +962,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:current_situation_states",
@@ -899,7 +982,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         },
         {
           "Id": "BDQueimadas:current_situation_countries",
@@ -916,7 +1002,10 @@
           "Time": null,
           "Disabled": false,
           "AddsInTheStart": true,
-          "Buffer": null
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null
         }
       ]
     },
@@ -935,7 +1024,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     },
     {
       "Id": "osm",
@@ -952,7 +1044,10 @@
       "Time": null,
       "Disabled": false,
       "AddsInTheStart": true,
-      "Buffer": null
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "TileGrid": null
     }
   ]
 }
