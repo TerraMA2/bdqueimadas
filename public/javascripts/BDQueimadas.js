@@ -278,7 +278,23 @@ define(
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
-                  var countries = (!Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames().toString() : '');
+                  var countries = !Utils.stringInArray(Filter.getCountriesBdqNames(), "") && Filter.getCountriesBdqNames().length > 0 ? Filter.getCountriesBdqNames() : [];
+
+                  var arrayOne = JSON.parse(JSON.stringify(countries));
+                  var arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsCountries()));
+
+                  countries = $.merge(arrayOne, arrayTwo);
+                  countries = countries.toString();
+
+                  var states = !Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames() : [];
+
+                  arrayOne = JSON.parse(JSON.stringify(states));
+                  arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsStates()));
+
+                  states = $.merge(arrayOne, arrayTwo);
+                  states = states.toString();
+
+                  var cities = Filter.getSpecialRegionsCities().toString();
 
                   if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
                     var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
@@ -301,7 +317,8 @@ define(
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
                       countries: countries,
-                      states: (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '')
+                      states: states,
+                      cities: cities
                     },
                     success: function(existsDataToExport) {
                       if(existsDataToExport.existsDataToExport) {
@@ -310,7 +327,8 @@ define(
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
                                          "&countries=" + countries +
-                                         "&states=" + (!Utils.stringInArray(Filter.getStatesBdqNames(), "") && Filter.getStatesBdqNames().length > 0 ? Filter.getStatesBdqNames().toString() : '') +
+                                         "&states=" + states +
+                                         "&cities=" + cities +
                                          "&format=" + $("#exportation-type").val();
 
                         window.open(exportLink, '_blank');

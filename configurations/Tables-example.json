@@ -23,6 +23,13 @@
     "BdqNameFieldName": "nome_bdq",
     "GeometryFieldName": "geom"
   },
+  "SpecialRegions": {
+    "Schema": "dados_geo",
+    "TableName": "regioes_especiais",
+    "IdFieldName": "gid",
+    "NameFieldName": "nome",
+    "GeometryFieldName": "geom"
+  },
   "Fires": {
     "Schema": "public",
     "TableName": "focos",
@@ -32,6 +39,7 @@
     "SatelliteFieldName": "satelite",
     "CountryFieldName": "pais",
     "StateFieldName": "estado",
+    "CityFieldName": "municipio",
     "BiomeFieldName": "bioma_brasileiro",
     "GeometryFieldName": "geom",
     "DateFormat": "YYYY-MM-DD"
