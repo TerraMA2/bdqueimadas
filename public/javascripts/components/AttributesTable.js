@@ -112,7 +112,6 @@ define(
               var arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsCountries()));
 
               countries = $.merge(arrayOne, arrayTwo);
-
               data.countries = countries.toString();
 
               if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && data.countries === '') {
@@ -128,12 +127,13 @@ define(
 
               var states = Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? [] : Filter.getStatesBdqNames();
 
-              var arrayOne = JSON.parse(JSON.stringify(states));
-              var arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsStates()));
+              arrayOne = JSON.parse(JSON.stringify(states));
+              arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsStates()));
 
               states = $.merge(arrayOne, arrayTwo);
-
               data.states = states.toString();
+
+              data.cities = Filter.getSpecialRegionsCities().toString();
             }
           },
           "columns": getAttributesTableColumnNamesArray(),

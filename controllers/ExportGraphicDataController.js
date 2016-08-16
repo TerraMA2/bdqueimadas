@@ -41,6 +41,7 @@ var ExportGraphicDataController = function(app) {
     if(request.query.biomes !== '') options.biomes = request.query.biomes;
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
+    if(request.query.cities !== '') options.cities = request.query.cities;
 
     var graphicConfigurations = getGraphicConfigurations(request.query.id);
 
@@ -50,6 +51,7 @@ var ExportGraphicDataController = function(app) {
     var filterRules = {
       ignoreCountryFilter: graphicConfigurations.IgnoreCountryFilter,
       ignoreStateFilter: graphicConfigurations.IgnoreStateFilter,
+      ignoreCityFilter: graphicConfigurations.IgnoreCityFilter,
       showOnlyIfThereIsACountryFiltered: graphicConfigurations.ShowOnlyIfThereIsACountryFiltered,
       showOnlyIfThereIsNoCountryFiltered: graphicConfigurations.ShowOnlyIfThereIsNoCountryFiltered,
       showOnlyIfThereIsAStateFiltered: graphicConfigurations.ShowOnlyIfThereIsAStateFiltered,

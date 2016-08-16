@@ -120,6 +120,19 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined && !filterRules.ignoreCityFilter) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         query += " group by " + group + " order by count desc, " + key + " asc";
 
         // If the 'options.limit' parameter exists, a limit clause is created
@@ -216,6 +229,19 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined && !filterRules.ignoreCityFilter) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         // If the 'options.limit' parameter exists, a limit clause is created
         if(options.limit !== undefined) {
           query += " limit $" + (parameter++);
@@ -306,6 +332,19 @@ var Graphics = function() {
           for(var i = 0; i < statesArray.length; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined && !filterRules.ignoreCityFilter) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
