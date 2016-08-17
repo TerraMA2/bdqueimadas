@@ -75,6 +75,10 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .clear { clear: both; }
 
+.clear-none { clear: none !important; }
+
+.clear-left { clear: left !important; }
+
 .float-left { float: left; }
 
 .float-right { float: right; }
@@ -682,6 +686,19 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .main-sidebar { padding-top: 50px !important; }
 
+.unsortable > span { cursor: default !important; }
+
+.unsortable-separator { padding-left: 30px !important; }
+
+.unsortable-separator > span { margin-left: 40px !important; }
+
+.unsortable-separator > input { margin-left: 20px; }
+
+.unsortable-separator::before {
+  content: '/' !important;
+  left: 0 !important;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
@@ -695,7 +712,10 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   transition: width 0.3s ease-in-out;
 }
 
-#terrama2-layerexplorer li { padding: 2px 0 !important; }
+#terrama2-layerexplorer li {
+  padding: 2px 0 !important;
+  clear: both;
+}
 
 #terrama2-layerexplorer li > span { padding: 0px 0px 0px 10.5px !important; }
 
