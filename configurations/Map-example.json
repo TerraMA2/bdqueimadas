@@ -427,7 +427,8 @@
       "Buffer": null,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable float-left clear-left"
     },
     {
       "Id": "BDQueimadas:paises_multi",
@@ -447,7 +448,8 @@
       "Buffer": null,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable unsortable-separator float-left clear-none"
     },
     {
       "Id": "BDQueimadas:estados",
@@ -467,7 +469,8 @@
       "Buffer": null,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable unsortable-separator float-left clear-none"
     },
     {
       "Id": "BDQueimadas:municipios",
@@ -487,11 +490,12 @@
       "Buffer": null,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable float-left clear-left"
     },
     {
       "Id": "BDQueimadas:municipios_pnt",
-      "Name": "Nomes dos Municípios",
+      "Name": "Nomes Municípios",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -507,7 +511,8 @@
       "Buffer": 256,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable unsortable-separator float-left clear-none"
     },
     {
       "Id": "BDQueimadas:biomas_brasileiros",
@@ -527,12 +532,14 @@
       "Buffer": 256,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": null
     },
     {
       "Id": "protected_areas",
       "Name": "Áreas Protegidas",
       "LayerGroup": true,
+      "Classes": null,
       "Layers": [
         {
           "Id": "BDQueimadas:unidades_conservacao_estaduais",
@@ -552,7 +559,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
@@ -572,7 +580,8 @@
           "Buffer": 512,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:unidades_conservacao_federais",
@@ -592,7 +601,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_federais",
@@ -612,7 +622,8 @@
           "Buffer": 512,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:terras_indigenas",
@@ -632,7 +643,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:labels_terras_indigenas",
@@ -652,7 +664,8 @@
           "Buffer": 512,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:protectedplanet",
@@ -672,7 +685,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:labels_protectedplanet",
@@ -692,7 +706,8 @@
           "Buffer": 512,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         }
       ]
     },
@@ -700,13 +715,14 @@
       "Id": "satellites_images",
       "Name": "Satélites",
       "LayerGroup": true,
+      "Classes": null,
       "Layers": [
         {
-          "Id": "suomi_npp_250m_truecolor",
+          "Id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
           "Name": "NPP / VIIRRS {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "Url": "http://localhost:38000/wms-proxy",
           "TerraMA2WebComponentsFunction": null,
           "AppendAtTheEnd": null,
           "ServerType": "mapserver",
@@ -717,16 +733,22 @@
           "Disabled": false,
           "AddsInTheStart": true,
           "Buffer": null,
-          "Version": null,
-          "Format": null,
-          "TileGrid": null
+          "Version": "1.1.0",
+          "Format": "image/jpeg",
+          "TileGrid": {
+            "origin": [-180, 90],
+            "resolutions": [0.5625, 0.28125, 0.140625, 0.0703125, 0.03515625, 0.017578125, 0.0087890625, 0.00439453125, 0.002197265625],
+            "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            "tileSize": 512
+          },
+          "Classes": null
         },
         {
-          "Id": "aqua_250m_truecolor",
+          "Id": "MODIS_Aqua_CorrectedReflectance_TrueColor",
           "Name": "Aqua / Modis {{FINAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
-          "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
+          "Url": "http://localhost:38000/wms-proxy",
           "TerraMA2WebComponentsFunction": null,
           "AppendAtTheEnd": null,
           "ServerType": "mapserver",
@@ -737,9 +759,15 @@
           "Disabled": false,
           "AddsInTheStart": true,
           "Buffer": null,
-          "Version": null,
-          "Format": null,
-          "TileGrid": null
+          "Version": "1.1.0",
+          "Format": "image/jpeg",
+          "TileGrid": {
+            "origin": [-180, 90],
+            "resolutions": [0.5625, 0.28125, 0.140625, 0.0703125, 0.03515625, 0.017578125, 0.0087890625, 0.00439453125, 0.002197265625],
+            "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            "tileSize": 512
+          },
+          "Classes": null
         },
         {
           "Id": "MODIS_Terra_CorrectedReflectance_TrueColor",
@@ -764,7 +792,8 @@
             "resolutions": [0.5625, 0.28125, 0.140625, 0.0703125, 0.03515625, 0.017578125, 0.0087890625, 0.00439453125, 0.002197265625],
             "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
             "tileSize": 512
-          }
+          },
+          "Classes": null
         },
         {
           "Id": "quicklook_noaa16",
@@ -784,7 +813,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "quicklook_noaa18",
@@ -804,7 +834,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "quicklook_noaa19",
@@ -824,7 +855,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "goes",
@@ -844,7 +876,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "msg",
@@ -864,7 +897,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         }
       ]
     },
@@ -872,6 +906,7 @@
       "Id": "meteorology",
       "Name": "Risco de Fogo / Meteorologia",
       "LayerGroup": true,
+      "Classes": null,
       "Layers": [
         {
           "Id": "mrp0",
@@ -891,12 +926,14 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "ndsc",
           "Name": "Número de Dias sem Chuva",
           "LayerGroup": true,
+          "Classes": null,
           "Layers": [
             {
               "Id": "observacao_ndsc_obs",
@@ -916,7 +953,8 @@
               "Buffer": null,
               "Version": null,
               "Format": null,
-              "TileGrid": null
+              "TileGrid": null,
+              "Classes": null
             },
             {
               "Id": "observacao_ndsc_obssat",
@@ -936,7 +974,8 @@
               "Buffer": null,
               "Version": null,
               "Format": null,
-              "TileGrid": null
+              "TileGrid": null,
+              "Classes": null
             }
           ]
         }
@@ -946,6 +985,7 @@
       "Id": "fires_spatial_map",
       "Name": "Mapa Espacial de Focos",
       "LayerGroup": true,
+      "Classes": null,
       "Layers": [
         {
           "Id": "BDQueimadas:current_situation_cities",
@@ -965,7 +1005,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:current_situation_states",
@@ -985,7 +1026,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         },
         {
           "Id": "BDQueimadas:current_situation_countries",
@@ -1005,7 +1047,8 @@
           "Buffer": null,
           "Version": null,
           "Format": null,
-          "TileGrid": null
+          "TileGrid": null,
+          "Classes": null
         }
       ]
     },
@@ -1027,7 +1070,8 @@
       "Buffer": null,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable float-left clear-left"
     },
     {
       "Id": "osm",
@@ -1047,7 +1091,8 @@
       "Buffer": null,
       "Version": null,
       "Format": null,
-      "TileGrid": null
+      "TileGrid": null,
+      "Classes": "unsortable unsortable-separator float-left clear-none"
     }
   ]
 }
