@@ -719,7 +719,7 @@
       "Layers": [
         {
           "Id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
-          "Name": "NPP / VIIRRS {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "NPP / VIIRRS {{INITIAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:38000/wms-proxy",
@@ -729,7 +729,7 @@
           "Visible": true,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Time": "{{INITIAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
           "Buffer": null,
@@ -745,7 +745,7 @@
         },
         {
           "Id": "MODIS_Aqua_CorrectedReflectance_TrueColor",
-          "Name": "Aqua / Modis {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "Aqua / Modis {{INITIAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:38000/wms-proxy",
@@ -755,7 +755,7 @@
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Time": "{{INITIAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
           "Buffer": null,
@@ -771,7 +771,7 @@
         },
         {
           "Id": "MODIS_Terra_CorrectedReflectance_TrueColor",
-          "Name": "Terra / Modis {{FINAL_DATE=YYYY/MM/DD}}",
+          "Name": "Terra / Modis {{INITIAL_DATE=YYYY/MM/DD}}",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:38000/wms-proxy",
@@ -781,7 +781,7 @@
           "Visible": false,
           "MinResolution": null,
           "MaxResolution": null,
-          "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+          "Time": "{{INITIAL_DATE=YYYY-MM-DD}}",
           "Disabled": false,
           "AddsInTheStart": true,
           "Buffer": null,
