@@ -85,6 +85,28 @@ define(
         });
       });
 
+      $('#contact-btn').on('click', function() {
+        vex.dialog.alert({
+          message: '<p class="text-center">Dúvidas, comentários e sugestões:<br/><a href="mailto:queimadas@inpe.br">queimadas@inpe.br</a></p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok',
+            className: 'bdqueimadas-btn'
+          }]
+        });
+      });
+
+      $('#notice-btn').on('click', function() {
+        vex.dialog.alert({
+          message: '<p class="text-center"><strong>Atenção!</strong><br/><br/>Esta aplicação está em <strong>fase de desenvolvimento</strong>. Ela está disponível para fins de teste e coleta de sugestões e críticas sobre suas funcionalidades.</p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok, entendi',
+            className: 'bdqueimadas-btn'
+          }]
+        });
+      });
+
       // Sidebar buttons click event
       $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();
@@ -1503,15 +1525,23 @@ define(
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
 
+        vex.dialog.alert({
+          message: '<p class="text-center"><strong>Atenção!</strong><br/><br/>Esta aplicação está em <strong>fase de desenvolvimento</strong>. Ela está disponível para fins de teste e coleta de sugestões e críticas sobre suas funcionalidades.<br/><br/>No mapa com a última imagem do satélite NPP, cada cruzinha indica uma detecção de fogo na vegetação.</p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok, entendi',
+            className: 'bdqueimadas-btn'
+          }]
+        });
+
+        setTimeout(function() {
+          vex.close();
+        }, 15000);
+
         /*window.setInterval(function() {
           updateSizeVars();
           updateComponents();
         }, 60000);*/
-
-        /*setTimeout(function() {
-          $('.sidebar-toggle').click();
-          $('#main-sidebar-toggle').css('display', '');
-        }, 15000);*/
 
         /*setTimeout(function() {
           if($('#states').val() !== null && !Utils.stringInArray($('#states').val(), "")) {
