@@ -470,7 +470,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 #layer-explorer-and-filter-box h4 { margin: 0 0 5px 0; }
 
-#layer-explorer-and-filter-box hr {
+#layer-explorer-and-filter-box hr, .sidebar-menu hr {
   -moz-border-bottom-colors: none;
   -moz-border-image: none;
   -moz-border-left-colors: none;
@@ -480,6 +480,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   border-style: solid none;
   margin: 5px 0 5px 0;
 }
+
+.sidebar-menu hr { margin: 20px 0 20px 0 !important; }
 
 #footer > p {
   text-align: center;
@@ -692,18 +694,14 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .unsortable > span { cursor: default !important; }
 
-.unsortable-separator { padding-left: 30px !important; }
-
-.unsortable-separator > span { margin-left: 40px !important; }
-
-.unsortable-separator > input { margin-left: 20px; }
-
-.unsortable-separator::before {
-  content: '/' !important;
-  left: 0 !important;
+.unsortable-separator {
+  padding-left: 30px !important;
+  margin-left: 0px !important;
 }
 
-.children .unsortable-separator::before { left: 7px !important; }
+.unsortable-separator > span { margin-left: 30px !important; }
+
+.unsortable-separator > input { margin-left: 10px; }
 
 /* TerraMA2Components styles */
 
@@ -723,13 +721,19 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   clear: both;
 }
 
-#terrama2-layerexplorer li > span { padding: 0px 0px 0px 10.5px !important; }
+#terrama2-layerexplorer li > span { padding: 0px !important; }
 
 .terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
 
 .terrama2-layerexplorer-checkbox-span { cursor: move !important; }
 
 #terrama2-layerexplorer ul.children span.group-name { padding-left: 0px !important; }
+
+.terrama2-layerexplorer-plus, .terrama2-layerexplorer-minus { padding-right: 8px !important; }
+
+#terrama2-layerexplorer li.parent_li { margin-left: 10px !important; }
+
+#terrama2-layerexplorer ul { padding-left: 15px !important; }
 
 /* AdminLTEQueimadas general adjustments */
 
