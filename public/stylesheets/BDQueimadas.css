@@ -699,6 +699,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   left: 0 !important;
 }
 
+.children .unsortable-separator::before { left: 7px !important; }
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
