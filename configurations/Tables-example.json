@@ -43,5 +43,26 @@
     "BiomeFieldName": "bioma_brasileiro",
     "GeometryFieldName": "geom",
     "DateFormat": "YYYY-MM-DD"
+  },
+  "UCE": {
+    "Schema": "dados_geo",
+    "TableName": "unidades_conservacao_estaduais",
+    "IdFieldName": "gid",
+    "NameFieldName": "nome",
+    "GeometryFieldName": "geom"
+  },
+  "UCF": {
+    "Schema": "dados_geo",
+    "TableName": "unidades_conservacao_federais",
+    "IdFieldName": "gid",
+    "NameFieldName": "nome",
+    "GeometryFieldName": "geom"
+  },
+  "TI": {
+    "Schema": "dados_geo",
+    "TableName": "terras_indigenas",
+    "IdFieldName": "gid",
+    "NameFieldName": "nome",
+    "GeometryFieldName": "geom"
   }
 }

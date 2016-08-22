@@ -293,6 +293,18 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   max-width: 200px;
 }
 
+.graphic-item .collapse-btn {
+  font-size: 18px;
+  padding-top: 0px;
+  color: #ff7272;
+  outline: none;
+}
+
+.graphic-item .collapse-btn:hover, .graphic-item .collapse-btn:active {
+  color: red;
+  outline: none;
+}
+
 .component-filter-content > label {
   float: left;
   margin-right: 10px;

@@ -152,6 +152,137 @@ var Graphics = function() {
   };
 
   /**
+   * Returns the count of the fires grouped by protected areas.
+   * @param {string} dateFrom - Initial date
+   * @param {string} dateTo - Final date
+   * @param {string} key - Key
+   * @param {json} filterRules - Filter rules
+   * @param {json} options - Filtering options
+   * @param {databaseOperationCallback} callback - Callback function
+   * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getFiresCountByPA
+   * @memberof Graphics
+   * @inner
+   */
+  this.getFiresCountByPA = function(dateFrom, dateTo, key, filterRules, options, callback) {
+    // Counter of the query parameters
+    var parameter = 1;
+
+    // Connection with the PostgreSQL database
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+      if(!err) {
+        if(key === "UCE") {
+          var fields = "a." + memberTablesConfig.UCE.NameFieldName + " as name, count(b.*) as count";
+          var nameField = "a." + memberTablesConfig.UCE.NameFieldName;
+          var geomField = "a." + memberTablesConfig.UCE.GeometryFieldName;
+          var group = "a." + memberTablesConfig.UCE.NameFieldName;
+          var table = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName + " a";
+        } else if(key === "UCF") {
+          var fields = "a." + memberTablesConfig.UCF.NameFieldName + " as name, count(b.*) as count";
+          var nameField = "a." + memberTablesConfig.UCF.NameFieldName;
+          var geomField = "a." + memberTablesConfig.UCF.GeometryFieldName;
+          var group = "a." + memberTablesConfig.UCF.NameFieldName;
+          var table = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName + " a";
+        } else {
+          var fields = "a." + memberTablesConfig.TI.NameFieldName + " as name, count(b.*) as count";
+          var nameField = "a." + memberTablesConfig.TI.NameFieldName;
+          var geomField = "a." + memberTablesConfig.TI.GeometryFieldName;
+          var group = "a." + memberTablesConfig.TI.NameFieldName;
+          var table = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName + " a";
+        }
+
+        // Creation of the query
+        var query = "select " + fields + " from " + table +
+        " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
+        " b on ST_Intersects(b." + memberTablesConfig.Fires.GeometryFieldName + ", " + geomField + ")" +
+        " where (b." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateFrom, dateTo];
+
+        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
+        if(options.satellites !== undefined) {
+          var satellitesArray = options.satellites.split(',');
+          query += " and b." + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+
+          for(var i = 0; i < satellitesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(satellitesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
+        if(options.biomes !== undefined) {
+          var biomesArray = options.biomes.split(',');
+          query += " and b." + memberTablesConfig.Fires.BiomeFieldName + " in (";
+
+          for(var i = 0; i < biomesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(biomesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.countries' parameter exists, a countries 'where' clause is created
+        if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
+          var countriesArray = options.countries.split(',');
+          query += " and b." + memberTablesConfig.Fires.CountryFieldName + " in (";
+
+          for(var i = 0; i < countriesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countriesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.states' parameter exists, a states 'where' clause is created
+        if(options.states !== undefined && !filterRules.ignoreStateFilter) {
+          var statesArray = options.states.split(',');
+          query += " and b." + memberTablesConfig.Fires.StateFieldName + " in (";
+
+          for(var i = 0; i < statesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined && !filterRules.ignoreCityFilter) {
+          var citiesArray = options.cities.split(',');
+          query += " and b." + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        query += " group by " + group + " order by count desc, " + nameField + " asc";
+
+        // If the 'options.limit' parameter exists, a limit clause is created
+        if(options.limit !== undefined) {
+          query += " limit $" + (parameter++);
+          params.push(options.limit);
+        }
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns the count of the fires.
    * @param {string} dateFrom - Initial date
    * @param {string} dateTo - Final date

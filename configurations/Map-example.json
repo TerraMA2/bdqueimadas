@@ -2,7 +2,7 @@
   "Subtitles": [
     {
       "LayerId": "BDQueimadas:current_situation_countries",
-      "LayerName": "Camada: Focos-Total Espacial - Países",
+      "LayerName": "Camada: Mapa Espacial de Focos - Países",
       "Subtitles": [
         {
           "SubtitleId": null,
@@ -62,7 +62,127 @@
     },
     {
       "LayerId": "BDQueimadas:current_situation_states",
-      "LayerName": "Camada: Focos-Total Espacial - Estados",
+      "LayerName": "Camada: Mapa Espacial de Focos - Estados",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0 focos",
+          "FillColor": "#FFEBCD",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 1 a 100 focos",
+          "FillColor": "#FFC387",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 101 a 500 focos",
+          "FillColor": "#FAA046",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 1001 a 5000 focos",
+          "FillColor": "#FA5C25",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 5001 a 25000 focos",
+          "FillColor": "#C34231",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 25001 a 50000 focos",
+          "FillColor": "#A21C0D",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "LayerId": "BDQueimadas:current_situation_cities",
+      "LayerName": "Camada: Mapa Espacial de Focos - Municípios",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0 focos",
+          "FillColor": "#FFEBCD",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 1 a 100 focos",
+          "FillColor": "#FFC387",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 101 a 500 focos",
+          "FillColor": "#FAA046",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 1001 a 5000 focos",
+          "FillColor": "#FA5C25",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 5001 a 25000 focos",
+          "FillColor": "#C34231",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 25001 a 50000 focos",
+          "FillColor": "#A21C0D",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "LayerId": "BDQueimadas:current_situation_biomes",
+      "LayerName": "Camada: Mapa Espacial de Focos - Biomas Brasileiros",
       "Subtitles": [
         {
           "SubtitleId": null,
@@ -494,7 +614,7 @@
       "Classes": "unsortable float-left clear-left"
     },
     {
-      "Id": "BDQueimadas:municipios_pnt",
+      "Id": "BDQueimadas:sedes_municipios",
       "Name": "Nomes Municípios",
       "LayerGroup": false,
       "Background": false,
@@ -502,7 +622,7 @@
       "TerraMA2WebComponentsFunction": null,
       "AppendAtTheEnd": null,
       "ServerType": "geoserver",
-      "Visible": true,
+      "Visible": false,
       "MinResolution": 0,
       "MaxResolution": "Infinity",
       "Time": null,
@@ -542,50 +662,8 @@
       "Classes": null,
       "Layers": [
         {
-          "Id": "BDQueimadas:unidades_conservacao_estaduais",
-          "Name": "Unid. Conserv. Estaduais",
-          "LayerGroup": false,
-          "Background": false,
-          "Url": "http://localhost:8080/geoserver/ows",
-          "TerraMA2WebComponentsFunction": null,
-          "AppendAtTheEnd": null,
-          "ServerType": "geoserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null,
-          "Disabled": false,
-          "AddsInTheStart": true,
-          "Buffer": null,
-          "Version": null,
-          "Format": null,
-          "TileGrid": null,
-          "Classes": null
-        },
-        {
-          "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
-          "Name": "Nomes das Unid. Conserv. Estaduais",
-          "LayerGroup": false,
-          "Background": false,
-          "Url": "http://localhost:8080/geoserver/ows",
-          "TerraMA2WebComponentsFunction": null,
-          "AppendAtTheEnd": null,
-          "ServerType": "geoserver",
-          "Visible": false,
-          "MinResolution": 0,
-          "MaxResolution": "Infinity",
-          "Time": null,
-          "Disabled": false,
-          "AddsInTheStart": true,
-          "Buffer": 512,
-          "Version": null,
-          "Format": null,
-          "TileGrid": null,
-          "Classes": null
-        },
-        {
           "Id": "BDQueimadas:unidades_conservacao_federais",
-          "Name": "Unid. Conserv. Federais",
+          "Name": "UCFs",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -602,11 +680,11 @@
           "Version": null,
           "Format": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": "unsortable float-left clear-left"
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_federais",
-          "Name": "Nomes das Unid. Conserv. Federais",
+          "Name": "Nomes",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -623,11 +701,53 @@
           "Version": null,
           "Format": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": "unsortable unsortable-separator float-left clear-none"
         },
         {
-          "Id": "BDQueimadas:terras_indigenas",
-          "Name": "Terras Indígenas",
+          "Id": "BDQueimadas:buffer_5_unidades_conservacao_federais",
+          "Name": "_5Km",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:buffer_10_unidades_conservacao_federais",
+          "Name": "_10Km",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:unidades_conservacao_estaduais",
+          "Name": "UCEs",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -644,11 +764,11 @@
           "Version": null,
           "Format": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": "unsortable float-left clear-left"
         },
         {
-          "Id": "BDQueimadas:labels_terras_indigenas",
-          "Name": "Nomes das Terras Indígenas",
+          "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
+          "Name": "Nomes",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -665,7 +785,133 @@
           "Version": null,
           "Format": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:buffer_5_unidades_conservacao_estaduais",
+          "Name": "_5Km",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:buffer_10_unidades_conservacao_estaduais",
+          "Name": "_10Km",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:terras_indigenas",
+          "Name": "TIs",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable float-left clear-left"
+        },
+        {
+          "Id": "BDQueimadas:labels_terras_indigenas",
+          "Name": "Nomes",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:buffer_5_terras_indigenas",
+          "Name": "_5Km",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
+        },
+        {
+          "Id": "BDQueimadas:buffer_10_terras_indigenas",
+          "Name": "_10Km",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": 512,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": "unsortable unsortable-separator float-left clear-none"
         },
         {
           "Id": "BDQueimadas:protectedplanet",
@@ -686,11 +932,11 @@
           "Version": null,
           "Format": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": "unsortable float-left clear-left"
         },
         {
           "Id": "BDQueimadas:labels_protectedplanet",
-          "Name": "Nomes das Áreas Protegidas Américas",
+          "Name": "Nomes",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -707,7 +953,7 @@
           "Version": null,
           "Format": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": "unsortable unsortable-separator float-left clear-none"
         }
       ]
     },
@@ -987,6 +1233,27 @@
       "LayerGroup": true,
       "Classes": null,
       "Layers": [
+        {
+          "Id": "BDQueimadas:current_situation_biomes",
+          "Name": "Biomas Brasileiros",
+          "LayerGroup": false,
+          "Background": false,
+          "Url": "http://localhost:8080/geoserver/ows",
+          "TerraMA2WebComponentsFunction": null,
+          "AppendAtTheEnd": null,
+          "ServerType": "geoserver",
+          "Visible": false,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity",
+          "Time": null,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "Buffer": null,
+          "Version": null,
+          "Format": null,
+          "TileGrid": null,
+          "Classes": null
+        },
         {
           "Id": "BDQueimadas:current_situation_cities",
           "Name": "Municípios",

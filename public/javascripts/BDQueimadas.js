@@ -530,6 +530,11 @@ define(
         Graphics.exportGraphicData($(this).data('id'));
       });
 
+      $('#graph-box').on('click', '.collapse-btn', function() {
+        if(!$(this).parent().parent().parent().find(' > .box-body').is(':visible')) $(this).text('Minimizar');
+        else $(this).text('Expandir');
+      });
+
       // Map Events
 
       $('#dragbox').on('click', function() {

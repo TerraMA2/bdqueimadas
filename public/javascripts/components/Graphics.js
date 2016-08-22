@@ -138,17 +138,31 @@ define(
 
           $.each(Utils.getConfigurations().graphicsConfigurations.FiresCount, function(i, firesCountGraphicsConfig) {
             if(memberFiresCountGraphics[firesCountGraphicsConfig.Id] === undefined) {
-              var htmlElements = "<div class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
-                                 firesCountGraphicsConfig.Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
-                                 $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
-                                 "<button type=\"button\" class=\"btn btn-box-tool\" data-widget=\"collapse\"><i class=\"fa fa-minus\"></i></button></div></div>" +
-                                 "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
-                                 "<canvas id=\"fires-count-" + firesCountGraphicsConfig.Id + "-graphic\"></canvas>" +
-                                 "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig.Id +
-                                 "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                 "<div id=\"fires-count-" + firesCountGraphicsConfig.Id +
-                                 "-graphic-message-container\" class=\"text-center\">" +
-                                 "</div></div></div></div>";
+              if(firesCountGraphicsConfig.Expanded) {
+                var htmlElements = "<div class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                                   firesCountGraphicsConfig.Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
+                                   $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
+                                   "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Minimizar</button></div></div>" +
+                                   "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
+                                   "<canvas id=\"fires-count-" + firesCountGraphicsConfig.Id + "-graphic\"></canvas>" +
+                                   "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig.Id +
+                                   "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                                   "<div id=\"fires-count-" + firesCountGraphicsConfig.Id +
+                                   "-graphic-message-container\" class=\"text-center\">" +
+                                   "</div></div></div></div>";
+              } else {
+                var htmlElements = "<div class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                                   firesCountGraphicsConfig.Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
+                                   $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
+                                   "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Expandir</button></div></div>" +
+                                   "<div class=\"box-body\" style=\"display: none;\"><div class=\"chart\">" +
+                                   "<canvas id=\"fires-count-" + firesCountGraphicsConfig.Id + "-graphic\"></canvas>" +
+                                   "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig.Id +
+                                   "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                                   "<div id=\"fires-count-" + firesCountGraphicsConfig.Id +
+                                   "-graphic-message-container\" class=\"text-center\">" +
+                                   "</div></div></div></div>";
+              }
 
               $("#graphics-container").append(htmlElements);
               memberFiresCountGraphics[firesCountGraphicsConfig.Id] = null;
@@ -319,6 +333,11 @@ define(
       } else if(firesCount.filterRules.showOnlyIfThereIsNoStateFiltered && states !== '') {
         hideGraphic(firesCount.id);
       }
+
+      var visibleItemsLength = $('#graphics-container > .graphic-item:visible').length;
+
+      if(visibleItemsLength > 0) $('#graphics-no-data').hide();
+      else $('#graphics-no-data').show();
     };
 
     /**

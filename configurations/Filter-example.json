@@ -57,7 +57,8 @@
     "Layers": [
       "BDQueimadas:current_situation_countries",
       "BDQueimadas:current_situation_states",
-      "BDQueimadas:current_situation_cities"
+      "BDQueimadas:current_situation_cities",
+      "BDQueimadas:current_situation_biomes"
     ],
     "DateFormat": "YYYY-MM-DD",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
@@ -78,7 +79,7 @@
     "CityField": "id_2"
   },
   "CitiesLabelsLayer": {
-    "Id": "BDQueimadas:municipios_pnt",
+    "Id": "BDQueimadas:sedes_municipios",
     "CountryField": "id_0",
     "StateField": "id_1",
     "CityField": "id_2"
