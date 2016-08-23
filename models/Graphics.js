@@ -172,7 +172,7 @@ var Graphics = function() {
     // Connection with the PostgreSQL database
     memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
-        if(key === "UCE") {
+        if(key === "UCE" || key === "UCE_5KM" || key === "UCE_10KM") {
           var fields = "b." + memberTablesConfig.UCE.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.UCE.NameFieldName;
           var tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.FiresTableName + " a";
@@ -180,7 +180,7 @@ var Graphics = function() {
           var idField = "b." + memberTablesConfig.UCE.IdFieldName;
           var PAField = "a." + memberTablesConfig.UCE.FiresPAFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCE.FiresIdsFieldName;
-        } else if(key === "UCF") {
+        } else if(key === "UCF" || key === "UCF_5KM" || key === "UCF_10KM") {
           var fields = "b." + memberTablesConfig.UCF.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.UCF.NameFieldName;
           var tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.FiresTableName + " a";
@@ -188,7 +188,7 @@ var Graphics = function() {
           var idField = "b." + memberTablesConfig.UCF.IdFieldName;
           var PAField = "a." + memberTablesConfig.UCF.FiresPAFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCF.FiresIdsFieldName;
-        } else if(key === "TI") {
+        } else {
           var fields = "b." + memberTablesConfig.TI.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.TI.NameFieldName;
           var tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.FiresTableName + " a";
@@ -196,54 +196,26 @@ var Graphics = function() {
           var idField = "b." + memberTablesConfig.TI.IdFieldName;
           var PAField = "a." + memberTablesConfig.TI.FiresPAFieldName;
           var firesIdsField = "a." + memberTablesConfig.TI.FiresIdsFieldName;
-        } else if(key === "UCE_5KM") {
-          var fields = "b." + memberTablesConfig.UCE_5KM.NameFieldName + " as name, count(c.*) as count";
-          var group = "b." + memberTablesConfig.UCE_5KM.NameFieldName;
-          var tableFires = memberTablesConfig.UCE_5KM.FiresSchema + "." + memberTablesConfig.UCE_5KM.FiresTableName + " a";
-          var tablePA = memberTablesConfig.UCE_5KM.Schema + "." + memberTablesConfig.UCE_5KM.TableName + " b";
-          var idField = "b." + memberTablesConfig.UCE_5KM.IdFieldName;
-          var PAField = "a." + memberTablesConfig.UCE_5KM.FiresPAFieldName;
-          var firesIdsField = "a." + memberTablesConfig.UCE_5KM.FiresIdsFieldName;
-        } else if(key === "UCF_5KM") {
-          var fields = "b." + memberTablesConfig.UCF_5KM.NameFieldName + " as name, count(c.*) as count";
-          var group = "b." + memberTablesConfig.UCF_5KM.NameFieldName;
-          var tableFires = memberTablesConfig.UCF_5KM.FiresSchema + "." + memberTablesConfig.UCF_5KM.FiresTableName + " a";
-          var tablePA = memberTablesConfig.UCF_5KM.Schema + "." + memberTablesConfig.UCF_5KM.TableName + " b";
-          var idField = "b." + memberTablesConfig.UCF_5KM.IdFieldName;
-          var PAField = "a." + memberTablesConfig.UCF_5KM.FiresPAFieldName;
-          var firesIdsField = "a." + memberTablesConfig.UCF_5KM.FiresIdsFieldName;
-        } else if(key === "TI_5KM") {
-          var fields = "b." + memberTablesConfig.TI_5KM.NameFieldName + " as name, count(c.*) as count";
-          var group = "b." + memberTablesConfig.TI_5KM.NameFieldName;
-          var tableFires = memberTablesConfig.TI_5KM.FiresSchema + "." + memberTablesConfig.TI_5KM.FiresTableName + " a";
-          var tablePA = memberTablesConfig.TI_5KM.Schema + "." + memberTablesConfig.TI_5KM.TableName + " b";
-          var idField = "b." + memberTablesConfig.TI_5KM.IdFieldName;
-          var PAField = "a." + memberTablesConfig.TI_5KM.FiresPAFieldName;
-          var firesIdsField = "a." + memberTablesConfig.TI_5KM.FiresIdsFieldName;
+        }
+
+        if(key === "UCE_5KM") {
+          tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.Fires5KMTableName + " b";
+          PAField = "a." + memberTablesConfig.UCE.Fires5KMPAFieldName;
         } else if(key === "UCE_10KM") {
-          var fields = "b." + memberTablesConfig.UCE_10KM.NameFieldName + " as name, count(c.*) as count";
-          var group = "b." + memberTablesConfig.UCE_10KM.NameFieldName;
-          var tableFires = memberTablesConfig.UCE_10KM.FiresSchema + "." + memberTablesConfig.UCE_10KM.FiresTableName + " a";
-          var tablePA = memberTablesConfig.UCE_10KM.Schema + "." + memberTablesConfig.UCE_10KM.TableName + " b";
-          var idField = "b." + memberTablesConfig.UCE_10KM.IdFieldName;
-          var PAField = "a." + memberTablesConfig.UCE_10KM.FiresPAFieldName;
-          var firesIdsField = "a." + memberTablesConfig.UCE_10KM.FiresIdsFieldName;
+          tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.Fires10KMTableName + " b";
+          PAField = "a." + memberTablesConfig.UCE.Fires10KMPAFieldName;
+        } else if(key === "UCF_5KM") {
+          tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.Fires5KMTableName + " b";
+          PAField = "a." + memberTablesConfig.UCF.Fires5KMPAFieldName;
         } else if(key === "UCF_10KM") {
-          var fields = "b." + memberTablesConfig.UCF_10KM.NameFieldName + " as name, count(c.*) as count";
-          var group = "b." + memberTablesConfig.UCF_10KM.NameFieldName;
-          var tableFires = memberTablesConfig.UCF_10KM.FiresSchema + "." + memberTablesConfig.UCF_10KM.FiresTableName + " a";
-          var tablePA = memberTablesConfig.UCF_10KM.Schema + "." + memberTablesConfig.UCF_10KM.TableName + " b";
-          var idField = "b." + memberTablesConfig.UCF_10KM.IdFieldName;
-          var PAField = "a." + memberTablesConfig.UCF_10KM.FiresPAFieldName;
-          var firesIdsField = "a." + memberTablesConfig.UCF_10KM.FiresIdsFieldName;
-        } else {
-          var fields = "b." + memberTablesConfig.TI_10KM.NameFieldName + " as name, count(c.*) as count";
-          var group = "b." + memberTablesConfig.TI_10KM.NameFieldName;
-          var tableFires = memberTablesConfig.TI_10KM.FiresSchema + "." + memberTablesConfig.TI_10KM.FiresTableName + " a";
-          var tablePA = memberTablesConfig.TI_10KM.Schema + "." + memberTablesConfig.TI_10KM.TableName + " b";
-          var idField = "b." + memberTablesConfig.TI_10KM.IdFieldName;
-          var PAField = "a." + memberTablesConfig.TI_10KM.FiresPAFieldName;
-          var firesIdsField = "a." + memberTablesConfig.TI_10KM.FiresIdsFieldName;
+          tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.Fires10KMTableName + " b";
+          PAField = "a." + memberTablesConfig.UCF.Fires10KMPAFieldName;
+        } else if(key === "TI_5KM") {
+          tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.Fires5KMTableName + " b";
+          PAField = "a." + memberTablesConfig.TI.Fires5KMPAFieldName;
+        } else if(key === "TI_10KM") {
+          tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.Fires10KMTableName + " b";
+          PAField = "a." + memberTablesConfig.TI.Fires10KMPAFieldName;
         }
 
         // Creation of the query
