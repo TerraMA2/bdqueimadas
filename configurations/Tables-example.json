@@ -45,24 +45,48 @@
     "DateFormat": "YYYY-MM-DD"
   },
   "UCE": {
+    "Buffer5KMSchema": "dados_geo",
+    "Buffer5KMTableName": "buffer_5_unidades_conservacao_estaduais",
+    "Buffer10KMSchema": "dados_geo",
+    "Buffer10KMTableName": "buffer_10_unidades_conservacao_estaduais",
     "Schema": "dados_geo",
     "TableName": "unidades_conservacao_estaduais",
+    "Buffer5KMIdFieldName": "gid",
+    "Buffer10KMIdFieldName": "gid",
     "IdFieldName": "gid",
     "NameFieldName": "nome",
+    "Buffer5KMGeometryFieldName": "geom",
+    "Buffer10KMGeometryFieldName": "geom",
     "GeometryFieldName": "geom"
   },
   "UCF": {
+    "Buffer5KMSchema": "dados_geo",
+    "Buffer5KMTableName": "buffer_5_unidades_conservacao_federais",
+    "Buffer10KMSchema": "dados_geo",
+    "Buffer10KMTableName": "buffer_10_unidades_conservacao_federais",
     "Schema": "dados_geo",
     "TableName": "unidades_conservacao_federais",
+    "Buffer5KMIdFieldName": "gid",
+    "Buffer10KMIdFieldName": "gid",
     "IdFieldName": "gid",
     "NameFieldName": "nome",
+    "Buffer5KMGeometryFieldName": "geom",
+    "Buffer10KMGeometryFieldName": "geom",
     "GeometryFieldName": "geom"
   },
   "TI": {
+    "Buffer5KMSchema": "dados_geo",
+    "Buffer5KMTableName": "buffer_5_terras_indigenas",
+    "Buffer10KMSchema": "dados_geo",
+    "Buffer10KMTableName": "buffer_10_terras_indigenas",
     "Schema": "dados_geo",
     "TableName": "terras_indigenas",
+    "Buffer5KMIdFieldName": "gid",
+    "Buffer10KMIdFieldName": "gid",
     "IdFieldName": "gid",
     "NameFieldName": "nome",
+    "Buffer5KMGeometryFieldName": "geom",
+    "Buffer10KMGeometryFieldName": "geom",
     "GeometryFieldName": "geom"
   }
 }

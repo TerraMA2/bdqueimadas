@@ -149,6 +149,51 @@
       "ShowOnlyIfThereIsNoCountryFiltered": false,
       "ShowOnlyIfThereIsAStateFiltered": false,
       "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Id": "firesByUCEBuffer5KM",
+      "Y": "{name}",
+      "Key": "UCE_5KM",
+      "Title": "Buffer 5 Km das Unidades de Conservação Estaduais com mais focos (<= 30)",
+      "Limit": 30,
+      "Expanded": false,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreCityFilter": false,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Id": "firesByUCFBuffer5KM",
+      "Y": "{name}",
+      "Key": "UCF_5KM",
+      "Title": "Buffer 5 Km das Unidades de Conservação Federais com mais focos (<= 30)",
+      "Limit": 30,
+      "Expanded": false,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreCityFilter": false,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Id": "firesByTIBuffer5KM",
+      "Y": "{name}",
+      "Key": "TI_5KM",
+      "Title": "Buffer 5 Km das Terras Indígenas com mais focos (<= 30)",
+      "Limit": 30,
+      "Expanded": false,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreCityFilter": false,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     }
   ],
   "TimeSeries": {
