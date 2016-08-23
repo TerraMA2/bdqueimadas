@@ -174,35 +174,90 @@ var Graphics = function() {
       if(!err) {
         if(key === "UCE") {
           var fields = "a." + memberTablesConfig.UCE.NameFieldName + " as name, count(b.*) as count";
-          var nameField = "a." + memberTablesConfig.UCE.NameFieldName;
-          var geomField = "a." + memberTablesConfig.UCE.GeometryFieldName;
           var group = "a." + memberTablesConfig.UCE.NameFieldName;
-          var table = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName + " a";
+          var tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.FiresTableName + " a";
+          var tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName + " b";
+          var idField = "b." + memberTablesConfig.UCE.IdFieldName;
+          var PAField = "a." + memberTablesConfig.UCE.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.UCE.FiresIdsFieldName;
         } else if(key === "UCF") {
           var fields = "a." + memberTablesConfig.UCF.NameFieldName + " as name, count(b.*) as count";
-          var nameField = "a." + memberTablesConfig.UCF.NameFieldName;
-          var geomField = "a." + memberTablesConfig.UCF.GeometryFieldName;
           var group = "a." + memberTablesConfig.UCF.NameFieldName;
-          var table = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName + " a";
-        } else {
+          var tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.FiresTableName + " a";
+          var tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName + " b";
+          var idField = "b." + memberTablesConfig.UCF.IdFieldName;
+          var PAField = "a." + memberTablesConfig.UCF.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.UCF.FiresIdsFieldName;
+        } else if(key === "TI") {
           var fields = "a." + memberTablesConfig.TI.NameFieldName + " as name, count(b.*) as count";
-          var nameField = "a." + memberTablesConfig.TI.NameFieldName;
-          var geomField = "a." + memberTablesConfig.TI.GeometryFieldName;
           var group = "a." + memberTablesConfig.TI.NameFieldName;
-          var table = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName + " a";
+          var tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.FiresTableName + " a";
+          var tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName + " b";
+          var idField = "b." + memberTablesConfig.TI.IdFieldName;
+          var PAField = "a." + memberTablesConfig.TI.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.TI.FiresIdsFieldName;
+        } else if(key === "UCE_5KM") {
+          var fields = "a." + memberTablesConfig.UCE_5KM.NameFieldName + " as name, count(b.*) as count";
+          var group = "a." + memberTablesConfig.UCE_5KM.NameFieldName;
+          var tableFires = memberTablesConfig.UCE_5KM.FiresSchema + "." + memberTablesConfig.UCE_5KM.FiresTableName + " a";
+          var tablePA = memberTablesConfig.UCE_5KM.Schema + "." + memberTablesConfig.UCE_5KM.TableName + " b";
+          var idField = "b." + memberTablesConfig.UCE_5KM.IdFieldName;
+          var PAField = "a." + memberTablesConfig.UCE_5KM.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.UCE_5KM.FiresIdsFieldName;
+        } else if(key === "UCF_5KM") {
+          var fields = "a." + memberTablesConfig.UCF_5KM.NameFieldName + " as name, count(b.*) as count";
+          var group = "a." + memberTablesConfig.UCF_5KM.NameFieldName;
+          var tableFires = memberTablesConfig.UCF_5KM.FiresSchema + "." + memberTablesConfig.UCF_5KM.FiresTableName + " a";
+          var tablePA = memberTablesConfig.UCF_5KM.Schema + "." + memberTablesConfig.UCF_5KM.TableName + " b";
+          var idField = "b." + memberTablesConfig.UCF_5KM.IdFieldName;
+          var PAField = "a." + memberTablesConfig.UCF_5KM.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.UCF_5KM.FiresIdsFieldName;
+        } else if(key === "TI_5KM") {
+          var fields = "a." + memberTablesConfig.TI_5KM.NameFieldName + " as name, count(b.*) as count";
+          var group = "a." + memberTablesConfig.TI_5KM.NameFieldName;
+          var tableFires = memberTablesConfig.TI_5KM.FiresSchema + "." + memberTablesConfig.TI_5KM.FiresTableName + " a";
+          var tablePA = memberTablesConfig.TI_5KM.Schema + "." + memberTablesConfig.TI_5KM.TableName + " b";
+          var idField = "b." + memberTablesConfig.TI_5KM.IdFieldName;
+          var PAField = "a." + memberTablesConfig.TI_5KM.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.TI_5KM.FiresIdsFieldName;
+        } else if(key === "UCE_10KM") {
+          var fields = "a." + memberTablesConfig.UCE_10KM.NameFieldName + " as name, count(b.*) as count";
+          var group = "a." + memberTablesConfig.UCE_10KM.NameFieldName;
+          var tableFires = memberTablesConfig.UCE_10KM.FiresSchema + "." + memberTablesConfig.UCE_10KM.FiresTableName + " a";
+          var tablePA = memberTablesConfig.UCE_10KM.Schema + "." + memberTablesConfig.UCE_10KM.TableName + " b";
+          var idField = "b." + memberTablesConfig.UCE_10KM.IdFieldName;
+          var PAField = "a." + memberTablesConfig.UCE_10KM.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.UCE_10KM.FiresIdsFieldName;
+        } else if(key === "UCF_10KM") {
+          var fields = "a." + memberTablesConfig.UCF_10KM.NameFieldName + " as name, count(b.*) as count";
+          var group = "a." + memberTablesConfig.UCF_10KM.NameFieldName;
+          var tableFires = memberTablesConfig.UCF_10KM.FiresSchema + "." + memberTablesConfig.UCF_10KM.FiresTableName + " a";
+          var tablePA = memberTablesConfig.UCF_10KM.Schema + "." + memberTablesConfig.UCF_10KM.TableName + " b";
+          var idField = "b." + memberTablesConfig.UCF_10KM.IdFieldName;
+          var PAField = "a." + memberTablesConfig.UCF_10KM.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.UCF_10KM.FiresIdsFieldName;
+        } else {
+          var fields = "a." + memberTablesConfig.TI_10KM.NameFieldName + " as name, count(b.*) as count";
+          var group = "a." + memberTablesConfig.TI_10KM.NameFieldName;
+          var tableFires = memberTablesConfig.TI_10KM.FiresSchema + "." + memberTablesConfig.TI_10KM.FiresTableName + " a";
+          var tablePA = memberTablesConfig.TI_10KM.Schema + "." + memberTablesConfig.TI_10KM.TableName + " b";
+          var idField = "b." + memberTablesConfig.TI_10KM.IdFieldName;
+          var PAField = "a." + memberTablesConfig.TI_10KM.FiresPAFieldName;
+          var firesIdsField = "a." + memberTablesConfig.TI_10KM.FiresIdsFieldName;
         }
 
         // Creation of the query
-        var query = "select " + fields + " from " + table +
+        var query = "select " + fields + " from " + tableFires +
+        " inner join " + tablePA + " on (" + idField + " = " + PAField + ")" +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " b on ST_Intersects(b." + memberTablesConfig.Fires.GeometryFieldName + ", " + geomField + ")" +
-        " where ST_IsValid(" + geomField + ") and (b." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        " c on (c." + memberTablesConfig.Fires.IdFieldName + " = ANY (" + firesIdsField + "))" +
+        " where (c." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
           var satellitesArray = options.satellites.split(',');
-          query += " and b." + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+          query += " and c." + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
           for(var i = 0; i < satellitesArray.length; i++) {
             query += "$" + (parameter++) + ",";
@@ -215,7 +270,7 @@ var Graphics = function() {
         // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
         if(options.biomes !== undefined) {
           var biomesArray = options.biomes.split(',');
-          query += " and b." + memberTablesConfig.Fires.BiomeFieldName + " in (";
+          query += " and c." + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
           for(var i = 0; i < biomesArray.length; i++) {
             query += "$" + (parameter++) + ",";
@@ -228,7 +283,7 @@ var Graphics = function() {
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
-          query += " and b." + memberTablesConfig.Fires.CountryFieldName + " in (";
+          query += " and c." + memberTablesConfig.Fires.CountryFieldName + " in (";
 
           for(var i = 0; i < countriesArray.length; i++) {
             query += "$" + (parameter++) + ",";
@@ -241,7 +296,7 @@ var Graphics = function() {
         // If the 'options.states' parameter exists, a states 'where' clause is created
         if(options.states !== undefined && !filterRules.ignoreStateFilter) {
           var statesArray = options.states.split(',');
-          query += " and b." + memberTablesConfig.Fires.StateFieldName + " in (";
+          query += " and c." + memberTablesConfig.Fires.StateFieldName + " in (";
 
           for(var i = 0; i < statesArray.length; i++) {
             query += "$" + (parameter++) + ",";
@@ -254,7 +309,7 @@ var Graphics = function() {
         // If the 'options.cities' parameter exists, a cities 'where' clause is created
         if(options.cities !== undefined && !filterRules.ignoreCityFilter) {
           var citiesArray = options.cities.split(',');
-          query += " and b." + memberTablesConfig.Fires.CityFieldName + " in (";
+          query += " and c." + memberTablesConfig.Fires.CityFieldName + " in (";
 
           for(var i = 0; i < citiesArray.length; i++) {
             query += "$" + (parameter++) + ",";
@@ -264,7 +319,7 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
-        query += " group by " + group + " order by count desc, " + nameField + " asc";
+        query += " group by " + group + " order by count desc, " + group + " asc";
 
         // If the 'options.limit' parameter exists, a limit clause is created
         if(options.limit !== undefined) {

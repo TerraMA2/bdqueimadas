@@ -43,14 +43,8 @@ var Graphics = function(io) {
 
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
-        } else if(json.key === "UCE" || json.key === "UCF" || json.key === "TI") {
+        } else if(json.key === "UCE" || json.key === "UCF" || json.key === "TI" || json.key === "UCE_5KM" || json.key === "UCF_5KM" || json.key === "TI_5KM" || json.key === "UCE_10KM" || json.key === "UCF_10KM" || json.key === "TI_10KM") {
           memberGraphics.getFiresCountByPA(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
-            if(err) return console.error(err);
-
-            client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
-          });
-        } else if(json.key === "UCE_5KM" || json.key === "UCF_5KM" || json.key === "TI_5KM" || json.key === "UCE_10KM" || json.key === "UCF_10KM" || json.key === "TI_10KM") {
-          memberGraphics.getFiresCountByPABuffer(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
