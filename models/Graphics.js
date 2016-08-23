@@ -199,22 +199,22 @@ var Graphics = function() {
         }
 
         if(key === "UCE_5KM") {
-          tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.Fires5KMTableName + " b";
+          tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.Fires5KMTableName + " b";
           PAField = "a." + memberTablesConfig.UCE.Fires5KMPAFieldName;
         } else if(key === "UCE_10KM") {
-          tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.Fires10KMTableName + " b";
+          tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.Fires10KMTableName + " b";
           PAField = "a." + memberTablesConfig.UCE.Fires10KMPAFieldName;
         } else if(key === "UCF_5KM") {
-          tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.Fires5KMTableName + " b";
+          tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.Fires5KMTableName + " b";
           PAField = "a." + memberTablesConfig.UCF.Fires5KMPAFieldName;
         } else if(key === "UCF_10KM") {
-          tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.Fires10KMTableName + " b";
+          tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.Fires10KMTableName + " b";
           PAField = "a." + memberTablesConfig.UCF.Fires10KMPAFieldName;
         } else if(key === "TI_5KM") {
-          tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.Fires5KMTableName + " b";
+          tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.Fires5KMTableName + " b";
           PAField = "a." + memberTablesConfig.TI.Fires5KMPAFieldName;
         } else if(key === "TI_10KM") {
-          tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.Fires10KMTableName + " b";
+          tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.Fires10KMTableName + " b";
           PAField = "a." + memberTablesConfig.TI.Fires10KMPAFieldName;
         }
 
