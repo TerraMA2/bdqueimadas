@@ -199,22 +199,22 @@ var Graphics = function() {
         }
 
         if(key === "UCE_5KM") {
-          tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.Fires5KMTableName + " b";
+          tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.Fires5KMTableName + " a";
           PAField = "a." + memberTablesConfig.UCE.Fires5KMPAFieldName;
         } else if(key === "UCE_10KM") {
-          tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.Fires10KMTableName + " b";
+          tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.Fires10KMTableName + " a";
           PAField = "a." + memberTablesConfig.UCE.Fires10KMPAFieldName;
         } else if(key === "UCF_5KM") {
-          tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.Fires5KMTableName + " b";
+          tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.Fires5KMTableName + " a";
           PAField = "a." + memberTablesConfig.UCF.Fires5KMPAFieldName;
         } else if(key === "UCF_10KM") {
-          tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.Fires10KMTableName + " b";
+          tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.Fires10KMTableName + " a";
           PAField = "a." + memberTablesConfig.UCF.Fires10KMPAFieldName;
         } else if(key === "TI_5KM") {
-          tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.Fires5KMTableName + " b";
+          tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.Fires5KMTableName + " a";
           PAField = "a." + memberTablesConfig.TI.Fires5KMPAFieldName;
         } else if(key === "TI_10KM") {
-          tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.Fires10KMTableName + " b";
+          tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.Fires10KMTableName + " a";
           PAField = "a." + memberTablesConfig.TI.Fires10KMPAFieldName;
         }
 
