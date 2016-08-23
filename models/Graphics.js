@@ -196,7 +196,7 @@ var Graphics = function() {
         var query = "select " + fields + " from " + table +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " b on ST_Intersects(b." + memberTablesConfig.Fires.GeometryFieldName + ", " + geomField + ")" +
-        " where (b." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        " where ST_IsValid(" + geomField + ") and (b." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
@@ -371,7 +371,8 @@ var Graphics = function() {
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " c on (ST_Intersects(c." + memberTablesConfig.Fires.GeometryFieldName + ", " + geomFieldBuffer +
         ") and ST_Disjoint(c." + memberTablesConfig.Fires.GeometryFieldName + ", " + geomFieldPA + "))" +
-        " where (c." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        " where ST_IsValid(" + geomFieldPA + ") and ST_IsValid(" + geomFieldBuffer + ") and (c." + memberTablesConfig.Fires.DateFieldName +
+        " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateFrom, dateTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
