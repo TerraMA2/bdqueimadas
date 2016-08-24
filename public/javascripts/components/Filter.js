@@ -192,18 +192,19 @@ define(
     /**
      * Updates the countries BDQ names array.
      * @param {function} callback - Callback function
+     * @param {string} countries - Countries ids
      *
      * @function updateCountriesBdqNames
      * @memberof Filter(2)
      * @inner
      */
-    var updateCountriesBdqNames = function(callback) {
+    var updateCountriesBdqNames = function(callback, countries) {
       $.ajax({
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
         data: {
           key: "Countries",
-          ids: getCountries().toString()
+          ids: countries === undefined || countries === null ? getCountries().toString() : countries
         },
         success: function(names) {
           var namesArray = [];
@@ -212,9 +213,12 @@ define(
             namesArray.push(names.names.rows[i].name);
           }
 
-          setCountriesBdqNames(namesArray);
-
-          if(callback !== null) callback();
+          if(countries === undefined || countries === null) {
+            setCountriesBdqNames(namesArray);
+            if(callback !== null) callback();
+          } else {
+            if(callback !== null) callback(namesArray);
+          }
         }
       });
     };
@@ -283,18 +287,19 @@ define(
     /**
      * Updates the states BDQ names array.
      * @param {function} callback - Callback function
+     * @param {string} states - States ids
      *
      * @function updateStatesBdqNames
      * @memberof Filter(2)
      * @inner
      */
-    var updateStatesBdqNames = function(callback) {
+    var updateStatesBdqNames = function(callback, states) {
       $.ajax({
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
         data: {
           key: "States",
-          ids: getStates().toString()
+          ids: states === undefined || states === null ? getStates().toString() : states
         },
         success: function(names) {
           var namesArray = [];
@@ -303,9 +308,12 @@ define(
             namesArray.push(names.names.rows[i].name);
           }
 
-          setStatesBdqNames(namesArray);
-
-          if(callback !== null) callback();
+          if(states === undefined || states === null) {
+            setStatesBdqNames(namesArray);
+            if(callback !== null) callback();
+          } else {
+            if(callback !== null) callback(namesArray);
+          }
         }
       });
     };
@@ -653,7 +661,11 @@ define(
       }
 
       for(var i = 0; i < memberSpecialRegionsStates.length; i++) {
-        cql += "'" + memberSpecialRegionsStates[i] + "',";
+        if(memberSpecialRegionsStates[i] === "Madre de Dios") {
+          cql += "'" + memberSpecialRegionsStates[i] + "','Tahuamanu','Tambopata','Manu',";
+        } else {
+          cql += "'" + memberSpecialRegionsStates[i] + "',";
+        }
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -720,35 +732,14 @@ define(
 
         var cql = "";
 
-        if(memberSpecialRegions.length > 0) {
-          for(var i = 0; i < memberSpecialRegions.length; i++) {
-            for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
-              if(memberSpecialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
-                for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++) {
-                  memberSpecialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
-                  memberSpecialRegionsCountriesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds[x]);
-                }
+        var specialRegionsData = createSpecialRegionsArrays(memberSpecialRegions);
 
-                for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++) {
-                  memberSpecialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
-                  memberSpecialRegionsStatesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds[x]);
-                }
-
-                for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++) {
-                  memberSpecialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
-                  memberSpecialRegionsCitiesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds[x]);
-                }
-              }
-            }
-          }
-        } else {
-          memberSpecialRegionsCountries = [];
-          memberSpecialRegionsCountriesIds = [];
-          memberSpecialRegionsStates = [];
-          memberSpecialRegionsStatesIds = [];
-          memberSpecialRegionsCities = [];
-          memberSpecialRegionsCitiesIds = [];
-        }
+        memberSpecialRegionsCountries = specialRegionsData.specialRegionsCountries;
+        memberSpecialRegionsCountriesIds = specialRegionsData.specialRegionsCountriesIds;
+        memberSpecialRegionsStates = specialRegionsData.specialRegionsStates;
+        memberSpecialRegionsStatesIds = specialRegionsData.specialRegionsStatesIds;
+        memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
+        memberSpecialRegionsCitiesIds = specialRegionsData.specialRegionsCitiesIds;
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
@@ -790,6 +781,52 @@ define(
       }
 
       if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
+    };
+
+    /**
+     * Processes an array of special regions and returns an object of arrays of countries, states and cities.
+     * @param {array} specialRegions - Special regions array
+     *
+     * @function createSpecialRegionsArrays
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createSpecialRegionsArrays = function(specialRegions) {
+      var specialRegionsData = {
+        specialRegionsCountries: [],
+        specialRegionsCountriesIds: [],
+        specialRegionsStates: [],
+        specialRegionsStatesIds: [],
+        specialRegionsCities: [],
+        specialRegionsCitiesIds: []
+      };
+
+      if(specialRegions.length > 0) {
+        for(var i = 0; i < specialRegions.length; i++) {
+          for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
+            if(specialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++) {
+                specialRegionsData.specialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
+                specialRegionsData.specialRegionsCountriesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds[x]);
+              }
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++) {
+                specialRegionsData.specialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
+                specialRegionsData.specialRegionsStatesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds[x]);
+              }
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++) {
+                specialRegionsData.specialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
+                specialRegionsData.specialRegionsCitiesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds[x]);
+              }
+
+              break;
+            }
+          }
+        }
+      }
+
+      return specialRegionsData;
     };
 
     /**
@@ -1247,6 +1284,7 @@ define(
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
+      createSpecialRegionsArrays: createSpecialRegionsArrays,
       checkFiresCount: checkFiresCount,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       selectContinentItem: selectContinentItem,
