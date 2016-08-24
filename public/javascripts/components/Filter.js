@@ -661,11 +661,7 @@ define(
       }
 
       for(var i = 0; i < memberSpecialRegionsStates.length; i++) {
-        //if(memberSpecialRegionsStates[i] === "Madre de Dios") {
-          //cql += "'" + memberSpecialRegionsStates[i] + "','Tahuamanu','Tambopata','Manu',";
-        //} else {
-          cql += "'" + memberSpecialRegionsStates[i] + "',";
-        //}
+        cql += "'" + memberSpecialRegionsStates[i] + "',";
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";

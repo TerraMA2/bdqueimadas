@@ -271,8 +271,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .component-filter-content {
-  max-width: 1185px;
-  margin: 0 auto;
+  /*max-width: 1185px;
+  margin: 0 auto;*/
 }
 
 .component-filter-error { color: #dd4b39; }
@@ -289,8 +289,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 #filter-satellite-attributes-table, #filter-satellite-graphics, #filter-biome-attributes-table, #filter-biome-graphics {
-  float: left;
-  max-width: 200px;
+  /*float: left;
+  max-width: 200px;*/
 }
 
 .graphic-item .collapse-btn {

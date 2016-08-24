@@ -490,16 +490,43 @@ define(
       });
 
       $('#continents').change(function() {
+        $('#continents-graphics').val($('#continents').val());
+        $('#continents-graphics').change();
+
         if($(this).val() !== "")
           Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent', filterForm: false });
       });
 
       $('#countries').change(function() {
+        $('#countries-graphics').val($('#countries').val());
+        $('#countries-graphics').change();
+
         $('#filter-button').click();
       });
 
       $('#states').change(function() {
+        $('#states-graphics').val($('#states').val());
+        $('#states-graphics').change();
+
         $('#filter-button').click();
+      });
+
+      $('#continents-graphics').change(function() {
+        if($(this).val() !== "") {
+          Utils.getSocket().emit('countriesByContinentRequest', { continent: $(this).val(), filter: 2 });
+        }
+      });
+
+      $('#countries-graphics').change(function() {
+        if(!Utils.stringInArray($(this).val(), "") && $(this).val().length > 0) {
+          Utils.getSocket().emit('statesByCountriesRequest', { countries: $(this).val(), filter: 2 });
+        } else {
+          Utils.getSocket().emit('countriesByContinentRequest', { continent: $('#continents-graphics').val(), filter: 2 });
+        }
+      });
+
+      $('#states-graphics').change(function() {
+        $('#filter-button-graphics').click();
       });
 
       $('.filter-date').on('focus', function() {
@@ -972,7 +999,15 @@ define(
       });
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
-        var initialValue = $('#countries').val();
+        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
+          var countriesId = '#countries-attributes-table';
+        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
+          var countriesId = '#countries-graphics';
+        } else {
+          var countriesId = '#countries';
+        }
+
+        var initialValue = $(countriesId).val();
 
         var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
             countriesCount = result.countries.rowCount;
@@ -981,39 +1016,77 @@ define(
           html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
         }
 
-        $('#countries').empty().html(html);
-        if($('#countries').attr('data-value') === "") {
-          $('#countries').val(initialValue);
+        $(countriesId).empty().html(html);
+        if($(countriesId).attr('data-value') === undefined || $(countriesId).attr('data-value') === "") {
+          $(countriesId).val(initialValue);
         } else {
-          var countries = $('#countries').attr('data-value').split(',');
-          $('#countries').val(countries);
+          var countries = $(countriesId).attr('data-value').split(',');
+          $(countriesId).val(countries);
+        }
+
+        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
+          $('#states-attributes-table').html('');
+          $('#states-attributes-table').attr('disabled', '');
+          $('#filter-button-attributes-table').click();
+        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
+          $('#states-graphics').html('');
+          $('#states-graphics').attr('disabled', '');
+          $('#filter-button-graphics').click();
         }
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
-        var initialValue = $('#states').val();
+        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
+          var statesId = '#states-attributes-table';
+          var html = "<option value=\"\" selected>Todos os estados</option>";
+        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
+          var statesId = '#states-graphics';
+          var html = "<option value=\"\" selected>Todos os estados</option>";
+        } else {
+          var statesId = '#states';
+          var html = "<option value=\"\" selected>Todos os estados</option><option value=\"0\" selected>Todos municípios</option>";
+        }
 
-        var html = "<option value=\"\" selected>Todos os estados</option><option value=\"0\" selected>Todos municípios</option>",
-            statesCount = result.states.rowCount;
+        var initialValue = $(statesId).val();
+
+        var statesCount = result.states.rowCount;
 
         for(var i = 0; i < statesCount; i++) {
           html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
         }
 
-        $('#states').empty().html(html);
-        if($('#states').attr('data-value') === "") {
-          $('#states').val(initialValue);
+        $(statesId).empty().html(html);
+        if($(statesId).attr('data-value') === undefined || $(statesId).attr('data-value') === "") {
+          $(statesId).val(initialValue);
         } else {
-          var states = $('#states').attr('data-value').split(',');
-          $('#states').val(states);
+          var states = $(statesId).attr('data-value').split(',');
+          $(statesId).val(states);
+        }
+
+        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
+          $('#states-attributes-table').removeAttr('disabled');
+          $('#filter-button-attributes-table').click();
+        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
+          $('#states-graphics').removeAttr('disabled');
+          $('#filter-button-graphics').click();
         }
       });
 
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
-        var initialValue = $('#states').val();
+        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
+          var statesId = '#states-attributes-table';
+          var html = "<option value=\"\" selected>Todos os estados</option>";
+        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
+          var statesId = '#states-graphics';
+          var html = "<option value=\"\" selected>Todos os estados</option>";
+        } else {
+          var statesId = '#states';
+          var html = "<option value=\"\" selected>Todos os estados</option><option value=\"0\" selected>Todos municípios</option>";
+        }
 
-        var html = "<option value=\"\" selected>Todos os estados</option><option value=\"0\" selected>Todos municípios</option>",
-            statesCount = result.states.rowCount;
+        var initialValue = $(statesId).val();
+
+        var statesCount = result.states.rowCount;
 
         for(var i = 0; i < statesCount; i++) {
           html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
@@ -1027,12 +1100,20 @@ define(
           }
         }
 
-        $('#states').empty().html(html);
-        if($('#states').attr('data-value') === "") {
-          $('#states').val(initialValue);
+        $(statesId).empty().html(html);
+        if($(statesId).attr('data-value') === undefined || $(statesId).attr('data-value') === "") {
+          $(statesId).val(initialValue);
         } else {
-          var states = $('#states').attr('data-value').split(',');
-          $('#states').val(states);
+          var states = $(statesId).attr('data-value').split(',');
+          $(statesId).val(states);
+        }
+
+        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
+          $('#states-attributes-table').removeAttr('disabled');
+          $('#filter-button-attributes-table').click();
+        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
+          $('#states-graphics').removeAttr('disabled');
+          $('#filter-button-graphics').click();
         }
       });
 

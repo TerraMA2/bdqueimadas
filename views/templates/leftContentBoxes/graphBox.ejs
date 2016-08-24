@@ -2,64 +2,117 @@
   <div class="box box-default">
     <div class="box-body">
       <div class="component-filter">
-        <div class="component-filter-title">Confirme abaixo as datas e os sat&eacute;lites dos gr&aacute;ficos. Para alterar a regi&atilde;o, use a p&aacute;gina principal de filtros.</div>
+        <div class="component-filter-title">Confirme abaixo os filtros dos gr&aacute;ficos.</div>
         <div class="component-filter-content">
-          <label for="filter-date-from-graphics">Início</label>
-          <input type="text" class="form-control date filter-date-from" id="filter-date-from-graphics" placeholder="De">
-          <label for="filter-date-to-graphics">Fim</label>
-          <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="Até">
-          <label for="filter-satellite-graphics">Focos dos Sat&eacute;lites</label>
-          <select multiple class="form-control" id="filter-satellite-graphics">
-            <%
-            var satelliteOptions = "";
-            var referenceSatellite = "";
-            var isSatelliteSelected = false;
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="continents-graphics">Continentes</label>
+                <select id="continents-graphics" name="continents-graphics" class="form-control">
+                  <option value="">Selecione o continente</option>
+                  <% continents.rows.forEach(function(continent, index) { %>
+                    <% if(continent.name === "Americas") { %>
+                      <option value="<%- continent.id %>">Am&eacute;ricas</option>
+                    <% } else if(continent.name === "Europe") { %>
+                      <option value="<%- continent.id %>">Europa</option>
+                    <% } else if(continent.name === "Africa") { %>
+                      <option value="<%- continent.id %>">&Aacute;frica</option>
+                    <% } else if(continent.name === "South_America") { %>
+                      <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
+                    <% } else { %>
+                      <option value="<%- continent.id %>"><%- continent.name %></option>
+                    <% } %>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="countries-graphics">Países</label>
+                <select multiple id="countries-graphics" name="countries-graphics" class="form-control"></select>
+              </div>
+            </div>
+            <div class="col-md-2" style="border-right: 1px solid black;">
+              <div class="form-group">
+                <label for="states-graphics">Estados</label>
+                <select multiple id="states-graphics" name="states-graphics" class="form-control" disabled></select>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label for="filter-date-from-graphics">Início</label>
+                <input type="text" class="form-control date filter-date-from" id="filter-date-from-graphics" placeholder="De">
+              </div>
+              <div class="form-group">
+                <label for="filter-date-to-graphics">Fim</label>
+                <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="Até">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="filter-satellite-graphics">Focos dos Sat&eacute;lites</label>
+                <select multiple class="form-control" id="filter-satellite-graphics">
+                  <%
+                  var satelliteOptions = "";
+                  var referenceSatellite = "";
+                  var isSatelliteSelected = false;
 
-            configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
-              if(satellite.Current) {
-                if(satellite.ReferenceCurrent) {
-                  referenceSatellite += "<option value=\"" + satellite.Id + "\"";
+                  configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+                    if(satellite.Current) {
+                      if(satellite.ReferenceCurrent) {
+                        referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
-                  if(satellite.Selected) {
-                    referenceSatellite += " selected>";
+                        if(satellite.Selected) {
+                          referenceSatellite += " selected>";
 
-                    if(!isSatelliteSelected) isSatelliteSelected = true;
-                  } else {
-                    referenceSatellite += ">";
-                  }
+                          if(!isSatelliteSelected) isSatelliteSelected = true;
+                        } else {
+                          referenceSatellite += ">";
+                        }
 
-                  referenceSatellite += "Refer&ecirc;ncia</option>";
-                } else {
-                  satelliteOptions += "<option value=\"" + satellite.Id + "\"";
+                        referenceSatellite += "Refer&ecirc;ncia</option>";
+                      } else {
+                        satelliteOptions += "<option value=\"" + satellite.Id + "\"";
 
-                  if(satellite.Selected) {
-                    satelliteOptions += " selected>";
+                        if(satellite.Selected) {
+                          satelliteOptions += " selected>";
 
-                    if(!isSatelliteSelected) isSatelliteSelected = true;
-                  } else {
-                    satelliteOptions += ">";
-                  }
+                          if(!isSatelliteSelected) isSatelliteSelected = true;
+                        } else {
+                          satelliteOptions += ">";
+                        }
 
-                  satelliteOptions += satellite.Name + "</option>";
-                }
-              }
-            })
-            %>
+                        satelliteOptions += satellite.Name + "</option>";
+                      }
+                    }
+                  })
+                  %>
 
-            <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
-            <%- referenceSatellite + satelliteOptions %>
-          </select>
-          <label for="filter-biome-graphics">Focos dos Biomas</label>
-          <select multiple class="form-control" id="filter-biome-graphics">
-            <option value="all" selected>TODOS</option>
-            <option value="Amazonia">Amaz&ocirc;nia</option>
-            <option value="Caatinga">Caatinga</option>
-            <option value="Cerrado">Cerrado</option>
-            <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
-            <option value="Pampa">Pampa</option>
-            <option value="Pantanal">Pantanal</option>
-          </select>
-          <button class="btn btn-primary" id="filter-button-graphics">Aplicar</button>
+                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+                  <%- referenceSatellite + satelliteOptions %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="filter-biome-graphics">Focos dos Biomas</label>
+                <select multiple class="form-control" id="filter-biome-graphics">
+                  <option value="all" selected>TODOS</option>
+                  <option value="Amazonia">Amaz&ocirc;nia</option>
+                  <option value="Caatinga">Caatinga</option>
+                  <option value="Cerrado">Cerrado</option>
+                  <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+                  <option value="Pampa">Pampa</option>
+                  <option value="Pantanal">Pantanal</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <button class="btn btn-primary" id="filter-button-graphics" style="margin-top: 40px;">Aplicar</button>
+              </div>
+            </div>
+          </div>
         </div>
         <span id="graphics-no-data" style="text-align: center; display: none;">
           <div class="clear"></div>

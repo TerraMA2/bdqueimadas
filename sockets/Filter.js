@@ -108,7 +108,7 @@ var Filter = function(io) {
       memberFilter.getCountriesByContinent(json.continent, function(err, countries) {
         if(err) return console.error(err);
 
-        client.emit('countriesByContinentResponse', { countries: countries });
+        client.emit('countriesByContinentResponse', { countries: countries, filter: json.filter });
       });
     });
 
@@ -120,7 +120,7 @@ var Filter = function(io) {
         memberFilter.getSpecialRegions([json.country], function(err, specialRegions) {
           if(err) return console.error(err);
 
-          client.emit('statesByCountryResponse', { states: states, specialRegions: specialRegions });
+          client.emit('statesByCountryResponse', { states: states, specialRegions: specialRegions, filter: json.filter });
         });
       });
     });
@@ -133,7 +133,7 @@ var Filter = function(io) {
         memberFilter.getSpecialRegions(json.countries, function(err, specialRegions) {
           if(err) return console.error(err);
 
-          client.emit('statesByCountriesResponse', { states: states, specialRegions: specialRegions });
+          client.emit('statesByCountriesResponse', { states: states, specialRegions: specialRegions, filter: json.filter });
         });
       });
     });
