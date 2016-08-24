@@ -661,11 +661,11 @@ define(
       }
 
       for(var i = 0; i < memberSpecialRegionsStates.length; i++) {
-        if(memberSpecialRegionsStates[i] === "Madre de Dios") {
-          cql += "'" + memberSpecialRegionsStates[i] + "','Tahuamanu','Tambopata','Manu',";
-        } else {
+        //if(memberSpecialRegionsStates[i] === "Madre de Dios") {
+          //cql += "'" + memberSpecialRegionsStates[i] + "','Tahuamanu','Tambopata','Manu',";
+        //} else {
           cql += "'" + memberSpecialRegionsStates[i] + "',";
-        }
+        //}
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -805,20 +805,23 @@ define(
         for(var i = 0; i < specialRegions.length; i++) {
           for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
             if(specialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++) {
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++)
                 specialRegionsData.specialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds.length; x++)
                 specialRegionsData.specialRegionsCountriesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds[x]);
-              }
 
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++) {
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++)
                 specialRegionsData.specialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
-                specialRegionsData.specialRegionsStatesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds[x]);
-              }
 
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++) {
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds.length; x++)
+                specialRegionsData.specialRegionsStatesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++)
                 specialRegionsData.specialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds.length; x++)
                 specialRegionsData.specialRegionsCitiesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds[x]);
-              }
 
               break;
             }
