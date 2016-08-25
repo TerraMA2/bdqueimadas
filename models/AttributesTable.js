@@ -7,7 +7,7 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionPool - PostgreSQL connection pool.
+ * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
  * @property {json} memberAttributesTableConfig - Attributes table configuration.
  * @property {json} memberTablesConfig - Tables configuration.
  */
@@ -15,8 +15,8 @@ var AttributesTable = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // PostgreSQL connection pool
-  var memberPgConnectionPool = require(memberPath.join(__dirname, '../db.js'));
+  // 'PgConnectionPool' module
+  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Attributes table configuration
   var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
   // Tables configuration
@@ -73,7 +73,7 @@ var AttributesTable = function() {
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.connect(function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -184,7 +184,7 @@ var AttributesTable = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.connect(function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -284,7 +284,7 @@ var AttributesTable = function() {
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.connect(function(err, client, done) {
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
