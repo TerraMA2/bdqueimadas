@@ -407,37 +407,10 @@ define(
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
 
-          var countries = Utils.stringInArray(Filter.getCountriesBdqNames(), "") || Filter.getCountriesBdqNames().length === 0 ? [] : Filter.getCountriesBdqNames();
-
-          var arrayOne = JSON.parse(JSON.stringify(countries));
-          var arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsCountries()));
-
-          countries = $.merge(arrayOne, arrayTwo);
-          countries = countries.toString();
-
-          var states = Utils.stringInArray(Filter.getStatesBdqNames(), "") || Filter.getStatesBdqNames().length === 0 ? [] : Filter.getStatesBdqNames();
-
-          arrayOne = JSON.parse(JSON.stringify(states));
-          arrayTwo = JSON.parse(JSON.stringify(Filter.getSpecialRegionsStates()));
-
-          states = $.merge(arrayOne, arrayTwo);
-          states = states.toString();
-
-          var cities = Filter.getSpecialRegionsCities().toString();
-
-          if((Filter.getContinent() !== null && Filter.getContinent() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
-            var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-            var initialContinentCountriesLength = initialContinentCountries.length;
-
-            for(var i = 0; i < initialContinentCountriesLength; i++) {
-              countries += initialContinentCountries[i].Name + ',';
-            }
-
-            countries = countries.substring(0, countries.length - 1);
-          }
-
-          var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + countries + "&states=" + states + "&cities=" + cities + "&id=" + id;
-          location.href = exportLink;
+          getSpatialFilterData(function(countries, states, cities) {
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + countries + "&states=" + states + "&cities=" + cities + "&id=" + id;
+            location.href = exportLink;
+          });
         }
       }
     };

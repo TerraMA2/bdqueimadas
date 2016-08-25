@@ -493,6 +493,9 @@ define(
         $('#continents-graphics').val($('#continents').val());
         $('#continents-graphics').change();
 
+        $('#continents-attributes-table').val($('#continents').val());
+        $('#continents-attributes-table').change();
+
         if($(this).val() !== "")
           Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent', filterForm: false });
       });
@@ -501,12 +504,18 @@ define(
         $('#countries-graphics').val($('#countries').val());
         $('#countries-graphics').change();
 
+        $('#continents-attributes-table').val($('#continents').val());
+        $('#continents-attributes-table').change();
+
         $('#filter-button').click();
       });
 
       $('#states').change(function() {
         $('#states-graphics').val($('#states').val());
         $('#states-graphics').change();
+
+        $('#continents-attributes-table').val($('#continents').val());
+        $('#continents-attributes-table').change();
 
         $('#filter-button').click();
       });
@@ -527,6 +536,24 @@ define(
 
       $('#states-graphics').change(function() {
         $('#filter-button-graphics').click();
+      });
+
+      $('#continents-attributes-table').change(function() {
+        if($(this).val() !== "") {
+          Utils.getSocket().emit('countriesByContinentRequest', { continent: $(this).val(), filter: 1 });
+        }
+      });
+
+      $('#countries-attributes-table').change(function() {
+        if(!Utils.stringInArray($(this).val(), "") && $(this).val().length > 0) {
+          Utils.getSocket().emit('statesByCountriesRequest', { countries: $(this).val(), filter: 1 });
+        } else {
+          Utils.getSocket().emit('countriesByContinentRequest', { continent: $('#continents-attributes-table').val(), filter: 1 });
+        }
+      });
+
+      $('#states-attributes-table').change(function() {
+        $('#filter-button-attributes-table').click();
       });
 
       $('.filter-date').on('focus', function() {
