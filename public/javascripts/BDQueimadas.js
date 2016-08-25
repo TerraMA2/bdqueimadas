@@ -577,7 +577,6 @@ define(
       });
 
       $('#filter-button-graphics').on('click', function() {
-        console.log('filtrou');
         Graphics.updateGraphics(true);
       });
 
