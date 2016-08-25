@@ -299,6 +299,9 @@ var Graphics = function() {
           params.push(options.limit);
         }
 
+        console.log(query);
+        console.log(params);
+
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
