@@ -37,6 +37,8 @@ var Graphics = function(io) {
       memberGraphics.getFiresTotalCount(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesTotalCount) {
         if(err) return console.error(err);
 
+        console.log('total');
+
         if(json.key === "week") {
           memberGraphics.getFiresCountByWeek(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
