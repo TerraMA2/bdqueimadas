@@ -180,6 +180,7 @@ var Graphics = function() {
           var idField = "b." + memberTablesConfig.UCE.IdFieldName;
           var PAField = "a." + memberTablesConfig.UCE.FiresPAFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCE.FiresIdsFieldName;
+          var dateField = "a." + memberTablesConfig.UCE.FiresDateFieldName;
         } else if(key === "UCF" || key === "UCF_5KM" || key === "UCF_10KM") {
           var fields = "b." + memberTablesConfig.UCF.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.UCF.NameFieldName;
@@ -188,6 +189,7 @@ var Graphics = function() {
           var idField = "b." + memberTablesConfig.UCF.IdFieldName;
           var PAField = "a." + memberTablesConfig.UCF.FiresPAFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCF.FiresIdsFieldName;
+          var dateField = "a." + memberTablesConfig.UCF.FiresDateFieldName;
         } else {
           var fields = "b." + memberTablesConfig.TI.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.TI.NameFieldName;
@@ -196,6 +198,7 @@ var Graphics = function() {
           var idField = "b." + memberTablesConfig.TI.IdFieldName;
           var PAField = "a." + memberTablesConfig.TI.FiresPAFieldName;
           var firesIdsField = "a." + memberTablesConfig.TI.FiresIdsFieldName;
+          var dateField = "a." + memberTablesConfig.TI.FiresDateFieldName;
         }
 
         if(key === "UCE_5KM") {
@@ -223,8 +226,9 @@ var Graphics = function() {
         " inner join " + tablePA + " on (" + idField + " = " + PAField + ")" +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " c on (c." + memberTablesConfig.Fires.IdFieldName + " = ANY (" + firesIdsField + "))" +
-        " where (c." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        " where (c." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
+        " and (" + dateField + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateFrom, dateTo, dateFrom, dateTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -298,9 +302,6 @@ var Graphics = function() {
           query += " limit $" + (parameter++);
           params.push(options.limit);
         }
-
-        console.log(query);
-        console.log(params);
 
         // Execution of the query
         client.query(query, params, function(err, result) {
