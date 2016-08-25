@@ -1,6 +1,7 @@
 {
   "FiresCount": [
     {
+      "Order": 1,
       "Id": "firesByCountry",
       "Y": "{pais}",
       "Key": "pais",
@@ -16,6 +17,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 2,
       "Id": "firesByState",
       "Y": "{estado}",
       "Key": "estado",
@@ -31,6 +33,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 3,
       "Id": "firesByCity",
       "Y": "{municipio}",
       "Key": "municipio",
@@ -46,6 +49,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 4,
       "Id": "firesByBiome",
       "Y": "{bioma_brasileiro}",
       "Key": "bioma_brasileiro",
@@ -61,6 +65,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 5,
       "Id": "firesBySatellite",
       "Y": "{satelite}",
       "Key": "satelite",
@@ -76,6 +81,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 6,
       "Id": "citiesWithTheBiggestNumberOfFires",
       "Y": "{municipio} / {estado}",
       "Key": "municipio",
@@ -91,6 +97,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 7,
       "Id": "firesByWeek",
       "Y": "{start} - {end}",
       "Key": "week",
@@ -106,6 +113,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 8,
       "Id": "firesByUCE",
       "Y": "{name}",
       "Key": "UCE",
@@ -121,6 +129,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 9,
       "Id": "firesByUCF",
       "Y": "{name}",
       "Key": "UCF",
@@ -136,6 +145,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 10,
       "Id": "firesByTI",
       "Y": "{name}",
       "Key": "TI",
@@ -151,6 +161,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 11,
       "Id": "firesByUCEBuffer5KM",
       "Y": "{name}",
       "Key": "UCE_5KM",
@@ -166,6 +177,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 12,
       "Id": "firesByUCFBuffer5KM",
       "Y": "{name}",
       "Key": "UCF_5KM",
@@ -181,6 +193,7 @@
       "ShowOnlyIfThereIsNoStateFiltered": false
     },
     {
+      "Order": 13,
       "Id": "firesByTIBuffer5KM",
       "Y": "{name}",
       "Key": "TI_5KM",

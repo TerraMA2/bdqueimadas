@@ -261,8 +261,7 @@ define(
                                        "</div></div></div></div>";
                   }
 
-                  //$("#graphics-container").append(htmlElements);
-                  Utils.insertDivAtPosition(htmlElements);
+                  insertGraphicAtPosition(htmlElements);
                   memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
                 }
 
@@ -296,6 +295,46 @@ define(
             }
           });
         }
+      }
+    };
+
+    /**
+     * Inserts a new graphic div in the right order.
+     * @param {string} newDiv - New graphic div
+     *
+     * @private
+     * @function insertGraphicAtPosition
+     * @memberof Graphics(2)
+     * @inner
+     */
+    var insertGraphicAtPosition = function(newDiv) {
+      newDiv = $(newDiv);
+
+      var count = $("div.graphic-item").length;
+
+      if(count > 0) {
+        var newDivOrder = parseInt(newDiv.attr("data-sort"));
+
+        $("div.graphic-item").each(function(index) {
+          var currentItemOrder = parseInt($(this).attr("data-sort"));
+
+          if(index < count - 1) {
+            var nextItemOrder = parseInt($(this).next().attr("data-sort"));
+
+            if(newDivOrder < currentItemOrder) {
+              newDiv.insertBefore($(this));
+              return false;
+            } else if(currentItemOrder == newDivOrder || (newDivOrder > currentItemOrder && newDivOrder < nextItemOrder)) {
+              newDiv.insertAfter($(this));
+              return false;
+            }
+          } else {
+            newDiv.insertAfter($(this));
+            return false;
+          }
+        });
+      } else {
+        $("#graphics-container").append(newDiv);
       }
     };
 
