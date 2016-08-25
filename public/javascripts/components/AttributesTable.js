@@ -10,11 +10,11 @@
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
  * @property {date} memberDateFrom - Current initial date filter.
  * @property {date} memberDateTo - Current final date filter.
- * @property {array} memberSatellites - Current satellites filter.
- * @property {array} memberBiomes - Current biomes filter.
- * @property {array} memberCountries - Current countries filter.
- * @property {array} memberStates - Current states filter.
- * @property {array} memberCities - Current cities filter.
+ * @property {string} memberSatellites - Current satellites filter.
+ * @property {string} memberBiomes - Current biomes filter.
+ * @property {string} memberCountries - Current countries filter.
+ * @property {string} memberStates - Current states filter.
+ * @property {string} memberCities - Current cities filter.
  */
 define(
   ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
@@ -27,15 +27,15 @@ define(
     // Current final date filter
     var memberDateTo = null;
     // Current satellites filter
-    var memberSatellites = ["all"];
+    var memberSatellites = "all";
     // Current biomes filter
-    var memberBiomes = ["all"];
+    var memberBiomes = "all";
     // Current countries filter
-    var memberCountries = [];
+    var memberCountries = null;
     // Current states filter
-    var memberStates = [];
+    var memberStates = null;
     // Current cities filter
-    var memberCities = [];
+    var memberCities = null;
 
     /**
      * Creates and returns an array with the attributes table columns names.
