@@ -485,6 +485,41 @@ define(function() {
     return memberBaseUrl;
   };
 
+  // new
+
+  var insertDivAtPosition = function(newDiv) {
+    newDiv = $(newDiv);
+
+    var count = $("div.graphic-item").length;
+
+    if(count > 0) {
+      var newDivOrder = parseInt(newDiv.attr("data-sort"));
+
+      $("div.graphic-item").each(function(index) {
+        var currentItemOrder = parseInt($(this).attr("data-sort"));
+
+        if(index < count - 1) {
+          var nextItemOrder = parseInt($(this).next().attr("data-sort"));
+
+          if(newDivOrder < currentItemOrder) {
+            newDiv.insertBefore($(this));
+            return false;
+          } else if(currentItemOrder == newDivOrder || (newDivOrder > currentItemOrder && newDivOrder < nextItemOrder)) {
+            newDiv.insertAfter($(this));
+            return false;
+          }
+        } else {
+          newDiv.insertAfter($(this));
+          return false;
+        }
+      });
+    } else {
+      $("#graphics-container").append(newDiv);
+    }
+  };
+
+  // new
+
   /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
@@ -516,6 +551,7 @@ define(function() {
     areArraysEqual: areArraysEqual,
     getStateIds: getStateIds,
     getBaseUrl: getBaseUrl,
+    insertDivAtPosition: insertDivAtPosition,
     init: init
   };
 });

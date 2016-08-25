@@ -236,7 +236,7 @@ define(
               if(loadGraphic) {
                 if(memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] === undefined) {
                   if(firesCountGraphicsConfig[i].Expanded) {
-                    var htmlElements = "<div class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                    var htmlElements = "<div data-sort=\"" + firesCountGraphicsConfig[i].Order + "\" class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
                                        firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
                                        $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
                                        "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Minimizar</button></div></div>" +
@@ -248,7 +248,7 @@ define(
                                        "-graphic-message-container\" class=\"text-center\">" +
                                        "</div></div></div></div>";
                   } else {
-                    var htmlElements = "<div class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                    var htmlElements = "<div data-sort=\"" + firesCountGraphicsConfig[i].Order + "\" class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
                                        firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
                                        $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
                                        "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Expandir</button></div></div>" +
@@ -261,7 +261,8 @@ define(
                                        "</div></div></div></div>";
                   }
 
-                  $("#graphics-container").append(htmlElements);
+                  //$("#graphics-container").append(htmlElements);
+                  Utils.insertDivAtPosition(htmlElements);
                   memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
                 }
 
