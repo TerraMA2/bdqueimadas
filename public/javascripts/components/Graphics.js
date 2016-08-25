@@ -100,6 +100,7 @@ define(
 
     /**
      * Returns the countries, states and cities to be filtered.
+     * @param {boolean} considerInitialContinent - Flag that indicates if the initial continent should be considered in case no country is filtered
      * @param {function} callback - Callback function
      * @returns {function} callback - Execution of the callback function, which will process the received data
      *
@@ -108,11 +109,11 @@ define(
      * @memberof Graphics(2)
      * @inner
      */
-    var getSpatialFilterData = function(callback) {
+    var getSpatialFilterData = function(considerInitialContinent, callback) {
       var countries = $('#countries-graphics').val() === null || (Utils.stringInArray($('#countries-graphics').val(), "") || $('#countries-graphics').val().length === 0) ? [] : $('#countries-graphics').val();
       var countriesNames = [];
 
-      if(($('#continents-graphics').val() !== null && $('#continents-graphics').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
+      if(considerInitialContinent && ($('#continents-graphics').val() !== null && $('#continents-graphics').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
         var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
         var initialContinentCountriesLength = initialContinentCountries.length;
 
@@ -231,7 +232,7 @@ define(
               memberFiresCountGraphics[firesCountGraphicsConfig.Id] = null;
             }
 
-            getSpatialFilterData(function(countries, states, cities) {
+            getSpatialFilterData(true, function(countries, states, cities) {
               Utils.getSocket().emit(
                 'graphicsFiresCountRequest',
                 {
@@ -342,7 +343,7 @@ define(
       $("#fires-count-" + firesCount.id + "-graphic").parent().children('.export-graphic-data').show();
       $("#fires-count-" + firesCount.id + "-graphic").parents('.graphic-item').show();
 
-      getSpatialFilterData(function(countries, states, cities) {
+      getSpatialFilterData(false, function(countries, states, cities) {
         if(firesCount.firesCount.rowCount <= 1) {
           hideGraphic(firesCount.id);
         } else if(firesCount.filterRules.showOnlyIfThereIsACountryFiltered && countries === '') {
@@ -407,7 +408,7 @@ define(
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
 
-          getSpatialFilterData(function(countries, states, cities) {
+          getSpatialFilterData(true, function(countries, states, cities) {
             var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + countries + "&states=" + states + "&cities=" + cities + "&id=" + id;
             location.href = exportLink;
           });
