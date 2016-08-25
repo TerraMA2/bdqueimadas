@@ -39,8 +39,8 @@ define(
      * @inner
      */
     var updateComponents = function() {
-      AttributesTable.updateAttributesTable(false);
-      Graphics.updateGraphics(false);
+      //AttributesTable.updateAttributesTable(false);
+      //Graphics.updateGraphics(false);
       Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountriesBdqNames(), Filter.getStatesBdqNames());
     };
 
