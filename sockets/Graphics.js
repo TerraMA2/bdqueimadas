@@ -25,8 +25,6 @@ var Graphics = function(io) {
       // Object responsible for keep several information to be used in the database query
       var options = {};
 
-      console.log('passou no socket');
-
       // Verifications of the 'options' object items
       if(json.satellites !== '') options.satellites = json.satellites;
       if(json.biomes !== '') options.biomes = json.biomes;
@@ -43,18 +41,21 @@ var Graphics = function(io) {
           memberGraphics.getFiresCountByWeek(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
+            console.log('response1');
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
         } else if(json.key === "UCE" || json.key === "UCF" || json.key === "TI" || json.key === "UCE_5KM" || json.key === "UCF_5KM" || json.key === "TI_5KM" || json.key === "UCE_10KM" || json.key === "UCF_10KM" || json.key === "TI_10KM") {
           memberGraphics.getFiresCountByPA(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
+            console.log('response2');
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
         } else {
           memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
+            console.log('response3');
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
         }
