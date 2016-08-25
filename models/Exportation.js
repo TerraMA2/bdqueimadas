@@ -7,7 +7,7 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
+ * @property {object} memberPgConnectionPool - PostgreSQL connection pool.
  * @property {json} memberTablesConfig - Tables configuration.
  * @property {json} memberAttributesTableConfig - Attributes table configuration.
  */
@@ -15,8 +15,8 @@ var Exportation = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  // PostgreSQL connection pool
+  var memberPgConnectionPool = require(memberPath.join(__dirname, '../db.js'));
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // Attributes table configuration
@@ -54,7 +54,7 @@ var Exportation = function() {
     columns = columns.substring(0, (columns.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    memberPgConnectionPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
