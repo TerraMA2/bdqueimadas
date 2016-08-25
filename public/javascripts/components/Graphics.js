@@ -225,63 +225,73 @@ define(
             var firesCountGraphicsConfigLength = firesCountGraphicsConfig.length;
 
             for(var i = 0; i < firesCountGraphicsConfigLength; i++) {
-              if(memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] === undefined) {
-                if(firesCountGraphicsConfig[i].Expanded) {
-                  var htmlElements = "<div class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
-                                     firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
-                                     $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
-                                     "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Minimizar</button></div></div>" +
-                                     "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
-                                     "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
-                                     "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
-                                     "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                     "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                     "-graphic-message-container\" class=\"text-center\">" +
-                                     "</div></div></div></div>";
-                } else {
-                  var htmlElements = "<div class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
-                                     firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
-                                     $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
-                                     "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Expandir</button></div></div>" +
-                                     "<div class=\"box-body\" style=\"display: none;\"><div class=\"chart\">" +
-                                     "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
-                                     "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
-                                     "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                     "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                     "-graphic-message-container\" class=\"text-center\">" +
-                                     "</div></div></div></div>";
-                }
 
-                $("#graphics-container").append(htmlElements);
-                memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
-              }
+              var loadGraphic = true;
 
-              Utils.getSocket().emit(
-                'graphicsFiresCountRequest',
-                {
-                  dateFrom: dateFrom,
-                  dateTo: dateTo,
-                  id: firesCountGraphicsConfig[i].Id,
-                  y: firesCountGraphicsConfig[i].Y,
-                  key: firesCountGraphicsConfig[i].Key,
-                  limit: firesCountGraphicsConfig[i].Limit,
-                  title: firesCountGraphicsConfig[i].Title,
-                  satellites: satellites,
-                  biomes: biomes,
-                  countries: memberAllCountries,
-                  states: memberStates,
-                  cities: memberCities,
-                  filterRules: {
-                    ignoreCountryFilter: firesCountGraphicsConfig[i].IgnoreCountryFilter,
-                    ignoreStateFilter: firesCountGraphicsConfig[i].IgnoreStateFilter,
-                    ignoreCityFilter: firesCountGraphicsConfig[i].IgnoreCityFilter,
-                    showOnlyIfThereIsACountryFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered,
-                    showOnlyIfThereIsNoCountryFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered,
-                    showOnlyIfThereIsAStateFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered,
-                    showOnlyIfThereIsNoStateFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered
+              if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered && memberCountries === '') loadGraphic = false;
+              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered && memberCountries !== '') loadGraphic = false;
+              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered && memberStates === '') loadGraphic = false;
+              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered && memberStates !== '') loadGraphic = false;
+
+              if(loadGraphic) {
+                if(memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] === undefined) {
+                  if(firesCountGraphicsConfig[i].Expanded) {
+                    var htmlElements = "<div class=\"box box-default graphic-item\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                                       firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
+                                       $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
+                                       "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Minimizar</button></div></div>" +
+                                       "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
+                                       "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
+                                       "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
+                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                                       "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
+                                       "-graphic-message-container\" class=\"text-center\">" +
+                                       "</div></div></div></div>";
+                  } else {
+                    var htmlElements = "<div class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
+                                       firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
+                                       $('#filter-date-to-graphics').val() + "</span></h3><div class=\"box-tools pull-right\">" +
+                                       "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Expandir</button></div></div>" +
+                                       "<div class=\"box-body\" style=\"display: none;\"><div class=\"chart\">" +
+                                       "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
+                                       "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
+                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
+                                       "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
+                                       "-graphic-message-container\" class=\"text-center\">" +
+                                       "</div></div></div></div>";
                   }
+
+                  $("#graphics-container").append(htmlElements);
+                  memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
                 }
-              );
+
+                Utils.getSocket().emit(
+                  'graphicsFiresCountRequest',
+                  {
+                    dateFrom: dateFrom,
+                    dateTo: dateTo,
+                    id: firesCountGraphicsConfig[i].Id,
+                    y: firesCountGraphicsConfig[i].Y,
+                    key: firesCountGraphicsConfig[i].Key,
+                    limit: firesCountGraphicsConfig[i].Limit,
+                    title: firesCountGraphicsConfig[i].Title,
+                    satellites: satellites,
+                    biomes: biomes,
+                    countries: memberAllCountries,
+                    states: memberStates,
+                    cities: memberCities,
+                    filterRules: {
+                      ignoreCountryFilter: firesCountGraphicsConfig[i].IgnoreCountryFilter,
+                      ignoreStateFilter: firesCountGraphicsConfig[i].IgnoreStateFilter,
+                      ignoreCityFilter: firesCountGraphicsConfig[i].IgnoreCityFilter,
+                      showOnlyIfThereIsACountryFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered,
+                      showOnlyIfThereIsNoCountryFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered,
+                      showOnlyIfThereIsAStateFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered,
+                      showOnlyIfThereIsNoStateFiltered: firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered
+                    }
+                  }
+                );
+              }
             }
           });
         }
