@@ -256,6 +256,8 @@ define(
                 memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
               }
 
+              console.log('emitiu request');
+
               Utils.getSocket().emit(
                 'graphicsFiresCountRequest',
                 {

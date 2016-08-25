@@ -25,6 +25,8 @@ var Graphics = function(io) {
       // Object responsible for keep several information to be used in the database query
       var options = {};
 
+      console.log('passou no socket');
+
       // Verifications of the 'options' object items
       if(json.satellites !== '') options.satellites = json.satellites;
       if(json.biomes !== '') options.biomes = json.biomes;
@@ -52,8 +54,6 @@ var Graphics = function(io) {
         } else {
           memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
-
-            console.log(firesCount);
 
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
