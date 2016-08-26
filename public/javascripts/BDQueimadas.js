@@ -808,6 +808,8 @@ define(
             return false;
           }
         });
+
+        $.event.trigger({type: "updateMapInformationsBox"});
       });
 
       // AttributesTable events
@@ -1706,7 +1708,7 @@ define(
       if(visibleLayers.length > 0) {
         for(var i = 0, count = visibleLayers.length; i < count; i++) {
           if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
-          html += visibleLayers[i].layerName + '<br/>';
+          html += $('#' + visibleLayers[i].elementId + ' > span').text() + '<br/>';
         }
       } else {
         html = '<strong>Nenhuma camada a ser exibida.</strong>';
