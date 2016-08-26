@@ -277,10 +277,6 @@ define(
                   memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
                 }
 
-                if(firesCountGraphicsConfig[i].Id == "firesByState") {
-                  console.log(memberStates);
-                }
-
                 Utils.getSocket().emit(
                   'graphicsFiresCountRequest',
                   {
