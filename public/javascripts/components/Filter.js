@@ -935,7 +935,7 @@ define(
           } else {
             if(memberStates.length > 0 || memberSpecialRegionsStatesIds.length > 0) {
               var statesCqlFilter = "(";
-              var citiesCqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField + " in (";
+              var citiesCqlFilter = "(";
 
               for(var count = 0; count < memberStates.length; count++) {
                 var ids = Utils.getStateIds(memberStates[count]);
@@ -950,11 +950,11 @@ define(
                 statesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + " LIKE '" + memberSpecialRegionsStatesIds[count] + "%' OR ";
 
               for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++)
-                citiesCqlFilter += "'" + memberSpecialRegionsCitiesIds[count] + "',";
+                citiesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField + " LIKE '" + memberSpecialRegionsCitiesIds[count] + "%' OR ";
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 4)) + ")";
 
-              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
+              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 4)) + ")";
             } else {
               cqlFilter += "0)";
             }
@@ -984,7 +984,7 @@ define(
           } else {
             if(memberStates.length > 0 || memberSpecialRegionsStatesIds.length > 0) {
               var statesCqlFilter = "(";
-              var citiesCqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField + " in (";
+              var citiesCqlFilter = "(";
 
               for(var count = 0; count < memberStates.length; count++) {
                 var ids = Utils.getStateIds(memberStates[count]);
@@ -999,11 +999,11 @@ define(
                 statesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField + " LIKE '" + memberSpecialRegionsStatesIds[count] + "%' OR ";
 
               for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++)
-                citiesCqlFilter += "'" + memberSpecialRegionsCitiesIds[count] + "',";
+                citiesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField + " LIKE '" + memberSpecialRegionsCitiesIds[count] + "%' OR ";
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 4)) + ")";
 
-              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
+              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 4)) + ")";
             } else {
               cqlFilter += "0)";
             }
