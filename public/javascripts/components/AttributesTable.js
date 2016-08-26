@@ -116,27 +116,43 @@ define(
 
       var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
 
-      var arrayOne = JSON.parse(JSON.stringify(countries));
-      var arrayTwo = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountriesIds));
-
-      countries = $.merge(arrayOne, arrayTwo);
       countries = countries.toString();
+
+      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
         Filter.updateCountriesBdqNames(function(namesArrayCountries) {
-          var arrayOne = JSON.parse(JSON.stringify(filterStates));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStatesIds));
+          var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
 
-          states = $.merge(arrayOne, arrayTwo);
+          namesArrayCountries = $.merge(arrayOne, arrayTwo);
+
+          states = JSON.parse(JSON.stringify(filterStates));
           states = states.toString();
 
-          Filter.updateStatesBdqNames(function(namesArrayStates) {
-            var cities = specialRegionsData.specialRegionsCities.toString();
+          var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-            callback(namesArrayCountries.toString(), namesArrayStates.toString(), cities);
-          }, states);
+          var cities = specialRegionsData.specialRegionsCities.toString();
+
+          if(states.length > 0) {
+            Filter.updateStatesBdqNames(function(namesArrayStates) {
+              var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
+              var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
+
+              namesArrayStates = $.merge(arrayOne, arrayTwo);
+
+              callback(namesArrayCountries.toString(), namesArrayStates.toString(), cities);
+            }, states);
+          } else {
+            callback(namesArrayCountries.toString(), specialRegionsStatesNames.toString(), cities);
+          }
         }, countries);
       } else {
+        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+
+        countriesNames = $.merge(arrayOne, arrayTwo);
+
         callback(countriesNames.toString(), "", "");
       }
     };
