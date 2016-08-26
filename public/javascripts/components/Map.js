@@ -528,10 +528,15 @@ define(
      * @inner
      */
     var updateZoomTop = function(toggle) {
-      if($('.map-subtitle-toggle').parent().parent().parent().hasClass('collapsed-box') || !toggle)
-        $('#terrama2-map .ol-zoom').animate({ 'top': '221px' }, { duration: 500, queue: false });
-      else
-        $('#terrama2-map .ol-zoom').animate({ 'top': '70px' }, { duration: 500, queue: false });
+      if(toggle) {
+        setTimeout(function() {
+          $('#terrama2-map .ol-zoom').animate({ 'top': ($('#map-subtitle').height() + 7) + 'px' }, { duration: 300, queue: false });
+          $('#map-tools').animate({ 'top': ($('#map-subtitle').height() + 65) + 'px' }, { duration: 300, queue: false });
+        }, 500);
+      } else {
+        $('#terrama2-map .ol-zoom').css('top', ($('#map-subtitle').height() + 7) + 'px');
+        $('#map-tools').css('top', ($('#map-subtitle').height() + 65) + 'px');
+      }
     };
 
     /**

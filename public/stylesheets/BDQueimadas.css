@@ -453,12 +453,6 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   left: 46%;
 }
 
-.mouse-function-btn { background: #f8b802 !important; }
-
-.mouse-function-btn:hover { background: #E0A602 !important; }
-
-.mouse-function-btn.active { background: #E0A602 !important; }
-
 #page-title {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -569,8 +563,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .feature-info-box .ui-dialog-title, .map-info-box .ui-dialog-title { font-size: 13px; }
 
-#map-info-button {
-  bottom: 130px;
+.map-tool-button {
   z-index: 9999;
   position: absolute;
   background-color: rgba(255,255,255,.4);
@@ -580,7 +573,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   max-height: 350px;
 }
 
-#map-info-button > button {
+.map-tool-button > button {
   width: 30px;
   height: 30px;
   background-color: rgba(241,241,241,.8);
@@ -590,7 +583,23 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   outline: 0;
 }
 
-#map-info-button > button:hover { background-color: rgba(241,241,241,1); }
+.map-tool-button > button:hover { background-color: rgba(241,241,241,1); }
+
+.map-tool-button.active > button { background-color: rgba(255, 255, 255, 1); }
+
+#map-info-button { bottom: 108px; }
+
+#map-tools {
+  z-index: 9999;
+  position: absolute;
+  right: 0px;
+}
+
+#dragbox { top: 43px; }
+
+#initialExtent { top: 86px; }
+
+#getAttributes { top: 129px; }
 
 #page-second-title > .inpe-image {
   position: absolute;
@@ -681,8 +690,11 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 #languages-secondary {
-  border-right: solid 2px #333;
+  /*border-right: solid 2px #333;
   margin-right: 10px;
+  margin-top: 10px;*/
+
+  margin-right: 3px;
   margin-top: 10px;
 }
 
