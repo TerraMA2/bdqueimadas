@@ -926,9 +926,7 @@ define(
 
           if(index > -1) {
             if(memberCountries.length > 0) {
-              for(var count = 0; count < memberCountries.length; count++) {
-                cqlFilter += memberCountries[count] + ",";
-              }
+              for(var count = 0; count < memberCountries.length; count++) cqlFilter += memberCountries[count] + ",";
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
             } else {
@@ -945,17 +943,9 @@ define(
                 statesCqlFilter += ids[1] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
-                cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
-              }
-
-              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++) {
-                statesCqlFilter += memberSpecialRegionsStatesIds[count] + ",";
-              }
-
-              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++) {
-                citiesCqlFilter += memberSpecialRegionsCitiesIds[count] + ",";
-              }
+              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++) statesCqlFilter += memberSpecialRegionsStatesIds[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++) citiesCqlFilter += memberSpecialRegionsCitiesIds[count] + ",";
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
 
@@ -997,17 +987,9 @@ define(
                 statesCqlFilter += ids[1] + ",";
               }
 
-              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
-                cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
-              }
-
-              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++) {
-                statesCqlFilter += memberSpecialRegionsStatesIds[count] + ",";
-              }
-
-              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++) {
-                citiesCqlFilter += memberSpecialRegionsCitiesIds[count] + ",";
-              }
+              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++) statesCqlFilter += memberSpecialRegionsStatesIds[count] + ",";
+              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++) citiesCqlFilter += memberSpecialRegionsCitiesIds[count] + ",";
 
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
 
