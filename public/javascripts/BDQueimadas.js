@@ -623,6 +623,11 @@ define(
         Map.activateGetFeatureInfoTool();
       });
 
+      $('#fogograma').on('click', function() {
+        Map.resetMapMouseTools();
+        Map.activateFogoGramaTool();
+      });
+
       $('.map-subtitle-toggle').on('click', function() {
         Map.updateZoomTop(true);
 
@@ -647,7 +652,7 @@ define(
         $('#map-info-box').html(html);
         $('#map-info-box').dialog({
           dialogClass: "map-info-box",
-          title: "Informações do Mapa",
+          title: "Informações da Tela",
           width: 230,
           maxHeight: 300,
           modal: false,

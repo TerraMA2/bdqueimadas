@@ -21,9 +21,10 @@
                 <div id="moveMap" class="map-tool-button mouse-function-btn"><button type="button" title="Arrastar Tela"><i class="fa fa-hand-rock-o"></i></button></div>
                 <div id="dragbox" class="map-tool-button mouse-function-btn"><button type="button" title="Selecionar Retângulo"><i class="fa fa-crop"></i></button></div>
                 <div id="initialExtent" class="map-tool-button mouse-function-btn"><button type="button" title="Extensão Inicial"><i class="fa fa-arrows-alt"></i></button></div>
-                <div id="getAttributes" class="map-tool-button mouse-function-btn"><button type="button" title="Obter Atributos dos Focos"><i class="fa fa-info-circle"></i></button></div>
+                <div id="getAttributes" class="map-tool-button mouse-function-btn"><button type="button" title="Obter Atributos dos Focos"><i class="fa fa-google"></i></button></div>
+                <div id="fogograma" class="map-tool-button mouse-function-btn"><button type="button" title="FogoGrama"><i class="fa fa-line-chart"></i></button></div>
+                <div id="map-info-button" class="map-tool-button"><button type="button" title="Informações da Tela"><i class="fa fa-info"></i></button></div>
               </div>
-              <div id="map-info-button" class="map-tool-button"><button type="button" title="Informações do Mapa"><i class="fa fa-info"></i></button></div>
               <span id="loading-span" class="hide"></span>
               <div id="map-subtitle" class="col-md-3" style="width: 150px">
                 <div class="box box-solid collapsed-box">
@@ -42,6 +43,7 @@
       </div>
     </div>
     <% include templates/footer %>
+    <div id="fogograma-box" style="padding: 0 !important; margin: 0 !important; overflow: hidden !important;"></div>
     <div id="map-info-box"></div>
     <div id="feature-info-box"></div>
     <div id="about-dialog" title="Sobre">

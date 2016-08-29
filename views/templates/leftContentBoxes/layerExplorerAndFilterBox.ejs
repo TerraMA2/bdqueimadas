@@ -65,7 +65,7 @@
               referenceSatellite += ">";
             }
 
-            referenceSatellite += "Refer&ecirc;ncia</option>";
+            referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
           } else {
             satelliteOptions += "<option value=\"" + satellite.Id + "\"";
 
@@ -112,5 +112,5 @@
       }
     %>
   </h4>
-  <div id="terrama2-layerexplorer" style="max-height: 250px;overflow: auto;"></div>
+  <div id="terrama2-layerexplorer" style="max-height: 350px;overflow: auto;"></div>
 </div>
