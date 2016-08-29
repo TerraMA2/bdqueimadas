@@ -455,6 +455,93 @@ var Filter = function() {
   };
 
   /**
+   * Returns the special regions extent correspondent to the received ids.
+   * @param {array} specialRegions - Special regions ids
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getSpecialRegionsExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getSpecialRegionsExtent = function(specialRegions, callback) {
+    // Connection with the PostgreSQL database
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+      if(!err) {
+        var parameter = 1;
+        var params = [];
+
+        // Creation of the query
+        var query = "select ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent from " + memberTablesConfig.SpecialRegions.Schema + "." +
+        memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+        for(var i = 0; i < specialRegions.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(specialRegions[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ")";
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the states and special regions extent correspondent to the received ids.
+   * @param {array} states - States ids
+   * @param {array} specialRegions - Special regions ids
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getStatesAndSpecialRegionsExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getStatesAndSpecialRegionsExtent = function(states, specialRegions, callback) {
+    // Connection with the PostgreSQL database
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+      if(!err) {
+        var parameter = 1;
+        var params = [];
+
+        // Creation of the query
+        var query = "WITH all_geoms AS(" +
+        "SELECT ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent FROM " + memberTablesConfig.States.Schema + "." +
+        memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+
+        for(var i = 0; i < states.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(states[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ") UNION ALL " +
+        "SELECT ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." +
+        memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+        for(var i = 0; i < specialRegions.length; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(specialRegions[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ")) SELECT ST_Extent(extent) as extent FROM all_geoms";
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns the number of the fires located in the country correspondent to the received id.
    * @param {number} country - Country id
    * @param {function} callback - Callback function
@@ -696,6 +783,54 @@ var Filter = function() {
 
         // Execution of the query
         client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
+   * Returns the special regions.
+   * @param {array} countries - Filtered countries
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getSpecialRegions
+   * @memberof Filter
+   * @inner
+   */
+  this.getSpecialRegions = function(countries, callback) {
+    // Connection with the PostgreSQL database
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+      if(!err) {
+        var specialRegions = "";
+
+        for(var i = 0, specialRegionsLength = memberFilterConfig.SpecialRegions.length; i < specialRegionsLength; i++) {
+          var inArray = false;
+
+          for(var j = 0, countriesLength = countries.length; j < countriesLength; j++) {
+            for(var x = 0, specialRegionsCountriesLength = memberFilterConfig.SpecialRegions[i].CountriesIds.length; x < specialRegionsCountriesLength; x++) {
+              if(countries[j] == memberFilterConfig.SpecialRegions[i].CountriesIds[x]) {
+                inArray = true;
+                break;
+              }
+            }
+
+            if(inArray) break;
+          }
+
+          if(inArray) specialRegions += memberFilterConfig.SpecialRegions[i].Id + ",";
+        }
+
+        specialRegions = specialRegions != "" ? specialRegions.substring(0, specialRegions.length - 1) : "0";
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where gid in (" + specialRegions + ") order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+
+        // Execution of the query
+        client.query(query, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);

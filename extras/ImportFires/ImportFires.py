@@ -37,6 +37,9 @@ EXCEPTION = None
 # Variable responsible for keeping the process result
 RESULT = ""
 
+# Variable responsible for keeping the process protected areas fires function
+PROCESS_FIRES_PA_FUNCTION = "public.processar_focos_uc_ti"
+
 # Importing necessary packages
 import MySQLdb
 import psycopg2
@@ -169,6 +172,28 @@ def insertData():
 
     return True
 
+# Function responsible for processing the protected areas fires
+def processFiresPA(begin, end):
+    beginDate = datetime.datetime.strptime(begin, "%Y-%m-%d")
+    endDate = datetime.datetime.strptime(end, "%Y-%m-%d")
+    delta = datetime.timedelta(days=1)
+
+    while beginDate <= endDate:
+        try:
+            query = "select " + PROCESS_FIRES_PA_FUNCTION + "(('" + beginDate.strftime("%Y-%m-%d") + "')::date);"
+            PGSQL_CURSOR.execute(query)
+        except Exception as e:
+            global EXCEPTION
+            EXCEPTION = str(e)
+
+            return False
+
+        beginDate += delta
+
+    PGSQL_DB.commit()
+
+    return True
+
 # Function responsible for closing the databases connections
 def closeConnections():
     if MYSQL_CURSOR is not None:
@@ -276,6 +301,9 @@ def performImportation():
 
                     if not insertData():
                         exception("Insert error")
+                    else:
+                        if not processFiresPA(sys.argv[1], sys.argv[3]):
+                            exception("Protected areas fires processing error")
                 else:
                     exception("Query error")
             else:
@@ -289,6 +317,9 @@ def performImportation():
 
                         if not insertData():
                             exception("Insert error")
+                        else:
+                            if not processFiresPA(sys.argv[1], sys.argv[3]):
+                                exception("Protected areas fires processing error")
                     else:
                         exception("Query error")
                 else:

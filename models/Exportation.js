@@ -116,6 +116,19 @@ var Exportation = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         // If the 'options.limit' parameter exists, a limit clause is created
         if(options.limit !== undefined) {
           query += " limit " + options.limit;

@@ -132,6 +132,19 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
           var searchResult = createSearch(search, parameter);
@@ -230,6 +243,19 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
@@ -312,6 +338,19 @@ var AttributesTable = function() {
           for(var i = 0; i < statesArray.length; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.cities' parameter exists, a cities 'where' clause is created
+        if(options.cities !== undefined) {
+          var citiesArray = options.cities.split(',');
+          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
+
+          for(var i = 0; i < citiesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(citiesArray[i]);
           }
 
           query = query.substring(0, (query.length - 1)) + ")";

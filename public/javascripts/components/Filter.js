@@ -16,6 +16,7 @@
  * @property {array} memberCountriesBdqNames - Current countries BDQ names.
  * @property {array} memberStates - Current states.
  * @property {array} memberStatesBdqNames - Current states BDQ names.
+ * @property {array} memberSpecialRegions - Current special regions.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -39,6 +40,20 @@ define(
     var memberStates = [];
     // Current states BDQ names
     var memberStatesBdqNames = [];
+    // Current special regions
+    var memberSpecialRegions = [];
+    // Current special regions countries
+    var memberSpecialRegionsCountries = [];
+    // Current special regions countries ids
+    var memberSpecialRegionsCountriesIds = [];
+    // Current special regions states
+    var memberSpecialRegionsStates = [];
+    // Current special regions states ids
+    var memberSpecialRegionsStatesIds = [];
+    // Current special regions cities
+    var memberSpecialRegionsCities = [];
+    // Current special regions cities ids
+    var memberSpecialRegionsCitiesIds = [];
 
     /**
      * Returns the initial date formatted with the received format.
@@ -177,18 +192,19 @@ define(
     /**
      * Updates the countries BDQ names array.
      * @param {function} callback - Callback function
+     * @param {string} countries - Countries ids
      *
      * @function updateCountriesBdqNames
      * @memberof Filter(2)
      * @inner
      */
-    var updateCountriesBdqNames = function(callback) {
+    var updateCountriesBdqNames = function(callback, countries) {
       $.ajax({
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
         data: {
           key: "Countries",
-          ids: getCountries().toString()
+          ids: countries === undefined || countries === null ? getCountries().toString() : countries
         },
         success: function(names) {
           var namesArray = [];
@@ -197,9 +213,12 @@ define(
             namesArray.push(names.names.rows[i].name);
           }
 
-          setCountriesBdqNames(namesArray);
-
-          if(callback !== null) callback();
+          if(countries === undefined || countries === null) {
+            setCountriesBdqNames(namesArray);
+            if(callback !== null) callback();
+          } else {
+            if(callback !== null) callback(namesArray);
+          }
         }
       });
     };
@@ -268,18 +287,19 @@ define(
     /**
      * Updates the states BDQ names array.
      * @param {function} callback - Callback function
+     * @param {string} states - States ids
      *
      * @function updateStatesBdqNames
      * @memberof Filter(2)
      * @inner
      */
-    var updateStatesBdqNames = function(callback) {
+    var updateStatesBdqNames = function(callback, states) {
       $.ajax({
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
         data: {
           key: "States",
-          ids: getStates().toString()
+          ids: states === undefined || states === null ? getStates().toString() : states
         },
         success: function(names) {
           var namesArray = [];
@@ -288,9 +308,12 @@ define(
             namesArray.push(names.names.rows[i].name);
           }
 
-          setStatesBdqNames(namesArray);
-
-          if(callback !== null) callback();
+          if(states === undefined || states === null) {
+            setStatesBdqNames(namesArray);
+            if(callback !== null) callback();
+          } else {
+            if(callback !== null) callback(namesArray);
+          }
         }
       });
     };
@@ -317,7 +340,18 @@ define(
     var clearStates = function() {
       setStates([]);
       setStatesBdqNames([]);
-      $("#states option:selected").removeAttr("selected");
+      $("#states option:selected[value!='0']").removeAttr("selected");
+    };
+
+    /**
+     * Clears the list of selected special regions.
+     *
+     * @function clearSpecialRegions
+     * @memberof Filter(2)
+     * @inner
+     */
+    var clearSpecialRegions = function() {
+      setSpecialRegions([]);
     };
 
     /**
@@ -354,6 +388,102 @@ define(
           if(callback !== null) callback();
         }
       });
+    };
+
+    /**
+     * Sets the special regions array.
+     * @param {array} specialRegions - Special regions array
+     *
+     * @function setSpecialRegions
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setSpecialRegions = function(specialRegions) {
+      memberSpecialRegions = specialRegions;
+    };
+
+    /**
+     * Returns the special regions array.
+     * @returns {array} memberSpecialRegions - Special regions array
+     *
+     * @function getSpecialRegions
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegions = function() {
+      return memberSpecialRegions;
+    };
+
+    /**
+     * Returns the special regions countries array.
+     * @returns {array} memberSpecialRegionsCountries - Special regions countries
+     *
+     * @function getSpecialRegionsCountries
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegionsCountries = function() {
+      return memberSpecialRegionsCountries;
+    };
+
+    /**
+     * Returns the special regions countries ids array.
+     * @returns {array} memberSpecialRegionsCountriesIds - Special regions countries ids
+     *
+     * @function getSpecialRegionsCountriesIds
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegionsCountriesIds = function() {
+      return memberSpecialRegionsCountriesIds;
+    };
+
+    /**
+     * Returns the special regions states array.
+     * @returns {array} memberSpecialRegionsStates - Special regions states
+     *
+     * @function getSpecialRegionsStates
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegionsStates = function() {
+      return memberSpecialRegionsStates;
+    };
+
+    /**
+     * Returns the special regions states ids array.
+     * @returns {array} memberSpecialRegionsStatesIds - Special regions states ids
+     *
+     * @function getSpecialRegionsStatesIds
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegionsStatesIds = function() {
+      return memberSpecialRegionsStatesIds;
+    };
+
+    /**
+     * Returns the special regions cities array.
+     * @returns {array} memberSpecialRegionsCities - Special regions cities
+     *
+     * @function getSpecialRegionsCities
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegionsCities = function() {
+      return memberSpecialRegionsCities;
+    };
+
+    /**
+     * Returns the special regions cities ids array.
+     * @returns {array} memberSpecialRegionsCitiesIds - Special regions cities ids
+     *
+     * @function getSpecialRegionsCitiesIds
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSpecialRegionsCitiesIds = function() {
+      return memberSpecialRegionsCitiesIds;
     };
 
     /**
@@ -429,13 +559,13 @@ define(
      * @inner
      */
     var createSatellitesFilter = function() {
-      var cql = "(";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + " in (";
 
       for(var i = 0; i < memberSatellites.length; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + "='" + memberSatellites[i] + "' OR ";
+        cql += "'" + memberSatellites[i] + "',";
       }
 
-      cql = cql.substring(0, cql.length - 4) + ")";
+      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -450,13 +580,13 @@ define(
      * @inner
      */
     var createBiomesFilter = function() {
-      var cql = "(";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + " in (";
 
       for(var i = 0; i < memberBiomes.length; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + "='" + memberBiomes[i] + "' OR ";
+        cql += "'" + memberBiomes[i] + "',";
       }
 
-      cql = cql.substring(0, cql.length - 4) + ")";
+      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -471,13 +601,19 @@ define(
      * @inner
      */
     var createCountriesFilter = function() {
-      var cql = "(";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
-      for(var i = 0; i < memberCountriesBdqNames.length; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + memberCountriesBdqNames[i] + "' OR ";
+      if(!Utils.stringInArray(memberCountries, "")) {
+        for(var i = 0; i < memberCountriesBdqNames.length; i++) {
+          cql += "'" + memberCountriesBdqNames[i] + "',";
+        }
       }
 
-      cql = cql.substring(0, cql.length - 4) + ")";
+      for(var i = 0; i < memberSpecialRegionsCountries.length; i++) {
+        cql += "'" + memberSpecialRegionsCountries[i] + "',";
+      }
+
+      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -492,16 +628,16 @@ define(
      * @inner
      */
     var createContinentFilter = function() {
-      var cql = "(";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
       var countries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
       var countriesLength = countries.length;
 
       for(var i = 0; i < countriesLength; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + "='" + countries[i].Name + "' OR ";
+        cql += "'" + countries[i].Name + "',";
       }
 
-      cql = cql.substring(0, cql.length - 4) + ")";
+      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -516,13 +652,40 @@ define(
      * @inner
      */
     var createStatesFilter = function() {
-      var cql = "(";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
 
-      for(var i = 0; i < memberStatesBdqNames.length; i++) {
-        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + "='" + memberStatesBdqNames[i] + "' OR ";
+      if(!Utils.stringInArray(memberStates, "")) {
+        for(var i = 0; i < memberStatesBdqNames.length; i++) {
+          cql += "'" + memberStatesBdqNames[i] + "',";
+        }
       }
 
-      cql = cql.substring(0, cql.length - 4) + ")";
+      for(var i = 0; i < memberSpecialRegionsStates.length; i++) {
+        cql += "'" + memberSpecialRegionsStates[i] + "',";
+      }
+
+      cql = cql.substring(0, cql.length - 1) + ")";
+
+      return cql;
+    };
+
+    /**
+     * Creates the cities filter.
+     * @returns {string} cql - States cql filter
+     *
+     * @private
+     * @function createCitiesFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createCitiesFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + " in (";
+
+      for(var i = 0; i < memberSpecialRegionsCities.length; i++) {
+        cql += "'" + memberSpecialRegionsCities[i] + "',";
+      }
+
+      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -565,6 +728,15 @@ define(
 
         var cql = "";
 
+        var specialRegionsData = createSpecialRegionsArrays(memberSpecialRegions);
+
+        memberSpecialRegionsCountries = specialRegionsData.specialRegionsCountries;
+        memberSpecialRegionsCountriesIds = specialRegionsData.specialRegionsCountriesIds;
+        memberSpecialRegionsStates = specialRegionsData.specialRegionsStates;
+        memberSpecialRegionsStatesIds = specialRegionsData.specialRegionsStatesIds;
+        memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
+        memberSpecialRegionsCitiesIds = specialRegionsData.specialRegionsCitiesIds;
+
         if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
           cql += createDateFilter() + " AND ";
@@ -584,12 +756,16 @@ define(
           cql += createContinentFilter() + " AND ";
         }
 
-        if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
+        if((!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) || memberSpecialRegionsCountries.length > 0) {
           cql += createCountriesFilter() + " AND ";
         }
 
-        if(!Utils.stringInArray(memberStates, "") && memberStates.length > 0) {
+        if((!Utils.stringInArray(memberStates, "") && memberStates.length > 0) || memberSpecialRegionsStates.length > 0) {
           cql += createStatesFilter() + " AND ";
+        }
+
+        if(memberSpecialRegionsCities.length > 0) {
+          cql += createCitiesFilter(memberSpecialRegionsCities) + " AND ";
         }
 
         if(cql.length > 5) {
@@ -601,6 +777,55 @@ define(
       }
 
       if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
+    };
+
+    /**
+     * Processes an array of special regions and returns an object of arrays of countries, states and cities.
+     * @param {array} specialRegions - Special regions array
+     *
+     * @function createSpecialRegionsArrays
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createSpecialRegionsArrays = function(specialRegions) {
+      var specialRegionsData = {
+        specialRegionsCountries: [],
+        specialRegionsCountriesIds: [],
+        specialRegionsStates: [],
+        specialRegionsStatesIds: [],
+        specialRegionsCities: [],
+        specialRegionsCitiesIds: []
+      };
+
+      if(specialRegions.length > 0) {
+        for(var i = 0; i < specialRegions.length; i++) {
+          for(var j = 0; j < Utils.getConfigurations().filterConfigurations.SpecialRegions.length; j++) {
+            if(specialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++)
+                specialRegionsData.specialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds.length; x++)
+                specialRegionsData.specialRegionsCountriesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++)
+                specialRegionsData.specialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds.length; x++)
+                specialRegionsData.specialRegionsStatesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++)
+                specialRegionsData.specialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
+
+              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds.length; x++)
+                specialRegionsData.specialRegionsCitiesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds[x]);
+
+              break;
+            }
+          }
+        }
+      }
+
+      return specialRegionsData;
     };
 
     /**
@@ -672,46 +897,116 @@ define(
             TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
           }
         } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
-          var cqlFilter = "";
+          var cqlFilter = Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + " in (";
 
-          if(memberCountries.length > 0) {
+          if(memberCountries.length > 0 || memberSpecialRegionsCountries.length > 0) {
             for(var count = 0; count < memberCountries.length; count++) {
-              cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=" + memberCountries[count] + " OR ";
+              cqlFilter += memberCountries[count] + ",";
             }
 
-            cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+            for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
+              cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+            }
+
+            cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
           } else {
-            cqlFilter += Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + "=0";
+            cqlFilter += "0)";
           }
 
           TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
         } else if(layer.Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id) {
-          var cqlFilter = "";
+          var cqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + " in (";
 
-          if(memberStates.length > 0) {
-            for(var count = 0; count < memberStates.length; count++) {
-              var ids = Utils.getStateIds(memberStates[count]);
-              cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=" + ids[1] + ") OR ";
-            }
-
-            cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+          if($('#states').val() !== null) {
+            var states = $('#states').val();
+            var index = states.indexOf("0");
           } else {
-            cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + "=0";
+            var index = -1;
+          }
+
+          if(index > -1) {
+            if(memberCountries.length > 0) {
+              for(var count = 0; count < memberCountries.length; count++) cqlFilter += memberCountries[count] + ",";
+
+              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
+            } else {
+              cqlFilter += "0)";
+            }
+          } else {
+            if(memberStates.length > 0 || memberSpecialRegionsStatesIds.length > 0) {
+              var statesCqlFilter = "(";
+              var citiesCqlFilter = "(";
+
+              for(var count = 0; count < memberStates.length; count++) {
+                var ids = Utils.getStateIds(memberStates[count]);
+                cqlFilter += ids[0] + ",";
+                statesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + " LIKE '" + memberStates[count] + "%' OR ";
+              }
+
+              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++)
+                cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+
+              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++)
+                statesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField + " LIKE '" + memberSpecialRegionsStatesIds[count] + "%' OR ";
+
+              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++)
+                citiesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField + " LIKE '" + memberSpecialRegionsCitiesIds[count] + "%' OR ";
+
+              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 4)) + ")";
+
+              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 4)) + ")";
+            } else {
+              cqlFilter += "0)";
+            }
           }
 
           TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
         } else if(layer.Id === Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id) {
-          var cqlFilter = "";
+          var cqlFilter = Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CountryField + " in (";
 
-          if(memberStates.length > 0) {
-            for(var count = 0; count < memberStates.length; count++) {
-              var ids = Utils.getStateIds(memberStates[count]);
-              cqlFilter += "(" + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CountryField + "=" + ids[0] + " AND " + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField + "=" + ids[1] + ") OR ";
-            }
-
-            cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 4));
+          if($('#states').val() !== null) {
+            var states = $('#states').val();
+            var index = states.indexOf("0");
           } else {
-            cqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CountryField + "=0 AND " + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField + "=0";
+            var index = -1;
+          }
+
+          if(index > -1) {
+            if(memberCountries.length > 0) {
+              for(var count = 0; count < memberCountries.length; count++) {
+                cqlFilter += memberCountries[count] + ",";
+              }
+
+              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
+            } else {
+              cqlFilter += "0)";
+            }
+          } else {
+            if(memberStates.length > 0 || memberSpecialRegionsStatesIds.length > 0) {
+              var statesCqlFilter = "(";
+              var citiesCqlFilter = "(";
+
+              for(var count = 0; count < memberStates.length; count++) {
+                var ids = Utils.getStateIds(memberStates[count]);
+                cqlFilter += ids[0] + ",";
+                statesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField + " LIKE '" + memberStates[count] + "%' OR ";
+              }
+
+              for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++)
+                cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+
+              for(var count = 0; count < memberSpecialRegionsStatesIds.length; count++)
+                statesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField + " LIKE '" + memberSpecialRegionsStatesIds[count] + "%' OR ";
+
+              for(var count = 0; count < memberSpecialRegionsCitiesIds.length; count++)
+                citiesCqlFilter += Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField + " LIKE '" + memberSpecialRegionsCitiesIds[count] + "%' OR ";
+
+              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 4)) + ")";
+
+              if(memberSpecialRegionsCitiesIds.length > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 4)) + ")";
+            } else {
+              cqlFilter += "0)";
+            }
           }
 
           TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
@@ -727,14 +1022,12 @@ define(
             for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i].Id);
           }
 
-          var states = $('#states').val();
-
           updateBdqNames(function() {
             applyCurrentSituationFilter(
               Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
               Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
               countries,
-              states,
+              memberStates,
               memberStatesBdqNames,
               memberSatellites,
               memberBiomes,
@@ -885,7 +1178,7 @@ define(
     var selectStates = function(ids) {
       Utils.getSocket().emit('continentByStateRequest', { state: ids[0] });
       Utils.getSocket().emit('countriesByStatesRequest', { states: ids });
-      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, key: 'States', filterForm: false });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, specialRegions: [], key: 'States', filterForm: false });
     };
 
     /**
@@ -969,10 +1262,20 @@ define(
       updateStatesBdqNames: updateStatesBdqNames,
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
+      clearSpecialRegions: clearSpecialRegions,
       updateBdqNames: updateBdqNames,
+      setSpecialRegions: setSpecialRegions,
+      getSpecialRegions: getSpecialRegions,
+      getSpecialRegionsCountries: getSpecialRegionsCountries,
+      getSpecialRegionsCountriesIds: getSpecialRegionsCountriesIds,
+      getSpecialRegionsStates: getSpecialRegionsStates,
+      getSpecialRegionsStatesIds: getSpecialRegionsStatesIds,
+      getSpecialRegionsCities: getSpecialRegionsCities,
+      getSpecialRegionsCitiesIds: getSpecialRegionsCitiesIds,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
+      createSpecialRegionsArrays: createSpecialRegionsArrays,
       checkFiresCount: checkFiresCount,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       selectContinentItem: selectContinentItem,

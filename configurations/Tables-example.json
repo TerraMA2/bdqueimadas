@@ -23,6 +23,13 @@
     "BdqNameFieldName": "nome_bdq",
     "GeometryFieldName": "geom"
   },
+  "SpecialRegions": {
+    "Schema": "dados_geo",
+    "TableName": "regioes_especiais",
+    "IdFieldName": "gid",
+    "NameFieldName": "nome",
+    "GeometryFieldName": "geom"
+  },
   "Fires": {
     "Schema": "public",
     "TableName": "focos",
@@ -32,8 +39,54 @@
     "SatelliteFieldName": "satelite",
     "CountryFieldName": "pais",
     "StateFieldName": "estado",
+    "CityFieldName": "municipio",
     "BiomeFieldName": "bioma_brasileiro",
     "GeometryFieldName": "geom",
     "DateFormat": "YYYY-MM-DD"
+  },
+  "UCE": {
+    "NameFieldName": "nome",
+    "FiresSchema": "public",
+    "FiresTableName": "focos_uce",
+    "FiresDateFieldName": "data",
+    "Fires5KMTableName": "focos_uce_buffer_5",
+    "Fires10KMTableName": "focos_uce_buffer_10",
+    "Schema": "dados_geo",
+    "TableName": "unidades_conservacao_estaduais",
+    "IdFieldName": "gid",
+    "FiresPAFieldName": "id_uce",
+    "Fires5KMPAFieldName": "id_uce_buffer_5",
+    "Fires10KMPAFieldName": "id_uce_buffer_10",
+    "FiresIdsFieldName": "ids_focos"
+  },
+  "UCF": {
+    "NameFieldName": "nome",
+    "FiresSchema": "public",
+    "FiresTableName": "focos_ucf",
+    "FiresDateFieldName": "data",
+    "Fires5KMTableName": "focos_ucf_buffer_5",
+    "Fires10KMTableName": "focos_ucf_buffer_10",
+    "Schema": "dados_geo",
+    "TableName": "unidades_conservacao_federais",
+    "IdFieldName": "gid",
+    "FiresPAFieldName": "id_ucf",
+    "Fires5KMPAFieldName": "id_ucf_buffer_5",
+    "Fires10KMPAFieldName": "id_ucf_buffer_10",
+    "FiresIdsFieldName": "ids_focos"
+  },
+  "TI": {
+    "NameFieldName": "nome",
+    "FiresSchema": "public",
+    "FiresTableName": "focos_ti",
+    "FiresDateFieldName": "data",
+    "Fires5KMTableName": "focos_ti_buffer_5",
+    "Fires10KMTableName": "focos_ti_buffer_10",
+    "Schema": "dados_geo",
+    "TableName": "terras_indigenas",
+    "IdFieldName": "gid",
+    "FiresPAFieldName": "id_ti",
+    "Fires5KMPAFieldName": "id_ti_buffer_5",
+    "Fires10KMPAFieldName": "id_ti_buffer_10",
+    "FiresIdsFieldName": "ids_focos"
   }
 }

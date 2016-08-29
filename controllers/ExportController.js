@@ -38,6 +38,7 @@ var ExportController = function(app) {
     if(request.query.biomes !== '') options.biomes = request.query.biomes;
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
+    if(request.query.cities !== '') options.cities = request.query.cities;
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
     memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {

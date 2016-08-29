@@ -34,6 +34,7 @@ var GetAttributesTableController = function(app) {
     if(request.body.biomes !== '') options.biomes = request.body.biomes;
     if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
+    if(request.body.cities !== null && request.body.cities !== '') options.cities = request.body.cities;
 
     // Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {
