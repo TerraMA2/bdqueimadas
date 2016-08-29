@@ -157,6 +157,7 @@ def insertData():
             try:
                 query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, lat_gms, lon_gms, data, hora, satelite, municipio, estado, regiao, pais, vegetacao, suscetibilidade, precipitacao, num_dias_sem_precipitacao, risco, bioma_brasileiro, satelite_referencia, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
                 PGSQL_CURSOR.execute(query, insertParameters)
+                PGSQL_DB.commit()
             except Exception as e:
                 if str(e).split('\n')[0] == 'duplicate key value violates unique constraint "' + PGSQL_UNIQUE_KEY + '"':
                     PGSQL_DB.rollback()
@@ -167,8 +168,6 @@ def insertData():
                     return False
         else:
             appendIntoResult("Error inserting the following record: " + rows[i])
-
-    PGSQL_DB.commit()
 
     return True
 
@@ -182,6 +181,7 @@ def processFiresPA(begin, end):
         try:
             query = "select " + PROCESS_FIRES_PA_FUNCTION + "(('" + beginDate.strftime("%Y-%m-%d") + "')::date);"
             PGSQL_CURSOR.execute(query)
+            PGSQL_DB.commit()
         except Exception as e:
             global EXCEPTION
             EXCEPTION = str(e)
@@ -189,8 +189,6 @@ def processFiresPA(begin, end):
             return False
 
         beginDate += delta
-
-    PGSQL_DB.commit()
 
     return True
 

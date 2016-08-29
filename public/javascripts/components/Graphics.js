@@ -254,11 +254,15 @@ define(
                                        "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Minimizar</button></div></div>" +
                                        "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
                                        "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
-                                       "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
-                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                       "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                       "-graphic-message-container\" class=\"text-center\">" +
-                                       "</div></div></div></div>";
+                                       "<a href=\"#\" class=\"btn btn-app graphic-button export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
+                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
+
+                    if(firesCountGraphicsConfig[i].PAGraphic)
+                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+
+                    htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
+                                    "-graphic-message-container\" class=\"text-center\">" +
+                                    "</div></div></div></div>";
                   } else {
                     var htmlElements = "<div data-sort=\"" + firesCountGraphicsConfig[i].Order + "\" class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
                                        firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
@@ -266,11 +270,15 @@ define(
                                        "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Expandir</button></div></div>" +
                                        "<div class=\"box-body\" style=\"display: none;\"><div class=\"chart\">" +
                                        "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
-                                       "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
-                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                       "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                       "-graphic-message-container\" class=\"text-center\">" +
-                                       "</div></div></div></div>";
+                                       "<a href=\"#\" class=\"btn btn-app graphic-button export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
+                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
+
+                    if(firesCountGraphicsConfig[i].PAGraphic)
+                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+
+                    htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
+                                    "-graphic-message-container\" class=\"text-center\">" +
+                                    "</div></div></div></div>";
                   }
 
                   insertGraphicAtPosition(htmlElements);

@@ -363,6 +363,48 @@ define(
     };
 
     /**
+     * Activates the FogoGrama tool.
+     *
+     * @function activateFogoGramaTool
+     * @memberof Map
+     * @inner
+     */
+    var activateFogoGramaTool = function() {
+      $('#fogograma').addClass('active');
+      $('#terrama2-map').addClass('cursor-pointer');
+
+      TerraMA2WebComponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
+        showFogoGrama(longitude, latitude);
+      });
+    };
+
+    /**
+     * Shows the fogograma to the given longitude and latitude.
+     * @param {string} longitude - Longitude
+     * @param {string} latitude - Latitude
+     *
+     * @private
+     * @function showFogoGrama
+     * @memberof Map
+     * @inner
+     */
+    var showFogoGrama = function(longitude, latitude) {
+      $('#fogograma-box').html("<iframe style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"http://poitara.cptec.inpe.br/queimada/risco_fogo/fogograma2.jsp?x=" + longitude + "&y=" + latitude + "\"></iframe>");
+      $('#fogograma-box').dialog({
+        dialogClass: "fogograma-box",
+        title: "FogoGrama",
+        width: 500,
+        height: 780,
+        modal: false,
+        resizable: true,
+        draggable: true,
+        closeOnEscape: true,
+        closeText: "",
+        position: { my: 'top', at: 'top+15' }
+      });
+    };
+
+    /**
      * Adds the layers subtitles from the map configuration file to the map.
      *
      * @private
@@ -531,11 +573,11 @@ define(
       if(toggle) {
         setTimeout(function() {
           $('#terrama2-map .ol-zoom').animate({ 'top': ($('#map-subtitle').height() + 7) + 'px' }, { duration: 300, queue: false });
-          $('#map-tools').animate({ 'top': ($('#map-subtitle').height() + 65) + 'px' }, { duration: 300, queue: false });
+          $('#map-tools').animate({ 'top': ($('#map-subtitle').height() + 79) + 'px' }, { duration: 300, queue: false });
         }, 500);
       } else {
         $('#terrama2-map .ol-zoom').css('top', ($('#map-subtitle').height() + 7) + 'px');
-        $('#map-tools').css('top', ($('#map-subtitle').height() + 65) + 'px');
+        $('#map-tools').css('top', ($('#map-subtitle').height() + 79) + 'px');
       }
     };
 
@@ -571,6 +613,7 @@ define(
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,
       activateGetFeatureInfoTool: activateGetFeatureInfoTool,
+      activateFogoGramaTool: activateFogoGramaTool,
       getSubtitlesSatellites: getSubtitlesSatellites,
       updateSubtitles: updateSubtitles,
       activateMoveMapTool: activateMoveMapTool,

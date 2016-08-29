@@ -1122,9 +1122,9 @@ define(
         if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
           if((satelliteReferenceBegin <= memberDateFrom && satelliteReferenceEnd >= memberDateTo) || (satelliteReferenceBegin <= memberDateFrom && satelliteItem.ReferenceCurrent)) {
             if(Utils.stringInArray(selectedOptions, satelliteItem.Id)) {
-              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\" selected>Refer&ecirc;ncia</option>";
+              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\" selected>Refer. (" + satelliteItem.Name + ")</option>";
             } else {
-              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\">Refer&ecirc;ncia</option>";
+              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\">Refer. (" + satelliteItem.Name + ")</option>";
             }
           } else {
             if(Utils.stringInArray(selectedOptions, satelliteItem.Id)) {
