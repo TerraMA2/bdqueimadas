@@ -57,7 +57,7 @@
           if(satellite.ReferenceCurrent) {
             referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
-            if(satellite.Selected) {
+            if(satellite.SelectedInFilter) {
               referenceSatellite += " selected>";
 
               if(!isSatelliteSelected) isSatelliteSelected = true;
@@ -69,7 +69,7 @@
           } else {
             satelliteOptions += "<option value=\"" + satellite.Id + "\"";
 
-            if(satellite.Selected) {
+            if(satellite.SelectedInFilter) {
               satelliteOptions += " selected>";
 
               if(!isSatelliteSelected) isSatelliteSelected = true;
