@@ -106,6 +106,7 @@
       "End": "2007-08-09",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "1998-06-01",
       "ReferenceEnd": "2002-07-03",
       "ReferenceCurrent": false
@@ -117,6 +118,7 @@
       "End": "2007-08-10",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -128,6 +130,7 @@
       "End": "2012-03-28",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -139,6 +142,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -150,6 +154,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -161,6 +166,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -171,7 +177,8 @@
       "Begin": "2002-07-04",
       "End": "",
       "Current": true,
-      "Selected": false,
+      "Selected": true,
+      "SelectedInFilter": false,
       "ReferenceBegin": "2002-07-04",
       "ReferenceEnd": "",
       "ReferenceCurrent": true
@@ -183,6 +190,7 @@
       "End": "2013-09-09",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -194,6 +202,7 @@
       "End": "2013-09-09",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -205,6 +214,7 @@
       "End": "2013-09-09",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -216,6 +226,7 @@
       "End": "2013-09-09",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -227,6 +238,7 @@
       "End": "2003-03-31",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -238,6 +250,7 @@
       "End": "2009-11-30",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -249,6 +262,7 @@
       "End": "2013-08-11",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -260,6 +274,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -271,6 +286,7 @@
       "End": "2014-06-06",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -282,6 +298,7 @@
       "End": "2014-06-06",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -293,6 +310,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -304,6 +322,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -315,6 +334,7 @@
       "End": "2010-09-26",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -326,6 +346,7 @@
       "End": "2007-05-23",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -337,6 +358,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -348,6 +370,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -359,6 +382,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -370,6 +394,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -381,6 +406,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -392,6 +418,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -403,6 +430,7 @@
       "End": "",
       "Current": true,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false
@@ -414,6 +442,7 @@
       "End": "2013-09-22",
       "Current": false,
       "Selected": false,
+      "SelectedInFilter": false,
       "ReferenceBegin": "",
       "ReferenceEnd": "",
       "ReferenceCurrent": false

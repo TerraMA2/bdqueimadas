@@ -12,6 +12,7 @@
  * @property {number} memberContentHeaderHeight - Content header height.
  * @property {number} memberReducedFooterHeight - Reduced footer height.
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
+ * @property {number} memberButtonBlinkingInterval - Timer id of the initial blinking interval of the filter button.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
@@ -29,6 +30,8 @@ define(
     var memberReducedFooterHeight = 12;
     // Map subtitle height
     var memberMapSubtitleHeight = null;
+    // Timer id of the initial blinking interval of the filter button
+    var memberButtonBlinkingInterval = null;
 
     /**
      * Updates the necessary components.
@@ -113,6 +116,23 @@ define(
       // Sidebar buttons click event
       $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();
+
+        if(memberButtonBlinkingInterval !== null) {
+          clearInterval(memberButtonBlinkingInterval);
+          memberButtonBlinkingInterval = null;
+
+          setTimeout(function() {
+            $('#layer-explorer-and-filter-button > a').removeAttr('style');
+            $('#layer-explorer-and-filter-button > a > i').removeAttr('style');
+          }, 1100);
+        }
+
+        if($(this).hasClass('active')) {
+          $(".sidebar-menu > li.left-box").removeClass('active');
+        } else {
+          $(".sidebar-menu > li.left-box").removeClass('active');
+          $(this).addClass('active');
+        }
 
         var box = $(this).attr('box');
         var id = $(this).attr('id');
@@ -1743,6 +1763,16 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        memberButtonBlinkingInterval = setInterval(function() {
+          $("#layer-explorer-and-filter-button > a > i").animate({ 'color': '#f49d1e' }, 500, "linear", function() {
+            $("#layer-explorer-and-filter-button > a > i").animate({ 'color': '#172938' }, 500);
+          });
+
+          $("#layer-explorer-and-filter-button > a").animate({ 'background-color': '#eaeaea' }, 500, "linear", function() {
+            $("#layer-explorer-and-filter-button > a").animate({ 'background-color': '#ffffff' }, 500);
+          });
+        }, 1100);
+
         Utils.getSocket().emit('piwikDataRequest');
 
         setTimeout(function() {
