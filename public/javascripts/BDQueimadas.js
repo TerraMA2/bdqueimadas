@@ -1778,10 +1778,6 @@ define(
         setTimeout(function() {
           $('#footer-brasil a').attr('target', '_blank');
           $('.ol-viewport a').attr('target', '_blank');
-
-          $('#filter-satellite').val('all');
-          $('#filter-satellite-graphics').val('all');
-          $('#filter-satellite-attributes-table').val('all');
         }, 2000);
 
         updateSizeVars();

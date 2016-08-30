@@ -1238,6 +1238,12 @@ define(
       $(document).ready(function() {
         updateDatesToCurrent();
         Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
+
+        setTimeout(function() {
+          $('#filter-satellite').val('all');
+          $('#filter-satellite-graphics').val('all');
+          $('#filter-satellite-attributes-table').val('all');
+        }, 4000);
       });
     };
 
