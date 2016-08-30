@@ -68,8 +68,16 @@
     "Id": "BDQueimadas:paises_multi",
     "ContinentField": "continente_id"
   },
+  "CountriesLabelsLayer": {
+    "Id": "BDQueimadas:labels_paises",
+    "ContinentField": "continente_id"
+  },
   "StatesLayer": {
     "Id": "BDQueimadas:estados",
+    "CountryField": "id_0"
+  },
+  "StatesLabelsLayer": {
+    "Id": "BDQueimadas:labels_estados",
     "CountryField": "id_0"
   },
   "CitiesLayer": {
