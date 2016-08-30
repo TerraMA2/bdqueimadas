@@ -896,8 +896,31 @@ define(
             var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "=" + memberContinent;
             TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
           }
+        } else if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
+          if(memberContinent !== null) {
+            var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.ContinentField + "=" + memberContinent;
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+          }
         } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
           var cqlFilter = Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + " in (";
+
+          if(memberCountries.length > 0 || memberSpecialRegionsCountries.length > 0) {
+            for(var count = 0; count < memberCountries.length; count++) {
+              cqlFilter += memberCountries[count] + ",";
+            }
+
+            for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
+              cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+            }
+
+            cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
+          } else {
+            cqlFilter += "0)";
+          }
+
+          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+        } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.Id) {
+          var cqlFilter = Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.CountryField + " in (";
 
           if(memberCountries.length > 0 || memberSpecialRegionsCountries.length > 0) {
             for(var count = 0; count < memberCountries.length; count++) {
