@@ -8,7 +8,7 @@
  */
 var ExistsDataToExportRoute = function(app) {
   var controller = app.controllers.ExistsDataToExportController;
-  app.get('/exists-data-to-export', controller);
+  app.post('/exists-data-to-export', controller);
 };
 
 module.exports = ExistsDataToExportRoute;

@@ -65,9 +65,12 @@ define(
         });
       });
 
-      $('#frequently-asked-questions-btn').on('click', function() {
-        $('#frequently-asked-questions').dialog({
-          width: 800,
+      $('#presentation-btn').on('click', function() {
+        if($('#presentation-dialog').html() === "")
+          $('#presentation-dialog').html("<iframe style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"" + Utils.getBaseUrl() + "files/presentation.pdf\"></iframe>");
+
+        $('#presentation-dialog').dialog({
+          width: 950,
           height: 900,
           closeOnEscape: true,
           closeText: "",
@@ -75,8 +78,8 @@ define(
         });
       });
 
-      $('#presentation-btn').on('click', function() {
-        $('#presentation').dialog({
+      $('#frequently-asked-questions-btn').on('click', function() {
+        $('#frequently-asked-questions').dialog({
           width: 800,
           height: 900,
           closeOnEscape: true,
@@ -322,7 +325,7 @@ define(
                     $.ajax({
                       async: false,
                       url: Utils.getBaseUrl() + "exists-data-to-export",
-                      type: "GET",
+                      type: "POST",
                       data: {
                         dateFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
                         dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
@@ -469,6 +472,8 @@ define(
           $('#filter-satellite').val(Filter.getSatellites());
           $('#filter-biome').val(Filter.getBiomes());
         }
+
+        $.event.trigger({type: "updateMapInformationsBox"});
       });
 
       $('#initial-filter-button').on('click', function() {
@@ -1708,7 +1713,12 @@ define(
      */
     var getVisibleLayers = function() {
       var visibleLayers = Map.getVisibleLayers();
-      var html = '';
+
+      if($('#filter-date-from').val() !== "" && $('#filter-date-to').val() !== "") {
+        var html = $('#filter-date-from').val() + ' - ' + $('#filter-date-to').val() + '<br/>';
+      } else {
+        var html = 'Período Inválido<br/>';
+      }
 
       if(visibleLayers.length > 0) {
         for(var i = 0, count = visibleLayers.length; i < count; i++) {
