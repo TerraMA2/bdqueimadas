@@ -30,7 +30,7 @@ define(
      * @inner
      */
     var getLayers = function() {
-      return memberLayers;
+      return JSON.parse(JSON.stringify(memberLayers));
     };
 
     /**
@@ -582,6 +582,44 @@ define(
     };
 
     /**
+     * Updates the time of a given layer.
+     * @param {object} layer - Layer
+     *
+     * @function updateLayerTime
+     * @memberof Map
+     * @inner
+     */
+    var updateLayerTime = function(layer) {
+      var currentDate = moment().tz('America/Sao_Paulo');
+      var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Time);
+      var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Time));
+      var useTodaysImage = true;
+
+      if(layer.MinTimeForTodaysImage !== null) {
+        layerMinTime = moment(Utils.processStringWithDatePattern(layer.Time) + " " + layer.MinTimeForTodaysImage, layerTimeFormat + " HH:mm:ss");
+
+        if(Utils.processStringWithDatePattern(layer.Time) === currentDate.format(layerTimeFormat))
+          useTodaysImage = currentDate.isAfter(layerMinTime);
+      }
+
+      var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
+
+      if(!useTodaysImage) {
+        layerMinTime = layerMinTime.subtract(1, "days");
+
+        layer.Time = layerMinTime.format(layerTimeFormat);
+        layerName = Utils.replaceDatePatternWithString(layerName, layerMinTime.format('YYYY/MM/DD'));
+      } else {
+        layerName = Utils.processStringWithDatePattern(layerName);
+      }
+
+      TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, { TIME: Utils.processStringWithDatePattern(layer.Time) }, true);
+
+      $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
+      TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+    };
+
+    /**
      * Initializes the necessary features.
      *
      * @function init
@@ -619,6 +657,7 @@ define(
       activateMoveMapTool: activateMoveMapTool,
       setSubtitlesVisibility: setSubtitlesVisibility,
       updateZoomTop: updateZoomTop,
+      updateLayerTime: updateLayerTime,
       init: init
     };
   }

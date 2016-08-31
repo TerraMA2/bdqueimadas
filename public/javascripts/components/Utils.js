@@ -185,6 +185,53 @@ define(function() {
   };
 
   /**
+   * Returns the format from a string that contains a date pattern.
+   * @param {string} string - String to be processed
+   * @returns {string} finalString - Processed string
+   *
+   * @function getFormatFromStringWithDatePattern
+   * @memberof Utils
+   * @inner
+   */
+  var getFormatFromStringWithDatePattern = function(string) {
+    var finalString = string;
+
+    if(string !== null && string !== undefined) {
+      var datePattern = string.match("{{(.*)}}");
+
+      if(datePattern !== null) {
+        var patternFormat = datePattern[1].split('=');
+        var finalString = patternFormat[1];
+      }
+    }
+
+    return finalString;
+  };
+
+  /**
+   * Replaces a date pattern with a given string.
+   * @param {string} string - String to be processed
+   * @param {string} newString - String to replace the pattern
+   * @returns {string} finalString - Processed string
+   *
+   * @function replaceDatePatternWithString
+   * @memberof Utils
+   * @inner
+   */
+  var replaceDatePatternWithString = function(string, newString) {
+    var finalString = string;
+
+    if(string !== null && string !== undefined) {
+      var datePattern = string.match("{{(.*)}}");
+
+      if(datePattern !== null)
+        finalString = string.replace(datePattern[0], newString);
+    }
+
+    return finalString;
+  };
+
+  /**
    * Creates a layer time update button in a string that have a date pattern.
    * @param {string} string - String where the button should be created
    * @param {string} layerId - Layer id
@@ -507,6 +554,8 @@ define(function() {
     stringToDate: stringToDate,
     formatTime: formatTime,
     processStringWithDatePattern: processStringWithDatePattern,
+    getFormatFromStringWithDatePattern: getFormatFromStringWithDatePattern,
+    replaceDatePatternWithString: replaceDatePatternWithString,
     applyLayerTimeUpdateButton: applyLayerTimeUpdateButton,
     getFilterDates: getFilterDates,
     stringInArray: stringInArray,
