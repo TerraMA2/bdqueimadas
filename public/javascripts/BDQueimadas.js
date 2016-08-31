@@ -124,6 +124,7 @@ define(
           setTimeout(function() {
             $('#layer-explorer-and-filter-button > a').removeAttr('style');
             $('#layer-explorer-and-filter-button > a > i').removeAttr('style');
+            $('#layer-explorer-and-filter-button > a > div').removeAttr('style');
           }, 1100);
         }
 
@@ -147,8 +148,11 @@ define(
 
           // Opens the left content box corresponding to the button and the left content box background, if the box is not already open
           if(!active) {
+            var numberLength = $(this).find(' > a > div.menu-btn-number').text().length;
+            var headerText = $(this).text().trim();
+
             openLeftContentBoxBackground(id, box);
-            openLeftContentBox(box, $(this).text().trim());
+            openLeftContentBox(box, headerText.substring(numberLength));
           }
         } else {
           var active = $("#left-content-box-background").hasClass('active');
@@ -1768,11 +1772,13 @@ define(
             $("#layer-explorer-and-filter-button").removeClass('blink');
 
             $("#layer-explorer-and-filter-button > a > i").css('color', '#172938');
+            $("#layer-explorer-and-filter-button > a > div").css('color', '#172938');
             $("#layer-explorer-and-filter-button > a").css('background-color', '#ffffff');
           } else {
             $("#layer-explorer-and-filter-button").addClass('blink');
 
             $("#layer-explorer-and-filter-button > a > i").css('color', '#ffffff');
+            $("#layer-explorer-and-filter-button > a > div").css('color', '#ffffff');
             $("#layer-explorer-and-filter-button > a").css('background-color', '#f8b802');
           }
         }, 600);
