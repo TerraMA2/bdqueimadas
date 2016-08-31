@@ -882,13 +882,7 @@ define(
     var processLayers = function(layers) {
       $.each(layers, function(j, layer) {
         if(layer.Time !== null) {
-          TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, { TIME: Utils.processStringWithDatePattern(layer.Time) }, true);
-
-          var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
-          layerName = Utils.processStringWithDatePattern(layerName);
-
-          $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
-          TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+          Map.updateLayerTime(layer);
         }
 
         if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {

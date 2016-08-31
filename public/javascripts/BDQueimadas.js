@@ -833,7 +833,7 @@ define(
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
             layer.Name = self.parent().html();
 
-            Filter.checkFiresCount();
+            Map.updateLayerTime(layer);
 
             return false;
           }
