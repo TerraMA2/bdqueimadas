@@ -731,6 +731,14 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
 
 .unsortable-separator > input { margin-left: 10px; }
 
+.menu-btn-number {
+  position: absolute;
+  font-weight: 800;
+  color: #172938;
+  top: 0px;
+  left: 0px;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
