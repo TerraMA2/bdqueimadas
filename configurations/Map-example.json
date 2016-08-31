@@ -573,7 +573,7 @@
     },
     {
       "Id": "BDQueimadas:labels_paises",
-      "Name": "Nomes Países",
+      "Name": "Nomes",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -615,7 +615,7 @@
     },
     {
       "Id": "BDQueimadas:labels_estados",
-      "Name": "Nomes Estados",
+      "Name": "Nomes",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -657,7 +657,7 @@
     },
     {
       "Id": "BDQueimadas:sedes_municipios",
-      "Name": "Nomes Municípios",
+      "Name": "Nomes",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -699,7 +699,7 @@
     },
     {
       "Id": "BDQueimadas:labels_biomas_brasileiros",
-      "Name": "Nomes Biomas Brasileiros",
+      "Name": "Nomes",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
