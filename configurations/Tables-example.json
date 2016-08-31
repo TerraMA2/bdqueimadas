@@ -88,5 +88,21 @@
     "Fires5KMPAFieldName": "id_ti_buffer_5",
     "Fires10KMPAFieldName": "id_ti_buffer_10",
     "FiresIdsFieldName": "ids_focos"
+  },
+  "Downloads": {
+    "Schema": "public",
+    "TableName": "downloads",
+    "IdFieldName": "id",
+    "DateFieldName": "data",
+    "TimeFieldName": "hora",
+    "IpFieldName": "ip",
+    "FilterBeginFieldName": "filtro_inicio",
+    "FilterEndFieldName": "filtro_fim",
+    "FilterSatellitesFieldName": "filtro_satelites",
+    "FilterBiomesFieldName": "filtro_biomas",
+    "FilterCountriesFieldName": "filtro_paises",
+    "FilterStatesFieldName": "filtro_estados",
+    "FilterCitiesFieldName": "filtro_cidades",
+    "FilterFormatFieldName": "filtro_formato"
   }
 }
