@@ -725,7 +725,9 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-left: 0px !important;
 }
 
-.unsortable-separator > span { margin-left: 30px !important; }
+span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
+
+.unsortable-separator > span { margin-left: 24px !important; }
 
 .unsortable-separator > input { margin-left: 10px; }
 
@@ -755,7 +757,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 #terrama2-layerexplorer ul.children span.group-name { padding-left: 0px !important; }
 
-.terrama2-layerexplorer-plus, .terrama2-layerexplorer-minus { padding-right: 8px !important; }
+.terrama2-layerexplorer-plus, .terrama2-layerexplorer-minus { padding-right: 3px !important; }
 
 #terrama2-layerexplorer li.parent_li { margin-left: 10px !important; }
 
@@ -768,6 +770,8 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 #terrama2-map #terrama2-map-info { bottom: 42px; }
 
 #terrama2-map .ol-attribution { bottom: 95px; }
+
+.ol-zoom-in, .ol-zoom-out { width: 30px !important; height: 30px !important; }
 
 /* AdminLTEQueimadas general adjustments */
 

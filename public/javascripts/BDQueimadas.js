@@ -1764,14 +1764,18 @@ define(
     var init = function() {
       $(document).ready(function() {
         memberButtonBlinkingInterval = setInterval(function() {
-          $("#layer-explorer-and-filter-button > a > i").animate({ 'color': '#f49d1e' }, 500, "linear", function() {
-            $("#layer-explorer-and-filter-button > a > i").animate({ 'color': '#172938' }, 500);
-          });
+          if($("#layer-explorer-and-filter-button").hasClass('blink')) {
+            $("#layer-explorer-and-filter-button").removeClass('blink');
 
-          $("#layer-explorer-and-filter-button > a").animate({ 'background-color': '#eaeaea' }, 500, "linear", function() {
-            $("#layer-explorer-and-filter-button > a").animate({ 'background-color': '#ffffff' }, 500);
-          });
-        }, 1100);
+            $("#layer-explorer-and-filter-button > a > i").css('color', '#172938');
+            $("#layer-explorer-and-filter-button > a").css('background-color', '#ffffff');
+          } else {
+            $("#layer-explorer-and-filter-button").addClass('blink');
+
+            $("#layer-explorer-and-filter-button > a > i").css('color', '#ffffff');
+            $("#layer-explorer-and-filter-button > a").css('background-color', '#f8b802');
+          }
+        }, 600);
 
         Utils.getSocket().emit('piwikDataRequest');
 
