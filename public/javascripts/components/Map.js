@@ -66,9 +66,7 @@ define(
         elementId: elementId
       });
 
-      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
-        $.event.trigger({type: "updateMapInformationsBox"});
-      }
+      $.event.trigger({type: "updateMapInformationsBox"});
     };
 
     /**
@@ -87,9 +85,7 @@ define(
         }
       }
 
-      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
-        $.event.trigger({type: "updateMapInformationsBox"});
-      }
+      $.event.trigger({type: "updateMapInformationsBox"});
     };
 
     /**

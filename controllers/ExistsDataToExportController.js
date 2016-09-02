@@ -38,9 +38,26 @@ var ExistsDataToExportController = function(app) {
     memberExportation.getGeoJSONData(request.body.dateFrom, request.body.dateTo, options, function(err, GeoJSONData) {
       if(err) return console.error(err);
 
-      // JSON response
-      response.json({
-        existsDataToExport: GeoJSONData.rowCount > 0
+      if(request.session.tokens === undefined) request.session.tokens = [];
+
+      require('crypto').randomBytes(10, function(err, buffer) {
+        var token = buffer.toString('hex');
+        var date = new Date();
+        var dateString = date.getFullYear().toString() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        var timeString = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
+        var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
+
+        request.session.tokens.push({
+          token: token,
+          date: dateString + ' ' + timeString,
+          ip: userIp
+        });
+
+        // JSON response
+        response.json({
+          existsDataToExport: GeoJSONData.rowCount > 0,
+          token: token
+        });
       });
     });
   };

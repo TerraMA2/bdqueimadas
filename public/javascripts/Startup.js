@@ -8,6 +8,11 @@ requirejs.config({
 requirejs(
   ['BDQueimadas', 'components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
   function(BDQueimadas, Utils, Filter, AttributesTable, Graphics, Map, TerraMA2WebComponents) {
+    // Adding the CSRF token to the ajax requests
+    $.ajaxPrefilter(function(options, _, xhr) {
+      if(!xhr.crossDomain) xhr.setRequestHeader('X-CSRF-Token', $('#_csrf').val());
+    });
+
     TerraMA2WebComponents.LayerExplorer.init();
     TerraMA2WebComponents.MapDisplay.init();
 
