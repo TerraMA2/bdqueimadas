@@ -39,8 +39,10 @@ var ExportController = function(app) {
     if(request.query.states !== '') options.states = request.query.states;
     if(request.query.cities !== '') options.cities = request.query.cities;
 
+    var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
+
     // Call of the method 'registerDownload', responsible for registering the download in the database
-    memberExportation.registerDownload(request.query.dateFrom, request.query.dateTo, request.query.format, request.connection.remoteAddress, options, function(err, registerDownloadResult) {
+    memberExportation.registerDownload(request.query.dateFrom, request.query.dateTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
       if(err) return console.error(err);
 
       // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
