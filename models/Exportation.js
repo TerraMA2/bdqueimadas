@@ -145,20 +145,23 @@ var Exportation = function() {
   };
 
   /**
-   * Returns the fires data in GeoJSON format.
+   * Registers the downloads in the database.
    * @param {string} dateFrom - Initial date
    * @param {string} dateTo - Final date
+   * @param {string} format - Exportation file format
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
    *
-   * @function insertDownload
+   * @function registerDownload
    * @memberof Exportation
    * @inner
    */
-  this.insertDownload = function(dateFrom, dateTo, options, callback) {
-    // Counter of the query parameters
-    var parameter = 1;
+  this.registerDownload = function(dateFrom, dateTo, format, ip, options, callback) {
+    var date = new Date();
+
+    var dateString = date.getFullYear().toString() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+    var timeString = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
 
     // Connection with the PostgreSQL database
     memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
@@ -176,69 +179,35 @@ var Exportation = function() {
                     memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
                     memberTablesConfig.Downloads.FilterStatesFieldName + ", " +
                     memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterFormatFieldName + ") values (" +
-                    "$" + (parameter++) + ", $" + (parameter++) + ", ",
-            params = [dateFrom, dateTo];
+                    memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
+            params = [dateString, timeString, ip, dateFrom, dateTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-
-          query += "$" + (parameter++) + ", ";
-
-          params.push(satellitesArray);
-        } else {
-          query += "$" + (parameter++) + ", ";
+        if(options.satellites !== undefined)
+          params.push(options.satellites.split(','));
+        else
           params.push(null);
-        }
 
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-
-          query += "$" + (parameter++) + ", ";
-
-          params.push(biomesArray);
-        } else {
-          query += "$" + (parameter++) + ", ";
+        if(options.biomes !== undefined)
+          params.push(options.biomes.split(','));
+        else
           params.push(null);
-        }
 
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-
-          query += "$" + (parameter++) + ", ";
-
-          params.push(countriesArray);
-        } else {
-          query += "$" + (parameter++) + ", ";
+        if(options.countries !== undefined)
+          params.push(options.countries.split(','));
+        else
           params.push(null);
-        }
 
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-
-          query += "$" + (parameter++) + ", ";
-
-          params.push(statesArray);
-        } else {
-          query += "$" + (parameter++) + ", ";
+        if(options.states !== undefined)
+          params.push(options.states.split(','));
+        else
           params.push(null);
-        }
 
-        // If the 'options.cities' parameter exists, a cities 'where' clause is created
-        if(options.cities !== undefined) {
-          var citiesArray = options.cities.split(',');
-
-          query += "$" + (parameter++) + ",";
-
-          params.push(citiesArray);
-        } else {
-          query += "$" + (parameter++) + ", ";
+        if(options.cities !== undefined)
+          params.push(options.cities.split(','));
+        else
           params.push(null);
-        }
+
+        params.push(format);
 
         // Execution of the query
         client.query(query, params, function(err, result) {
