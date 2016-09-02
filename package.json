@@ -8,10 +8,12 @@
   "dependencies": {
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
+    "csurf": "^1.9.0",
     "debug": "~2.2.0",
     "ejs": "~2.4.2",
     "express": "~4.14.0",
     "express-load": "^1.1.15",
+    "express-session": "^1.14.1",
     "fs": "0.0.2",
     "httpp-proxy": "^0.10.3",
     "jsonfile": "^2.2.3",

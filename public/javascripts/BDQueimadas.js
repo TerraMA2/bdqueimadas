@@ -368,7 +368,8 @@ define(
                                            "&countries=" + allCountries +
                                            "&states=" + states +
                                            "&cities=" + cities +
-                                           "&format=" + $("#exportation-type").val();
+                                           "&format=" + $("#exportation-type").val() +
+                                           "&t=" + existsDataToExport.token;
 
                           window.open(exportLink, '_blank');
 
@@ -670,9 +671,11 @@ define(
       });
 
       $(document).on("updateMapInformationsBox", function() {
-        var html = getVisibleLayers();
+        if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
+          var html = getVisibleLayers();
 
-        $('#map-info-box').html(html);
+          $('#map-info-box').html(html);
+        }
       });
 
       $('#map-info-button > button').on('click', function() {

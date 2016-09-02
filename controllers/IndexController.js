@@ -56,7 +56,8 @@ var IndexController = function(app) {
       // Response parameters
       var params = {
         configurations: configurations,
-        continents: result
+        continents: result,
+        csrf: request.csrfToken()
       };
 
       // Response (page rendering)

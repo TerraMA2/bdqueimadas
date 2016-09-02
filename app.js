@@ -5,15 +5,24 @@ var express = require('express'),
     load = require('express-load'),
     bodyParser = require('body-parser'),
     methodOverride = require('method-override'),
-    favicon = require('serve-favicon'),
     app = express(),
     server = require('http').Server(app),
-    fs = require('fs');
+    fs = require('fs'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session'),
+    csrf = require('csurf');
 
 var applicationConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, './configurations/Application.json'), 'utf8'));
 
 BASE_URL = applicationConfigurations.BaseUrl;
 
+app.use(cookieParser());
+app.use(session({
+  secret: KEY,
+  resave: true,
+  saveUninitialized: false
+}));
+app.use(csrf());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
