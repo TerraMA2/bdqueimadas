@@ -149,6 +149,7 @@ var Exportation = function() {
    * @param {string} dateFrom - Initial date
    * @param {string} dateTo - Final date
    * @param {string} format - Exportation file format
+   * @param {string} ip - Ip of the user
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
@@ -169,16 +170,11 @@ var Exportation = function() {
 
         // Creation of the query
         var query = "insert into " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " (" +
-                    memberTablesConfig.Downloads.DateFieldName + ", " +
-                    memberTablesConfig.Downloads.TimeFieldName + ", " +
-                    memberTablesConfig.Downloads.IpFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterBeginFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterEndFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterBiomesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterStatesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
+                    memberTablesConfig.Downloads.DateFieldName + ", " + memberTablesConfig.Downloads.TimeFieldName + ", " +
+                    memberTablesConfig.Downloads.IpFieldName + ", " + memberTablesConfig.Downloads.FilterBeginFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterEndFieldName + ", " + memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterBiomesFieldName + ", " + memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterStatesFieldName + ", " + memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
                     memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
             params = [dateString, timeString, ip, dateFrom, dateTo];
 

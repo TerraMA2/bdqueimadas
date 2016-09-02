@@ -39,8 +39,7 @@ var ExportController = function(app) {
     if(request.query.states !== '') options.states = request.query.states;
     if(request.query.cities !== '') options.cities = request.query.cities;
 
-    console.log(request.connection);
-
+    // Call of the method 'registerDownload', responsible for registering the download in the database
     memberExportation.registerDownload(request.query.dateFrom, request.query.dateTo, request.query.format, request.connection.remoteAddress, options, function(err, registerDownloadResult) {
       if(err) return console.error(err);
 
