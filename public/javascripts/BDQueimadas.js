@@ -1410,7 +1410,12 @@ define(
       var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
-        var namesArrayCountries = Filter.updateCountriesBdqNamesSync(countries);
+        var namesArray = Filter.updateCountriesBdqNamesSync(countries);
+        var namesArrayCountries = [];
+
+        for(var i = 0; i < namesArray.names.rowCount; i++) {
+          namesArrayCountries.push(namesArray.names.rows[i].name);
+        }
 
         var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
         var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
@@ -1425,7 +1430,12 @@ define(
         var cities = specialRegionsData.specialRegionsCities.toString();
 
         if(states.length > 0) {
-          var namesArrayStates = Filter.updateStatesBdqNamesSync(states);
+          var namesArray = Filter.updateStatesBdqNamesSync(states);
+          var namesArrayStates = [];
+
+          for(var i = 0; i < namesArray.names.rowCount; i++) {
+            namesArrayStates.push(namesArray.names.rows[i].name);
+          }
 
           var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
           var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
