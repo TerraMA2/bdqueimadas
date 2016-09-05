@@ -224,6 +224,42 @@ define(
     };
 
     /**
+     * Updates the countries BDQ names array (synchronous).
+     * @param {string} countries - Countries ids
+     * @returns {array} namesArray - Countries names
+     *
+     * @function updateCountriesBdqNamesSync
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateCountriesBdqNamesSync = function(countries) {
+      $.ajax({
+        async: false,
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          key: "Countries",
+          ids: countries === undefined || countries === null ? getCountries().toString() : countries
+        },
+        success: function(names) {
+          var namesArray = [];
+
+          for(var i = 0; i < names.names.rowCount; i++) {
+            namesArray.push(names.names.rows[i].name);
+          }
+
+          if(countries === undefined || countries === null) {
+            setCountriesBdqNames(namesArray);
+
+            return null;
+          } else {
+            return namesArray;
+          }
+        }
+      });
+    };
+
+    /**
      * Returns the countries BDQ names array.
      * @returns {array} memberCountriesBdqNames - Countries BDQ names array
      *
@@ -313,6 +349,42 @@ define(
             if(callback !== null) callback();
           } else {
             if(callback !== null) callback(namesArray);
+          }
+        }
+      });
+    };
+
+    /**
+     * Updates the states BDQ names array (synchronous).
+     * @param {string} states - States ids
+     * @returns {array} namesArray - States names
+     *
+     * @function updateStatesBdqNamesSync
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateStatesBdqNamesSync = function(states) {
+      $.ajax({
+        async: false,
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          key: "States",
+          ids: states === undefined || states === null ? getStates().toString() : states
+        },
+        success: function(names) {
+          var namesArray = [];
+
+          for(var i = 0; i < names.names.rowCount; i++) {
+            namesArray.push(names.names.rows[i].name);
+          }
+
+          if(states === undefined || states === null) {
+            setStatesBdqNames(namesArray);
+
+            return null;
+          } else {
+            return namesArray;
           }
         }
       });
@@ -1277,12 +1349,14 @@ define(
       getCountries: getCountries,
       setCountriesBdqNames: setCountriesBdqNames,
       updateCountriesBdqNames: updateCountriesBdqNames,
+      updateCountriesBdqNamesSync: updateCountriesBdqNamesSync,
       getCountriesBdqNames: getCountriesBdqNames,
       clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
       setStatesBdqNames: setStatesBdqNames,
       updateStatesBdqNames: updateStatesBdqNames,
+      updateStatesBdqNamesSync: updateStatesBdqNamesSync,
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
       clearSpecialRegions: clearSpecialRegions,
