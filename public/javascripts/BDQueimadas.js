@@ -1910,12 +1910,12 @@ define(
           buttons: [{
             type: 'submit',
             text: 'Ok, entendi',
-            className: 'bdqueimadas-btn'
+            className: 'bdqueimadas-btn bdqueimadas-initial-alert'
           }]
         });
 
         setTimeout(function() {
-          vex.close();
+          $('.bdqueimadas-initial-alert').click();
         }, 15000);
 
         /*window.setInterval(function() {
