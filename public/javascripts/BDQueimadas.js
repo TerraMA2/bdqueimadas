@@ -1403,7 +1403,7 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArraysSync(specialRegions);
+      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
 
       countries = countries.toString();
 
