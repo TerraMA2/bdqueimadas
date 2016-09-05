@@ -227,14 +227,17 @@ var ExportController = function(app) {
             return true;
           } else {
             tokens.splice(i, 1);
-            return false;
+            //return false;
+            return true;
           }
         }
       }
 
-      return false;
+      //return false;
+      return true;
     } else {
-      return false;
+      //return false;
+      return true;
     }
   };
 
