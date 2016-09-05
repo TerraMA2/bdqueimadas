@@ -233,7 +233,7 @@ define(
      * @inner
      */
     var updateCountriesBdqNamesSync = function(countries) {
-      return JSON.parse($.ajax({
+      var namesArray = JSON.parse($.ajax({
         async: false,
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
@@ -242,6 +242,8 @@ define(
           ids: countries === undefined || countries === null ? getCountries().toString() : countries
         }
       }).responseText);
+
+      return namesArray;
     };
 
     /**
@@ -349,7 +351,7 @@ define(
      * @inner
      */
     var updateStatesBdqNamesSync = function(states) {
-      return JSON.parse($.ajax({
+      var namesArray = JSON.parse($.ajax({
         async: false,
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
@@ -358,6 +360,8 @@ define(
           ids: states === undefined || states === null ? getStates().toString() : states
         }
       }).responseText);
+
+      return namesArray;
     };
 
     /**
