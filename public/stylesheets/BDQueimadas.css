@@ -786,33 +786,140 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
 .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu { display: none !important; }
 
 .sidebar-menu > li > a {
-  height: 44px;
+  background-position: 16px;
   background-repeat: no-repeat;
-  background-position: 14px;
-  background-size: 14px;
+  background-size: 15px;
 }
 
 .sidebar-menu > li > a:hover {
+  background-position: 16px !important;
   background-repeat: no-repeat !important;
-  background-position: 14px !important;
-  background-size: 14px !important;
+  background-size: 15px !important;
 }
 
-#layerexplorer-btn > a { background-image: url('../images/icon_layers.png'); }
+#current-situation-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_situacao_atual.png");
+  height: 44px !important;
+}
 
-#layerexplorer-btn > a:hover { background-image: url('../images/icon_layers_hover.png'); }
+#current-situation-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_situacao_atual_hover.png");
+  height: 44px !important;
+}
 
-#filters-btn > a { background-image: url('../images/icon_calendar.png'); }
+#current-situation-protected-areas-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_deteccao_areas_protegidas.png");
+  height: 44px !important;
+}
 
-#filters-btn > a:hover { background-image: url('../images/icon_calendar_hover.png'); }
+#current-situation-protected-areas-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_deteccao_areas_protegidas_hover.png");
+  height: 44px !important;
+}
 
-#tables-btn > a { background-image: url('../images/icon_table.png'); }
+#infoqueima-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_boletim_infoqueima.png");
+  height: 44px !important;
+}
 
-#tables-btn > a:hover { background-image: url('../images/icon_table_hover.png'); }
+#infoqueima-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_boletim_infoqueima_hover.png");
+  height: 44px !important;
+}
 
-#graphs-btn > a { background-image: url('../images/icon_graphics.png'); }
+#ciman-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_ciman.png");
+  height: 44px !important;
+}
 
-#graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
+#ciman-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_ciman_hover.png");
+  height: 44px !important;
+}
+
+#on-media-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_na_midia.png");
+  background-size: 19px !important;
+  background-position: 13px 18px !important;
+  height: 44px !important;
+}
+
+#on-media-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_na_midia_hover.png");
+  background-size: 19px !important;
+  background-position: 13px 18px !important;
+  height: 44px !important;
+}
+
+#maps-and-animations-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_mapas_mensais_e_animacoes.png");
+  background-size: 18px !important;
+  background-position: 13px !important;
+  height: 44px !important;
+}
+
+#maps-and-animations-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_mapas_mensais_e_animacoes_hover.png");
+  background-size: 18px !important;
+  background-position: 13px !important;
+  height: 44px !important;
+}
+
+#examples-and-validations-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_exemplos_e_validacoes.png");
+  background-size: 19px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#examples-and-validations-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_exemplos_e_validacoes_hover.png");
+  background-size: 19px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-countries-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-countries-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico_hover.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-states-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-states-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico_hover.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#fire-risk-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_risco_de_fogo.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#fire-risk-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_risco_de_fogo_hover.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
 
 .skin-queimadas .main-header #gov-header #header input.searchButton { background-image: url("../externals/adminlte/img/sprite.png") 0 2px; }
 
