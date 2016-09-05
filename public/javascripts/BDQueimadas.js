@@ -1403,14 +1403,14 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+      var specialRegionsData = Filter.createSpecialRegionsArraysSync(specialRegions);
 
       countries = countries.toString();
 
       var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
-        var namesArrayCountries = Filter.updateCountriesBdqNames(countries);
+        var namesArrayCountries = Filter.updateCountriesBdqNamesSync(countries);
 
         var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
         var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
