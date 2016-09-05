@@ -233,30 +233,15 @@ define(
      * @inner
      */
     var updateCountriesBdqNamesSync = function(countries) {
-      $.ajax({
+      return JSON.parse($.ajax({
         async: false,
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
         data: {
           key: "Countries",
           ids: countries === undefined || countries === null ? getCountries().toString() : countries
-        },
-        success: function(names) {
-          var namesArray = [];
-
-          for(var i = 0; i < names.names.rowCount; i++) {
-            namesArray.push(names.names.rows[i].name);
-          }
-
-          if(countries === undefined || countries === null) {
-            setCountriesBdqNames(namesArray);
-
-            return null;
-          } else {
-            return namesArray;
-          }
         }
-      });
+      }).responseText);
     };
 
     /**
@@ -364,30 +349,15 @@ define(
      * @inner
      */
     var updateStatesBdqNamesSync = function(states) {
-      $.ajax({
+      return JSON.parse($.ajax({
         async: false,
         url: Utils.getBaseUrl() + "get-bdq-names",
         type: "GET",
         data: {
           key: "States",
           ids: states === undefined || states === null ? getStates().toString() : states
-        },
-        success: function(names) {
-          var namesArray = [];
-
-          for(var i = 0; i < names.names.rowCount; i++) {
-            namesArray.push(names.names.rows[i].name);
-          }
-
-          if(states === undefined || states === null) {
-            setStatesBdqNames(namesArray);
-
-            return null;
-          } else {
-            return namesArray;
-          }
         }
-      });
+      }).responseText);
     };
 
     /**
