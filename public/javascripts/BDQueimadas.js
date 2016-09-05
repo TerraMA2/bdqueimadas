@@ -345,47 +345,47 @@ define(
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
-                  getExportationSpatialFilterData(function(allCountries, countries, states, cities) {
-                    $.ajax({
-                      url: Utils.getBaseUrl() + "exists-data-to-export",
-                      type: "POST",
-                      data: {
-                        dateFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
-                        dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
-                        satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
-                        biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
-                        countries: allCountries,
-                        states: states,
-                        cities: cities
-                      },
-                      success: function(existsDataToExport) {
-                        if(existsDataToExport.existsDataToExport) {
-                          var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
-                                           "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
-                                           "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
-                                           "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
-                                           "&countries=" + allCountries +
-                                           "&states=" + states +
-                                           "&cities=" + cities +
-                                           "&format=" + $("#exportation-type").val() +
-                                           "&t=" + existsDataToExport.token;
+                  var exportationSpatialFilterData = getExportationSpatialFilterDataSync();
 
-                          //window.open(exportLink, '_blank');
-                          window.location = exportLink;
+                  $.ajax({
+                    async: false,
+                    url: Utils.getBaseUrl() + "exists-data-to-export",
+                    type: "POST",
+                    data: {
+                      dateFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
+                      dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
+                      satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
+                      biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
+                      countries: exportationSpatialFilterData.allCountries,
+                      states: exportationSpatialFilterData.states,
+                      cities: exportationSpatialFilterData.cities
+                    },
+                    success: function(existsDataToExport) {
+                      if(existsDataToExport.existsDataToExport) {
+                        var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
+                                         "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
+                                         "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
+                                         "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
+                                         "&countries=" + exportationSpatialFilterData.allCountries +
+                                         "&states=" + exportationSpatialFilterData.states +
+                                         "&cities=" + exportationSpatialFilterData.cities +
+                                         "&format=" + $("#exportation-type").val() +
+                                         "&t=" + existsDataToExport.token;
 
-                          vex.close();
-                        } else {
-                          vex.dialog.alert({
-                            message: '<p class="text-center">Não existem dados para exportar!</p>',
-                            buttons: [{
-                              type: 'submit',
-                              text: 'Ok',
-                              className: 'bdqueimadas-btn'
-                            }]
-                          });
-                        }
+                        window.open(exportLink, '_blank');
+
+                        vex.close();
+                      } else {
+                        vex.dialog.alert({
+                          message: '<p class="text-center">Não existem dados para exportar!</p>',
+                          buttons: [{
+                            type: 'submit',
+                            text: 'Ok',
+                            className: 'bdqueimadas-btn'
+                          }]
+                        });
                       }
-                    });
+                    }
                   });
                 }
               }
@@ -1365,6 +1365,99 @@ define(
         countriesNames = $.merge(arrayOne, arrayTwo);
 
         callback(countriesNames.toString(), "", "", "");
+      }
+    };
+
+    /**
+     * Returns the countries, states and cities to be filtered in the exportation (synchronous).
+     * @returns {object} return - Spatial filter data
+     *
+     * @private
+     * @function getExportationSpatialFilterDataSync
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var getExportationSpatialFilterDataSync = function() {
+      var countries = $('#countries-export').val() === null || (Utils.stringInArray($('#countries-export').val(), "") || $('#countries-export').val().length === 0) ? [] : $('#countries-export').val();
+      var countriesNames = [];
+
+      if(($('#continents-export').val() !== null && $('#continents-export').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
+        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+        var initialContinentCountriesLength = initialContinentCountries.length;
+
+        for(var i = 0; i < initialContinentCountriesLength; i++) {
+          countriesNames.push(initialContinentCountries[i].Name);
+        }
+      }
+
+      var states = $('#states-export').val() === null || Utils.stringInArray($('#states-export').val(), "") || $('#states-export').val().length === 0 ? [] : $('#states-export').val();
+
+      var filterStates = [];
+      var specialRegions = [];
+
+      $('#states-export > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
+          specialRegions.push($(this).val());
+        } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
+          filterStates.push($(this).val());
+        }
+      });
+
+      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+
+      countries = countries.toString();
+
+      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+
+      if(countries.length > 0) {
+        var namesArrayCountries = Filter.updateCountriesBdqNames(countries);
+
+        var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+
+        namesArrayCountries = $.merge(arrayOne, arrayTwo);
+
+        states = JSON.parse(JSON.stringify(filterStates));
+        states = states.toString();
+
+        var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+
+        var cities = specialRegionsData.specialRegionsCities.toString();
+
+        if(states.length > 0) {
+          var namesArrayStates = Filter.updateStatesBdqNamesSync(states);
+
+          var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
+
+          namesArrayStates = $.merge(arrayOne, arrayTwo);
+
+          return {
+            allCountries: namesArrayCountries.toString(),
+            countries: namesArrayCountries.toString(),
+            states: namesArrayStates.toString(),
+            cities: cities
+          };
+        } else {
+          return {
+            allCountries: namesArrayCountries.toString(),
+            countries: namesArrayCountries.toString(),
+            states: specialRegionsStatesNames.toString(),
+            cities: cities
+          };
+        }
+      } else {
+        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+
+        countriesNames = $.merge(arrayOne, arrayTwo);
+
+        return {
+          allCountries: countriesNames.toString(),
+          countries: "",
+          states: "",
+          cities: ""
+        };
       }
     };
 
