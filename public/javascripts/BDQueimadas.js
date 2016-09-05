@@ -347,7 +347,6 @@ define(
                 } else {
                   getExportationSpatialFilterData(function(allCountries, countries, states, cities) {
                     $.ajax({
-                      async: false,
                       url: Utils.getBaseUrl() + "exists-data-to-export",
                       type: "POST",
                       data: {
@@ -371,7 +370,8 @@ define(
                                            "&format=" + $("#exportation-type").val() +
                                            "&t=" + existsDataToExport.token;
 
-                          window.open(exportLink, '_blank');
+                          //window.open(exportLink, '_blank');
+                          window.location = exportLink;
 
                           vex.close();
                         } else {
