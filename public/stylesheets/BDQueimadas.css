@@ -710,11 +710,15 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   float: left;
 }
 
-.languages-item.portuguese { background-image: url('../images/brazil.png'); }
+#languages-secondary > .languages-item:hover {
+  background-color: transparent !important;
+}
 
-.languages-item.english { background-image: url('../images/usa.png'); }
+.languages-item.portuguese, .languages-item.portuguese:hover { background-image: url('../images/brazil.png') !important; }
 
-.languages-item.spanish { background-image: url('../images/spain.png'); }
+.languages-item.english, .languages-item.english:hover { background-image: url('../images/usa.png') !important; }
+
+.languages-item.spanish, .languages-item.spanish:hover { background-image: url('../images/spain.png') !important; }
 
 .main-sidebar { padding-top: 50px !important; }
 

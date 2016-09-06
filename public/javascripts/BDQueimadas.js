@@ -441,11 +441,6 @@ define(
         if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0) $('#states-export').attr('disabled', 'disabled');
       });
 
-      // Language change event
-      $('.languages-item').on('click', function() {
-        //console.log($(this).attr('class').split(' ')[1]);
-      });
-
       // Filter Events
 
       $('#filter-button').on('click', function() {

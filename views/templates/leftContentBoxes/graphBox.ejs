@@ -2,14 +2,14 @@
   <div class="box box-default">
     <div class="box-body">
       <div class="component-filter">
-        <div class="component-filter-title">Confirme abaixo os filtros dos gr&aacute;ficos.</div>
+        <div class="component-filter-title"><%= __('Confirme abaixo os filtros dos gráficos.') %></div>
         <div class="component-filter-content">
           <div class="row">
             <div class="col-md-2">
               <div class="form-group">
-                <label for="continents-graphics">Continentes</label>
+                <label for="continents-graphics"><%= __('Continentes') %></label>
                 <select id="continents-graphics" name="continents-graphics" class="form-control">
-                  <option value="">Selecione o continente</option>
+                  <option value=""><%= __('Selecione o continente') %></option>
                   <% continents.rows.forEach(function(continent, index) { %>
                     <% if(continent.name === "Americas") { %>
                       <option value="<%- continent.id %>">Am&eacute;ricas</option>
@@ -28,29 +28,29 @@
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="countries-graphics">Países</label>
+                <label for="countries-graphics"><%= __('Países') %></label>
                 <select multiple id="countries-graphics" name="countries-graphics" class="form-control"></select>
               </div>
             </div>
             <div class="col-md-2" style="border-right: 1px solid black;">
               <div class="form-group">
-                <label for="states-graphics">Estados</label>
+                <label for="states-graphics"><%= __('Estados') %></label>
                 <select multiple id="states-graphics" name="states-graphics" class="form-control" disabled></select>
               </div>
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <label for="filter-date-from-graphics">Início</label>
+                <label for="filter-date-from-graphics"><%= __('Início') %></label>
                 <input type="text" class="form-control date filter-date-from" id="filter-date-from-graphics" placeholder="De">
               </div>
               <div class="form-group">
-                <label for="filter-date-to-graphics">Fim</label>
+                <label for="filter-date-to-graphics"><%= __('Fim') %></label>
                 <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="Até">
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-satellite-graphics">Focos dos Sat&eacute;lites</label>
+                <label for="filter-satellite-graphics"><%= __('Focos dos Sat&eacute;lites') %></label>
                 <select multiple class="form-control" id="filter-satellite-graphics">
                   <%
                   var satelliteOptions = "";
@@ -88,16 +88,16 @@
                   })
                   %>
 
-                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
                   <%- referenceSatellite + satelliteOptions %>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-biome-graphics">Focos dos Biomas</label>
+                <label for="filter-biome-graphics"><%= __('Focos dos Biomas') %></label>
                 <select multiple class="form-control" id="filter-biome-graphics">
-                  <option value="all" selected>TODOS</option>
+                  <option value="all" selected><%= __('TODOS') %></option>
                   <option value="Amazonia">Amaz&ocirc;nia</option>
                   <option value="Caatinga">Caatinga</option>
                   <option value="Cerrado">Cerrado</option>
@@ -109,7 +109,7 @@
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <button class="btn btn-primary" id="filter-button-graphics" style="margin-top: 40px;">Aplicar</button>
+                <button class="btn btn-primary" id="filter-button-graphics" style="margin-top: 40px;"><%= __('Aplicar') %></button>
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@
         <span id="graphics-no-data" style="text-align: center; display: none;">
           <div class="clear"></div>
           <hr/>
-          <h4>Sem focos com a sele&ccedil;&atilde;o escolhida</h4>
+          <h4><%= __('Sem focos com a seleção escolhida') %></h4>
         </span>
       </div>
       <table class="table table-bordered table-hover" id="attributes-table"></table>

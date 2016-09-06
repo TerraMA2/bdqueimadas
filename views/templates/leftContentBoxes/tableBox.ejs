@@ -3,14 +3,14 @@
   <div class="box" id="box-attributes-table">
     <div class="box-body">
       <div class="component-filter">
-        <div class="component-filter-title">Confirme abaixo os filtros da tabela de atributos. Para baixar os dados use a ferramenta de exporta&ccedil;&atilde;o.</div>
+        <div class="component-filter-title"><%= __('Confirme abaixo os filtros da tabela de atributos. Para baixar os dados use a ferramenta de exportação.') %></div>
         <div class="component-filter-content">
           <div class="row">
             <div class="col-md-2">
               <div class="form-group">
-                <label for="continents-attributes-table">Continentes</label>
+                <label for="continents-attributes-table"><%= __('Continentes') %></label>
                 <select id="continents-attributes-table" name="continents-attributes-table" class="form-control">
-                  <option value="">Selecione o continente</option>
+                  <option value=""><%= __('Selecione o continente') %></option>
                   <% continents.rows.forEach(function(continent, index) { %>
                     <% if(continent.name === "Americas") { %>
                       <option value="<%- continent.id %>">Am&eacute;ricas</option>
@@ -29,29 +29,29 @@
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="countries-attributes-table">Países</label>
+                <label for="countries-attributes-table"><%= __('Países') %></label>
                 <select multiple id="countries-attributes-table" name="countries-attributes-table" class="form-control"></select>
               </div>
             </div>
             <div class="col-md-2" style="border-right: 1px solid black;">
               <div class="form-group">
-                <label for="states-attributes-table">Estados</label>
+                <label for="states-attributes-table"><%= __('Estados') %></label>
                 <select multiple id="states-attributes-table" name="states-attributes-table" class="form-control" disabled></select>
               </div>
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <label for="filter-date-from-attributes-table">Início</label>
+                <label for="filter-date-from-attributes-table"><%= __('Início') %></label>
                 <input type="text" class="form-control date filter-date-from" id="filter-date-from-attributes-table" placeholder="De">
               </div>
               <div class="form-group">
-                <label for="filter-date-to-attributes-table">Fim</label>
+                <label for="filter-date-to-attributes-table"><%= __('Fim') %></label>
                 <input type="text" class="form-control date filter-date-to" id="filter-date-to-attributes-table" placeholder="Até">
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-satellite-attributes-table">Focos dos Sat&eacute;lites</label>
+                <label for="filter-satellite-attributes-table"><%= __('Focos dos Satélites') %></label>
                 <select multiple class="form-control" id="filter-satellite-attributes-table">
                   <%
                   var satelliteOptions = "";
@@ -89,16 +89,16 @@
                   })
                   %>
 
-                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
                   <%- referenceSatellite + satelliteOptions %>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-biome-attributes-table">Focos dos Biomas</label>
+                <label for="filter-biome-attributes-table"><%= __('Focos dos Biomas') %></label>
                 <select multiple class="form-control" id="filter-biome-attributes-table">
-                  <option value="all" selected>TODOS</option>
+                  <option value="all" selected><%= __('TODOS') %></option>
                   <option value="Amazonia">Amaz&ocirc;nia</option>
                   <option value="Caatinga">Caatinga</option>
                   <option value="Cerrado">Cerrado</option>
@@ -110,7 +110,7 @@
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <button class="btn btn-primary" id="filter-button-attributes-table" style="margin-top: 40px;">Aplicar</button>
+                <button class="btn btn-primary" id="filter-button-attributes-table" style="margin-top: 40px;"><%= __('Aplicar') %></button>
               </div>
             </div>
           </div>
