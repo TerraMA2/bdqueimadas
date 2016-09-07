@@ -152,10 +152,10 @@ def insertData():
             date = dateHour[0]
             hour = dateHour[1]
 
-            insertParameters = [ rows[i][0], rows[i][1], rows[i][2], convertLatitudeToDMS(rows[i][1]), convertLongitudeToDMS(rows[i][2]), date, hour, rows[i][4], rows[i][5], rows[i][6], rows[i][7], rows[i][8], rows[i][9], rows[i][10], rows[i][11], rows[i][12], rows[i][13], rows[i][14], rows[i][15], rows[i][2], rows[i][1] ]
+            insertParameters = [ rows[i][0], rows[i][1], rows[i][2], convertLatitudeToDMS(rows[i][1]), convertLongitudeToDMS(rows[i][2]), date, hour, rows[i][3], rows[i][4], rows[i][5], rows[i][6], rows[i][7], rows[i][8], rows[i][9], rows[i][10], rows[i][11], rows[i][12], rows[i][13], rows[i][14], rows[i][15], rows[i][2], rows[i][1] ]
 
             try:
-                query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, lat_gms, lon_gms, data, hora, satelite, municipio, estado, regiao, pais, vegetacao, suscetibilidade, precipitacao, num_dias_sem_precipitacao, risco, bioma_brasileiro, satelite_referencia, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
+                query = "INSERT INTO " + PGSQL_TABLE + " (id, lat, lon, lat_gms, lon_gms, data, hora, data_hora, satelite, municipio, estado, regiao, pais, vegetacao, suscetibilidade, precipitacao, num_dias_sem_precipitacao, risco, bioma_brasileiro, satelite_referencia, geom) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326));"
                 PGSQL_CURSOR.execute(query, insertParameters)
                 PGSQL_DB.commit()
             except Exception as e:

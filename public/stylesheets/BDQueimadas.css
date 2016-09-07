@@ -323,7 +323,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-top: 5px;
 }
 
-.div-date-filter-export > input { max-width: 150px; }
+.div-date-filter-export > input { max-width: 113px; }
 
 .bdqueimadas-btn {
   color: #fff;
@@ -473,6 +473,12 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .bdqueimadas-form { margin-bottom: 0px; }
+
+#layer-explorer-and-filter-box {
+  font-size: 13px !important;
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
 #layer-explorer-and-filter-box h4 { margin: 0 0 5px 0; }
 

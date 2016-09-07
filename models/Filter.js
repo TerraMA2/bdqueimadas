@@ -838,6 +838,37 @@ var Filter = function() {
       } else return callback(err);
     });
   };
+
+  // new
+
+  this.searchForPAs = function(value, callback) {
+    // Connection with the PostgreSQL database
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+      if(!err) {
+
+        select gid nome terras_indigenas
+        gid nome unidades_conservacao_estaduais
+        gid nome unidades_conservacao_federais
+
+        translate(lower(nome), 'áàâãäåaaaÁÂÃÄÅAAAÀéèêëeeeeeEEEÉEEÈìíîïìiiiÌÍÎÏÌIIIóôõöoooòÒÓÔÕÖOOOùúûüuuuuÙÚÛÜUUUUçÇñÑýÝ', 'aaaaaaaaaAAAAAAAAAeeeeeeeeeEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnNyY') like
+        '%' || translate(lower(value), 'áàâãäåaaaÁÂÃÄÅAAAÀéèêëeeeeeEEEÉEEÈìíîïìiiiÌÍÎÏÌIIIóôõöoooòÒÓÔÕÖOOOùúûüuuuuÙÚÛÜUUUUçÇñÑýÝ', 'aaaaaaaaaAAAAAAAAAeeeeeeeeeEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnNyY') || '%'
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " +
+        memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where gid in (" + specialRegions + ") order by " +
+        memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+
+        // Execution of the query
+        client.query(query, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  // new
 };
 
 module.exports = Filter;

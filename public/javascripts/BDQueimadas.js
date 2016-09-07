@@ -263,12 +263,23 @@ define(
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-date-from-export">Início</label>' +
+                  '<label for="filter-date-from-export">Data Início</label>' +
                   '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="De">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<label for="filter-date-to-export">Fim</label>' +
+                  '<label for="filter-date-to-export">Data Fim</label>' +
                   '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Até">' +
+                '</div>' +
+              '</div>' +
+              '<div class="clear" style="height: 5px;"></div>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<div class="float-left div-date-filter-export">' +
+                  '<label for="filter-time-from-export">Hora Início</label>' +
+                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="De">' +
+                '</div>' +
+                '<div class="float-right div-date-filter-export">' +
+                  '<label for="filter-time-to-export">Hora Fim</label>' +
+                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Até">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
@@ -397,6 +408,9 @@ define(
 
         $("#filter-date-from-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
         $("#filter-date-to-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
+
+        $("#filter-time-from-export").inputmask("99:99", {"placeholder": "hh:mm"});
+        $("#filter-time-to-export").inputmask("99:99", {"placeholder": "hh:mm"});
 
         var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
@@ -1476,6 +1490,7 @@ define(
      */
     var loadPlugins = function() {
       $(".date").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
+      $(".time").inputmask("99:99", {"placeholder": "hh:mm"});
 
       var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
@@ -1649,6 +1664,22 @@ define(
           return v + y * 0.1;
         });
       });
+
+      /*
+      $("input.suggest-user").autocomplete({
+        source: function(request, response) {
+          $.get("usernames.action", {
+            value: request.term
+          }, function (data) {
+            // assuming data is a JavaScript array such as
+            // ["one@abc.de", "onf@abc.de","ong@abc.de"]
+            // and not a string
+            response(data);
+          });
+        },
+        minLength: 3
+      });
+      */
     };
 
     /**
