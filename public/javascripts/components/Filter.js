@@ -745,6 +745,9 @@ define(
      */
     var applyFilter = function() {
       var dates = Utils.getFilterDates(true, 0);
+      var times = Utils.getFilterTimes(true, 0);
+
+      console.log(times);
 
       if(dates !== null) {
         if(dates.length === 0) {

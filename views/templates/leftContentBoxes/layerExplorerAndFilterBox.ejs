@@ -1,8 +1,8 @@
 <div class="left-content-box" id="layer-explorer-and-filter-box">
   <div class="form-horizontal">
     <div class="form-group bdqueimadas-form">
-      <label for="continents" class="col-sm-3 control-label" style="padding-left: 0px; padding-right: 0px; margin-left: 5px; float: left;"><%= __('Continentes') %></label>
-      <div class="col-sm-9" style="float: right; width: 73%;">
+      <label for="continents" class="col-sm-2 control-label" style="padding-left: 0px; padding-right: 0px; margin-left: 15px; float: left;"><%= __('Continentes') %></label>
+      <div class="col-sm-9" style="float: right; width: 75%;">
         <select id="continents" name="continents" class="form-control">
           <option value=""><%= __('Selecione o continente') %></option>
           <% continents.rows.forEach(function(continent, index) { %>
@@ -24,29 +24,45 @@
   </div>
   <div class="form-group bdqueimadas-form float-left">
     <label for="countries"><%= __('Países') %></label>
-    <select multiple id="countries" name="countries" class="form-control" style="width: 140px;"></select>
+    <select multiple id="countries" name="countries" class="form-control" style="width: 148px;"></select>
   </div>
   <div class="form-group bdqueimadas-form float-right">
     <label for="states"><%= __('Estados') %></label>
-    <select multiple id="states" name="states" class="form-control" style="width: 140px;"></select>
+    <select multiple id="states" name="states" class="form-control" style="width: 148px;"></select>
+  </div>
+  <div style="clear: both; height: 4px;"></div>
+  <div class="form-group bdqueimadas-form">
+    <label for="pas"><%= __('UCs / TIs') %></label>
+    <input type="text" id="pas" name="pas" class="form-control"/>
   </div>
   <div style="clear: both; height: 5px;"></div>
   <hr/>
   <div style="clear: both; height: 5px;"></div>
   <div class="form-group bdqueimadas-form">
     <div style="float: left;">
-      <label for="filter-date-from" style="float: left; margin-right: 10px; margin-top: 5px;"><%= __('Início') %></label>
-      <input type="text" style="width: 96px; float: left;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="De">
+      <label for="filter-date-from" style="float: left; margin-right: 4px; margin-top: 5px;"><%= __('Data Início') %></label>
+      <input type="text" style="width: 84px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="<%= __('De') %>">
     </div>
     <div style="float: right;">
-      <label for="filter-date-to" style="float: left; margin-right: 20px; margin-top: 5px;"><%= __('Fim') %></label>
-      <input type="text" style="width: 96px; float: left;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="Até">
+      <label for="filter-date-to" style="float: left; margin-right: 13px; margin-top: 5px;"><%= __('Data Fim') %></label>
+      <input type="text" style="width: 84px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="<%= __('Até') %>">
+    </div>
+  </div>
+  <div style="clear: both; height: 4px;"></div>
+  <div class="form-group bdqueimadas-form">
+    <div style="float: left;">
+      <label for="filter-time-from" style="float: left; margin-right: 2px; margin-top: 5px;"><%= __('Hora Início') %></label>
+      <input type="text" style="width: 84px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-from" id="filter-time-from" placeholder="<%= __('De') %>">
+    </div>
+    <div style="float: right;">
+      <label for="filter-time-to" style="float: left; margin-right: 13px; margin-top: 5px;"><%= __('Hora Fim') %></label>
+      <input type="text" style="width: 84px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-to" id="filter-time-to" placeholder="<%= __('Até') %>">
     </div>
   </div>
   <div style="clear: both;"></div>
   <div class="form-group bdqueimadas-form float-left">
     <label for="filter-satellite"><%= __('Focos dos Satélites') %></label>
-    <select multiple class="form-control" id="filter-satellite" style="width: 140px;">
+    <select multiple class="form-control" id="filter-satellite" style="width: 148px;">
       <%
       var satelliteOptions = "";
       var referenceSatellite = "";
@@ -89,7 +105,7 @@
   </div>
   <div class="form-group bdqueimadas-form float-right">
     <label for="filter-biome"><%= __('Focos nos Biomas') %></label>
-    <select multiple class="form-control" id="filter-biome" style="width: 140px;">
+    <select multiple class="form-control" id="filter-biome" style="width: 148px;">
       <option value="all" selected><%= __('TODOS') %></option>
       <option value="Amazonia">Amaz&ocirc;nia</option>
       <option value="Caatinga">Caatinga</option>

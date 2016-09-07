@@ -376,6 +376,109 @@ define(function() {
   };
 
   /**
+   * Returns the filter begin and end times. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the times.
+   * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
+   * @param {integer} filter - Number that indicates which filter fields should be used: 0 - main filter, 1 - attributes table filter, 2 - graphics filter
+   * @returns {array} returnValue - Empy array, or an array with the times, or a null value
+   *
+   * @function getFilterTimes
+   * @memberof Utils
+   * @inner
+   */
+  var getFilterTimes = function(showAlerts, filter) {
+    showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
+
+    var filterFieldsExtention = '';
+
+    if(filter === 1) {
+      filterFieldsExtention = '-attributes-table';
+    } else if(filter === 2) {
+      filterFieldsExtention = '-graphics';
+    }
+
+    var filterTimeFrom = $('#filter-time-from' + filterFieldsExtention);
+    var filterTimeTo = $('#filter-time-to' + filterFieldsExtention);
+
+    var returnValue = null;
+
+    if((filterTimeFrom.val().length > 0 && filterTimeTo.val().length > 0) || (filterTimeFrom.val().length === 0 && filterTimeTo.val().length === 0)) {
+      if(filterTimeFrom.val().length === 0 && filterTimeTo.val().length === 0) {
+        returnValue = [];
+      } else {
+        if(isTimeValid(filterTimeFrom.val()) && isTimeValid(filterTimeTo.val())) {
+          returnValue = [filterTimeFrom.val(), filterTimeTo.val()];
+        } else if(!isTimeValid(filterTimeFrom.val()) && !isTimeValid(filterTimeTo.val())) {
+          vex.dialog.alert({
+            message: '<p class="text-center">Horas inválidas!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        } else if(!isTimeValid(filterTimeFrom.val())) {
+          vex.dialog.alert({
+            message: '<p class="text-center">Hora inicial inválida!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        } else {
+          vex.dialog.alert({
+            message: '<p class="text-center">Hora final inválida!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+        }
+      }
+    } else {
+      if(filterTimeFrom.val().length === 0) {
+        vex.dialog.alert({
+          message: '<p class="text-center">Hora inicial inválida!</p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok',
+            className: 'bdqueimadas-btn'
+          }]
+        });
+      }
+
+      if(filterTimeTo.val().length === 0) {
+        vex.dialog.alert({
+          message: '<p class="text-center">Hora final inválida!</p>',
+          buttons: [{
+            type: 'submit',
+            text: 'Ok',
+            className: 'bdqueimadas-btn'
+          }]
+        });
+      }
+    }
+
+    return returnValue;
+  };
+
+  /**
+   * Verifies if a time with the format hh:mm is valid.
+   * @param {string} value - Given time
+   * @returns {boolean} isValid - Flag that indicates if the time is valid
+   *
+   * @function isTimeValid
+   * @memberof Utils
+   * @inner
+   */
+  var isTimeValid = function(value) {
+    var isValid = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(value);
+
+    return isValid;
+  };
+
+  /**
    * Verifies if a string exists in an array.
    * @param {array} array - Array where the search will be performed
    * @param {string} string - String to be searched
@@ -558,6 +661,8 @@ define(function() {
     replaceDatePatternWithString: replaceDatePatternWithString,
     applyLayerTimeUpdateButton: applyLayerTimeUpdateButton,
     getFilterDates: getFilterDates,
+    getFilterTimes: getFilterTimes,
+    isTimeValid: isTimeValid,
     stringInArray: stringInArray,
     replaceAll: replaceAll,
     sortIntegerArray: sortIntegerArray,
