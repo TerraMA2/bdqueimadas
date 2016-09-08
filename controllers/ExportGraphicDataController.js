@@ -67,6 +67,12 @@ var ExportGraphicDataController = function(app) {
 
           downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateFrom, request.query.dateTo, response);
         });
+      } else if(graphicConfigurations.Key === "UCE" || graphicConfigurations.Key === "UCF" || graphicConfigurations.Key === "TI" || graphicConfigurations.Key === "UCE_5KM" || graphicConfigurations.Key === "UCF_5KM" || graphicConfigurations.Key === "TI_5KM" || graphicConfigurations.Key === "UCE_10KM" || graphicConfigurations.Key === "UCF_10KM" || graphicConfigurations.Key === "TI_10KM") {
+        memberGraphics.getFiresCountByPA(request.query.dateFrom, request.query.dateTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+          if(err) return console.error(err);
+
+          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateFrom, request.query.dateTo, response);
+        });
       } else {
         memberGraphics.getFiresCount(request.query.dateFrom, request.query.dateTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
           if(err) return console.error(err);
