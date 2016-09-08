@@ -1665,21 +1665,23 @@ define(
         });
       });
 
-      /*
-      $("input.suggest-user").autocomplete({
+      $("#pas").autocomplete({
+        minLength: 4,
         source: function(request, response) {
-          $.get("usernames.action", {
+          $.get(Utils.getBaseUrl() + "search-for-pas", {
             value: request.term
-          }, function (data) {
-            // assuming data is a JavaScript array such as
-            // ["one@abc.de", "onf@abc.de","ong@abc.de"]
-            // and not a string
+          }, function(data) {
             response(data);
           });
         },
-        minLength: 3
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#pas').val(ui.item.label);
+
+          console.log(ui.item.value);
+        }
       });
-      */
     };
 
     /**

@@ -24,29 +24,26 @@ var SearchForPAsController = function(app) {
    */
   var searchForPAsController = function(request, response) {
 
-    var value = request.query.value;
-
     // Call of the method 'searchForPAs', responsible for returning the protected areas that match the provided value
     memberFilter.searchForPAs(request.query.value, function(err, result) {
       if(err) return console.error(err);
 
-      // Array responsible for keeping the data obtained by the method 'getAttributesTableData'
+      // Array responsible for keeping the data obtained by the method 'searchForPAs'
       var data = [];
 
       // Conversion of the result object to array
-      result.rows.forEach(function(val){
-        var temp = [];
-        for(var key in val) temp.push(val[key]);
-        data.push(temp);
+      result.rows.forEach(function(val) {
+        data.push({
+          label: val.type + ' - ' + val.name,
+          value: {
+            id: val.id,
+            type: val.type
+          }
+        });
       });
 
       // JSON response
-      response.json({
-        draw: parseInt(request.body.draw),
-        recordsTotal: parseInt(resultCount.rows[0].count),
-        recordsFiltered: parseInt(resultCountWithSearch.rows[0].count),
-        data: data
-      });
+      response.json(data);
     });
   };
 
