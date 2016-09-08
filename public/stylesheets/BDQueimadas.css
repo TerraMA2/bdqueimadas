@@ -749,6 +749,13 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
   left: 0px;
 }
 
+.ui-autocomplete {
+  z-index: 99999999999 !important;
+  max-height: 350px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 /* TerraMA2Components styles */
 
 #terrama2-layerexplorer { color: black; }
