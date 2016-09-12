@@ -541,6 +541,54 @@ var Filter = function() {
     });
   };
 
+  // new
+
+  /**
+   * Returns the extent of the protected area corresponding to the received id.
+   * @param {integer} id - Id of the protected area
+   * @param {string} type - Type of the protected area (TI, UCE or UCF)
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getProtectedAreaExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getProtectedAreaExtent = function(id, type, callback) {
+    var parameters = [parseInt(id)];
+
+    // Connection with the PostgreSQL database
+    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+      if(!err) {
+        if(type === 'UCE') {
+          var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+          var geom = memberTablesConfig.UCE.GeometryFieldName;
+          var id = memberTablesConfig.UCE.IdFieldName;
+        } else if(type === 'UCF') {
+          var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+          var geom = memberTablesConfig.UCF.GeometryFieldName;
+          var id = memberTablesConfig.UCF.IdFieldName;
+        } else {
+          var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+          var geom = memberTablesConfig.TI.GeometryFieldName;
+          var id = memberTablesConfig.TI.IdFieldName;
+        }
+
+        // Creation of the query
+        var query = "select ST_Extent(" + geom + ") as extent from " + schemaAndTable + " where " + id + " = $1;";
+
+        // Execution of the query
+        client.query(query, parameters, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  // new
+
   /**
    * Returns the number of the fires located in the country correspondent to the received id.
    * @param {number} country - Country id
