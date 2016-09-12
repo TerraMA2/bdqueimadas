@@ -53,6 +53,12 @@ var Filter = function(io) {
 
           client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
         });
+      } else if(json.key === 'ProtectedArea') {
+        memberFilter.getProtectedAreaExtent(json.id, json.type, function(err, extent) {
+          if(err) return console.error(err);
+
+          client.emit('spatialFilterResponse', { key: json.key, id: json.id, type: json.type, extent: extent });
+        });
       } else {
         var functionName = "get" + json.key + "Extent";
         memberFilter[functionName](json.ids, function(err, extent) {

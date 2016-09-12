@@ -969,7 +969,7 @@ define(
             } else {
               Filter.enableDropdown('states', '');
             }
-          } else {
+          } else if(result.key === 'States') {
             Filter.setStates(result.ids);
             Filter.setSpecialRegions(result.specialRegions);
 
@@ -1679,7 +1679,7 @@ define(
 
           $('#pas').val(ui.item.label);
 
-          console.log(ui.item.value);
+          Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
         }
       });
     };
