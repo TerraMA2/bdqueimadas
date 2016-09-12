@@ -24,27 +24,78 @@ var SearchForPAsController = function(app) {
    */
   var searchForPAsController = function(request, response) {
 
-    // Call of the method 'searchForPAs', responsible for returning the protected areas that match the provided value
-    memberFilter.searchForPAs(request.query.value, function(err, result) {
-      if(err) return console.error(err);
+    var searchValue = request.query.value.toUpperCase();
 
-      // Array responsible for keeping the data obtained by the method 'searchForPAs'
-      var data = [];
+    var searchFor = {
+      'UCE': true,
+      'UCF': true,
+      'TI': true
+    };
 
-      // Conversion of the result object to array
-      result.rows.forEach(function(val) {
-        data.push({
-          label: val.type + ' - ' + val.name,
-          value: {
-            id: val.id,
-            type: val.type
-          }
+    if(searchValue.indexOf('UCE') !== -1 && searchValue.indexOf('UCF') === -1 && searchValue.indexOf('TI') === -1) {
+      searchFor.UCF = false;
+      searchFor.TI = false;
+
+      searchValue = searchValue.replace('UCE', '');
+    } else if(searchValue.indexOf('UCE') === -1 && searchValue.indexOf('UCF') !== -1 && searchValue.indexOf('TI') === -1) {
+      searchFor.UCE = false;
+      searchFor.TI = false;
+
+      searchValue = searchValue.replace('UCF', '');
+    } else if(searchValue.indexOf('UCE') === -1 && searchValue.indexOf('UCF') === -1 && searchValue.indexOf('TI') !== -1) {
+      searchFor.UCE = false;
+      searchFor.UCF = false;
+
+      searchValue = searchValue.replace('TI', '');
+    } else if(searchValue.indexOf('UCE') !== -1 && searchValue.indexOf('UCF') !== -1 && searchValue.indexOf('TI') === -1) {
+      searchFor.TI = false;
+
+      searchValue = searchValue.replace('UCE', '');
+      searchValue = searchValue.replace('UCF', '');
+    } else if(searchValue.indexOf('UCE') === -1 && searchValue.indexOf('UCF') !== -1 && searchValue.indexOf('TI') !== -1) {
+      searchFor.UCE = false;
+
+      searchValue = searchValue.replace('UCF', '');
+      searchValue = searchValue.replace('TI', '');
+    } else if(searchValue.indexOf('UCE') !== -1 && searchValue.indexOf('UCF') === -1 && searchValue.indexOf('TI') !== -1) {
+      searchFor.UCF = false;
+
+      searchValue = searchValue.replace('UCE', '');
+      searchValue = searchValue.replace('TI', '');
+    } else {
+      searchValue = searchValue.replace('UCE', '');
+      searchValue = searchValue.replace('UCF', '');
+      searchValue = searchValue.replace('TI', '');
+    }
+
+    // Removing excessive spaces and non alphanumeric characters
+    searchValue = searchValue.replace(/\W /g, '').replace(/\s+/g, ' ').trim();
+
+    if(searchValue.length > 3) {
+      // Call of the method 'searchForPAs', responsible for returning the protected areas that match the provided value
+      memberFilter.searchForPAs(searchValue, searchFor, function(err, result) {
+        if(err) return console.error(err);
+
+        // Array responsible for keeping the data obtained by the method 'searchForPAs'
+        var data = [];
+
+        // Conversion of the result object to array
+        result.rows.forEach(function(val) {
+          data.push({
+            label: val.type + ' - ' + val.name,
+            value: {
+              id: val.id,
+              type: val.type
+            }
+          });
         });
-      });
 
-      // JSON response
-      response.json(data);
-    });
+        // JSON response
+        response.json(data);
+      });
+    } else {
+      response.json([]);
+    }
   };
 
   return searchForPAsController;

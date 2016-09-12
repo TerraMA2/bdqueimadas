@@ -55,6 +55,12 @@ define(
     // Current special regions cities ids
     var memberSpecialRegionsCitiesIds = [];
 
+    // new
+
+    var memberProtectedArea = null;
+
+    // new
+
     /**
      * Returns the initial date formatted with the received format.
      * @param {string} format - Format
@@ -531,6 +537,18 @@ define(
     var getSpecialRegionsCitiesIds = function() {
       return memberSpecialRegionsCitiesIds;
     };
+
+    // new
+
+    var setProtectedArea = function(protectedArea) {
+      memberProtectedArea = protectedArea;
+    };
+
+    var getProtectedArea = function() {
+      return memberProtectedArea;
+    };
+
+    // new
 
     /**
      * Creates the date filter.
@@ -1346,6 +1364,8 @@ define(
       getSpecialRegionsStatesIds: getSpecialRegionsStatesIds,
       getSpecialRegionsCities: getSpecialRegionsCities,
       getSpecialRegionsCitiesIds: getSpecialRegionsCitiesIds,
+      setProtectedArea: setProtectedArea,
+      getProtectedArea: getProtectedArea,
       updateDates: updateDates,
       updateDatesToCurrent: updateDatesToCurrent,
       applyFilter: applyFilter,
