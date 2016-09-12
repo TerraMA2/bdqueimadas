@@ -842,6 +842,7 @@ var Filter = function() {
   /**
    * Returns the protected areas that match the given value.
    * @param {string} value - Value to be used in the search of protected areas
+   * @param {object} searchFor - Flags that indicates in which tables the search should be performed. Format: { 'UCE': true/false, 'UCF': true/false, 'TI': true/false }
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -849,24 +850,40 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.searchForPAs = function(value, callback) {
-    var parameters = ['%' + value + '%', '%' + value + '%', '%' + value + '%'];
-
+  this.searchForPAs = function(value, searchFor, callback) {
     // Connection with the PostgreSQL database
     memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
-        // Creation of the query
-        var query = "select " + memberTablesConfig.TI.IdFieldName + " as id, upper(" + memberTablesConfig.TI.NameFieldName + ") as name, 'TI' as type " +
+        var parameters = [];
+
+        var tiQuery = "select " + memberTablesConfig.TI.IdFieldName + " as id, upper(" + memberTablesConfig.TI.NameFieldName + ") as name, 'TI' as type " +
         "from " + memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName +
-        " where unaccent(upper(" + memberTablesConfig.TI.NameFieldName + ")) like unaccent(upper($1)) " +
-        "union " +
-        "select " + memberTablesConfig.UCE.IdFieldName + " as id, upper(" + memberTablesConfig.UCE.NameFieldName + ") as name, 'UCE' as type " +
+        " where unaccent(upper(" + memberTablesConfig.TI.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
+
+        var uceQuery = "select " + memberTablesConfig.UCE.IdFieldName + " as id, upper(" + memberTablesConfig.UCE.NameFieldName + ") as name, 'UCE' as type " +
         "from " + memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName +
-        " where unaccent(upper(" + memberTablesConfig.UCE.NameFieldName + ")) like unaccent(upper($2)) " +
-        "union " +
-        "select " + memberTablesConfig.UCF.IdFieldName + " as id, upper(" + memberTablesConfig.UCF.NameFieldName + ") as name, 'UCF' as type " +
+        " where unaccent(upper(" + memberTablesConfig.UCE.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
+
+        var ucfQuery = "select " + memberTablesConfig.UCF.IdFieldName + " as id, upper(" + memberTablesConfig.UCF.NameFieldName + ") as name, 'UCF' as type " +
         "from " + memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName +
-        " where unaccent(upper(" + memberTablesConfig.UCF.NameFieldName + ")) like unaccent(upper($3));";
+        " where unaccent(upper(" + memberTablesConfig.UCF.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
+
+        var query = "";
+
+        if(searchFor.TI) {
+          parameters.push('%' + value + '%');
+          query += tiQuery.replace('_SEARCH_', '$' + parameters.length);
+        }
+
+        if(searchFor.UCE) {
+          parameters.push('%' + value + '%');
+          query += (parameters.length > 1 ? ' union ' : '') + uceQuery.replace('_SEARCH_', '$' + parameters.length);
+        }
+
+        if(searchFor.UCF) {
+          parameters.push('%' + value + '%');
+          query += (parameters.length > 1 ? ' union ' : '') + ucfQuery.replace('_SEARCH_', '$' + parameters.length);
+        }
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
