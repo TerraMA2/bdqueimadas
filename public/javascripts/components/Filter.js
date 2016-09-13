@@ -17,6 +17,7 @@
  * @property {array} memberStates - Current states.
  * @property {array} memberStatesBdqNames - Current states BDQ names.
  * @property {array} memberSpecialRegions - Current special regions.
+ * @property {object} memberProtectedArea - Current protected area.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -54,12 +55,8 @@ define(
     var memberSpecialRegionsCities = [];
     // Current special regions cities ids
     var memberSpecialRegionsCitiesIds = [];
-
-    // new
-
+    // Current protected area
     var memberProtectedArea = null;
-
-    // new
 
     /**
      * Returns the initial date formatted with the received format.
@@ -538,17 +535,29 @@ define(
       return memberSpecialRegionsCitiesIds;
     };
 
-    // new
-
+    /**
+     * Sets the id of the current protected area.
+     * @param {object} protectedArea - Id of the protected area
+     *
+     * @function setProtectedArea
+     * @memberof Filter(2)
+     * @inner
+     */
     var setProtectedArea = function(protectedArea) {
       memberProtectedArea = protectedArea;
     };
 
+    /**
+     * Returns the id fo the current protected area.
+     * @returns {object} memberProtectedArea - Current protected area
+     *
+     * @function getProtectedArea
+     * @memberof Filter(2)
+     * @inner
+     */
     var getProtectedArea = function() {
       return memberProtectedArea;
     };
-
-    // new
 
     /**
      * Creates the date filter.

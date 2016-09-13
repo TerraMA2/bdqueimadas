@@ -15,6 +15,7 @@
  * @property {string} memberCountries - Current countries filter.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
+ * @property {object} memberProtectedArea - Current protected area filter.
  */
 define(
   ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
@@ -36,6 +37,8 @@ define(
     var memberStates = null;
     // Current cities filter
     var memberCities = null;
+    // Current protected area
+    var memberProtectedArea = null;
 
     /**
      * Creates and returns an array with the attributes table columns names.
@@ -179,6 +182,7 @@ define(
       memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
       memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
+      memberProtectedArea = Filter.getProtectedArea();
 
       getSpatialFilterData(function(countries, states, cities) {
         memberCountries = countries;
@@ -201,6 +205,7 @@ define(
                 data.countries = memberCountries;
                 data.states = memberStates;
                 data.cities = memberCities;
+                data.protectedArea = memberProtectedArea;
               }
             },
             "columns": getAttributesTableColumnNamesArray(),
@@ -262,6 +267,8 @@ define(
               $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
               $('#filter-date-to-attributes-table').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
             }
+
+            memberProtectedArea = Filter.getProtectedArea();
 
             getSpatialFilterData(function(countries, states, cities) {
               memberCountries = countries;

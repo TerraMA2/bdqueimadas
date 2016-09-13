@@ -32,6 +32,7 @@ var ExistsDataToExportController = function(app) {
     if(request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== '') options.states = request.body.states;
     if(request.body.cities !== '') options.cities = request.body.cities;
+    if(request.body.protectedArea !== null && request.body.protectedArea !== '') options.protectedArea = request.body.protectedArea;
     options.limit = 1;
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
