@@ -260,6 +260,17 @@ define(
                   '<select multiple id="states-export" name="states-export" class="form-control float-left">' + $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '') + '</select>' +
                 '</div>' +
               '</div>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<label for="pas-export">UCs / TIs</label>' +
+                '<div class="input-group">' +
+                  '<input value="' + $('#pas').val() + '" type="text" id="pas-export" name="pas-export" class="form-control" placeholder="UCs / TIs">' +
+                  '<span class="input-group-btn">' +
+                    '<button type="button" id="search-pas-btn-export" class="btn btn-flat">' +
+                      '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                  '</span>' +
+                '</div>' +
+              '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
@@ -541,8 +552,8 @@ define(
         $('#countries-graphics').val($('#countries').val());
         $('#countries-graphics').change();
 
-        $('#continents-attributes-table').val($('#continents').val());
-        $('#continents-attributes-table').change();
+        $('#countries-attributes-table').val($('#countries').val());
+        $('#countries-attributes-table').change();
 
         $('#filter-button').click();
       });
@@ -551,8 +562,8 @@ define(
         $('#states-graphics').val($('#states').val());
         $('#states-graphics').change();
 
-        $('#continents-attributes-table').val($('#continents').val());
-        $('#continents-attributes-table').change();
+        $('#states-attributes-table').val($('#states').val());
+        $('#states-attributes-table').change();
 
         $('#filter-button').click();
       });
@@ -598,12 +609,15 @@ define(
           url: Utils.getBaseUrl() + "search-for-pas",
           type: "GET",
           data: {
-            value: $("#pas").val(),
+            value: $('#pas').val(),
             minLength: 1
           },
           success: function(data) {
             if(data.length > 0) {
               $('#pas').val(data[0].label);
+              $('#pas-graphics').val(data[0].label);
+              $('#pas-attributes-table').val(data[0].label);
+
               Filter.setProtectedArea({
                 id: data[0].value.id,
                 type: data[0].value.type
@@ -612,6 +626,40 @@ define(
               Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
             } else {
               Filter.setProtectedArea(null);
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $("#search-pas-btn-graphics").on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas-graphics').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas-graphics').val(data[0].label);
+
+              $('#pas-graphics').data('value', JSON.stringify({
+                id: data[0].value.id,
+                type: data[0].value.type
+              }));
+
+              $('#filter-button-graphics').click();
+            } else {
+              $('#pas-graphics').data('value', '');
 
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
@@ -1701,7 +1749,7 @@ define(
         });
       });
 
-      $("#pas").autocomplete({
+      $('#pas').autocomplete({
         minLength: 4,
         source: function(request, response) {
           $.get(Utils.getBaseUrl() + "search-for-pas", {
@@ -1715,12 +1763,39 @@ define(
           event.preventDefault();
 
           $('#pas').val(ui.item.label);
+          $('#pas-graphics').val(ui.item.label);
+          $('#pas-attributes-table').val(ui.item.label);
+
           Filter.setProtectedArea({
             id: ui.item.value.id,
             type: ui.item.value.type
           });
 
           Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
+        }
+      });
+
+      $('#pas-graphics').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-pas", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#pas-graphics').val(ui.item.label);
+
+          $('#pas-graphics').data('value', JSON.stringify({
+            id: ui.item.value.id,
+            type: ui.item.value.type
+          }));
+
+          $('#filter-button-graphics').click();
         }
       });
     };
