@@ -268,7 +268,9 @@ define(
               $('#filter-date-to-attributes-table').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
             }
 
-            memberProtectedArea = Filter.getProtectedArea();
+            memberProtectedArea = useAttributesTableFilter ?
+                                  ($('#pas-attributes-table').data('value') !== undefined && $('#pas-attributes-table').data('value') !== '' ? JSON.parse($('#pas-attributes-table').data('value')) : null) :
+                                  Filter.getProtectedArea();
 
             getSpatialFilterData(function(countries, states, cities) {
               memberCountries = countries;
