@@ -24,54 +24,49 @@ var SearchForPAsController = function(app) {
    */
   var searchForPAsController = function(request, response) {
 
-    var searchValue = request.query.value.toUpperCase();
-
+    // Setting the string to uppercase, removing excessive spaces and non alphanumeric characters
+    var searchValue = request.query.value.toUpperCase().replace(/\W /g, '').replace(/\s+/g, ' ').trim();
     var searchFor = {
       'UCE': true,
       'UCF': true,
       'TI': true
     };
 
-    if(searchValue.indexOf('UCE') !== -1 && searchValue.indexOf('UCF') === -1 && searchValue.indexOf('TI') === -1) {
+    var searchValueArray = searchValue.split(' ');
+
+    var uceInArray = stringInArray(searchValueArray, 'UCE');
+    var ucfInArray = stringInArray(searchValueArray, 'UCF');
+    var tiInArray = stringInArray(searchValueArray, 'TI');
+
+    var index = searchValueArray.indexOf("UCE");
+    if(index > -1) searchValueArray.splice(index, 1);
+
+    index = searchValueArray.indexOf("UCF");
+    if(index > -1) searchValueArray.splice(index, 1);
+
+    index = searchValueArray.indexOf("TI");
+    if(index > -1) searchValueArray.splice(index, 1);
+
+    if(uceInArray && !ucfInArray && !tiInArray) {
       searchFor.UCF = false;
       searchFor.TI = false;
-
-      searchValue = searchValue.replace('UCE', '');
-    } else if(searchValue.indexOf('UCE') === -1 && searchValue.indexOf('UCF') !== -1 && searchValue.indexOf('TI') === -1) {
+    } else if(!uceInArray && ucfInArray && !tiInArray) {
       searchFor.UCE = false;
       searchFor.TI = false;
-
-      searchValue = searchValue.replace('UCF', '');
-    } else if(searchValue.indexOf('UCE') === -1 && searchValue.indexOf('UCF') === -1 && searchValue.indexOf('TI') !== -1) {
+    } else if(!uceInArray && !ucfInArray && tiInArray) {
       searchFor.UCE = false;
       searchFor.UCF = false;
-
-      searchValue = searchValue.replace('TI', '');
-    } else if(searchValue.indexOf('UCE') !== -1 && searchValue.indexOf('UCF') !== -1 && searchValue.indexOf('TI') === -1) {
+    } else if(uceInArray && ucfInArray && !tiInArray) {
       searchFor.TI = false;
-
-      searchValue = searchValue.replace('UCE', '');
-      searchValue = searchValue.replace('UCF', '');
-    } else if(searchValue.indexOf('UCE') === -1 && searchValue.indexOf('UCF') !== -1 && searchValue.indexOf('TI') !== -1) {
+    } else if(!uceInArray && ucfInArray && tiInArray) {
       searchFor.UCE = false;
-
-      searchValue = searchValue.replace('UCF', '');
-      searchValue = searchValue.replace('TI', '');
-    } else if(searchValue.indexOf('UCE') !== -1 && searchValue.indexOf('UCF') === -1 && searchValue.indexOf('TI') !== -1) {
+    } else if(uceInArray && !ucfInArray && tiInArray) {
       searchFor.UCF = false;
-
-      searchValue = searchValue.replace('UCE', '');
-      searchValue = searchValue.replace('TI', '');
-    } else {
-      searchValue = searchValue.replace('UCE', '');
-      searchValue = searchValue.replace('UCF', '');
-      searchValue = searchValue.replace('TI', '');
     }
 
-    // Removing excessive spaces and non alphanumeric characters
-    searchValue = searchValue.replace(/\W /g, '').replace(/\s+/g, ' ').trim();
+    searchValue = searchValueArray.join(" ");
 
-    if(searchValue.length > 3) {
+    if(searchValue.length >= request.query.minLength) {
       // Call of the method 'searchForPAs', responsible for returning the protected areas that match the provided value
       memberFilter.searchForPAs(searchValue, searchFor, function(err, result) {
         if(err) return console.error(err);
@@ -96,6 +91,25 @@ var SearchForPAsController = function(app) {
     } else {
       response.json([]);
     }
+  };
+
+  /**
+   * Verifies if a string exists in an array.
+   * @param {array} array - Array where the search will be performed
+   * @param {string} string - String to be searched
+   * @returns {boolean} boolean - Flag that indicates if the string exists in the array
+   *
+   * @private
+   * @function stringInArray
+   * @memberof SearchForPAsController
+   * @inner
+   */
+  var stringInArray = function(array, string) {
+    for(var i = 0; i < array.length; i++) {
+      if(array[i].toString() === string.toString())
+        return true;
+    }
+    return false;
   };
 
   return searchForPAsController;

@@ -145,6 +145,27 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
+        }
+
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
           var searchResult = createSearch(search, parameter);
@@ -256,6 +277,27 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
+        }
+
         // Execution of the query
         client.query(query, params, function(err, result) {
           done();
@@ -354,6 +396,27 @@ var AttributesTable = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
         }
 
         // If the the user executed a search in the table, a 'where' clause is created for it

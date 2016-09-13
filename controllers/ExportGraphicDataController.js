@@ -42,6 +42,7 @@ var ExportGraphicDataController = function(app) {
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
     if(request.query.cities !== '') options.cities = request.query.cities;
+    if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
 
     var graphicConfigurations = getGraphicConfigurations(request.query.id);
 

@@ -49,6 +49,7 @@ define(
      * Adds a layer to the visible layers array.
      * @param {string} layerId - Layer id
      * @param {string} layerName - Layer name
+     * @param {string} layerTitle - Layer title
      * @param {string} parentId - Parent id
      * @param {string} parentName - Parent name
      * @param {string} elementId - Html element id
@@ -57,10 +58,11 @@ define(
      * @memberof Map
      * @inner
      */
-    var addVisibleLayer = function(layerId, layerName, parentId, parentName, elementId) {
+    var addVisibleLayer = function(layerId, layerName, layerTitle, parentId, parentName, elementId) {
       memberVisibleLayers.push({
         layerId: layerId,
         layerName: layerName,
+        layerTitle: layerTitle,
         parentId: parentId,
         parentName: parentName,
         elementId: elementId
@@ -172,16 +174,17 @@ define(
       memberLayers.push(layer);
 
       var layerName = Utils.processStringWithDatePattern(layer.Name);
+      var layerTitle = Utils.processStringWithDatePattern(layer.Title);
       var layerTime = Utils.processStringWithDatePattern(layer.Time);
 
       if(layer.TerraMA2WebComponentsFunction !== null) {
-        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layer.Visible, parent, layer.AppendAtTheEnd))
+        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, layer.Classes);
       } else if(layer.Wmts) {
-        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Url, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Format, layer.MatrixSet, layer.TileGrid))
+        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Url, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Format, layer.MatrixSet, layer.TileGrid))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes);
       } else {
-        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes);
       }
 
@@ -210,7 +213,7 @@ define(
           }
         }
 
-        addVisibleLayer(layer.Id, layerName, parent, parentsString, layer.Id.replace(':', ''));
+        addVisibleLayer(layer.Id, layerName, layerTitle, parent, parentsString, layer.Id.replace(':', ''));
       }
     };
 
