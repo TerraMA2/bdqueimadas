@@ -6,37 +6,56 @@
         <div class="component-filter-title"><%= __('Confirme abaixo os filtros da tabela de atributos. Para baixar os dados use a ferramenta de exportação.') %></div>
         <div class="component-filter-content">
           <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="continents-attributes-table"><%= __('Continentes') %></label>
-                <select id="continents-attributes-table" name="continents-attributes-table" class="form-control">
-                  <option value=""><%= __('Selecione o continente') %></option>
-                  <% continents.rows.forEach(function(continent, index) { %>
-                    <% if(continent.name === "Americas") { %>
-                      <option value="<%- continent.id %>">Am&eacute;ricas</option>
-                    <% } else if(continent.name === "Europe") { %>
-                      <option value="<%- continent.id %>">Europa</option>
-                    <% } else if(continent.name === "Africa") { %>
-                      <option value="<%- continent.id %>">&Aacute;frica</option>
-                    <% } else if(continent.name === "South_America") { %>
-                      <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
-                    <% } else { %>
-                      <option value="<%- continent.id %>"><%- continent.name %></option>
-                    <% } %>
-                  <% }) %>
-                </select>
+            <div class="col-md-5" style="border-right: 1px solid black;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="continents-attributes-table"><%= __('Continentes') %></label>
+                    <select id="continents-attributes-table" name="continents-attributes-table" class="form-control">
+                      <option value=""><%= __('Selecione o continente') %></option>
+                      <% continents.rows.forEach(function(continent, index) { %>
+                        <% if(continent.name === "Americas") { %>
+                          <option value="<%- continent.id %>">Am&eacute;ricas</option>
+                        <% } else if(continent.name === "Europe") { %>
+                          <option value="<%- continent.id %>">Europa</option>
+                        <% } else if(continent.name === "Africa") { %>
+                          <option value="<%- continent.id %>">&Aacute;frica</option>
+                        <% } else if(continent.name === "South_America") { %>
+                          <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
+                        <% } else { %>
+                          <option value="<%- continent.id %>"><%- continent.name %></option>
+                        <% } %>
+                      <% }) %>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pas-attributes-table"><%= __('UCs / TIs') %></label>
+                    <div class="input-group">
+                      <input type="text" id="pas-attributes-table" name="pas-attributes-table" class="form-control" placeholder="<%= __('UCs / TIs') %>">
+                      <span class="input-group-btn">
+                        <button type="button" id="search-pas-btn-attributes-table" class="btn btn-flat">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="countries-attributes-table"><%= __('Países') %></label>
-                <select multiple id="countries-attributes-table" name="countries-attributes-table" class="form-control"></select>
-              </div>
-            </div>
-            <div class="col-md-2" style="border-right: 1px solid black;">
-              <div class="form-group">
-                <label for="states-attributes-table"><%= __('Estados') %></label>
-                <select multiple id="states-attributes-table" name="states-attributes-table" class="form-control" disabled></select>
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="countries-attributes-table"><%= __('Países') %></label>
+                    <select multiple id="countries-attributes-table" name="countries-attributes-table" class="form-control"></select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="states-attributes-table"><%= __('Estados') %></label>
+                    <select multiple id="states-attributes-table" name="states-attributes-table" class="form-control" disabled></select>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-1">
@@ -104,7 +123,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
               <div class="form-group">
                 <label for="filter-biome-attributes-table"><%= __('Focos dos Biomas') %></label>
                 <select multiple class="form-control" id="filter-biome-attributes-table">
