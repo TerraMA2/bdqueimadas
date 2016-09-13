@@ -674,6 +674,40 @@ define(
         });
       });
 
+      $("#search-pas-btn-attributes-table").on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas-attributes-table').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas-attributes-table').val(data[0].label);
+
+              $('#pas-attributes-table').data('value', JSON.stringify({
+                id: data[0].value.id,
+                type: data[0].value.type
+              }));
+
+              $('#filter-button-attributes-table').click();
+            } else {
+              $('#pas-attributes-table').data('value', '');
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
       $(document).on('change', '#continents-export', function() {
         if($(this).val() !== "") {
           Utils.getSocket().emit('countriesByContinentRequest', { continent: $(this).val(), filter: 3 });
@@ -1796,6 +1830,30 @@ define(
           }));
 
           $('#filter-button-graphics').click();
+        }
+      });
+
+      $('#pas-attributes-table').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-pas", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#pas-attributes-table').val(ui.item.label);
+
+          $('#pas-attributes-table').data('value', JSON.stringify({
+            id: ui.item.value.id,
+            type: ui.item.value.type
+          }));
+
+          $('#filter-button-attributes-table').click();
         }
       });
     };
