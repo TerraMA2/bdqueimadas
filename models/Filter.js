@@ -541,8 +541,6 @@ var Filter = function() {
     });
   };
 
-  // new
-
   /**
    * Returns the extent of the protected area corresponding to the received id.
    * @param {integer} id - Id of the protected area
@@ -586,8 +584,6 @@ var Filter = function() {
       } else return callback(err);
     });
   };
-
-  // new
 
   /**
    * Returns the number of the fires located in the country correspondent to the received id.

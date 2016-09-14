@@ -385,7 +385,7 @@ define(function() {
    * @memberof Utils
    * @inner
    */
-  var getFilterTimes = function(showAlerts, filter) {
+  /*var getFilterTimes = function(showAlerts, filter) {
     showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
 
     var filterFieldsExtention = '';
@@ -461,7 +461,7 @@ define(function() {
     }
 
     return returnValue;
-  };
+  };*/
 
   /**
    * Verifies if a time with the format hh:mm is valid.
@@ -649,7 +649,7 @@ define(function() {
     memberBaseUrl = baseUrl;
     memberSocket = io.connect(window.location.origin, { path: baseUrl + 'socket.io' });
   };
-
+//getFilterTimes: getFilterTimes,
   return {
     getSocket: getSocket,
     getConfigurations: getConfigurations,
@@ -661,7 +661,7 @@ define(function() {
     replaceDatePatternWithString: replaceDatePatternWithString,
     applyLayerTimeUpdateButton: applyLayerTimeUpdateButton,
     getFilterDates: getFilterDates,
-    getFilterTimes: getFilterTimes,
+
     isTimeValid: isTimeValid,
     stringInArray: stringInArray,
     replaceAll: replaceAll,
