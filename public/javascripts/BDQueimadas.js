@@ -239,6 +239,18 @@ define(
 
       // Export click event
       $('#export').on('click', function() {
+        /*
+        '<div class="form-group bdqueimadas-form">' +
+          '<div class="float-left div-date-filter-export">' +
+            '<label for="filter-time-from-export">Hora Início</label>' +
+            '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="De">' +
+          '</div>' +
+          '<div class="float-right div-date-filter-export">' +
+            '<label for="filter-time-to-export">Hora Fim</label>' +
+            '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Até">' +
+          '</div>' +
+        '</div>' +
+        '<div class="clear" style="height: 5px;"></div>' +*/
         vex.dialog.alert({
           message: '<div class="component-filter">' +
             '<div class="component-filter-title">Confirme abaixo os filtros da exportação.</div>' +
@@ -280,17 +292,6 @@ define(
                 '<div class="float-right div-date-filter-export">' +
                   '<label for="filter-date-to-export">Data Fim</label>' +
                   '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Até">' +
-                '</div>' +
-              '</div>' +
-              '<div class="clear" style="height: 5px;"></div>' +
-              '<div class="form-group bdqueimadas-form">' +
-                '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-time-from-export">Hora Início</label>' +
-                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="De">' +
-                '</div>' +
-                '<div class="float-right div-date-filter-export">' +
-                  '<label for="filter-time-to-export">Hora Fim</label>' +
-                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Até">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
@@ -381,7 +382,7 @@ define(
                       countries: exportationSpatialFilterData.allCountries,
                       states: exportationSpatialFilterData.states,
                       cities: exportationSpatialFilterData.cities,
-                      protectedArea: Filter.getProtectedArea()
+                      protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null)
                     },
                     success: function(existsDataToExport) {
                       if(existsDataToExport.existsDataToExport) {
@@ -393,7 +394,7 @@ define(
                                          "&states=" + exportationSpatialFilterData.states +
                                          "&cities=" + exportationSpatialFilterData.cities +
                                          "&format=" + $("#exportation-type").val() +
-                                         "&protectedArea=" + (Filter.getProtectedArea() !== null ? JSON.stringify(Filter.getProtectedArea()) : '') +
+                                         "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
                                          "&t=" + existsDataToExport.token;
 
                         window.open(exportLink, '_blank');
@@ -422,8 +423,8 @@ define(
         $("#filter-date-from-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
         $("#filter-date-to-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
 
-        $("#filter-time-from-export").inputmask("99:99", {"placeholder": "hh:mm"});
-        $("#filter-time-to-export").inputmask("99:99", {"placeholder": "hh:mm"});
+        //$("#filter-time-from-export").inputmask("99:99", {"placeholder": "hh:mm"});
+        //$("#filter-time-to-export").inputmask("99:99", {"placeholder": "hh:mm"});
 
         var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
@@ -466,6 +467,30 @@ define(
         $('#states-export').val($('#states').val());
 
         if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0) $('#states-export').attr('disabled', 'disabled');
+
+        if(Filter.getProtectedArea() !== null) $('#pas-export').data('value', JSON.stringify(Filter.getProtectedArea()));
+
+        $('#pas-export').autocomplete({
+          minLength: 4,
+          source: function(request, response) {
+            $.get(Utils.getBaseUrl() + "search-for-pas", {
+              value: request.term,
+              minLength: 4
+            }, function(data) {
+              response(data);
+            });
+          },
+          select: function(event, ui) {
+            event.preventDefault();
+
+            $('#pas-export').val(ui.item.label);
+
+            $('#pas-export').data('value', JSON.stringify({
+              id: ui.item.value.id,
+              type: ui.item.value.type
+            }));
+          }
+        });
       });
 
       // Filter Events
@@ -694,6 +719,40 @@ define(
               $('#filter-button-attributes-table').click();
             } else {
               $('#pas-attributes-table').data('value', '');
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $(document).on('click', '#search-pas-btn-export', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas-export').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas-export').val(data[0].label);
+
+              $('#pas-export').data('value', JSON.stringify({
+                id: data[0].value.id,
+                type: data[0].value.type
+              }));
+
+              $('#filter-button-export').click();
+            } else {
+              $('#pas-export').data('value', '');
 
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',

@@ -532,6 +532,7 @@
     {
       "Id": "BDQueimadas:focos",
       "Name": "Focos",
+      "Title": "Focos",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -556,6 +557,7 @@
     {
       "Id": "BDQueimadas:paises_multi",
       "Name": "Países",
+      "Title": "Países",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -580,6 +582,7 @@
     {
       "Id": "BDQueimadas:labels_paises",
       "Name": "Nomes",
+      "Title": "Nomes dos Países",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -604,6 +607,7 @@
     {
       "Id": "BDQueimadas:estados",
       "Name": "Estados",
+      "Title": "Estados",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -628,6 +632,7 @@
     {
       "Id": "BDQueimadas:labels_estados",
       "Name": "Nomes",
+      "Title": "Nomes dos Estados",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -652,6 +657,7 @@
     {
       "Id": "BDQueimadas:municipios",
       "Name": "Municípios",
+      "Title": "Municípios",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -676,6 +682,7 @@
     {
       "Id": "BDQueimadas:sedes_municipios",
       "Name": "Nomes",
+      "Title": "Nomes dos Municípios",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -700,6 +707,7 @@
     {
       "Id": "BDQueimadas:biomas_brasileiros",
       "Name": "Biomas Brasileiros",
+      "Title": "Biomas Brasileiros",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -724,6 +732,7 @@
     {
       "Id": "BDQueimadas:labels_biomas_brasileiros",
       "Name": "Nomes",
+      "Title": "Nomes dos Biomas Brasileiros",
       "LayerGroup": false,
       "Background": false,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -746,6 +755,56 @@
       "Classes": "unsortable unsortable-separator float-left clear-none"
     },
     {
+      "Id": "BDQueimadas:hidrografia",
+      "Name": "Hidrografia",
+      "Title": "Hidrografia",
+      "LayerGroup": false,
+      "Background": false,
+      "Url": "http://localhost:8080/geoserver/ows",
+      "TerraMA2WebComponentsFunction": null,
+      "AppendAtTheEnd": null,
+      "Wmts": false,
+      "ServerType": "geoserver",
+      "Visible": false,
+      "MinResolution": 0,
+      "MaxResolution": "Infinity",
+      "Time": null,
+      "MinTimeForTodaysImage": null,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "MatrixSet": null,
+      "TileGrid": null,
+      "Classes": null
+    },
+    {
+      "Id": "BDQueimadas:rodovias",
+      "Name": "Rodovias",
+      "Title": "Rodovias",
+      "LayerGroup": false,
+      "Background": false,
+      "Url": "http://localhost:8080/geoserver/ows",
+      "TerraMA2WebComponentsFunction": null,
+      "AppendAtTheEnd": null,
+      "Wmts": false,
+      "ServerType": "geoserver",
+      "Visible": false,
+      "MinResolution": 0,
+      "MaxResolution": "Infinity",
+      "Time": null,
+      "MinTimeForTodaysImage": null,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "Buffer": null,
+      "Version": null,
+      "Format": null,
+      "MatrixSet": null,
+      "TileGrid": null,
+      "Classes": null
+    },
+    {
       "Id": "protected_areas",
       "Name": "Áreas Protegidas",
       "LayerGroup": true,
@@ -754,6 +813,7 @@
         {
           "Id": "BDQueimadas:unidades_conservacao_federais",
           "Name": "UCFs",
+          "Title": "Unidades de Conservação Federais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -778,6 +838,7 @@
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_federais",
           "Name": "Nomes",
+          "Title": "Nomes das Unidades de Conservação Federais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -802,6 +863,7 @@
         {
           "Id": "BDQueimadas:buffer_5_unidades_conservacao_federais",
           "Name": "_5Km",
+          "Title": "Buffer de 5Km das Unidades de Conservação Federais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -826,6 +888,7 @@
         {
           "Id": "BDQueimadas:buffer_10_unidades_conservacao_federais",
           "Name": "_10Km",
+          "Title": "Buffer de 10Km das Unidades de Conservação Federais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -850,6 +913,7 @@
         {
           "Id": "BDQueimadas:unidades_conservacao_estaduais",
           "Name": "UCEs",
+          "Title": "Unidades de Conservação Estaduais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -874,6 +938,7 @@
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
           "Name": "Nomes",
+          "Title": "Nomes das Unidades de Conservação Estaduais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -898,6 +963,7 @@
         {
           "Id": "BDQueimadas:buffer_5_unidades_conservacao_estaduais",
           "Name": "_5Km",
+          "Title": "Buffer de 5Km das Unidades de Conservação Estaduais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -922,6 +988,7 @@
         {
           "Id": "BDQueimadas:buffer_10_unidades_conservacao_estaduais",
           "Name": "_10Km",
+          "Title": "Buffer de 10Km das Unidades de Conservação Estaduais",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -946,6 +1013,7 @@
         {
           "Id": "BDQueimadas:terras_indigenas",
           "Name": "TIs",
+          "Title": "Terras Indígenas",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -970,6 +1038,7 @@
         {
           "Id": "BDQueimadas:labels_terras_indigenas",
           "Name": "Nomes",
+          "Title": "Nomes das Terras Indígenas",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -994,6 +1063,7 @@
         {
           "Id": "BDQueimadas:buffer_5_terras_indigenas",
           "Name": "_5Km",
+          "Title": "Buffer de 5Km das Terras Indígenas",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1018,6 +1088,7 @@
         {
           "Id": "BDQueimadas:buffer_10_terras_indigenas",
           "Name": "_10Km",
+          "Title": "Buffer de 10Km das Terras Indígenas",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1042,6 +1113,7 @@
         {
           "Id": "BDQueimadas:protectedplanet",
           "Name": "Áreas Protegidas Américas",
+          "Title": "Áreas Protegidas das Américas",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1066,6 +1138,7 @@
         {
           "Id": "BDQueimadas:labels_protectedplanet",
           "Name": "Nomes",
+          "Title": "Nomes das Áreas Protegidas das Américas",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1098,6 +1171,7 @@
         {
           "Id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
           "Name": "NPP / VIIRRS {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "NPP / VIIRRS",
           "LayerGroup": false,
           "Background": true,
           "Url": "//map1{a-c}.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
@@ -1127,6 +1201,7 @@
         {
           "Id": "MODIS_Aqua_CorrectedReflectance_TrueColor",
           "Name": "Aqua / Modis {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "Aqua / Modis",
           "LayerGroup": false,
           "Background": true,
           "Url": "//map1{a-c}.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
@@ -1156,6 +1231,7 @@
         {
           "Id": "MODIS_Terra_CorrectedReflectance_TrueColor",
           "Name": "Terra / Modis {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "Terra / Modis",
           "LayerGroup": false,
           "Background": true,
           "Url": "//map1{a-c}.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
@@ -1185,6 +1261,7 @@
         {
           "Id": "quicklook_noaa16",
           "Name": "NOAA-15 / AVHRR {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "NOAA-15 / AVHRR",
           "LayerGroup": false,
           "Background": true,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -1209,6 +1286,7 @@
         {
           "Id": "quicklook_noaa18",
           "Name": "NOAA-18 / AVHRR {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "NOAA-18 / AVHRR",
           "LayerGroup": false,
           "Background": true,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -1233,6 +1311,7 @@
         {
           "Id": "quicklook_noaa19",
           "Name": "NOAA-19 / AVHRR {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "NOAA-19 / AVHRR",
           "LayerGroup": false,
           "Background": true,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -1257,6 +1336,7 @@
         {
           "Id": "goes",
           "Name": "GOES / Imager (No Futuro) {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "GOES / Imager (No Futuro)",
           "LayerGroup": false,
           "Background": true,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -1281,6 +1361,7 @@
         {
           "Id": "msg",
           "Name": "MSG / SEVIRI (No Futuro) {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "MSG / SEVIRI (No Futuro)",
           "LayerGroup": false,
           "Background": true,
           "Url": "https://queimadas.dgi.inpe.br/wms/queimadas/",
@@ -1313,6 +1394,7 @@
         {
           "Id": "mrp0",
           "Name": "Risco de Fogo",
+          "Title": "Risco de Fogo",
           "LayerGroup": false,
           "Background": true,
           "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
@@ -1343,6 +1425,7 @@
             {
               "Id": "observacao_ndsc_obs",
               "Name": "Pluviômetros",
+              "Title": "Pluviômetros",
               "LayerGroup": false,
               "Background": true,
               "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
@@ -1367,6 +1450,7 @@
             {
               "Id": "observacao_ndsc_obssat",
               "Name": "Pluviômetros / Dados de Satélite",
+              "Title": "Pluviômetros / Dados de Satélite",
               "LayerGroup": false,
               "Background": true,
               "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
@@ -1401,6 +1485,7 @@
         {
           "Id": "BDQueimadas:current_situation_biomes",
           "Name": "Biomas Brasileiros",
+          "Title": "Mapa Espacial de Focos dos Biomas Brasileiros",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1425,6 +1510,7 @@
         {
           "Id": "BDQueimadas:current_situation_cities",
           "Name": "Municípios",
+          "Title": "Mapa Espacial de Focos dos Municípios",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1449,6 +1535,7 @@
         {
           "Id": "BDQueimadas:current_situation_states",
           "Name": "Estados",
+          "Title": "Mapa Espacial de Focos dos Estados",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1473,6 +1560,7 @@
         {
           "Id": "BDQueimadas:current_situation_countries",
           "Name": "Países",
+          "Title": "Mapa Espacial de Focos dos Países",
           "LayerGroup": false,
           "Background": false,
           "Url": "http://localhost:8080/geoserver/ows",
@@ -1499,6 +1587,7 @@
     {
       "Id": "BDQueimadas:pyr_nasa",
       "Name": "Blue Marble",
+      "Title": "Blue Marble (NASA)",
       "LayerGroup": false,
       "Background": true,
       "Url": "http://localhost:8080/geoserver/ows",
@@ -1523,6 +1612,7 @@
     {
       "Id": "osm",
       "Name": "OpenStreetMap",
+      "Title": "OpenStreetMap",
       "LayerGroup": false,
       "Background": true,
       "Url": null,
