@@ -206,7 +206,7 @@ var Exportation = function() {
     var columns = "";
 
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-      if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName || selectGeometry) {
+      if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateFieldName == memberAttributesTableConfig.Columns[i].Name)
           columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else
@@ -215,6 +215,9 @@ var Exportation = function() {
     }
 
     columns = columns.substring(0, (columns.length - 2));
+
+    if(selectGeometry)
+      columns += ", " + memberTablesConfig.Fires.GeometryFieldName;
 
     // Creation of the query
     var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName +

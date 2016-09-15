@@ -36,6 +36,7 @@
     "IdFieldName": "id",
     "DateFieldName": "date",
     "TimeFieldName": "time",
+    "DateTimeFieldName": "date_time",
     "SatelliteFieldName": "satellite",
     "CountryFieldName": "country",
     "StateFieldName": "state",
