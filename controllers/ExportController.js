@@ -50,12 +50,13 @@ var ExportController = function(app) {
       memberExportation.registerDownload(request.query.dateFrom, request.query.dateTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
         if(err) return console.error(err);
 
-        if(request.query.format === 'csv-new') {
+        require('crypto').randomBytes(24, function(err, buffer) {
+
           var connectionString = memberExportation.getPgConnectionString();
 
-          require('crypto').randomBytes(24, function(err, buffer) {
+          if(request.query.format === 'csv-new') {
             var csvPath = memberPath.join(__dirname, '../tmp/csv-' + buffer.toString('hex') + '.csv');
-            var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateFrom, request.query.dateTo, options) + "\"";
+            var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
 
             memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
               if(err) return console.error(err);
@@ -66,17 +67,118 @@ var ExportController = function(app) {
               memberFs.unlink(csvPath);
               });
             });
-          });
-        } else {
-          // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-          memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {
-            if(err) return console.error(err);
+          } else if(request.query.format === 'shapefile-new') {
+            var shapefileFolderName = 'Shapefile-' + buffer.toString('hex');
+            var shapefileFolderPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName);
+            var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/BDQueimadas-Shapefile.' + request.query.dateFrom + '.' + request.query.dateTo + '.shp');
 
-            var geoJson = createFeatureCollection(geoJsonData);
+            var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/BDQueimadas-Shapefile." + request.query.dateFrom + "." + request.query.dateTo + ".zip";
 
-            var jsonfile = require('jsonfile');
+            var shapefileGenerationCommand = memberExportation.ogr2ogr() + " -F \"ESRI Shapefile\" " + shapefilePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+            var zipGenerationCommand = "zip -r -j " + zipPath + " " + shapefileFolderPath;
 
-            require('crypto').randomBytes(24, function(err, buffer) {
+            try {
+              memberFs.mkdirSync(shapefileFolderPath);
+            } catch(e) {
+              if(e.code != 'EEXIST') throw e;
+            }
+
+            memberExec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
+              if(err) return console.error(err);
+
+              memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
+                if(err) return console.error(err);
+
+                response.download(zipPath, 'BDQueimadas-Shapefile.' + request.query.dateFrom + '.' + request.query.dateTo + '.zip', function(err) {
+                  if(err) return console.error(err);
+
+                  deleteFolderRecursively(shapefileFolderPath);
+                });
+              });
+            });
+          } else if(request.query.format === 'kml-new') {
+            var kmlPath = memberPath.join(__dirname, '../tmp/BDQueimadas-KML.' + request.query.dateFrom + '.' + request.query.dateTo + '.kml');
+            var kmlGenerationCommand = memberExportation.ogr2ogr() + " -F \"KML\" " + kmlPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+
+            memberExec(kmlGenerationCommand, function(err, kmlGenerationCommandResult, kmlGenerationCommandError) {
+              if(err) return console.error(err);
+
+              response.download(kmlPath, 'BDQueimadas-KML.' + request.query.dateFrom + '.' + request.query.dateTo + '.kml', function(err) {
+                if(err) return console.error(err);
+
+                memberFs.unlink(kmlPath);
+              });
+            });
+          } else if(request.query.format === 'geojson-new') {
+            var geoJsonPath = memberPath.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
+            var geoJsonGenerationCommand = memberExportation.ogr2ogr() + " -F \"GeoJSON\" " + geoJsonPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+
+            memberExec(geoJsonGenerationCommand, function(err, geoJsonGenerationCommandResult, geoJsonGenerationCommandError) {
+              if(err) return console.error(err);
+
+              response.download(geoJsonPath, 'BDQueimadas-GeoJSON.' + request.query.dateFrom + '.' + request.query.dateTo + '.json', function(err) {
+                if(err) return console.error(err);
+
+                memberFs.unlink(geoJsonPath);
+              });
+            });
+          /*} else if() {
+            satelites = []
+            satelites.append({'nome':'GOES-13'})
+            satelites.append({'nome':'AQUA_M'})
+            satelites.append({'nome':'TERRA_M'})
+            satelites.append({'nome':'TERRA_M-T'})
+            satelites.append({'nome':'MSG-02'})
+            satelites.append({'nome':'NPP'})
+            satelites.append({'nome':'NOAA-15'})
+            satelites.append({'nome':'NOAA-18'})
+            satelites.append({'nome':'NOAA-19'})
+            satelites.append({'nome':'MSG-02'})
+            satelites.append({'nome':'NPP'})
+            satelites.append({'nome':'NPP_375'})
+
+            arq_fonte = open("/tmp/" + arquivo, "r")
+            arq_template = open(settings.MEDIA_ROOT + "/templates/template_kml.kml", "r")
+
+            items = json.loads(arq_fonte.read())
+
+            for stl in satelites:
+                dados_str += '<Folder>'
+                dados_str += '<name>%s</name>' %(stl.get('nome'))
+
+                items_focos = items.get('features')
+
+                for it in items_focos:
+                    propriedades = it.get('properties')
+                    if propriedades.get('satelite') == stl.get('nome'):
+                        dados_str += '<Placemark>'
+                        dados_str += '<name>%s</name>' %(stl.get('nome'))
+                        dados_str += '<description><![CDATA[<br>LAT =  %s<br>LONG =  %s<br>DATA = %s<br>SATELITE = %s<br>ESTADO =%s<br>VERSION = 1.0NRT<br><br>]]></description>' %(propriedades.get('latitude'),propriedades.get('longitude'),propriedades.get('data_hora_gmt'),propriedades.get('satelite').decode('utf-8').strip(),propriedades.get('estado').decode('utf-8').strip())
+                        dados_str += '<styleUrl>#%s</styleUrl>' %(stl.get('nome'))
+                        dados_str += '<Point>'
+                        dados_str += '<coordinates>%s,%s</coordinates>' %(propriedades.get('longitude'),propriedades.get('latitude'))
+                        dados_str += '</Point>'
+                        dados_str += '<LookAt>'
+                        dados_str += '<longitude>%s</longitude>'%(propriedades.get('longitude'))
+                        dados_str += '<latitude>%s</latitude>'%(propriedades.get('latitude'))
+                        dados_str += '<range>5000</range>'
+                        dados_str += '</LookAt>'
+                        dados_str += '</Placemark>'
+                dados_str += '</Folder>'
+
+            dados = str(arq_template.read()).replace('||MIOLO||',dados_str).decode('utf-8').strip()
+
+            with codecs.open("/tmp/" + filename + ".kml",'w',encoding='utf-8') as f:
+                f.write(dados.decode('utf-8')) ''*/
+          } else {
+            // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
+            memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {
+              if(err) return console.error(err);
+
+              var geoJson = createFeatureCollection(geoJsonData);
+
+              var jsonfile = require('jsonfile');
+
               var geoJsonPath = memberPath.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
 
               jsonfile.writeFileSync(geoJsonPath, geoJson);
@@ -147,8 +249,8 @@ var ExportController = function(app) {
                 });
               }
             });
-          });
-        }
+          }
+        });
       });
     } else {
       response.status(403).send('Access denied!');
