@@ -60,8 +60,8 @@ var Exportation = function() {
 
   /**
    * Returns the fires data in GeoJSON format.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
    * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
@@ -70,7 +70,7 @@ var Exportation = function() {
    * @memberof Exportation
    * @inner
    */
-  this.getGeoJSONData = function(dateFrom, dateTo, options, callback) {
+  this.getGeoJSONData = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -89,9 +89,9 @@ var Exportation = function() {
         // Creation of the query
         var query = "select ST_AsGeoJSON(" + memberTablesConfig.Fires.GeometryFieldName + ")::json as geometry, row_to_json((select columns from (select " +
                     columns + ") as columns)) as properties from " + memberTablesConfig.Fires.Schema + "." +
-                    memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName +
+                    memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName +
                     " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -196,7 +196,7 @@ var Exportation = function() {
 
   // new
 
-  this.getQuery = function(selectGeometry, dateFrom, dateTo, options) {
+  this.getQuery = function(selectGeometry, dateTimeFrom, dateTimeTo, options) {
     // %% outputs a literal % character.
     // %I outputs an escaped SQL identifier.
     // %L outputs an escaped SQL literal.
@@ -220,9 +220,8 @@ var Exportation = function() {
       columns += ", " + memberTablesConfig.Fires.GeometryFieldName;
 
     // Creation of the query
-    var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName +
-                " between %L and %L)",
-        params = [dateFrom, dateTo];
+    var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
+        params = [dateTimeFrom, dateTimeTo];
 
     // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
     if(options.satellites !== undefined) {
@@ -322,7 +321,7 @@ var Exportation = function() {
     return finalQuery;
   };
 
-  this.getCSVData = function(dateFrom, dateTo, options) {
+  this.getCSVData = function(dateTimeFrom, dateTimeTo, options) {
 
     // Counter of the query parameters
     var parameter = 1;
@@ -349,9 +348,8 @@ var Exportation = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName +
-                    " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -486,8 +484,8 @@ var Exportation = function() {
 
   /**
    * Registers the downloads in the database.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} format - Exportation file format
    * @param {string} ip - Ip of the user
    * @param {json} options - Filtering options
@@ -498,7 +496,7 @@ var Exportation = function() {
    * @memberof Exportation
    * @inner
    */
-  this.registerDownload = function(dateFrom, dateTo, format, ip, options, callback) {
+  this.registerDownload = function(dateTimeFrom, dateTimeTo, format, ip, options, callback) {
     var date = new Date();
 
     var dateString = date.getFullYear().toString() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
@@ -516,7 +514,7 @@ var Exportation = function() {
                     memberTablesConfig.Downloads.FilterBiomesFieldName + ", " + memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
                     memberTablesConfig.Downloads.FilterStatesFieldName + ", " + memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
                     memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
-            params = [dateString, timeString, ip, dateFrom, dateTo];
+            params = [dateString, timeString, ip, dateTimeFrom, dateTimeTo];
 
         if(options.satellites !== undefined)
           params.push(options.satellites.split(','));

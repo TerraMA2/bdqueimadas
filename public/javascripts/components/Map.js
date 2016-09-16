@@ -468,10 +468,11 @@ define(
      */
     var getSubtitlesSatellites = function(satellites, biomes, countriesBdqNames, statesBdqNames) {
       var dates = Utils.getFilterDates(true, 0);
+      var times = Utils.getFilterTimes(true, 0);
 
       if(dates !== null) {
-        var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-        var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+        var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+        var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
         var satellites = Utils.stringInArray(satellites, "all") ? '' : satellites.toString();
         var biomes = Utils.stringInArray(biomes, "all") ? '' : biomes.toString();
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
@@ -481,8 +482,8 @@ define(
         Utils.getSocket().emit(
           'getSatellitesRequest',
           {
-            dateFrom: dateFrom,
-            dateTo: dateTo,
+            dateTimeFrom: dateTimeFrom,
+            dateTimeTo: dateTimeTo,
             satellites: satellites,
             biomes: biomes,
             extent: extent,

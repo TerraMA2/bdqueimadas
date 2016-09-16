@@ -28,8 +28,8 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by the received key.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} key - Key
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
@@ -40,7 +40,7 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCount = function(dateFrom, dateTo, key, filterRules, options, callback) {
+  this.getFiresCount = function(dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -63,10 +63,8 @@ var Graphics = function() {
         }
 
         // Creation of the query
-        var query = "select " + fields + " from " +
-        memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select " + fields + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -174,8 +172,8 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by protected areas.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} key - Key
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
@@ -186,7 +184,7 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountByPA = function(dateFrom, dateTo, key, filterRules, options, callback) {
+  this.getFiresCountByPA = function(dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -247,9 +245,9 @@ var Graphics = function() {
         " inner join " + tablePA + " on (" + idField + " = " + PAField + ")" +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " c on (c." + memberTablesConfig.Fires.IdFieldName + " = ANY (" + firesIdsField + "))" +
-        " where (c." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
+        " where (c." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
         " and (" + dateField + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo, dateFrom, dateTo];
+            params = [dateTimeFrom, dateTimeTo, dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -357,8 +355,8 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
@@ -368,7 +366,7 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresTotalCount = function(dateFrom, dateTo, filterRules, options, callback) {
+  this.getFiresTotalCount = function(dateTimeFrom, dateTimeTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -377,9 +375,8 @@ var Graphics = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -485,8 +482,8 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by week.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
@@ -496,7 +493,7 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountByWeek = function(dateFrom, dateTo, filterRules, options, callback) {
+  this.getFiresCountByWeek = function(dateTimeFrom, dateTimeTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -507,8 +504,8 @@ var Graphics = function() {
         var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ")::date, 'YYYY/MM/DD') as start, " +
         "TO_CHAR((date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ") + '6 days')::date, 'YYYY/MM/DD') as end, count(*) AS count " +
         "from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {

@@ -199,8 +199,9 @@ define(
      */
     var updateGraphics = function(useGraphicsFilter) {
       var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
+      var times = Utils.getFilterTimes(true, (useGraphicsFilter ? 2 : 0));
 
-      if(dates !== null) {
+      if(dates !== null && times !== null) {
         if(dates.length === 0) {
           vex.dialog.alert({
             message: '<p class="text-center">Datas inválidas!</p>',
@@ -210,9 +211,18 @@ define(
               className: 'bdqueimadas-btn'
             }]
           });
+        } else if(times.length === 0) {
+          vex.dialog.alert({
+            message: '<p class="text-center">Horas inválidas!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
         } else {
-          var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-          var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+          var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
 
           var satellites = useGraphicsFilter ?
                            (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
@@ -292,8 +302,8 @@ define(
                 Utils.getSocket().emit(
                   'graphicsFiresCountRequest',
                   {
-                    dateFrom: dateFrom,
-                    dateTo: dateTo,
+                    dateTimeFrom: dateTimeFrom,
+                    dateTimeTo: dateTimeTo,
                     id: firesCountGraphicsConfig[i].Id,
                     y: firesCountGraphicsConfig[i].Y,
                     key: firesCountGraphicsConfig[i].Key,
@@ -481,6 +491,7 @@ define(
      */
     var exportGraphicData = function(id) {
       var dates = Utils.getFilterDates(true, 2);
+      var times = Utils.getFilterTimes(true, 2);
 
       if(dates !== null) {
         if(dates.length === 0) {
@@ -493,14 +504,14 @@ define(
             }]
           });
         } else {
-          var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-          var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+          var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
           var protectedArea = ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? $('#pas-graphics').data('value') : '');
 
           getSpatialFilterData(function(allCountries, countries, states, cities) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
             location.href = exportLink;
           });
         }

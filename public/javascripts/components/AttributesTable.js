@@ -8,8 +8,8 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberAttributesTable - Attributes table object (DataTables).
- * @property {date} memberDateFrom - Current initial date filter.
- * @property {date} memberDateTo - Current final date filter.
+ * @property {date} memberDateTimeFrom - Current initial date / time filter.
+ * @property {date} memberDateTimeTo - Current final date / time filter.
  * @property {string} memberSatellites - Current satellites filter.
  * @property {string} memberBiomes - Current biomes filter.
  * @property {string} memberCountries - Current countries filter.
@@ -23,10 +23,10 @@ define(
 
     // Attributes table object (DataTables)
     var memberAttributesTable = null;
-    // Current initial date filter
-    var memberDateFrom = null;
-    // Current final date filter
-    var memberDateTo = null;
+    // Current initial date / time filter
+    var memberDateTimeFrom = null;
+    // Current final date / time filter
+    var memberDateTimeTo = null;
     // Current satellites filter
     var memberSatellites = "all";
     // Current biomes filter
@@ -178,8 +178,8 @@ define(
 
       $('#attributes-table').empty().append("<thead>" + titles + "</thead><tfoot>" + titles + "</tfoot>");
 
-      memberDateFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat);
-      memberDateTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat);
+      memberDateTimeFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat) + ' ' + Filter.getTimeFrom();
+      memberDateTimeTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) + ' ' + Filter.getTimeTo();
       memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
       memberProtectedArea = Filter.getProtectedArea();
@@ -198,8 +198,8 @@ define(
               "url": Utils.getBaseUrl() + "get-attributes-table",
               "type": "POST",
               "data": function(data) {
-                data.dateFrom = memberDateFrom;
-                data.dateTo = memberDateTo;
+                data.dateTimeFrom = memberDateTimeFrom;
+                data.dateTimeTo = memberDateTimeTo;
                 data.satellites = memberSatellites;
                 data.biomes = memberBiomes;
                 data.countries = memberCountries;
@@ -242,8 +242,9 @@ define(
     var updateAttributesTable = function(useAttributesTableFilter) {
       if(memberAttributesTable !== null) {
         var dates = Utils.getFilterDates(true, (useAttributesTableFilter ? 1 : 0));
+        var times = Utils.getFilterTimes(true, (useAttributesTableFilter ? 1 : 0));
 
-        if(dates !== null) {
+        if(dates !== null && times !== null) {
           if(dates.length === 0) {
             vex.dialog.alert({
               message: '<p class="text-center">Datas inválidas!</p>',
@@ -253,9 +254,18 @@ define(
                 className: 'bdqueimadas-btn'
               }]
             });
+          } else if(times.length === 0) {
+            vex.dialog.alert({
+              message: '<p class="text-center">Horas inválidas!</p>',
+              buttons: [{
+                type: 'submit',
+                text: 'Ok',
+                className: 'bdqueimadas-btn'
+              }]
+            });
           } else {
-            memberDateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-            memberDateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+            memberDateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+            memberDateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
 
             if(useAttributesTableFilter) {
               memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());

@@ -32,7 +32,7 @@ var Filter = function(io) {
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
 
-      memberFilter.getFiresCount(json.dateFrom, json.dateTo, options, function(err, firesCount) {
+      memberFilter.getFiresCount(json.dateTimeFrom, json.dateTimeTo, options, function(err, firesCount) {
         if(err) return console.error(err);
 
         client.emit('checkFiresCountResponse', { firesCount: firesCount });
@@ -156,7 +156,7 @@ var Filter = function(io) {
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
 
-      memberFilter.getSatellites(json.dateFrom, json.dateTo, options, function(err, satellitesList) {
+      memberFilter.getSatellites(json.dateTimeFrom, json.dateTimeTo, options, function(err, satellitesList) {
         if(err) return console.error(err);
 
         client.emit('getSatellitesResponse', { satellitesList: satellitesList });

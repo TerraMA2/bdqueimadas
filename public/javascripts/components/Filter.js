@@ -9,6 +9,8 @@
  *
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
+ * @property {string} memberTimeFrom - Current initial time.
+ * @property {string} memberTimeTo - Current final time.
  * @property {array} memberSatellites - Current satellites.
  * @property {array} memberBiomes - Current biomes.
  * @property {string} memberContinent - Current continent.
@@ -27,6 +29,10 @@ define(
     var memberDateFrom = null;
     // Current final date
     var memberDateTo = null;
+    // Current initial time
+    var memberTimeFrom = null;
+    // Current final time
+    var memberTimeTo = null;
     // Current satellites
     var memberSatellites = ["all"];
     // Current biomes
@@ -82,6 +88,30 @@ define(
      */
     var getFormattedDateTo = function(format) {
       return Utils.dateToString(memberDateTo, format);
+    };
+
+    /**
+     * Returns the initial time.
+     * @returns {string} memberTimeFrom - Initial time
+     *
+     * @function getTimeFrom
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getTimeFrom = function() {
+      return memberTimeFrom;
+    };
+
+    /**
+     * Returns the final time.
+     * @returns {string} memberTimeTo - Final time
+     *
+     * @function getTimeTo
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getTimeTo = function() {
+      return memberTimeTo;
     };
 
     /**
@@ -577,6 +607,23 @@ define(
     };
 
     /**
+     * Creates the date / time filter.
+     * @returns {string} cql - Date / time cql filter
+     *
+     * @private
+     * @function createDateTimeFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createDateTimeFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFieldName + " between " + Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) + 'T' + memberTimeFrom;
+      cql += " and ";
+      cql += Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) + 'T' + memberTimeTo;
+
+      return cql;
+    };
+
+    /**
      * Updates the initial and the final date.
      * @param {string} newDateFrom - New initial date (string)
      * @param {string} newDateTo - New final date (string)
@@ -595,6 +642,23 @@ define(
 
       $('#filter-date-from').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
       $('#filter-date-to').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
+    };
+
+    /**
+     * Updates the initial and the final times.
+     * @param {string} newTimeFrom - New initial time
+     * @param {string} newTimeTo - New final time
+     *
+     * @function updateTimes
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateTimes = function(newTimeFrom, newTimeTo) {
+      memberTimeFrom = newTimeFrom;
+      memberTimeTo = newTimeTo;
+
+      $('#filter-time-from').val(memberTimeFrom);
+      $('#filter-time-to').val(memberTimeTo);
     };
 
     /**
@@ -620,6 +684,27 @@ define(
 
       $('#filter-date-from-graphics').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
       $('#filter-date-to-graphics').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
+    };
+
+    /**
+     * Updates the initial and the final times to the default times.
+     *
+     * @function updateTimesToDefault
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateTimesToDefault = function() {
+      memberTimeFrom = '00:00';
+      memberTimeTo = '23:59';
+
+      $('#filter-time-from').val(memberTimeFrom);
+      $('#filter-time-to').val(memberTimeTo);
+
+      $('#filter-time-from-attributes-table').val(memberTimeFrom);
+      $('#filter-time-to-attributes-table').val(memberTimeTo);
+
+      $('#filter-time-from-graphics').val(memberTimeFrom);
+      $('#filter-time-to-graphics').val(memberTimeTo);
     };
 
     /**
@@ -772,11 +857,9 @@ define(
      */
     var applyFilter = function() {
       var dates = Utils.getFilterDates(true, 0);
-      //var times = Utils.getFilterTimes(true, 0);
+      var times = Utils.getFilterTimes(true, 0);
 
-      //console.log(times);
-
-      if(dates !== null) {
+      if(dates !== null && times !== null) {
         if(dates.length === 0) {
           updateDatesToCurrent();
           var filterDateFrom = getFormattedDateFrom('YYYY/MM/DD');
@@ -786,11 +869,26 @@ define(
           var filterDateTo = dates[1];
         }
 
+        if(times.length === 0) {
+          updateTimesToDefault();
+          var filterTimeFrom = '00:00';
+          var filterTimeTo = '23:59';
+        } else {
+          var filterTimeFrom = times[0];
+          var filterTimeTo = times[1];
+        }
+
         $('#filter-date-from-attributes-table').val(filterDateFrom);
         $('#filter-date-to-attributes-table').val(filterDateTo);
 
         $('#filter-date-from-graphics').val(filterDateFrom);
         $('#filter-date-to-graphics').val(filterDateTo);
+
+        $('#filter-time-from-attributes-table').val(filterTimeFrom);
+        $('#filter-time-to-attributes-table').val(filterTimeTo);
+
+        $('#filter-time-from-graphics').val(filterTimeFrom);
+        $('#filter-time-to-graphics').val(filterTimeTo);
 
         setSatellites($('#filter-satellite').val());
 
@@ -813,9 +911,11 @@ define(
         memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
         memberSpecialRegionsCitiesIds = specialRegionsData.specialRegionsCitiesIds;
 
-        if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
+        if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
-          cql += createDateFilter() + " AND ";
+          updateTimes(filterTimeFrom, filterTimeTo);
+
+          cql += createDateTimeFilter() + " AND ";
 
           if(Map.getLayers().length > 0) processLayers(Map.getLayers());
         }
@@ -1117,8 +1217,8 @@ define(
 
           updateBdqNames(function() {
             applyCurrentSituationFilter(
-              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
-              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
+              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
               countries,
               memberStates,
               memberStatesBdqNames,
@@ -1133,8 +1233,8 @@ define(
 
     /**
      * Applies filters to the current situation layers.
-     * @param {int} begin - Initial date
-     * @param {int} end - Final date
+     * @param {int} begin - Initial date / time
+     * @param {int} end - Final date / time
      * @param {array} countries - Countries ids
      * @param {array} states - States ids
      * @param {array} statesNames - States names
@@ -1330,6 +1430,7 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
+        updateTimesToDefault();
         Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
 
         setTimeout(function() {
@@ -1343,6 +1444,8 @@ define(
     return {
       getFormattedDateFrom: getFormattedDateFrom,
       getFormattedDateTo: getFormattedDateTo,
+      getTimeFrom: getTimeFrom,
+      getTimeTo: getTimeTo,
       setSatellites: setSatellites,
       getSatellites: getSatellites,
       setBiomes: setBiomes,
@@ -1376,7 +1479,9 @@ define(
       setProtectedArea: setProtectedArea,
       getProtectedArea: getProtectedArea,
       updateDates: updateDates,
+      updateTimes: updateTimes,
       updateDatesToCurrent: updateDatesToCurrent,
+      updateTimesToDefault: updateTimesToDefault,
       applyFilter: applyFilter,
       createSpecialRegionsArrays: createSpecialRegionsArrays,
       checkFiresCount: checkFiresCount,
