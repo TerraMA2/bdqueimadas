@@ -347,10 +347,6 @@ define(
                   $("#filter-error-export").text('Data inicial inválida!');
                 } else if($("#filter-date-to-export").val() === "") {
                   $("#filter-error-export").text('Data final inválida!');
-                } else if($("#filter-time-from-export").val() === "") {
-                  $("#filter-error-export").text('Hora inicial inválida!');
-                } else if($("#filter-time-to-export").val() === "") {
-                  $("#filter-error-export").text('Hora final inválida!');
                 } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
                   $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
                   $("#filter-date-to-export").val('');
@@ -364,6 +360,16 @@ define(
                   $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
                   $("#filter-date-from-export").val('');
                   $("#filter-date-to-export").val('');
+                } else if(!Utils.isTimeValid($("#filter-time-from-export").val()) && !Utils.isTimeValid($("#filter-time-to-export").val())) {
+                  $("#filter-error-export").text('Horas inválidas!');
+                  $("#filter-time-from-expor").val('');
+                  $("#filter-time-to-expor").val('');
+                } else if($("#filter-time-from-export").val() === "" || !Utils.isTimeValid($("#filter-time-from-export").val())) {
+                  $("#filter-error-export").text('Hora inicial inválida!');
+                  $("#filter-time-from-expor").val('');
+                } else if($("#filter-time-to-export").val() === "" || !Utils.isTimeValid($("#filter-time-to-export").val())) {
+                  $("#filter-error-export").text('Hora final inválida!');
+                  $("#filter-time-to-expor").val('');
                 } else if($('#filter-satellite-export').val() === null) {
                   $("#filter-error-export").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
@@ -426,8 +432,8 @@ define(
         $("#filter-date-from-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
         $("#filter-date-to-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
 
-        //$("#filter-time-from-export").inputmask("99:99", {"placeholder": "hh:mm"});
-        //$("#filter-time-to-export").inputmask("99:99", {"placeholder": "hh:mm"});
+        $("#filter-time-from-export").inputmask("99:99", {"placeholder": "hh:mm"});
+        $("#filter-time-to-export").inputmask("99:99", {"placeholder": "hh:mm"});
 
         var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
