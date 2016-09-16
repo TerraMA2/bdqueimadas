@@ -239,18 +239,6 @@ define(
 
       // Export click event
       $('#export').on('click', function() {
-        /*
-        '<div class="form-group bdqueimadas-form">' +
-          '<div class="float-left div-date-filter-export">' +
-            '<label for="filter-time-from-export">Hora Início</label>' +
-            '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="De">' +
-          '</div>' +
-          '<div class="float-right div-date-filter-export">' +
-            '<label for="filter-time-to-export">Hora Fim</label>' +
-            '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Até">' +
-          '</div>' +
-        '</div>' +
-        '<div class="clear" style="height: 5px;"></div>' +*/
         vex.dialog.alert({
           message: '<div class="component-filter">' +
             '<div class="component-filter-title">Confirme abaixo os filtros da exportação.</div>' +
@@ -292,6 +280,17 @@ define(
                 '<div class="float-right div-date-filter-export">' +
                   '<label for="filter-date-to-export">Data Fim</label>' +
                   '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Até">' +
+                '</div>' +
+              '</div>' +
+              '<div class="clear" style="height: 5px;"></div>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<div class="float-left div-date-filter-export">' +
+                  '<label for="filter-time-from-export">Hora Início</label>' +
+                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="De">' +
+                '</div>' +
+                '<div class="float-right div-date-filter-export">' +
+                  '<label for="filter-time-to-export">Hora Fim</label>' +
+                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Até">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
@@ -348,6 +347,10 @@ define(
                   $("#filter-error-export").text('Data inicial inválida!');
                 } else if($("#filter-date-to-export").val() === "") {
                   $("#filter-error-export").text('Data final inválida!');
+                } else if($("#filter-time-from-export").val() === "") {
+                  $("#filter-error-export").text('Hora inicial inválida!');
+                } else if($("#filter-time-to-export").val() === "") {
+                  $("#filter-error-export").text('Hora final inválida!');
                 } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
                   $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
                   $("#filter-date-to-export").val('');
@@ -375,8 +378,8 @@ define(
                     url: Utils.getBaseUrl() + "exists-data-to-export",
                     type: "POST",
                     data: {
-                      dateFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
-                      dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
+                      dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
+                      dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
                       countries: exportationSpatialFilterData.allCountries,
@@ -386,8 +389,8 @@ define(
                     },
                     success: function(existsDataToExport) {
                       if(existsDataToExport.existsDataToExport) {
-                        var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
-                                         "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
+                        var exportLink = Utils.getBaseUrl() + "export?dateTimeFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00' +
+                                         "&dateTimeTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59' +
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
                                          "&countries=" + exportationSpatialFilterData.allCountries +

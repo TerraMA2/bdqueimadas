@@ -24,8 +24,8 @@ var Filter = function() {
 
   /**
    * Returns the count of the fires.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -34,7 +34,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getFiresCount = function(dateFrom, dateTo, options, callback) {
+  this.getFiresCount = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -44,8 +44,8 @@ var Filter = function() {
 
         // Creation of the query
         var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -745,8 +745,8 @@ var Filter = function() {
 
   /**
    * Returns the satellites for the given filter.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -755,7 +755,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSatellites = function(dateFrom, dateTo, options, callback) {
+  this.getSatellites = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Connection with the PostgreSQL database
     memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
       if(!err) {
@@ -764,8 +764,8 @@ var Filter = function() {
 
         // Creation of the query
         var query = "select distinct " + memberTablesConfig.Fires.SatelliteFieldName + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-            " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+            " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {

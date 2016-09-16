@@ -47,7 +47,7 @@ var ExportController = function(app) {
       var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
 
       // Call of the method 'registerDownload', responsible for registering the download in the database
-      memberExportation.registerDownload(request.query.dateFrom, request.query.dateTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
+      memberExportation.registerDownload(request.query.dateTimeFrom, request.query.dateTimeTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
         if(err) return console.error(err);
 
         require('crypto').randomBytes(24, function(err, buffer) {
@@ -56,12 +56,12 @@ var ExportController = function(app) {
 
           if(request.query.format === 'csv-new') {
             var csvPath = memberPath.join(__dirname, '../tmp/csv-' + buffer.toString('hex') + '.csv');
-            var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+            var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
 
             memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
               if(err) return console.error(err);
 
-              response.download(csvPath, 'BDQueimadas-CSV.' + request.query.dateFrom + '.' + request.query.dateTo + '.csv', function(err) {
+              response.download(csvPath, 'BDQueimadas-CSV.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.csv', function(err) {
               if(err) return console.error(err);
 
               memberFs.unlink(csvPath);
@@ -70,11 +70,11 @@ var ExportController = function(app) {
           } else if(request.query.format === 'shapefile-new') {
             var shapefileFolderName = 'Shapefile-' + buffer.toString('hex');
             var shapefileFolderPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName);
-            var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/BDQueimadas-Shapefile.' + request.query.dateFrom + '.' + request.query.dateTo + '.shp');
+            var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/BDQueimadas-Shapefile.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.shp');
 
-            var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/BDQueimadas-Shapefile." + request.query.dateFrom + "." + request.query.dateTo + ".zip";
+            var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/BDQueimadas-Shapefile." + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + "." + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + ".zip";
 
-            var shapefileGenerationCommand = memberExportation.ogr2ogr() + " -F \"ESRI Shapefile\" " + shapefilePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+            var shapefileGenerationCommand = memberExportation.ogr2ogr() + " -F \"ESRI Shapefile\" " + shapefilePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
             var zipGenerationCommand = "zip -r -j " + zipPath + " " + shapefileFolderPath;
 
             try {
@@ -89,7 +89,7 @@ var ExportController = function(app) {
               memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
                 if(err) return console.error(err);
 
-                response.download(zipPath, 'BDQueimadas-Shapefile.' + request.query.dateFrom + '.' + request.query.dateTo + '.zip', function(err) {
+                response.download(zipPath, 'BDQueimadas-Shapefile.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.zip', function(err) {
                   if(err) return console.error(err);
 
                   deleteFolderRecursively(shapefileFolderPath);
@@ -97,13 +97,13 @@ var ExportController = function(app) {
               });
             });
           } else if(request.query.format === 'kml-new') {
-            var kmlPath = memberPath.join(__dirname, '../tmp/BDQueimadas-KML.' + request.query.dateFrom + '.' + request.query.dateTo + '.kml');
-            var kmlGenerationCommand = memberExportation.ogr2ogr() + " -F \"KML\" " + kmlPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+            var kmlPath = memberPath.join(__dirname, '../tmp/BDQueimadas-KML.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.kml');
+            var kmlGenerationCommand = memberExportation.ogr2ogr() + " -F \"KML\" " + kmlPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
 
             memberExec(kmlGenerationCommand, function(err, kmlGenerationCommandResult, kmlGenerationCommandError) {
               if(err) return console.error(err);
 
-              response.download(kmlPath, 'BDQueimadas-KML.' + request.query.dateFrom + '.' + request.query.dateTo + '.kml', function(err) {
+              response.download(kmlPath, 'BDQueimadas-KML.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.kml', function(err) {
                 if(err) return console.error(err);
 
                 memberFs.unlink(kmlPath);
@@ -111,12 +111,12 @@ var ExportController = function(app) {
             });
           } else if(request.query.format === 'geojson-new') {
             var geoJsonPath = memberPath.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
-            var geoJsonGenerationCommand = memberExportation.ogr2ogr() + " -F \"GeoJSON\" " + geoJsonPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateFrom, request.query.dateTo, options) + "\" -skipfailures";
+            var geoJsonGenerationCommand = memberExportation.ogr2ogr() + " -F \"GeoJSON\" " + geoJsonPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
 
             memberExec(geoJsonGenerationCommand, function(err, geoJsonGenerationCommandResult, geoJsonGenerationCommandError) {
               if(err) return console.error(err);
 
-              response.download(geoJsonPath, 'BDQueimadas-GeoJSON.' + request.query.dateFrom + '.' + request.query.dateTo + '.json', function(err) {
+              response.download(geoJsonPath, 'BDQueimadas-GeoJSON.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.json', function(err) {
                 if(err) return console.error(err);
 
                 memberFs.unlink(geoJsonPath);
@@ -172,7 +172,7 @@ var ExportController = function(app) {
                 f.write(dados.decode('utf-8')) ''*/
           } else {
             // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-            memberExportation.getGeoJSONData(request.query.dateFrom, request.query.dateTo, options, function(err, geoJsonData) {
+            memberExportation.getGeoJSONData(request.query.dateTimeFrom, request.query.dateTimeTo, options, function(err, geoJsonData) {
               if(err) return console.error(err);
 
               var geoJson = createFeatureCollection(geoJsonData);
@@ -186,11 +186,11 @@ var ExportController = function(app) {
               if(request.query.format === 'shapefile') {
                 var shapefileFolderName = 'Shapefile-' + buffer.toString('hex');
                 var shapefileFolderPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName);
-                var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/BDQueimadas-Shapefile.' + request.query.dateFrom + '.' + request.query.dateTo + '.shp');
+                var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/BDQueimadas-Shapefile.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.shp');
 
-                var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/BDQueimadas-Shapefile." + request.query.dateFrom + "." + request.query.dateTo + ".zip";
+                var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/BDQueimadas-Shapefile." + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + "." + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + ".zip";
 
-                var shapefileGenerationCommand = "ogr2ogr -F \"ESRI Shapefile\" " + shapefilePath + " " + geoJsonPath + " OGRGeoJSON";
+                var shapefileGenerationCommand = memberExportation.ogr2ogr() + " -F \"ESRI Shapefile\" " + shapefilePath + " " + geoJsonPath + " OGRGeoJSON";
                 var zipGenerationCommand = "zip -r -j " + zipPath + " " + shapefileFolderPath;
 
                 try {
@@ -205,7 +205,7 @@ var ExportController = function(app) {
                   memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
                     if(err) return console.error(err);
 
-                    response.download(zipPath, 'BDQueimadas-Shapefile.' + request.query.dateFrom + '.' + request.query.dateTo + '.zip', function(err) {
+                    response.download(zipPath, 'BDQueimadas-Shapefile.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.zip', function(err) {
                       if(err) return console.error(err);
 
                       memberFs.unlink(geoJsonPath);
@@ -214,13 +214,13 @@ var ExportController = function(app) {
                   });
                 });
               } else if(request.query.format === 'csv') {
-                var csvPath = memberPath.join(__dirname, '../tmp/BDQueimadas-CSV.' + request.query.dateFrom + '.' + request.query.dateTo + '.csv');
-                var csvGenerationCommand = "ogr2ogr -F \"CSV\" " + csvPath + " " + geoJsonPath;
+                var csvPath = memberPath.join(__dirname, '../tmp/BDQueimadas-CSV.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.csv');
+                var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " " + geoJsonPath;
 
                 memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
                   if(err) return console.error(err);
 
-                  response.download(csvPath, 'BDQueimadas-CSV.' + request.query.dateFrom + '.' + request.query.dateTo + '.csv', function(err) {
+                  response.download(csvPath, 'BDQueimadas-CSV.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.csv', function(err) {
                     if(err) return console.error(err);
 
                     memberFs.unlink(geoJsonPath);
@@ -228,13 +228,13 @@ var ExportController = function(app) {
                   });
                 });
               } else if(request.query.format === 'kml') {
-                var kmlPath = memberPath.join(__dirname, '../tmp/BDQueimadas-KML.' + request.query.dateFrom + '.' + request.query.dateTo + '.kml');
-                var kmlGenerationCommand = "ogr2ogr -F \"KML\" " + kmlPath + " " + geoJsonPath;
+                var kmlPath = memberPath.join(__dirname, '../tmp/BDQueimadas-KML.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.kml');
+                var kmlGenerationCommand = memberExportation.ogr2ogr() + " -F \"KML\" " + kmlPath + " " + geoJsonPath;
 
                 memberExec(kmlGenerationCommand, function(err, kmlGenerationCommandResult, kmlGenerationCommandError) {
                   if(err) return console.error(err);
 
-                  response.download(kmlPath, 'BDQueimadas-KML.' + request.query.dateFrom + '.' + request.query.dateTo + '.kml', function(err) {
+                  response.download(kmlPath, 'BDQueimadas-KML.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.kml', function(err) {
                     if(err) return console.error(err);
 
                     memberFs.unlink(geoJsonPath);
@@ -242,7 +242,7 @@ var ExportController = function(app) {
                   });
                 });
               } else {
-                response.download(geoJsonPath, 'BDQueimadas-GeoJSON.' + request.query.dateFrom + '.' + request.query.dateTo + '.json', function(err) {
+                response.download(geoJsonPath, 'BDQueimadas-GeoJSON.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('-') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.json', function(err) {
                   if(err) return console.error(err);
 
                   memberFs.unlink(geoJsonPath);

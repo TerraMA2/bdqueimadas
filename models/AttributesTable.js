@@ -28,8 +28,8 @@ var AttributesTable = function() {
    * @param {number} initialRegister - Initial record
    * @param {array} order - 'order by' clause parameters
    * @param {string} search - String of the search
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -38,7 +38,7 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableData = function(numberOfRegisters, initialRegister, order, search, dateFrom, dateTo, options, callback) {
+  this.getAttributesTableData = function(numberOfRegisters, initialRegister, order, search, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -77,8 +77,8 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -190,8 +190,8 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -200,7 +200,7 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
+  this.getAttributesTableCount = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -209,8 +209,8 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
-            params = [dateFrom, dateTo];
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -310,8 +310,8 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} search - String of the search
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
@@ -321,7 +321,7 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCountWithSearch = function(dateFrom, dateTo, search, options, callback) {
+  this.getAttributesTableCountWithSearch = function(dateTimeFrom, dateTimeTo, search, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -330,8 +330,8 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
-            params = [dateFrom, dateTo];
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {

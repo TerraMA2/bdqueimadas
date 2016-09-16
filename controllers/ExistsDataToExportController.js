@@ -36,7 +36,7 @@ var ExistsDataToExportController = function(app) {
     options.limit = 1;
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-    memberExportation.getGeoJSONData(request.body.dateFrom, request.body.dateTo, options, function(err, GeoJSONData) {
+    memberExportation.getGeoJSONData(request.body.dateTimeFrom, request.body.dateTimeTo, options, function(err, GeoJSONData) {
       if(err) return console.error(err);
 
       if(request.session.tokens === undefined) request.session.tokens = [];

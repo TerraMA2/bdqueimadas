@@ -385,7 +385,7 @@ define(function() {
    * @memberof Utils
    * @inner
    */
-  /*var getFilterTimes = function(showAlerts, filter) {
+  var getFilterTimes = function(showAlerts, filter) {
     showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
 
     var filterFieldsExtention = '';
@@ -406,7 +406,7 @@ define(function() {
         returnValue = [];
       } else {
         if(isTimeValid(filterTimeFrom.val()) && isTimeValid(filterTimeTo.val())) {
-          returnValue = [filterTimeFrom.val(), filterTimeTo.val()];
+          returnValue = [filterTimeFrom.val() + ':00', filterTimeTo.val() + ':59'];
         } else if(!isTimeValid(filterTimeFrom.val()) && !isTimeValid(filterTimeTo.val())) {
           vex.dialog.alert({
             message: '<p class="text-center">Horas inválidas!</p>',
@@ -416,6 +416,9 @@ define(function() {
               className: 'bdqueimadas-btn'
             }]
           });
+
+          filterTimeFrom.val('');
+          filterTimeTo.val('');
         } else if(!isTimeValid(filterTimeFrom.val())) {
           vex.dialog.alert({
             message: '<p class="text-center">Hora inicial inválida!</p>',
@@ -425,6 +428,8 @@ define(function() {
               className: 'bdqueimadas-btn'
             }]
           });
+
+          filterTimeFrom.val('');
         } else {
           vex.dialog.alert({
             message: '<p class="text-center">Hora final inválida!</p>',
@@ -434,6 +439,8 @@ define(function() {
               className: 'bdqueimadas-btn'
             }]
           });
+
+          filterTimeTo.val('');
         }
       }
     } else {
@@ -461,7 +468,7 @@ define(function() {
     }
 
     return returnValue;
-  };*/
+  };
 
   /**
    * Verifies if a time with the format hh:mm is valid.
@@ -649,7 +656,7 @@ define(function() {
     memberBaseUrl = baseUrl;
     memberSocket = io.connect(window.location.origin, { path: baseUrl + 'socket.io' });
   };
-//getFilterTimes: getFilterTimes,
+
   return {
     getSocket: getSocket,
     getConfigurations: getConfigurations,
@@ -661,7 +668,7 @@ define(function() {
     replaceDatePatternWithString: replaceDatePatternWithString,
     applyLayerTimeUpdateButton: applyLayerTimeUpdateButton,
     getFilterDates: getFilterDates,
-
+    getFilterTimes: getFilterTimes,
     isTimeValid: isTimeValid,
     stringInArray: stringInArray,
     replaceAll: replaceAll,
