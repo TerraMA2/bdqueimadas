@@ -274,23 +274,21 @@ define(
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-date-from-export">Data Início</label>' +
-                  '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="De">' +
+                  '<label for="filter-date-from-export">Data / Hora Início</label>' +
+                  '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<label for="filter-date-to-export">Data Fim</label>' +
-                  '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Até">' +
+                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="Hora Início">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-time-from-export">Hora Início</label>' +
-                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="De">' +
+                  '<label for="filter-date-to-export">Data / Hora Fim</label>' +
+                  '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<label for="filter-time-to-export">Hora Fim</label>' +
-                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Até">' +
+                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
@@ -308,9 +306,9 @@ define(
               '</div>' +
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
-                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left;">Formato da exportação</label>' +
+                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
                 '<div class="col-sm-6">' +
-                  '<select id="exportation-type" class="form-control">' +
+                  '<select id="exportation-type" class="form-control" style="width: 232px;">' +
                     '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
                     '<option value="kml">KML</option>' +

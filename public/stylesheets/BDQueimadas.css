@@ -318,6 +318,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .div-date-filter-export > label {
+  width: 178px;
   float: left;
   margin-right: 10px;
   margin-top: 5px;
