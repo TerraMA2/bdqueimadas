@@ -47,7 +47,7 @@ var ExportController = function(app) {
       var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
 
       // Call of the method 'registerDownload', responsible for registering the download in the database
-      memberExportation.registerDownload(request.query.dateTimeFrom, request.query.dateTimeTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
+      memberExportation.registerDownload(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
         if(err) return console.error(err);
 
         require('crypto').randomBytes(24, function(err, buffer) {
@@ -172,7 +172,7 @@ var ExportController = function(app) {
                 f.write(dados.decode('utf-8')) ''*/
           } else {
             // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-            memberExportation.getGeoJSONData(request.query.dateTimeFrom, request.query.dateTimeTo, options, function(err, geoJsonData) {
+            memberExportation.getGeoJSONData(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, options, function(err, geoJsonData) {
               if(err) return console.error(err);
 
               var geoJson = createFeatureCollection(geoJsonData);

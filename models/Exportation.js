@@ -21,7 +21,7 @@ var Exportation = function() {
   // 'pg-format' module
   var memberPgFormat = require('pg-format');
   // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // Attributes table configuration
@@ -70,7 +70,7 @@ var Exportation = function() {
    * @memberof Exportation
    * @inner
    */
-  this.getGeoJSONData = function(dateTimeFrom, dateTimeTo, options, callback) {
+  this.getGeoJSONData = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -83,7 +83,7 @@ var Exportation = function() {
     columns = columns.substring(0, (columns.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -321,7 +321,7 @@ var Exportation = function() {
     return finalQuery;
   };
 
-  this.getCSVData = function(dateTimeFrom, dateTimeTo, options) {
+  this.getCSVData = function(pgPool, dateTimeFrom, dateTimeTo, options) {
 
     // Counter of the query parameters
     var parameter = 1;
@@ -344,7 +344,7 @@ var Exportation = function() {
     columns = columns.substring(0, (columns.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -503,7 +503,7 @@ var Exportation = function() {
     var timeString = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query

@@ -52,6 +52,4 @@ app.use(function(req, res, next) {
   next();
 });
 
-load('controllers').then('routes').into(app);
-
 module.exports = app;

@@ -15,7 +15,7 @@ var Graphics = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
 
@@ -40,12 +40,12 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCount = function(dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
+  this.getFiresCount = function(pgPool, dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         var fields = key + ", count(*) as count";
@@ -184,12 +184,12 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountByPA = function(dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
+  this.getFiresCountByPA = function(pgPool, dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         if(key === "UCE" || key === "UCE_5KM" || key === "UCE_10KM") {
           var fields = "b." + memberTablesConfig.UCE.NameFieldName + " as name, count(c.*) as count";
@@ -366,12 +366,12 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresTotalCount = function(dateTimeFrom, dateTimeTo, filterRules, options, callback) {
+  this.getFiresTotalCount = function(pgPool, dateTimeFrom, dateTimeTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -493,12 +493,12 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountByWeek = function(dateTimeFrom, dateTimeTo, filterRules, options, callback) {
+  this.getFiresCountByWeek = function(pgPool, dateTimeFrom, dateTimeTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
         var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ")::date, 'YYYY/MM/DD') as start, " +

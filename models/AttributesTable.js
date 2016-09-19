@@ -16,7 +16,7 @@ var AttributesTable = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Attributes table configuration
   var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
   // Tables configuration
@@ -38,7 +38,7 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableData = function(numberOfRegisters, initialRegister, order, search, dateTimeFrom, dateTimeTo, options, callback) {
+  this.getAttributesTableData = function(pgPool, numberOfRegisters, initialRegister, order, search, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -73,7 +73,7 @@ var AttributesTable = function() {
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -200,12 +200,12 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCount = function(dateTimeFrom, dateTimeTo, options, callback) {
+  this.getAttributesTableCount = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -321,12 +321,12 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCountWithSearch = function(dateTimeFrom, dateTimeTo, search, options, callback) {
+  this.getAttributesTableCountWithSearch = function(pgPool, dateTimeFrom, dateTimeTo, search, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
