@@ -254,10 +254,19 @@ define(
 
               var loadGraphic = true;
 
-              if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered && memberCountries === '') loadGraphic = false;
-              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered && memberCountries !== '') loadGraphic = false;
-              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered && memberStates === '') loadGraphic = false;
-              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered && memberStates !== '') loadGraphic = false;
+              if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered && memberCountries === '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              } else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered && memberCountries !== '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              } else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered && memberStates === '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              } else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered && memberStates !== '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              }
 
               if(loadGraphic) {
                 if(memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] === undefined) {
