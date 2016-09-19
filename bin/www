@@ -12,6 +12,19 @@ var pg = require('pg');
 var fs = require('fs');
 var path = require('path');
 
+/**
+ * Get port from environment and store in Express.
+ */
+var port = normalizePort(process.env.PORT || portNumber);
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
 var databaseConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/Database.json'), 'utf8'));
 
 var pgPool = new pg.Pool({
@@ -32,19 +45,6 @@ app.use(function(req, res, next) {
   req.pgPool = pgPool;
   next();
 });
-
-/**
- * Get port from environment and store in Express.
- */
-var port = normalizePort(process.env.PORT || portNumber);
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
-var io = require('socket.io')(server);
 
 io.use(function(socket, next) {
   socket.pgPool = pgPool;
