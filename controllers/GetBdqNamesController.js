@@ -26,7 +26,7 @@ var GetBdqNamesController = function(app) {
     if(request.query.key == "Countries") {
       var countriesIds = request.query.ids !== "" ? request.query.ids.split(',') : [];
 
-      memberFilter.getCountriesBdqNames(countriesIds, function(err, countriesNames) {
+      memberFilter.getCountriesBdqNames(request.pgPool, countriesIds, function(err, countriesNames) {
         if(err) return console.error(err);
 
         // JSON response
@@ -37,7 +37,7 @@ var GetBdqNamesController = function(app) {
     } else if(request.query.key == "States") {
       var statesIds = request.query.ids !== "" ? request.query.ids.split(',') : [];
 
-      memberFilter.getStatesBdqNames(statesIds, function(err, statesNames) {
+      memberFilter.getStatesBdqNames(request.pgPool, statesIds, function(err, statesNames) {
         if(err) return console.error(err);
 
         // JSON response
@@ -49,10 +49,10 @@ var GetBdqNamesController = function(app) {
       var countriesIds = request.query.countriesIds !== "" ? request.query.countriesIds.split(',') : [];
       var statesIds = request.query.statesIds !== "" ? request.query.statesIds.split(',') : [];
 
-      memberFilter.getCountriesBdqNames(countriesIds, function(err, countriesNames) {
+      memberFilter.getCountriesBdqNames(request.pgPool, countriesIds, function(err, countriesNames) {
         if(err) return console.error(err);
 
-        memberFilter.getStatesBdqNames(statesIds, function(err, statesNames) {
+        memberFilter.getStatesBdqNames(request.pgPool, statesIds, function(err, statesNames) {
           if(err) return console.error(err);
 
           // JSON response

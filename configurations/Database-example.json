@@ -4,6 +4,6 @@
   "Database": "test",
   "User": "postgres",
   "Password": "postgres",
-  "MaxNumberOfClientsInThePool": 10,
+  "MaxNumberOfClientsInThePool": 30,
   "IdleTimeoutMillis": 30000
 }

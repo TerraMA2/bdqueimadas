@@ -38,7 +38,7 @@ var GetCountriesLayerFeaturesController = function(app) {
 
       var count = 0;
       body.features.forEach(function(feature) {
-        memberFilter.getFiresCountByCountry(feature.properties.name, function(err, firesCount) {
+        memberFilter.getFiresCountByCountry(request.pgPool, feature.properties.name, function(err, firesCount) {
           if(err) return callback(err);
           count++;
 

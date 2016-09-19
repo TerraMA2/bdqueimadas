@@ -16,7 +16,7 @@ var Filter = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Filter configuration
   var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter.json'));
   // Tables configuration
@@ -34,12 +34,12 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getFiresCount = function(dateTimeFrom, dateTimeTo, options, callback) {
+  this.getFiresCount = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -124,9 +124,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinents = function(callback) {
+  this.getContinents = function(pgPool, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -161,9 +161,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinentByCountry = function(country, callback) {
+  this.getContinentByCountry = function(pgPool, country, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -190,9 +190,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinentByState = function(state, callback) {
+  this.getContinentByState = function(pgPool, state, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -219,9 +219,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesByStates = function(states, callback) {
+  this.getCountriesByStates = function(pgPool, states, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -262,9 +262,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesByContinent = function(continent, callback) {
+  this.getCountriesByContinent = function(pgPool, continent, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -291,9 +291,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesByCountry = function(country, callback) {
+  this.getStatesByCountry = function(pgPool, country, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -320,9 +320,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesByCountries = function(countries, callback) {
+  this.getStatesByCountries = function(pgPool, countries, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -359,9 +359,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinentExtent = function(continent, callback) {
+  this.getContinentExtent = function(pgPool, continent, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -388,9 +388,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesExtent = function(countries, callback) {
+  this.getCountriesExtent = function(pgPool, countries, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -426,9 +426,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesExtent = function(states, callback) {
+  this.getStatesExtent = function(pgPool, states, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -464,9 +464,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSpecialRegionsExtent = function(specialRegions, callback) {
+  this.getSpecialRegionsExtent = function(pgPool, specialRegions, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -503,9 +503,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesAndSpecialRegionsExtent = function(states, specialRegions, callback) {
+  this.getStatesAndSpecialRegionsExtent = function(pgPool, states, specialRegions, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -552,11 +552,11 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getProtectedAreaExtent = function(id, type, callback) {
+  this.getProtectedAreaExtent = function(pgPool, id, type, callback) {
     var parameters = [parseInt(id)];
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         if(type === 'UCE') {
           var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
@@ -595,9 +595,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getFiresCountByCountry = function(country, callback) {
+  this.getFiresCountByCountry = function(pgPool, country, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -626,9 +626,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getDataByIntersection = function(longitude, latitude, resolution, callback) {
+  this.getDataByIntersection = function(pgPool, longitude, latitude, resolution, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         var key = "States";
@@ -669,9 +669,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesBdqNames = function(countries, callback) {
+  this.getCountriesBdqNames = function(pgPool, countries, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -711,9 +711,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesBdqNames = function(states, callback) {
+  this.getStatesBdqNames = function(pgPool, states, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -755,9 +755,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSatellites = function(dateTimeFrom, dateTimeTo, options, callback) {
+  this.getSatellites = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         // Counter of the query parameters
         var parameter = 1;
@@ -845,9 +845,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSpecialRegions = function(countries, callback) {
+  this.getSpecialRegions = function(pgPool, countries, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var specialRegions = "";
 
@@ -894,9 +894,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.searchForPAs = function(value, searchFor, callback) {
+  this.searchForPAs = function(pgPool, value, searchFor, callback) {
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         var parameters = [];
 
