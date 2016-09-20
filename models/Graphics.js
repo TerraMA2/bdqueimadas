@@ -28,6 +28,7 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by the received key.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {string} key - Key
@@ -172,6 +173,7 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by protected areas.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {string} key - Key
@@ -355,6 +357,7 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} filterRules - Filter rules
@@ -482,6 +485,7 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by week.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} filterRules - Filter rules

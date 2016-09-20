@@ -24,6 +24,7 @@ var AttributesTable = function() {
 
   /**
    * Returns data of the attributes table accordingly with the received parameters.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} numberOfRegisters - Desired number of records
    * @param {number} initialRegister - Initial record
    * @param {array} order - 'order by' clause parameters
@@ -190,6 +191,7 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -310,6 +312,7 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {string} search - String of the search
