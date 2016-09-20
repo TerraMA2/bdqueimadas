@@ -50,13 +50,14 @@ var IndexController = function(app) {
       piwikIdsite: piwikConfigurations.IdSite
     };
 
-    memberFilter.getContinents(function(err, result) {
+    memberFilter.getContinents(request.pgPool, function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters
       var params = {
         configurations: configurations,
-        continents: result
+        continents: result,
+        csrf: request.csrfToken()
       };
 
       // Response (page rendering)

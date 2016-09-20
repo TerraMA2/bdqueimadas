@@ -37,6 +37,12 @@
       "String": true
     },
     {
+      "Name": "bioma_brasileiro",
+      "Alias": "",
+      "Order": null,
+      "String": true
+    },
+    {
       "Name": "lat",
       "Alias": "",
       "Order": null,
@@ -44,6 +50,18 @@
     },
     {
       "Name": "lon",
+      "Alias": "",
+      "Order": null,
+      "String": false
+    },
+    {
+      "Name": "lat_gms",
+      "Alias": "",
+      "Order": null,
+      "String": false
+    },
+    {
+      "Name": "lon_gms",
       "Alias": "",
       "Order": null,
       "String": false

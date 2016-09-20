@@ -31,26 +31,27 @@ var Graphics = function(io) {
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
       if(json.cities !== null && json.cities !== '') options.cities = json.cities;
+      if(json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = json.protectedArea;
       if(json.limit !== null) options.limit = json.limit;
       if(json.y !== null) options.y = json.y;
 
-      memberGraphics.getFiresTotalCount(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesTotalCount) {
+      memberGraphics.getFiresTotalCount(client.pgPool, json.dateTimeFrom, json.dateTimeTo, json.filterRules, options, function(err, firesTotalCount) {
         if(err) return console.error(err);
 
         if(json.key === "week") {
-          memberGraphics.getFiresCountByWeek(json.dateFrom, json.dateTo, json.filterRules, options, function(err, firesCount) {
+          memberGraphics.getFiresCountByWeek(client.pgPool, json.dateTimeFrom, json.dateTimeTo, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
         } else if(json.key === "UCE" || json.key === "UCF" || json.key === "TI" || json.key === "UCE_5KM" || json.key === "UCF_5KM" || json.key === "TI_5KM" || json.key === "UCE_10KM" || json.key === "UCF_10KM" || json.key === "TI_10KM") {
-          memberGraphics.getFiresCountByPA(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
+          memberGraphics.getFiresCountByPA(client.pgPool, json.dateTimeFrom, json.dateTimeTo, json.key, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });
           });
         } else {
-          memberGraphics.getFiresCount(json.dateFrom, json.dateTo, json.key, json.filterRules, options, function(err, firesCount) {
+          memberGraphics.getFiresCount(client.pgPool, json.dateTimeFrom, json.dateTimeTo, json.key, json.filterRules, options, function(err, firesCount) {
             if(err) return console.error(err);
 
             client.emit('graphicsFiresCountResponse', { firesCount: firesCount, firesTotalCount: firesTotalCount, id: json.id, y: json.y, key: json.key, title: json.title, limit: json.limit, filterRules: json.filterRules });

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+	<Document>
+		<name>Monitoramento de Queimadas</name>
+		<description>Monitoramento de queimadas em tempo Real.</description>
+		<Style id="GOES-13"><IconStyle><color>ffcc99ff</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="AQUA_M"><IconStyle><color>ff00ff00</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="TERRA_M"><IconStyle><color>ffccffcc</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="TERRA_M-T"><IconStyle><color>ffccffcc</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="MSG-02"><IconStyle><color>ffffff00</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="NPP"><IconStyle><color>ff9900ff</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="NOAA-15"><IconStyle><color>ff0000ff</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="NPP_375"><IconStyle><color>FFda01C1</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="NOAA-18"><IconStyle><color>ff0099ff</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		<Style id="NOAA-19"><IconStyle><color>ff003399</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
+		||MIOLO||
+		<ScreenOverlay>
+			<name>Logo</name>
+			<Icon>
+				<href>http://sirc.dgi.inpe.br/img/logo.png</href>
+			</Icon>
+			<overlayXY x="1" y="1" xunits="fraction" yunits="fration"/>
+			<screenXY x=".99" y=".6" xunits="fraction" yunits="fraction"/>
+			<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+			<size x="0" y="0" xunits="fraction" yunits="fraction"/>
+			<rotation>0</rotation>
+		</ScreenOverlay>
+
+		<!-- <ScreenOverlay>
+			<name>Legendas</name>
+			<Icon>
+				<href>http://sirc.dgi.inpe.br/img/logo_gomapsgo.png</href>
+			</Icon>
+			<overlayXY x="1" y="1" xunits="fraction" yunits="fraction"/>
+			<screenXY x=".99" y=".58" xunits="fraction" yunits="fraction"/>
+			<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+			<size x="0" y="0" xunits="fraction" yunits="fraction"/>
+			<rotation>0</rotation>
+		</ScreenOverlay> -->
+
+		<ScreenOverlay>
+			<name>Legendas</name>
+			<Icon>
+				<href>http://sirc.dgi.inpe.br/img/legend.png</href>
+			</Icon>
+			<overlayXY x="1" y="1" xunits="fraction" yunits="fraction"/>
+			<screenXY x=".99" y=".48" xunits="fraction" yunits="fraction"/>
+			<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>
+			<size x="0" y="0" xunits="fraction" yunits="fraction"/>
+			<rotation>0</rotation>
+		</ScreenOverlay>
+
+	</Document>
+</kml>

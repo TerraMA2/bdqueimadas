@@ -2,55 +2,84 @@
   <div class="box box-default">
     <div class="box-body">
       <div class="component-filter">
-        <div class="component-filter-title">Confirme abaixo os filtros dos gr&aacute;ficos.</div>
+        <div class="component-filter-title"><%= __('Confirme abaixo os filtros dos gráficos.') %></div>
         <div class="component-filter-content">
           <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="continents-graphics">Continentes</label>
-                <select id="continents-graphics" name="continents-graphics" class="form-control">
-                  <option value="">Selecione o continente</option>
-                  <% continents.rows.forEach(function(continent, index) { %>
-                    <% if(continent.name === "Americas") { %>
-                      <option value="<%- continent.id %>">Am&eacute;ricas</option>
-                    <% } else if(continent.name === "Europe") { %>
-                      <option value="<%- continent.id %>">Europa</option>
-                    <% } else if(continent.name === "Africa") { %>
-                      <option value="<%- continent.id %>">&Aacute;frica</option>
-                    <% } else if(continent.name === "South_America") { %>
-                      <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
-                    <% } else { %>
-                      <option value="<%- continent.id %>"><%- continent.name %></option>
-                    <% } %>
-                  <% }) %>
-                </select>
+            <div class="col-md-5" style="border-right: 1px solid black;">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="continents-graphics"><%= __('Continentes') %></label>
+                    <select id="continents-graphics" name="continents-graphics" class="form-control">
+                      <option value=""><%= __('Selecione o continente') %></option>
+                      <% continents.rows.forEach(function(continent, index) { %>
+                        <% if(continent.name === "Americas") { %>
+                          <option value="<%- continent.id %>">Am&eacute;ricas</option>
+                        <% } else if(continent.name === "Europe") { %>
+                          <option value="<%- continent.id %>">Europa</option>
+                        <% } else if(continent.name === "Africa") { %>
+                          <option value="<%- continent.id %>">&Aacute;frica</option>
+                        <% } else if(continent.name === "South_America") { %>
+                          <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
+                        <% } else { %>
+                          <option value="<%- continent.id %>"><%- continent.name %></option>
+                        <% } %>
+                      <% }) %>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pas-graphics"><%= __('UCs / TIs') %></label>
+                    <div class="input-group">
+                      <input type="text" id="pas-graphics" name="pas-graphics" class="form-control" placeholder="<%= __('UCs / TIs') %>">
+                      <span class="input-group-btn">
+                        <button type="button" id="search-pas-btn-graphics" class="btn btn-flat">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="countries-graphics">Países</label>
-                <select multiple id="countries-graphics" name="countries-graphics" class="form-control"></select>
-              </div>
-            </div>
-            <div class="col-md-2" style="border-right: 1px solid black;">
-              <div class="form-group">
-                <label for="states-graphics">Estados</label>
-                <select multiple id="states-graphics" name="states-graphics" class="form-control" disabled></select>
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="countries-graphics"><%= __('Países') %></label>
+                    <select multiple id="countries-graphics" name="countries-graphics" class="form-control"></select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="states-graphics"><%= __('Estados') %></label>
+                    <select multiple id="states-graphics" name="states-graphics" class="form-control" disabled></select>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <label for="filter-date-from-graphics">Início</label>
-                <input type="text" class="form-control date filter-date-from" id="filter-date-from-graphics" placeholder="De">
+                <label for="filter-date-from-graphics"><%= __('Data Início') %></label>
+                <input type="text" class="form-control date filter-date-from" id="filter-date-from-graphics" placeholder="<%= __('Data Início') %>">
               </div>
               <div class="form-group">
-                <label for="filter-date-to-graphics">Fim</label>
-                <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="Até">
+                <label for="filter-date-to-graphics"><%= __('Data Fim') %></label>
+                <input type="text" class="form-control date filter-date-to" id="filter-date-to-graphics" placeholder="<%= __('Data Fim') %>">
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="form-group">
+                <label for="filter-time-from-graphics"><%= __('Hora Início') %></label>
+                <input type="text" class="form-control time filter-time-from" id="filter-time-from-graphics" placeholder="<%= __('Hora Início') %>" value="00:00">
+              </div>
+              <div class="form-group">
+                <label for="filter-time-to-graphics"><%= __('Hora Fim') %></label>
+                <input type="text" class="form-control time filter-time-to" id="filter-time-to-graphics" placeholder="<%= __('Hora Fim') %>" value="23:59">
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-satellite-graphics">Focos dos Sat&eacute;lites</label>
+                <label for="filter-satellite-graphics"><%= __('Focos dos Sat&eacute;lites') %></label>
                 <select multiple class="form-control" id="filter-satellite-graphics">
                   <%
                   var satelliteOptions = "";
@@ -70,7 +99,7 @@
                           referenceSatellite += ">";
                         }
 
-                        referenceSatellite += "Refer&ecirc;ncia</option>";
+                        referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
                       } else {
                         satelliteOptions += "<option value=\"" + satellite.Id + "\"";
 
@@ -88,16 +117,16 @@
                   })
                   %>
 
-                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>>TODOS</option>
+                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
                   <%- referenceSatellite + satelliteOptions %>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-biome-graphics">Focos dos Biomas</label>
+                <label for="filter-biome-graphics"><%= __('Focos dos Biomas') %></label>
                 <select multiple class="form-control" id="filter-biome-graphics">
-                  <option value="all" selected>TODOS</option>
+                  <option value="all" selected><%= __('TODOS') %></option>
                   <option value="Amazonia">Amaz&ocirc;nia</option>
                   <option value="Caatinga">Caatinga</option>
                   <option value="Cerrado">Cerrado</option>
@@ -109,7 +138,7 @@
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <button class="btn btn-primary" id="filter-button-graphics" style="margin-top: 40px;">Aplicar</button>
+                <button class="btn btn-primary" id="filter-button-graphics" style="margin-top: 40px;"><%= __('Aplicar') %></button>
               </div>
             </div>
           </div>
@@ -117,7 +146,7 @@
         <span id="graphics-no-data" style="text-align: center; display: none;">
           <div class="clear"></div>
           <hr/>
-          <h4>Sem focos com a sele&ccedil;&atilde;o escolhida</h4>
+          <h4><%= __('Sem focos com a seleção escolhida') %></h4>
         </span>
       </div>
       <table class="table table-bordered table-hover" id="attributes-table"></table>

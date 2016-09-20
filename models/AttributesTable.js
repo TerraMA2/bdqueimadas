@@ -16,7 +16,7 @@ var AttributesTable = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Attributes table configuration
   var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
   // Tables configuration
@@ -24,12 +24,13 @@ var AttributesTable = function() {
 
   /**
    * Returns data of the attributes table accordingly with the received parameters.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} numberOfRegisters - Desired number of records
    * @param {number} initialRegister - Initial record
    * @param {array} order - 'order by' clause parameters
    * @param {string} search - String of the search
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -38,7 +39,7 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableData = function(numberOfRegisters, initialRegister, order, search, dateFrom, dateTo, options, callback) {
+  this.getAttributesTableData = function(pgPool, numberOfRegisters, initialRegister, order, search, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -73,12 +74,12 @@ var AttributesTable = function() {
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -143,6 +144,27 @@ var AttributesTable = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
         }
 
         // If the the user executed a search in the table, a 'where' clause is created for it
@@ -169,8 +191,9 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -179,17 +202,17 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCount = function(dateFrom, dateTo, options, callback) {
+  this.getAttributesTableCount = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
-            params = [dateFrom, dateTo];
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -254,6 +277,27 @@ var AttributesTable = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
         }
 
         // Execution of the query
@@ -268,8 +312,9 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} search - String of the search
    * @param {json} options - Filtering options
    * @param {function} callback - Callback function
@@ -279,17 +324,17 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCountWithSearch = function(dateFrom, dateTo, search, options, callback) {
+  this.getAttributesTableCountWithSearch = function(pgPool, dateTimeFrom, dateTimeTo, search, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++),
-            params = [dateFrom, dateTo];
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -354,6 +399,27 @@ var AttributesTable = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
         }
 
         // If the the user executed a search in the table, a 'where' clause is created for it

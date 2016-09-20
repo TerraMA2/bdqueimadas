@@ -30,7 +30,7 @@ define(
      * @inner
      */
     var getLayers = function() {
-      return memberLayers;
+      return JSON.parse(JSON.stringify(memberLayers));
     };
 
     /**
@@ -49,6 +49,7 @@ define(
      * Adds a layer to the visible layers array.
      * @param {string} layerId - Layer id
      * @param {string} layerName - Layer name
+     * @param {string} layerTitle - Layer title
      * @param {string} parentId - Parent id
      * @param {string} parentName - Parent name
      * @param {string} elementId - Html element id
@@ -57,18 +58,17 @@ define(
      * @memberof Map
      * @inner
      */
-    var addVisibleLayer = function(layerId, layerName, parentId, parentName, elementId) {
+    var addVisibleLayer = function(layerId, layerName, layerTitle, parentId, parentName, elementId) {
       memberVisibleLayers.push({
         layerId: layerId,
         layerName: layerName,
+        layerTitle: layerTitle,
         parentId: parentId,
         parentName: parentName,
         elementId: elementId
       });
 
-      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
-        $.event.trigger({type: "updateMapInformationsBox"});
-      }
+      $.event.trigger({type: "updateMapInformationsBox"});
     };
 
     /**
@@ -87,9 +87,7 @@ define(
         }
       }
 
-      if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
-        $.event.trigger({type: "updateMapInformationsBox"});
-      }
+      $.event.trigger({type: "updateMapInformationsBox"});
     };
 
     /**
@@ -176,13 +174,17 @@ define(
       memberLayers.push(layer);
 
       var layerName = Utils.processStringWithDatePattern(layer.Name);
+      var layerTitle = Utils.processStringWithDatePattern(layer.Title);
       var layerTime = Utils.processStringWithDatePattern(layer.Time);
 
       if(layer.TerraMA2WebComponentsFunction !== null) {
-        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layer.Visible, parent, layer.AppendAtTheEnd))
+        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, layer.Classes);
+      } else if(layer.Wmts) {
+        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Url, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Format, layer.MatrixSet, layer.TileGrid))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes);
       } else {
-        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes);
       }
 
@@ -211,7 +213,7 @@ define(
           }
         }
 
-        addVisibleLayer(layer.Id, layerName, parent, parentsString, layer.Id.replace(':', ''));
+        addVisibleLayer(layer.Id, layerName, layerTitle, parent, parentsString, layer.Id.replace(':', ''));
       }
     };
 
@@ -363,6 +365,48 @@ define(
     };
 
     /**
+     * Activates the FogoGrama tool.
+     *
+     * @function activateFogoGramaTool
+     * @memberof Map
+     * @inner
+     */
+    var activateFogoGramaTool = function() {
+      $('#fogograma').addClass('active');
+      $('#terrama2-map').addClass('cursor-pointer');
+
+      TerraMA2WebComponents.MapDisplay.setMapSingleClickEvent(function(longitude, latitude) {
+        showFogoGrama(longitude, latitude);
+      });
+    };
+
+    /**
+     * Shows the fogograma to the given longitude and latitude.
+     * @param {string} longitude - Longitude
+     * @param {string} latitude - Latitude
+     *
+     * @private
+     * @function showFogoGrama
+     * @memberof Map
+     * @inner
+     */
+    var showFogoGrama = function(longitude, latitude) {
+      $('#fogograma-box').html("<iframe style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"http://poitara.cptec.inpe.br/queimada/risco_fogo/fogograma2.jsp?x=" + longitude + "&y=" + latitude + "\"></iframe>");
+      $('#fogograma-box').dialog({
+        dialogClass: "fogograma-box",
+        title: "FogoGrama",
+        width: 500,
+        height: 780,
+        modal: false,
+        resizable: true,
+        draggable: true,
+        closeOnEscape: true,
+        closeText: "",
+        position: { my: 'top', at: 'top+15' }
+      });
+    };
+
+    /**
      * Adds the layers subtitles from the map configuration file to the map.
      *
      * @private
@@ -424,10 +468,11 @@ define(
      */
     var getSubtitlesSatellites = function(satellites, biomes, countriesBdqNames, statesBdqNames) {
       var dates = Utils.getFilterDates(true, 0);
+      var times = Utils.getFilterTimes(true, 0);
 
       if(dates !== null) {
-        var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-        var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+        var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+        var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
         var satellites = Utils.stringInArray(satellites, "all") ? '' : satellites.toString();
         var biomes = Utils.stringInArray(biomes, "all") ? '' : biomes.toString();
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
@@ -437,8 +482,8 @@ define(
         Utils.getSocket().emit(
           'getSatellitesRequest',
           {
-            dateFrom: dateFrom,
-            dateTo: dateTo,
+            dateTimeFrom: dateTimeFrom,
+            dateTimeTo: dateTimeTo,
             satellites: satellites,
             biomes: biomes,
             extent: extent,
@@ -531,12 +576,61 @@ define(
       if(toggle) {
         setTimeout(function() {
           $('#terrama2-map .ol-zoom').animate({ 'top': ($('#map-subtitle').height() + 7) + 'px' }, { duration: 300, queue: false });
-          $('#map-tools').animate({ 'top': ($('#map-subtitle').height() + 65) + 'px' }, { duration: 300, queue: false });
+          $('#map-tools').animate({ 'top': ($('#map-subtitle').height() + 79) + 'px' }, { duration: 300, queue: false });
         }, 500);
       } else {
         $('#terrama2-map .ol-zoom').css('top', ($('#map-subtitle').height() + 7) + 'px');
-        $('#map-tools').css('top', ($('#map-subtitle').height() + 65) + 'px');
+        $('#map-tools').css('top', ($('#map-subtitle').height() + 79) + 'px');
       }
+    };
+
+    /**
+     * Updates the time of a given layer.
+     * @param {object} layer - Layer
+     *
+     * @function updateLayerTime
+     * @memberof Map
+     * @inner
+     */
+    var updateLayerTime = function(layer) {
+      var currentDate = moment().tz('America/Sao_Paulo');
+      var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Time);
+      var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Time));
+      var useTodaysImage = true;
+
+      if(layer.MinTimeForTodaysImage !== null) {
+        layerMinTime = moment(Utils.processStringWithDatePattern(layer.Time) + " " + layer.MinTimeForTodaysImage, layerTimeFormat + " HH:mm:ss");
+
+        if(Utils.processStringWithDatePattern(layer.Time) === currentDate.format(layerTimeFormat))
+          useTodaysImage = currentDate.isAfter(layerMinTime);
+      }
+
+      var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
+
+      if(!useTodaysImage) {
+        layerMinTime = layerMinTime.subtract(1, "days");
+
+        layer.Time = layerMinTime.format(layerTimeFormat);
+        layerName = Utils.replaceDatePatternWithString(layerName, layerMinTime.format('YYYY/MM/DD'));
+      } else {
+        layerName = Utils.processStringWithDatePattern(layerName);
+      }
+
+      if(layer.Wmts) {
+        var options = {
+          url: layer.Url,
+          format: layer.Format,
+          matrixSet: layer.MatrixSet,
+          tileGrid: layer.TileGrid
+        };
+
+        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Time), options);
+      } else {
+        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Time));
+      }
+
+      $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
+      TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
     };
 
     /**
@@ -571,11 +665,13 @@ define(
       initialExtent: initialExtent,
       activateDragboxTool: activateDragboxTool,
       activateGetFeatureInfoTool: activateGetFeatureInfoTool,
+      activateFogoGramaTool: activateFogoGramaTool,
       getSubtitlesSatellites: getSubtitlesSatellites,
       updateSubtitles: updateSubtitles,
       activateMoveMapTool: activateMoveMapTool,
       setSubtitlesVisibility: setSubtitlesVisibility,
       updateZoomTop: updateZoomTop,
+      updateLayerTime: updateLayerTime,
       init: init
     };
   }

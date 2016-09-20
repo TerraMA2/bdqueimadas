@@ -8,6 +8,7 @@
     "LongitudeDMSFieldName": "lon_gms",
     "DateFieldName": "data",
     "TimeFieldName": "hora",
+    "DateTimeFieldName": "data_hora",
     "SatelliteFieldName": "satelite",
     "CityFieldName": "municipio",
     "StateFieldName": "estado",
@@ -68,8 +69,16 @@
     "Id": "BDQueimadas:paises_multi",
     "ContinentField": "continente_id"
   },
+  "CountriesLabelsLayer": {
+    "Id": "BDQueimadas:labels_paises",
+    "ContinentField": "continente_id"
+  },
   "StatesLayer": {
     "Id": "BDQueimadas:estados",
+    "CountryField": "id_0"
+  },
+  "StatesLabelsLayer": {
+    "Id": "BDQueimadas:labels_estados",
     "CountryField": "id_0"
   },
   "CitiesLayer": {
@@ -171,7 +180,7 @@
       "Begin": "2002-07-04",
       "End": "",
       "Current": true,
-      "Selected": false,
+      "Selected": true,
       "ReferenceBegin": "2002-07-04",
       "ReferenceEnd": "",
       "ReferenceCurrent": true

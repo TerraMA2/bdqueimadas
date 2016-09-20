@@ -12,6 +12,7 @@
  * @property {number} memberContentHeaderHeight - Content header height.
  * @property {number} memberReducedFooterHeight - Reduced footer height.
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
+ * @property {number} memberButtonBlinkingInterval - Timer id of the initial blinking interval of the filter button.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
@@ -29,6 +30,8 @@ define(
     var memberReducedFooterHeight = 12;
     // Map subtitle height
     var memberMapSubtitleHeight = null;
+    // Timer id of the initial blinking interval of the filter button
+    var memberButtonBlinkingInterval = null;
 
     /**
      * Updates the necessary components.
@@ -65,9 +68,12 @@ define(
         });
       });
 
-      $('#frequently-asked-questions-btn').on('click', function() {
-        $('#frequently-asked-questions').dialog({
-          width: 800,
+      $('#presentation-btn').on('click', function() {
+        if($('#presentation-dialog').html() === "")
+          $('#presentation-dialog').html("<iframe style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"" + Utils.getBaseUrl() + "files/presentation.pdf\"></iframe>");
+
+        $('#presentation-dialog').dialog({
+          width: 950,
           height: 900,
           closeOnEscape: true,
           closeText: "",
@@ -75,8 +81,8 @@ define(
         });
       });
 
-      $('#presentation-btn').on('click', function() {
-        $('#presentation').dialog({
+      $('#frequently-asked-questions-btn').on('click', function() {
+        $('#frequently-asked-questions').dialog({
           width: 800,
           height: 900,
           closeOnEscape: true,
@@ -111,6 +117,24 @@ define(
       $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();
 
+        if(memberButtonBlinkingInterval !== null) {
+          clearInterval(memberButtonBlinkingInterval);
+          memberButtonBlinkingInterval = null;
+
+          setTimeout(function() {
+            $('#layer-explorer-and-filter-button > a').removeAttr('style');
+            $('#layer-explorer-and-filter-button > a > i').removeAttr('style');
+            $('#layer-explorer-and-filter-button > a > div').removeAttr('style');
+          }, 1100);
+        }
+
+        if($(this).hasClass('active')) {
+          $(".sidebar-menu > li.left-box").removeClass('active');
+        } else {
+          $(".sidebar-menu > li.left-box").removeClass('active');
+          $(this).addClass('active');
+        }
+
         var box = $(this).attr('box');
         var id = $(this).attr('id');
 
@@ -124,8 +148,11 @@ define(
 
           // Opens the left content box corresponding to the button and the left content box background, if the box is not already open
           if(!active) {
+            var numberLength = $(this).find(' > a > div.menu-btn-number').text().length;
+            var headerText = $(this).text().trim();
+
             openLeftContentBoxBackground(id, box);
-            openLeftContentBox(box, $(this).text().trim());
+            openLeftContentBox(box, headerText.substring(numberLength));
           }
         } else {
           var active = $("#left-content-box-background").hasClass('active');
@@ -233,15 +260,35 @@ define(
                   '<select multiple id="states-export" name="states-export" class="form-control float-left">' + $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '') + '</select>' +
                 '</div>' +
               '</div>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<label for="pas-export">UCs / TIs</label>' +
+                '<div class="input-group">' +
+                  '<input value="' + $('#pas').val() + '" type="text" id="pas-export" name="pas-export" class="form-control" placeholder="UCs / TIs">' +
+                  '<span class="input-group-btn">' +
+                    '<button type="button" id="search-pas-btn-export" class="btn btn-flat">' +
+                      '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                  '</span>' +
+                '</div>' +
+              '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-date-from-export">Início</label>' +
-                  '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="De">' +
+                  '<label for="filter-date-from-export">Data / Hora Início</label>' +
+                  '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<label for="filter-date-to-export">Fim</label>' +
-                  '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Até">' +
+                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="Hora Início">' +
+                '</div>' +
+              '</div>' +
+              '<div class="clear" style="height: 5px;"></div>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<div class="float-left div-date-filter-export">' +
+                  '<label for="filter-date-to-export">Data / Hora Fim</label>' +
+                  '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
+                '</div>' +
+                '<div class="float-right div-date-filter-export">' +
+                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
@@ -259,9 +306,9 @@ define(
               '</div>' +
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
-                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left;">Formato da exportação</label>' +
+                '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
                 '<div class="col-sm-6">' +
-                  '<select id="exportation-type" class="form-control">' +
+                  '<select id="exportation-type" class="form-control" style="width: 232px;">' +
                     '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
                     '<option value="kml">KML</option>' +
@@ -311,6 +358,16 @@ define(
                   $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
                   $("#filter-date-from-export").val('');
                   $("#filter-date-to-export").val('');
+                } else if(!Utils.isTimeValid($("#filter-time-from-export").val()) && !Utils.isTimeValid($("#filter-time-to-export").val())) {
+                  $("#filter-error-export").text('Horas inválidas!');
+                  $("#filter-time-from-expor").val('');
+                  $("#filter-time-to-expor").val('');
+                } else if($("#filter-time-from-export").val() === "" || !Utils.isTimeValid($("#filter-time-from-export").val())) {
+                  $("#filter-error-export").text('Hora inicial inválida!');
+                  $("#filter-time-from-expor").val('');
+                } else if($("#filter-time-to-export").val() === "" || !Utils.isTimeValid($("#filter-time-to-export").val())) {
+                  $("#filter-error-export").text('Hora final inválida!');
+                  $("#filter-time-to-expor").val('');
                 } else if($('#filter-satellite-export').val() === null) {
                   $("#filter-error-export").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
@@ -318,46 +375,49 @@ define(
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
                 } else {
-                  getExportationSpatialFilterData(function(allCountries, countries, states, cities) {
-                    $.ajax({
-                      async: false,
-                      url: Utils.getBaseUrl() + "exists-data-to-export",
-                      type: "GET",
-                      data: {
-                        dateFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
-                        dateTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat),
-                        satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
-                        biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
-                        countries: allCountries,
-                        states: states,
-                        cities: cities
-                      },
-                      success: function(existsDataToExport) {
-                        if(existsDataToExport.existsDataToExport) {
-                          var exportLink = Utils.getBaseUrl() + "export?dateFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
-                                           "&dateTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) +
-                                           "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
-                                           "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
-                                           "&countries=" + allCountries +
-                                           "&states=" + states +
-                                           "&cities=" + cities +
-                                           "&format=" + $("#exportation-type").val();
+                  var exportationSpatialFilterData = getExportationSpatialFilterDataSync();
 
-                          window.open(exportLink, '_blank');
+                  $.ajax({
+                    async: false,
+                    url: Utils.getBaseUrl() + "exists-data-to-export",
+                    type: "POST",
+                    data: {
+                      dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
+                      dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
+                      satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
+                      biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
+                      countries: exportationSpatialFilterData.allCountries,
+                      states: exportationSpatialFilterData.states,
+                      cities: exportationSpatialFilterData.cities,
+                      protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null)
+                    },
+                    success: function(existsDataToExport) {
+                      if(existsDataToExport.existsDataToExport) {
+                        var exportLink = Utils.getBaseUrl() + "export?dateTimeFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00' +
+                                         "&dateTimeTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59' +
+                                         "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
+                                         "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
+                                         "&countries=" + exportationSpatialFilterData.allCountries +
+                                         "&states=" + exportationSpatialFilterData.states +
+                                         "&cities=" + exportationSpatialFilterData.cities +
+                                         "&format=" + $("#exportation-type").val() +
+                                         "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
+                                         "&t=" + existsDataToExport.token;
 
-                          vex.close();
-                        } else {
-                          vex.dialog.alert({
-                            message: '<p class="text-center">Não existem dados para exportar!</p>',
-                            buttons: [{
-                              type: 'submit',
-                              text: 'Ok',
-                              className: 'bdqueimadas-btn'
-                            }]
-                          });
-                        }
+                        window.open(exportLink, '_blank');
+
+                        vex.close();
+                      } else {
+                        vex.dialog.alert({
+                          message: '<p class="text-center">Não existem dados para exportar!</p>',
+                          buttons: [{
+                            type: 'submit',
+                            text: 'Ok',
+                            className: 'bdqueimadas-btn'
+                          }]
+                        });
                       }
-                    });
+                    }
                   });
                 }
               }
@@ -369,6 +429,9 @@ define(
 
         $("#filter-date-from-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
         $("#filter-date-to-export").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
+
+        $("#filter-time-from-export").inputmask("99:99", {"placeholder": "hh:mm"});
+        $("#filter-time-to-export").inputmask("99:99", {"placeholder": "hh:mm"});
 
         var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
@@ -411,11 +474,30 @@ define(
         $('#states-export').val($('#states').val());
 
         if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0) $('#states-export').attr('disabled', 'disabled');
-      });
 
-      // Language change event
-      $('.languages-item').on('click', function() {
-        //console.log($(this).attr('class').split(' ')[1]);
+        if(Filter.getProtectedArea() !== null) $('#pas-export').data('value', JSON.stringify(Filter.getProtectedArea()));
+
+        $('#pas-export').autocomplete({
+          minLength: 4,
+          source: function(request, response) {
+            $.get(Utils.getBaseUrl() + "search-for-pas", {
+              value: request.term,
+              minLength: 4
+            }, function(data) {
+              response(data);
+            });
+          },
+          select: function(event, ui) {
+            event.preventDefault();
+
+            $('#pas-export').val(ui.item.label);
+
+            $('#pas-export').data('value', JSON.stringify({
+              id: ui.item.value.id,
+              type: ui.item.value.type
+            }));
+          }
+        });
       });
 
       // Filter Events
@@ -469,6 +551,8 @@ define(
           $('#filter-satellite').val(Filter.getSatellites());
           $('#filter-biome').val(Filter.getBiomes());
         }
+
+        $.event.trigger({type: "updateMapInformationsBox"});
       });
 
       $('#initial-filter-button').on('click', function() {
@@ -500,8 +584,8 @@ define(
         $('#countries-graphics').val($('#countries').val());
         $('#countries-graphics').change();
 
-        $('#continents-attributes-table').val($('#continents').val());
-        $('#continents-attributes-table').change();
+        $('#countries-attributes-table').val($('#countries').val());
+        $('#countries-attributes-table').change();
 
         $('#filter-button').click();
       });
@@ -510,8 +594,8 @@ define(
         $('#states-graphics').val($('#states').val());
         $('#states-graphics').change();
 
-        $('#continents-attributes-table').val($('#continents').val());
-        $('#continents-attributes-table').change();
+        $('#states-attributes-table').val($('#states').val());
+        $('#states-attributes-table').change();
 
         $('#filter-button').click();
       });
@@ -550,6 +634,144 @@ define(
 
       $('#states-attributes-table').change(function() {
         $('#filter-button-attributes-table').click();
+      });
+
+      $("#search-pas-btn").on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas').val(data[0].label);
+              $('#pas-graphics').val(data[0].label);
+              $('#pas-attributes-table').val(data[0].label);
+
+              Filter.setProtectedArea({
+                id: data[0].value.id,
+                type: data[0].value.type
+              });
+
+              Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
+            } else {
+              Filter.setProtectedArea(null);
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $("#search-pas-btn-graphics").on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas-graphics').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas-graphics').val(data[0].label);
+
+              $('#pas-graphics').data('value', JSON.stringify({
+                id: data[0].value.id,
+                type: data[0].value.type
+              }));
+
+              $('#filter-button-graphics').click();
+            } else {
+              $('#pas-graphics').data('value', '');
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $("#search-pas-btn-attributes-table").on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas-attributes-table').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas-attributes-table').val(data[0].label);
+
+              $('#pas-attributes-table').data('value', JSON.stringify({
+                id: data[0].value.id,
+                type: data[0].value.type
+              }));
+
+              $('#filter-button-attributes-table').click();
+            } else {
+              $('#pas-attributes-table').data('value', '');
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $(document).on('click', '#search-pas-btn-export', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-pas",
+          type: "GET",
+          data: {
+            value: $('#pas-export').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#pas-export').val(data[0].label);
+
+              $('#pas-export').data('value', JSON.stringify({
+                id: data[0].value.id,
+                type: data[0].value.type
+              }));
+
+              $('#filter-button-export').click();
+            } else {
+              $('#pas-export').data('value', '');
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
       });
 
       $(document).on('change', '#continents-export', function() {
@@ -623,6 +845,11 @@ define(
         Map.activateGetFeatureInfoTool();
       });
 
+      $('#fogograma').on('click', function() {
+        Map.resetMapMouseTools();
+        Map.activateFogoGramaTool();
+      });
+
       $('.map-subtitle-toggle').on('click', function() {
         Map.updateZoomTop(true);
 
@@ -636,9 +863,11 @@ define(
       });
 
       $(document).on("updateMapInformationsBox", function() {
-        var html = getVisibleLayers();
+        if($('#map-info-box').parent('.ui-dialog').css('display') !== undefined && $('#map-info-box').parent('.ui-dialog').css('display') !== 'none') {
+          var html = getVisibleLayers();
 
-        $('#map-info-box').html(html);
+          $('#map-info-box').html(html);
+        }
       });
 
       $('#map-info-button > button').on('click', function() {
@@ -647,7 +876,7 @@ define(
         $('#map-info-box').html(html);
         $('#map-info-box').dialog({
           dialogClass: "map-info-box",
-          title: "Informações do Mapa",
+          title: "Informações da Tela",
           width: 230,
           maxHeight: 300,
           modal: false,
@@ -680,6 +909,7 @@ define(
           Map.addVisibleLayer(
             $(this).parent().data('layerid'),
             $(this).parent().find(' > .terrama2-layerexplorer-checkbox-span').html(),
+            $(this).parent().attr('title'),
             $(this).parent().data('parentid'),
             (parentsString !== "" ? parentsString : null),
             $(this).parent().attr('id')
@@ -803,7 +1033,7 @@ define(
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
             layer.Name = self.parent().html();
 
-            Filter.checkFiresCount();
+            Map.updateLayerTime(layer);
 
             return false;
           }
@@ -923,7 +1153,7 @@ define(
             } else {
               Filter.enableDropdown('states', '');
             }
-          } else {
+          } else if(result.key === 'States') {
             Filter.setStates(result.ids);
             Filter.setSpecialRegions(result.specialRegions);
 
@@ -1332,6 +1562,109 @@ define(
     };
 
     /**
+     * Returns the countries, states and cities to be filtered in the exportation (synchronous).
+     * @returns {object} return - Spatial filter data
+     *
+     * @private
+     * @function getExportationSpatialFilterDataSync
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var getExportationSpatialFilterDataSync = function() {
+      var countries = $('#countries-export').val() === null || (Utils.stringInArray($('#countries-export').val(), "") || $('#countries-export').val().length === 0) ? [] : $('#countries-export').val();
+      var countriesNames = [];
+
+      if(($('#continents-export').val() !== null && $('#continents-export').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
+        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+        var initialContinentCountriesLength = initialContinentCountries.length;
+
+        for(var i = 0; i < initialContinentCountriesLength; i++) {
+          countriesNames.push(initialContinentCountries[i].Name);
+        }
+      }
+
+      var states = $('#states-export').val() === null || Utils.stringInArray($('#states-export').val(), "") || $('#states-export').val().length === 0 ? [] : $('#states-export').val();
+
+      var filterStates = [];
+      var specialRegions = [];
+
+      $('#states-export > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
+          specialRegions.push($(this).val());
+        } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
+          filterStates.push($(this).val());
+        }
+      });
+
+      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+
+      countries = countries.toString();
+
+      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+
+      if(countries.length > 0) {
+        var namesArray = Filter.updateCountriesBdqNamesSync(countries);
+        var namesArrayCountries = [];
+
+        for(var i = 0; i < namesArray.names.rowCount; i++) {
+          namesArrayCountries.push(namesArray.names.rows[i].name);
+        }
+
+        var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+
+        namesArrayCountries = $.merge(arrayOne, arrayTwo);
+
+        states = JSON.parse(JSON.stringify(filterStates));
+        states = states.toString();
+
+        var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+
+        var cities = specialRegionsData.specialRegionsCities.toString();
+
+        if(states.length > 0) {
+          var namesArray = Filter.updateStatesBdqNamesSync(states);
+          var namesArrayStates = [];
+
+          for(var i = 0; i < namesArray.names.rowCount; i++) {
+            namesArrayStates.push(namesArray.names.rows[i].name);
+          }
+
+          var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
+
+          namesArrayStates = $.merge(arrayOne, arrayTwo);
+
+          return {
+            allCountries: namesArrayCountries.toString(),
+            countries: namesArrayCountries.toString(),
+            states: namesArrayStates.toString(),
+            cities: cities
+          };
+        } else {
+          return {
+            allCountries: namesArrayCountries.toString(),
+            countries: namesArrayCountries.toString(),
+            states: specialRegionsStatesNames.toString(),
+            cities: cities
+          };
+        }
+      } else {
+        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+
+        countriesNames = $.merge(arrayOne, arrayTwo);
+
+        return {
+          allCountries: countriesNames.toString(),
+          countries: "",
+          states: "",
+          cities: ""
+        };
+      }
+    };
+
+    /**
      * Loads external plugins.
      *
      * @private
@@ -1341,6 +1674,7 @@ define(
      */
     var loadPlugins = function() {
       $(".date").inputmask("yyyy/mm/dd", {"placeholder": "aaaa/mm/dd"});
+      $(".time").inputmask("99:99", {"placeholder": "hh:mm"});
 
       var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
@@ -1511,8 +1845,82 @@ define(
           var h = $(window).height();
           var y = e.clientY - h / 2;
 
-          return v + y * 0.1;
+          return v + y * 0.004;
         });
+      });
+
+      $('#pas').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-pas", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#pas').val(ui.item.label);
+          $('#pas-graphics').val(ui.item.label);
+          $('#pas-attributes-table').val(ui.item.label);
+
+          Filter.setProtectedArea({
+            id: ui.item.value.id,
+            type: ui.item.value.type
+          });
+
+          Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
+        }
+      });
+
+      $('#pas-graphics').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-pas", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#pas-graphics').val(ui.item.label);
+
+          $('#pas-graphics').data('value', JSON.stringify({
+            id: ui.item.value.id,
+            type: ui.item.value.type
+          }));
+
+          $('#filter-button-graphics').click();
+        }
+      });
+
+      $('#pas-attributes-table').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-pas", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#pas-attributes-table').val(ui.item.label);
+
+          $('#pas-attributes-table').data('value', JSON.stringify({
+            id: ui.item.value.id,
+            type: ui.item.value.type
+          }));
+
+          $('#filter-button-attributes-table').click();
+        }
       });
     };
 
@@ -1703,7 +2111,12 @@ define(
      */
     var getVisibleLayers = function() {
       var visibleLayers = Map.getVisibleLayers();
-      var html = '';
+
+      if($('#filter-date-from').val() !== "" && $('#filter-date-to').val() !== "") {
+        var html = $('#filter-date-from').val() + ' - ' + $('#filter-date-to').val() + '<br/>';
+      } else {
+        var html = 'Período Inválido<br/>';
+      }
 
       if(visibleLayers.length > 0) {
         for(var i = 0, count = visibleLayers.length; i < count; i++) {
@@ -1728,6 +2141,22 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        memberButtonBlinkingInterval = setInterval(function() {
+          if($("#layer-explorer-and-filter-button").hasClass('blink')) {
+            $("#layer-explorer-and-filter-button").removeClass('blink');
+
+            $("#layer-explorer-and-filter-button > a > i").css('color', '#172938');
+            $("#layer-explorer-and-filter-button > a > div").css('color', '#172938');
+            $("#layer-explorer-and-filter-button > a").css('background-color', '#ffffff');
+          } else {
+            $("#layer-explorer-and-filter-button").addClass('blink');
+
+            $("#layer-explorer-and-filter-button > a > i").css('color', '#ffffff');
+            $("#layer-explorer-and-filter-button > a > div").css('color', '#ffffff');
+            $("#layer-explorer-and-filter-button > a").css('background-color', '#f8b802');
+          }
+        }, 600);
+
         Utils.getSocket().emit('piwikDataRequest');
 
         setTimeout(function() {
@@ -1749,12 +2178,12 @@ define(
           buttons: [{
             type: 'submit',
             text: 'Ok, entendi',
-            className: 'bdqueimadas-btn'
+            className: 'bdqueimadas-btn bdqueimadas-initial-alert'
           }]
         });
 
         setTimeout(function() {
-          vex.close();
+          $('.bdqueimadas-initial-alert').click();
         }, 15000);
 
         /*window.setInterval(function() {

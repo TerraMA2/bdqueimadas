@@ -3,7 +3,7 @@
   <a href="<%- BASE_URL %>">
     <span class="logo">
       <span class="logo-mini"></span>
-      <span class="logo-lg">BDQueimadas</span>
+      <!--<span class="logo-lg">BDQueimadas</span>-->
     </span>
   </a>
   <nav class="navbar navbar-static-top" role="navigation">
@@ -11,24 +11,24 @@
       <span class="sr-only">Diminuir Mapa</span>
     </a>-->
     <div id="page-title">
-      <span class="dynamic-text">Banco de Dados de Queimadas</span>
+      <span class="dynamic-text"><%= __('Banco de Dados de Queimadas') %></span>
       <span id="page-second-title">
          |
-        <span class="inpe-image" title="INPE"></span>
-        <span class="programa-queimadas-image" title="Programa Queimadas"></span>
-        <span class="text">INPE - Programa Queimadas - Apoio: </span>
-        <span class="defra-image" title="DEFRA"></span>
-        <span class="banco-mundial-image" title="Banco Mundial"></span>
-        <span class="mma-image" title="Ministério do Meio Ambiente"></span>
-        <span class="funcate-image" title="Funcate"></span>
+        <span class="inpe-image" title="<%= __('INPE') %>"></span>
+        <span class="programa-queimadas-image" title="<%= __('Programa Queimadas') %>"></span>
+        <span class="text"><%= __('INPE - Programa Queimadas - Apoio:') %> </span>
+        <span class="defra-image" title="<%= __('DEFRA') %>"></span>
+        <span class="banco-mundial-image" title="<%= __('Banco Mundial') %>"></span>
+        <span class="mma-image" title="<%= __('Ministério do Meio Ambiente') %>"></span>
+        <span class="funcate-image" title="<%= __('Funcate') %>"></span>
       </span>
     </div>
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
         <li id="languages-secondary">
-          <div class="languages-item portuguese" title="Portugu&ecirc;s"></div>
-          <div class="languages-item english" title="English"></div>
-          <div class="languages-item spanish" title="Espan&otilde;l"></div>
+          <a href="<%- BASE_URL %>" class="languages-item portuguese" title="<%= __('Português') %>"></a>
+          <a href="<%- BASE_URL %>en" class="languages-item english" title="<%= __('English') %>"></a>
+          <a href="<%- BASE_URL %>es" class="languages-item spanish" title="<%= __('Español') %>"></a>
         </li>
         <!--<li>
           <a href="#" class="mouse-function-btn" id="moveMap" alt="Arrastar Tela" title="Arrastar Tela">

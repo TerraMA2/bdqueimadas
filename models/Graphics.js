@@ -15,7 +15,7 @@ var Graphics = function() {
   // 'path' module
   var memberPath = require('path');
   // 'PgConnectionPool' module
-  var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
+  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
 
@@ -28,8 +28,9 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by the received key.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} key - Key
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
@@ -40,12 +41,12 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCount = function(dateFrom, dateTo, key, filterRules, options, callback) {
+  this.getFiresCount = function(pgPool, dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         var fields = key + ", count(*) as count";
@@ -63,10 +64,8 @@ var Graphics = function() {
         }
 
         // Creation of the query
-        var query = "select " + fields + " from " +
-        memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select " + fields + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -133,6 +132,27 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
+        }
+
         query += " group by " + group + " order by count desc, " + key + " asc";
 
         // If the 'options.limit' parameter exists, a limit clause is created
@@ -153,8 +173,9 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by protected areas.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {string} key - Key
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
@@ -165,12 +186,12 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountByPA = function(dateFrom, dateTo, key, filterRules, options, callback) {
+  this.getFiresCountByPA = function(pgPool, dateTimeFrom, dateTimeTo, key, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         if(key === "UCE" || key === "UCE_5KM" || key === "UCE_10KM") {
           var fields = "b." + memberTablesConfig.UCE.NameFieldName + " as name, count(c.*) as count";
@@ -226,9 +247,9 @@ var Graphics = function() {
         " inner join " + tablePA + " on (" + idField + " = " + PAField + ")" +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " c on (c." + memberTablesConfig.Fires.IdFieldName + " = ANY (" + firesIdsField + "))" +
-        " where (c." + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
+        " where (c." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
         " and (" + dateField + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo, dateFrom, dateTo];
+            params = [dateTimeFrom, dateTimeTo, dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -295,6 +316,27 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(c." + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
+        }
+
         query += " group by " + group + " order by count desc, " + group + " asc";
 
         // If the 'options.limit' parameter exists, a limit clause is created
@@ -315,8 +357,9 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
@@ -326,18 +369,17 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresTotalCount = function(dateFrom, dateTo, filterRules, options, callback) {
+  this.getFiresTotalCount = function(pgPool, dateTimeFrom, dateTimeTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -402,6 +444,27 @@ var Graphics = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
         }
 
         // If the 'options.limit' parameter exists, a limit clause is created
@@ -422,8 +485,9 @@ var Graphics = function() {
 
   /**
    * Returns the count of the fires grouped by week.
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {json} filterRules - Filter rules
    * @param {json} options - Filtering options
    * @param {databaseOperationCallback} callback - Callback function
@@ -433,19 +497,19 @@ var Graphics = function() {
    * @memberof Graphics
    * @inner
    */
-  this.getFiresCountByWeek = function(dateFrom, dateTo, filterRules, options, callback) {
+  this.getFiresCountByWeek = function(pgPool, dateTimeFrom, dateTimeTo, filterRules, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    memberPgConnectionPool.getConnectionPool().connect(function(err, client, done) {
+    pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
         var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ")::date, 'YYYY/MM/DD') as start, " +
         "TO_CHAR((date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ") + '6 days')::date, 'YYYY/MM/DD') as end, count(*) AS count " +
         "from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateFrom, dateTo];
+        " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
 
         // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
         if(options.satellites !== undefined) {
@@ -510,6 +574,27 @@ var Graphics = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
+        if(options.protectedArea !== undefined) {
+
+          if(options.protectedArea.type === 'UCE') {
+            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var geom = memberTablesConfig.UCE.GeometryFieldName;
+            var id = memberTablesConfig.UCE.IdFieldName;
+          } else if(options.protectedArea.type === 'UCF') {
+            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var geom = memberTablesConfig.UCF.GeometryFieldName;
+            var id = memberTablesConfig.UCF.IdFieldName;
+          } else {
+            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var geom = memberTablesConfig.TI.GeometryFieldName;
+            var id = memberTablesConfig.TI.IdFieldName;
+          }
+
+          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+          params.push(options.protectedArea.id);
         }
 
         query += "group by 1, 2 order by 1, 2";

@@ -9,6 +9,8 @@
  *
  * @property {date} memberDateFrom - Current initial date.
  * @property {date} memberDateTo - Current final date.
+ * @property {string} memberTimeFrom - Current initial time.
+ * @property {string} memberTimeTo - Current final time.
  * @property {array} memberSatellites - Current satellites.
  * @property {array} memberBiomes - Current biomes.
  * @property {string} memberContinent - Current continent.
@@ -17,6 +19,7 @@
  * @property {array} memberStates - Current states.
  * @property {array} memberStatesBdqNames - Current states BDQ names.
  * @property {array} memberSpecialRegions - Current special regions.
+ * @property {object} memberProtectedArea - Current protected area.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -26,6 +29,10 @@ define(
     var memberDateFrom = null;
     // Current final date
     var memberDateTo = null;
+    // Current initial time
+    var memberTimeFrom = null;
+    // Current final time
+    var memberTimeTo = null;
     // Current satellites
     var memberSatellites = ["all"];
     // Current biomes
@@ -54,6 +61,8 @@ define(
     var memberSpecialRegionsCities = [];
     // Current special regions cities ids
     var memberSpecialRegionsCitiesIds = [];
+    // Current protected area
+    var memberProtectedArea = null;
 
     /**
      * Returns the initial date formatted with the received format.
@@ -79,6 +88,30 @@ define(
      */
     var getFormattedDateTo = function(format) {
       return Utils.dateToString(memberDateTo, format);
+    };
+
+    /**
+     * Returns the initial time.
+     * @returns {string} memberTimeFrom - Initial time
+     *
+     * @function getTimeFrom
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getTimeFrom = function() {
+      return memberTimeFrom;
+    };
+
+    /**
+     * Returns the final time.
+     * @returns {string} memberTimeTo - Final time
+     *
+     * @function getTimeTo
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getTimeTo = function() {
+      return memberTimeTo;
     };
 
     /**
@@ -224,6 +257,29 @@ define(
     };
 
     /**
+     * Updates the countries BDQ names array (synchronous).
+     * @param {string} countries - Countries ids
+     * @returns {array} namesArray - Countries names
+     *
+     * @function updateCountriesBdqNamesSync
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateCountriesBdqNamesSync = function(countries) {
+      var namesArray = JSON.parse($.ajax({
+        async: false,
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          key: "Countries",
+          ids: countries === undefined || countries === null ? getCountries().toString() : countries
+        }
+      }).responseText);
+
+      return namesArray;
+    };
+
+    /**
      * Returns the countries BDQ names array.
      * @returns {array} memberCountriesBdqNames - Countries BDQ names array
      *
@@ -316,6 +372,29 @@ define(
           }
         }
       });
+    };
+
+    /**
+     * Updates the states BDQ names array (synchronous).
+     * @param {string} states - States ids
+     * @returns {array} namesArray - States names
+     *
+     * @function updateStatesBdqNamesSync
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateStatesBdqNamesSync = function(states) {
+      var namesArray = JSON.parse($.ajax({
+        async: false,
+        url: Utils.getBaseUrl() + "get-bdq-names",
+        type: "GET",
+        data: {
+          key: "States",
+          ids: states === undefined || states === null ? getStates().toString() : states
+        }
+      }).responseText);
+
+      return namesArray;
     };
 
     /**
@@ -487,6 +566,30 @@ define(
     };
 
     /**
+     * Sets the id of the current protected area.
+     * @param {object} protectedArea - Id of the protected area
+     *
+     * @function setProtectedArea
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setProtectedArea = function(protectedArea) {
+      memberProtectedArea = protectedArea;
+    };
+
+    /**
+     * Returns the id fo the current protected area.
+     * @returns {object} memberProtectedArea - Current protected area
+     *
+     * @function getProtectedArea
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getProtectedArea = function() {
+      return memberProtectedArea;
+    };
+
+    /**
      * Creates the date filter.
      * @returns {string} cql - Date cql filter
      *
@@ -499,6 +602,23 @@ define(
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
       cql += " and ";
       cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
+
+      return cql;
+    };
+
+    /**
+     * Creates the date / time filter.
+     * @returns {string} cql - Date / time cql filter
+     *
+     * @private
+     * @function createDateTimeFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createDateTimeFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFieldName + " between " + Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) + 'T' + memberTimeFrom;
+      cql += " and ";
+      cql += Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat) + 'T' + memberTimeTo;
 
       return cql;
     };
@@ -525,6 +645,23 @@ define(
     };
 
     /**
+     * Updates the initial and the final times.
+     * @param {string} newTimeFrom - New initial time
+     * @param {string} newTimeTo - New final time
+     *
+     * @function updateTimes
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateTimes = function(newTimeFrom, newTimeTo) {
+      memberTimeFrom = newTimeFrom;
+      memberTimeTo = newTimeTo;
+
+      $('#filter-time-from').val(memberTimeFrom);
+      $('#filter-time-to').val(memberTimeTo);
+    };
+
+    /**
      * Updates the initial and the final date to the current date.
      *
      * @function updateDatesToCurrent
@@ -547,6 +684,27 @@ define(
 
       $('#filter-date-from-graphics').val(Utils.dateToString(memberDateFrom, 'YYYY/MM/DD'));
       $('#filter-date-to-graphics').val(Utils.dateToString(memberDateTo, 'YYYY/MM/DD'));
+    };
+
+    /**
+     * Updates the initial and the final times to the default times.
+     *
+     * @function updateTimesToDefault
+     * @memberof Filter(2)
+     * @inner
+     */
+    var updateTimesToDefault = function() {
+      memberTimeFrom = '00:00';
+      memberTimeTo = '23:59';
+
+      $('#filter-time-from').val(memberTimeFrom);
+      $('#filter-time-to').val(memberTimeTo);
+
+      $('#filter-time-from-attributes-table').val(memberTimeFrom);
+      $('#filter-time-to-attributes-table').val(memberTimeTo);
+
+      $('#filter-time-from-graphics').val(memberTimeFrom);
+      $('#filter-time-to-graphics').val(memberTimeTo);
     };
 
     /**
@@ -699,8 +857,9 @@ define(
      */
     var applyFilter = function() {
       var dates = Utils.getFilterDates(true, 0);
+      var times = Utils.getFilterTimes(true, 0);
 
-      if(dates !== null) {
+      if(dates !== null && times !== null) {
         if(dates.length === 0) {
           updateDatesToCurrent();
           var filterDateFrom = getFormattedDateFrom('YYYY/MM/DD');
@@ -710,11 +869,26 @@ define(
           var filterDateTo = dates[1];
         }
 
+        if(times.length === 0) {
+          updateTimesToDefault();
+          var filterTimeFrom = '00:00';
+          var filterTimeTo = '23:59';
+        } else {
+          var filterTimeFrom = times[0];
+          var filterTimeTo = times[1];
+        }
+
         $('#filter-date-from-attributes-table').val(filterDateFrom);
         $('#filter-date-to-attributes-table').val(filterDateTo);
 
         $('#filter-date-from-graphics').val(filterDateFrom);
         $('#filter-date-to-graphics').val(filterDateTo);
+
+        $('#filter-time-from-attributes-table').val(filterTimeFrom);
+        $('#filter-time-to-attributes-table').val(filterTimeTo);
+
+        $('#filter-time-from-graphics').val(filterTimeFrom);
+        $('#filter-time-to-graphics').val(filterTimeTo);
 
         setSatellites($('#filter-satellite').val());
 
@@ -737,9 +911,11 @@ define(
         memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
         memberSpecialRegionsCitiesIds = specialRegionsData.specialRegionsCitiesIds;
 
-        if(filterDateFrom.length > 0 && filterDateTo.length > 0) {
+        if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
-          cql += createDateFilter() + " AND ";
+          updateTimes(filterTimeFrom, filterTimeTo);
+
+          cql += createDateTimeFilter() + " AND ";
 
           if(Map.getLayers().length > 0) processLayers(Map.getLayers());
         }
@@ -882,13 +1058,7 @@ define(
     var processLayers = function(layers) {
       $.each(layers, function(j, layer) {
         if(layer.Time !== null) {
-          TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, { TIME: Utils.processStringWithDatePattern(layer.Time) }, true);
-
-          var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
-          layerName = Utils.processStringWithDatePattern(layerName);
-
-          $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
-          TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+          Map.updateLayerTime(layer);
         }
 
         if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id) {
@@ -896,8 +1066,31 @@ define(
             var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField + "=" + memberContinent;
             TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
           }
+        } else if(layer.Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
+          if(memberContinent !== null) {
+            var cqlFilter = Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.ContinentField + "=" + memberContinent;
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+          }
         } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id) {
           var cqlFilter = Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField + " in (";
+
+          if(memberCountries.length > 0 || memberSpecialRegionsCountries.length > 0) {
+            for(var count = 0; count < memberCountries.length; count++) {
+              cqlFilter += memberCountries[count] + ",";
+            }
+
+            for(var count = 0; count < memberSpecialRegionsCountriesIds.length; count++) {
+              cqlFilter += memberSpecialRegionsCountriesIds[count] + ",";
+            }
+
+            cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
+          } else {
+            cqlFilter += "0)";
+          }
+
+          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layer.Id);
+        } else if(layer.Id === Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.Id) {
+          var cqlFilter = Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.CountryField + " in (";
 
           if(memberCountries.length > 0 || memberSpecialRegionsCountries.length > 0) {
             for(var count = 0; count < memberCountries.length; count++) {
@@ -1024,8 +1217,8 @@ define(
 
           updateBdqNames(function() {
             applyCurrentSituationFilter(
-              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
-              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat),
+              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
               countries,
               memberStates,
               memberStatesBdqNames,
@@ -1040,8 +1233,8 @@ define(
 
     /**
      * Applies filters to the current situation layers.
-     * @param {int} begin - Initial date
-     * @param {int} end - Final date
+     * @param {int} begin - Initial date / time
+     * @param {int} end - Final date / time
      * @param {array} countries - Countries ids
      * @param {array} states - States ids
      * @param {array} statesNames - States names
@@ -1122,9 +1315,9 @@ define(
         if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satelliteItem.Current)) {
           if((satelliteReferenceBegin <= memberDateFrom && satelliteReferenceEnd >= memberDateTo) || (satelliteReferenceBegin <= memberDateFrom && satelliteItem.ReferenceCurrent)) {
             if(Utils.stringInArray(selectedOptions, satelliteItem.Id)) {
-              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\" selected>Refer&ecirc;ncia</option>";
+              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\" selected>Refer. (" + satelliteItem.Name + ")</option>";
             } else {
-              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\">Refer&ecirc;ncia</option>";
+              referenceSatellite += "<option value=\"" + satelliteItem.Id + "\">Refer. (" + satelliteItem.Name + ")</option>";
             }
           } else {
             if(Utils.stringInArray(selectedOptions, satelliteItem.Id)) {
@@ -1237,13 +1430,22 @@ define(
     var init = function() {
       $(document).ready(function() {
         updateDatesToCurrent();
+        updateTimesToDefault();
         Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
+
+        setTimeout(function() {
+          $('#filter-satellite').val('all');
+          $('#filter-satellite-graphics').val('all');
+          $('#filter-satellite-attributes-table').val('all');
+        }, 4000);
       });
     };
 
     return {
       getFormattedDateFrom: getFormattedDateFrom,
       getFormattedDateTo: getFormattedDateTo,
+      getTimeFrom: getTimeFrom,
+      getTimeTo: getTimeTo,
       setSatellites: setSatellites,
       getSatellites: getSatellites,
       setBiomes: setBiomes,
@@ -1254,12 +1456,14 @@ define(
       getCountries: getCountries,
       setCountriesBdqNames: setCountriesBdqNames,
       updateCountriesBdqNames: updateCountriesBdqNames,
+      updateCountriesBdqNamesSync: updateCountriesBdqNamesSync,
       getCountriesBdqNames: getCountriesBdqNames,
       clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
       setStatesBdqNames: setStatesBdqNames,
       updateStatesBdqNames: updateStatesBdqNames,
+      updateStatesBdqNamesSync: updateStatesBdqNamesSync,
       getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
       clearSpecialRegions: clearSpecialRegions,
@@ -1272,8 +1476,12 @@ define(
       getSpecialRegionsStatesIds: getSpecialRegionsStatesIds,
       getSpecialRegionsCities: getSpecialRegionsCities,
       getSpecialRegionsCitiesIds: getSpecialRegionsCitiesIds,
+      setProtectedArea: setProtectedArea,
+      getProtectedArea: getProtectedArea,
       updateDates: updateDates,
+      updateTimes: updateTimes,
       updateDatesToCurrent: updateDatesToCurrent,
+      updateTimesToDefault: updateTimesToDefault,
       applyFilter: applyFilter,
       createSpecialRegionsArrays: createSpecialRegionsArrays,
       checkFiresCount: checkFiresCount,

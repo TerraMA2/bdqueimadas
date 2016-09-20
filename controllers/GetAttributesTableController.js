@@ -35,6 +35,7 @@ var GetAttributesTableController = function(app) {
     if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
     if(request.body.cities !== null && request.body.cities !== '') options.cities = request.body.cities;
+    if(request.body.protectedArea !== null && request.body.protectedArea !== '') options.protectedArea = request.body.protectedArea;
 
     // Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {
@@ -45,15 +46,15 @@ var GetAttributesTableController = function(app) {
     });
 
     // Call of the method 'getAttributesTableData', responsible for returning data of the attributes table accordingly with the request parameters
-    memberAttributesTable.getAttributesTableData(request.body.length, request.body.start, order, request.body.search.value, request.body.dateFrom, request.body.dateTo, options, function(err, result) {
+    memberAttributesTable.getAttributesTableData(request.pgPool, request.body.length, request.body.start, order, request.body.search.value, request.body.dateTimeFrom, request.body.dateTimeTo, options, function(err, result) {
       if(err) return console.error(err);
 
       // Call of the method 'getAttributesTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, not considering the table search
-      memberAttributesTable.getAttributesTableCount(request.body.dateFrom, request.body.dateTo, options, function(err, resultCount) {
+      memberAttributesTable.getAttributesTableCount(request.pgPool, request.body.dateTimeFrom, request.body.dateTimeTo, options, function(err, resultCount) {
         if(err) return console.error(err);
 
         // Call of the method 'getAttributesTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, considering the table search
-        memberAttributesTable.getAttributesTableCountWithSearch(request.body.dateFrom, request.body.dateTo, request.body.search.value, options, function(err, resultCountWithSearch) {
+        memberAttributesTable.getAttributesTableCountWithSearch(request.pgPool, request.body.dateTimeFrom, request.body.dateTimeTo, request.body.search.value, options, function(err, resultCountWithSearch) {
           if(err) return console.error(err);
 
           // Array responsible for keeping the data obtained by the method 'getAttributesTableData'

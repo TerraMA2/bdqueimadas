@@ -199,8 +199,9 @@ define(
      */
     var updateGraphics = function(useGraphicsFilter) {
       var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
+      var times = Utils.getFilterTimes(true, (useGraphicsFilter ? 2 : 0));
 
-      if(dates !== null) {
+      if(dates !== null && times !== null) {
         if(dates.length === 0) {
           vex.dialog.alert({
             message: '<p class="text-center">Datas inválidas!</p>',
@@ -210,9 +211,18 @@ define(
               className: 'bdqueimadas-btn'
             }]
           });
+        } else if(times.length === 0) {
+          vex.dialog.alert({
+            message: '<p class="text-center">Horas inválidas!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
         } else {
-          var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-          var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+          var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
 
           var satellites = useGraphicsFilter ?
                            (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
@@ -221,6 +231,10 @@ define(
           var biomes = useGraphicsFilter ?
                        (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
                        Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
+
+          var protectedArea = useGraphicsFilter ?
+                              ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? JSON.parse($('#pas-graphics').data('value')) : null) :
+                              Filter.getProtectedArea();
 
           if(!useGraphicsFilter) {
             $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
@@ -240,10 +254,19 @@ define(
 
               var loadGraphic = true;
 
-              if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered && memberCountries === '') loadGraphic = false;
-              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered && memberCountries !== '') loadGraphic = false;
-              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered && memberStates === '') loadGraphic = false;
-              else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered && memberStates !== '') loadGraphic = false;
+              if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsACountryFiltered && memberCountries === '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              } else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoCountryFiltered && memberCountries !== '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              } else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsAStateFiltered && memberStates === '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              } else if(firesCountGraphicsConfig[i].ShowOnlyIfThereIsNoStateFiltered && memberStates !== '') {
+                loadGraphic = false;
+                hideGraphic(firesCountGraphicsConfig[i].Id);
+              }
 
               if(loadGraphic) {
                 if(memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] === undefined) {
@@ -254,11 +277,15 @@ define(
                                        "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Minimizar</button></div></div>" +
                                        "<div class=\"box-body\" style=\"display: block;\"><div class=\"chart\">" +
                                        "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
-                                       "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
-                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                       "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                       "-graphic-message-container\" class=\"text-center\">" +
-                                       "</div></div></div></div>";
+                                       "<a href=\"#\" class=\"btn btn-app graphic-button export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
+                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
+
+                    if(firesCountGraphicsConfig[i].PAGraphic)
+                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+
+                    htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
+                                    "-graphic-message-container\" class=\"text-center\">" +
+                                    "</div></div></div></div>";
                   } else {
                     var htmlElements = "<div data-sort=\"" + firesCountGraphicsConfig[i].Order + "\" class=\"box box-default graphic-item collapsed-box\" style=\"display: none;\"><div class=\"box-header with-border\"><h3 class=\"box-title\">" +
                                        firesCountGraphicsConfig[i].Title + "<span class=\"additional-title\"> | 0 focos, de " + $('#filter-date-from-graphics').val() + " a " +
@@ -266,11 +293,15 @@ define(
                                        "<button type=\"button\" class=\"btn btn-box-tool collapse-btn\" data-widget=\"collapse\">Expandir</button></div></div>" +
                                        "<div class=\"box-body\" style=\"display: none;\"><div class=\"chart\">" +
                                        "<canvas id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic\"></canvas>" +
-                                       "<a href=\"#\" class=\"btn btn-app export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
-                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>" +
-                                       "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                       "-graphic-message-container\" class=\"text-center\">" +
-                                       "</div></div></div></div>";
+                                       "<a href=\"#\" class=\"btn btn-app graphic-button export-graphic-data\" data-id=\"" + firesCountGraphicsConfig[i].Id +
+                                       "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
+
+                    if(firesCountGraphicsConfig[i].PAGraphic)
+                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+
+                    htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
+                                    "-graphic-message-container\" class=\"text-center\">" +
+                                    "</div></div></div></div>";
                   }
 
                   insertGraphicAtPosition(htmlElements);
@@ -280,8 +311,8 @@ define(
                 Utils.getSocket().emit(
                   'graphicsFiresCountRequest',
                   {
-                    dateFrom: dateFrom,
-                    dateTo: dateTo,
+                    dateTimeFrom: dateTimeFrom,
+                    dateTimeTo: dateTimeTo,
                     id: firesCountGraphicsConfig[i].Id,
                     y: firesCountGraphicsConfig[i].Y,
                     key: firesCountGraphicsConfig[i].Key,
@@ -292,6 +323,7 @@ define(
                     countries: memberAllCountries,
                     states: memberStates,
                     cities: memberCities,
+                    protectedArea: protectedArea,
                     filterRules: {
                       ignoreCountryFilter: firesCountGraphicsConfig[i].IgnoreCountryFilter,
                       ignoreStateFilter: firesCountGraphicsConfig[i].IgnoreStateFilter,
@@ -468,6 +500,7 @@ define(
      */
     var exportGraphicData = function(id) {
       var dates = Utils.getFilterDates(true, 2);
+      var times = Utils.getFilterTimes(true, 2);
 
       if(dates !== null) {
         if(dates.length === 0) {
@@ -480,13 +513,14 @@ define(
             }]
           });
         } else {
-          var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-          var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
+          var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
+          var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
+          var protectedArea = ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? $('#pas-graphics').data('value') : '');
 
           getSpatialFilterData(function(allCountries, countries, states, cities) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id;
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
             location.href = exportLink;
           });
         }

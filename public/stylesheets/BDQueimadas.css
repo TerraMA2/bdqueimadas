@@ -281,7 +281,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 #graph-box > .box { margin-bottom: 8px !important; }
 
-.export-graphic-data { margin-top: 20px; }
+.graphic-button { margin-top: 20px; }
 
 #filter-button-attributes-table, #filter-button-graphics {
   float: left;
@@ -318,12 +318,13 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .div-date-filter-export > label {
+  width: 178px;
   float: left;
   margin-right: 10px;
   margin-top: 5px;
 }
 
-.div-date-filter-export > input { max-width: 150px; }
+.div-date-filter-export > input { max-width: 113px; }
 
 .bdqueimadas-btn {
   color: #fff;
@@ -474,6 +475,12 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .bdqueimadas-form { margin-bottom: 0px; }
 
+#layer-explorer-and-filter-box {
+  font-size: 13px !important;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 #layer-explorer-and-filter-box h4 { margin: 0 0 5px 0; }
 
 #layer-explorer-and-filter-box hr, .sidebar-menu hr {
@@ -587,8 +594,6 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .map-tool-button.active > button { background-color: rgba(255, 255, 255, 1); }
 
-#map-info-button { bottom: 108px; }
-
 #map-tools {
   z-index: 9999;
   position: absolute;
@@ -600,6 +605,10 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 #initialExtent { top: 86px; }
 
 #getAttributes { top: 129px; }
+
+#fogograma { top: 172px; }
+
+#map-info-button { top: 215px; }
 
 #page-second-title > .inpe-image {
   position: absolute;
@@ -708,11 +717,15 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   float: left;
 }
 
-.languages-item.portuguese { background-image: url('../images/brazil.png'); }
+#languages-secondary > .languages-item:hover {
+  background-color: transparent !important;
+}
 
-.languages-item.english { background-image: url('../images/usa.png'); }
+.languages-item.portuguese, .languages-item.portuguese:hover { background-image: url('../images/brazil.png') !important; }
 
-.languages-item.spanish { background-image: url('../images/spain.png'); }
+.languages-item.english, .languages-item.english:hover { background-image: url('../images/usa.png') !important; }
+
+.languages-item.spanish, .languages-item.spanish:hover { background-image: url('../images/spain.png') !important; }
 
 .main-sidebar { padding-top: 50px !important; }
 
@@ -723,9 +736,26 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-left: 0px !important;
 }
 
-.unsortable-separator > span { margin-left: 30px !important; }
+span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
+
+.unsortable-separator > span { margin-left: 24px !important; }
 
 .unsortable-separator > input { margin-left: 10px; }
+
+.menu-btn-number {
+  position: absolute;
+  font-weight: 800;
+  color: #172938;
+  top: 0px;
+  left: 0px;
+}
+
+.ui-autocomplete {
+  z-index: 99999999999 !important;
+  max-height: 350px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
 
 /* TerraMA2Components styles */
 
@@ -753,44 +783,161 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 #terrama2-layerexplorer ul.children span.group-name { padding-left: 0px !important; }
 
-.terrama2-layerexplorer-plus, .terrama2-layerexplorer-minus { padding-right: 8px !important; }
+.terrama2-layerexplorer-plus, .terrama2-layerexplorer-minus { padding-right: 3px !important; }
 
 #terrama2-layerexplorer li.parent_li { margin-left: 10px !important; }
 
 #terrama2-layerexplorer ul { padding-left: 15px !important; }
+
+#terrama2-map .terrama2-mouse-position { font-size: 14px; }
+
+#terrama2-map .ol-scale-line-inner { font-size: 14px; }
+
+#terrama2-map #terrama2-map-info { bottom: 42px; }
+
+#terrama2-map .ol-attribution { bottom: 95px; }
+
+.ol-zoom-in, .ol-zoom-out { width: 30px !important; height: 30px !important; }
 
 /* AdminLTEQueimadas general adjustments */
 
 .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right), .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu { display: none !important; }
 
 .sidebar-menu > li > a {
-  height: 44px;
+  background-position: 16px;
   background-repeat: no-repeat;
-  background-position: 14px;
-  background-size: 14px;
+  background-size: 15px;
 }
 
 .sidebar-menu > li > a:hover {
+  background-position: 16px !important;
   background-repeat: no-repeat !important;
-  background-position: 14px !important;
-  background-size: 14px !important;
+  background-size: 15px !important;
 }
 
-#layerexplorer-btn > a { background-image: url('../images/icon_layers.png'); }
+#current-situation-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_situacao_atual.png");
+  height: 44px !important;
+}
 
-#layerexplorer-btn > a:hover { background-image: url('../images/icon_layers_hover.png'); }
+#current-situation-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_situacao_atual_hover.png");
+  height: 44px !important;
+}
 
-#filters-btn > a { background-image: url('../images/icon_calendar.png'); }
+#current-situation-protected-areas-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_deteccao_areas_protegidas.png");
+  height: 44px !important;
+}
 
-#filters-btn > a:hover { background-image: url('../images/icon_calendar_hover.png'); }
+#current-situation-protected-areas-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_deteccao_areas_protegidas_hover.png");
+  height: 44px !important;
+}
 
-#tables-btn > a { background-image: url('../images/icon_table.png'); }
+#infoqueima-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_boletim_infoqueima.png");
+  height: 44px !important;
+}
 
-#tables-btn > a:hover { background-image: url('../images/icon_table_hover.png'); }
+#infoqueima-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_boletim_infoqueima_hover.png");
+  height: 44px !important;
+}
 
-#graphs-btn > a { background-image: url('../images/icon_graphics.png'); }
+#ciman-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_ciman.png");
+  height: 44px !important;
+}
 
-#graphs-btn > a: { background-image: url('../images/icon_graphics.png'); }
+#ciman-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_ciman_hover.png");
+  height: 44px !important;
+}
+
+#on-media-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_na_midia.png");
+  background-size: 19px !important;
+  background-position: 13px 18px !important;
+  height: 44px !important;
+}
+
+#on-media-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_na_midia_hover.png");
+  background-size: 19px !important;
+  background-position: 13px 18px !important;
+  height: 44px !important;
+}
+
+#maps-and-animations-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_mapas_mensais_e_animacoes.png");
+  background-size: 18px !important;
+  background-position: 13px !important;
+  height: 44px !important;
+}
+
+#maps-and-animations-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_mapas_mensais_e_animacoes_hover.png");
+  background-size: 18px !important;
+  background-position: 13px !important;
+  height: 44px !important;
+}
+
+#examples-and-validations-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_exemplos_e_validacoes.png");
+  background-size: 19px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#examples-and-validations-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_exemplos_e_validacoes_hover.png");
+  background-size: 19px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-countries-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-countries-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico_hover.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-states-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#summary-states-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_resumo_historico_hover.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#fire-risk-btn {
+  background-image: url("../images/leftbar-icons/mini_icon_risco_de_fogo.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
+
+#fire-risk-btn:hover {
+  background-image: url("../images/leftbar-icons/mini_icon_risco_de_fogo_hover.png");
+  background-size: 18px !important;
+  background-position: 14px !important;
+  height: 44px !important;
+}
 
 .skin-queimadas .main-header #gov-header #header input.searchButton { background-image: url("../externals/adminlte/img/sprite.png") 0 2px; }
 

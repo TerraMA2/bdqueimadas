@@ -42,6 +42,7 @@ var ExportGraphicDataController = function(app) {
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
     if(request.query.cities !== '') options.cities = request.query.cities;
+    if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
 
     var graphicConfigurations = getGraphicConfigurations(request.query.id);
 
@@ -58,20 +59,26 @@ var ExportGraphicDataController = function(app) {
       showOnlyIfThereIsNoStateFiltered: graphicConfigurations.ShowOnlyIfThereIsNoStateFiltered
     };
 
-    memberGraphics.getFiresTotalCount(request.query.dateFrom, request.query.dateTo, filterRules, options, function(err, firesTotalCount) {
+    memberGraphics.getFiresTotalCount(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, filterRules, options, function(err, firesTotalCount) {
       if(err) return console.error(err);
 
       if(graphicConfigurations.Key === "week") {
-        memberGraphics.getFiresCountByWeek(request.query.dateFrom, request.query.dateTo, filterRules, options, function(err, firesCount) {
+        memberGraphics.getFiresCountByWeek(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, filterRules, options, function(err, firesCount) {
           if(err) return console.error(err);
 
-          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateFrom, request.query.dateTo, response);
+          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateTimeFrom, request.query.dateTimeTo, response);
+        });
+      } else if(graphicConfigurations.Key === "UCE" || graphicConfigurations.Key === "UCF" || graphicConfigurations.Key === "TI" || graphicConfigurations.Key === "UCE_5KM" || graphicConfigurations.Key === "UCF_5KM" || graphicConfigurations.Key === "TI_5KM" || graphicConfigurations.Key === "UCE_10KM" || graphicConfigurations.Key === "UCF_10KM" || graphicConfigurations.Key === "TI_10KM") {
+        memberGraphics.getFiresCountByPA(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+          if(err) return console.error(err);
+
+          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateTimeFrom, request.query.dateTimeTo, response);
         });
       } else {
-        memberGraphics.getFiresCount(request.query.dateFrom, request.query.dateTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+        memberGraphics.getFiresCount(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
           if(err) return console.error(err);
 
-          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateFrom, request.query.dateTo, response);
+          downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateTimeFrom, request.query.dateTimeTo, response);
         });
       }
     });
@@ -83,8 +90,8 @@ var ExportGraphicDataController = function(app) {
    * @param {json} firesCount - Fires count for the given filters grouped by the given key
    * @param {string} y - Y label of the graphic
    * @param {string} key - Graphic key
-   * @param {string} dateFrom - Initial date
-   * @param {string} dateTo - Final date
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
    * @param {object} response - Response object
    *
    * @private
@@ -92,7 +99,7 @@ var ExportGraphicDataController = function(app) {
    * @memberof ExportGraphicDataController
    * @inner
    */
-  var downloadCsvFiresCount = function(firesTotalCount, firesCount, y, key, dateFrom, dateTo, response) {
+  var downloadCsvFiresCount = function(firesTotalCount, firesCount, y, key, dateTimeFrom, dateTimeTo, response) {
     var csv = createCsvFiresCount(firesTotalCount, firesCount, y);
     var path = require('path');
 
@@ -102,7 +109,7 @@ var ExportGraphicDataController = function(app) {
       memberFs.writeFile(csvPath, csv, 'ascii', function(err) {
         if(err) return console.error(err);
 
-        response.download(csvPath, 'Focos por ' + key + ' - de ' + dateFrom + ' a ' + dateTo + '.csv', function(err) {
+        response.download(csvPath, 'Focos por ' + key + ' - de ' + dateTimeFrom + ' a ' + dateTimeTo + '.csv', function(err) {
           if(err) return console.error(err);
 
           memberFs.unlink(csvPath);
