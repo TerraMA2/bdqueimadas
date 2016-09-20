@@ -24,6 +24,7 @@ var Filter = function() {
 
   /**
    * Returns the count of the fires.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -117,6 +118,7 @@ var Filter = function() {
 
   /**
    * Returns a list of continents.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -153,6 +155,7 @@ var Filter = function() {
 
   /**
    * Returns a continent filtered by the received country id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} country - Country id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -182,6 +185,7 @@ var Filter = function() {
 
   /**
    * Returns a continent filtered by the received state id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} state - State id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -211,6 +215,7 @@ var Filter = function() {
 
   /**
    * Returns a list of countries filtered by the received states ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -254,6 +259,7 @@ var Filter = function() {
 
   /**
    * Returns a list of countries filtered by the received continent id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} continent - Continent id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -283,6 +289,7 @@ var Filter = function() {
 
   /**
    * Returns a list of states filtered by the received country id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} country - Country id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -312,6 +319,7 @@ var Filter = function() {
 
   /**
    * Returns a list of states filtered by the received countries ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -351,6 +359,7 @@ var Filter = function() {
 
   /**
    * Returns the continent extent correspondent to the received id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} continent - Continent id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -380,6 +389,7 @@ var Filter = function() {
 
   /**
    * Returns the countries extent correspondent to the received ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -418,6 +428,7 @@ var Filter = function() {
 
   /**
    * Returns the states extent correspondent to the received ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -456,6 +467,7 @@ var Filter = function() {
 
   /**
    * Returns the special regions extent correspondent to the received ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} specialRegions - Special regions ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -494,6 +506,7 @@ var Filter = function() {
 
   /**
    * Returns the states and special regions extent correspondent to the received ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {array} specialRegions - Special regions ids
    * @param {function} callback - Callback function
@@ -543,6 +556,7 @@ var Filter = function() {
 
   /**
    * Returns the extent of the protected area corresponding to the received id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {integer} id - Id of the protected area
    * @param {string} type - Type of the protected area (TI, UCE or UCF)
    * @param {function} callback - Callback function
@@ -587,6 +601,7 @@ var Filter = function() {
 
   /**
    * Returns the number of the fires located in the country correspondent to the received id.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} country - Country id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -616,6 +631,7 @@ var Filter = function() {
 
   /**
    * Returns the data of the polygon that intersects with the received point.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} longitude - Longitude of the point
    * @param {string} latitude - Latitude of the point
    * @param {float} resolution - Current map resolution
@@ -661,6 +677,7 @@ var Filter = function() {
 
   /**
    * Returns the BDQ names of the received countries ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -703,6 +720,7 @@ var Filter = function() {
 
   /**
    * Returns the BDQ names of the received states ids.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -745,6 +763,7 @@ var Filter = function() {
 
   /**
    * Returns the satellites for the given filter.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -837,6 +856,7 @@ var Filter = function() {
 
   /**
    * Returns the special regions.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Filtered countries
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -885,6 +905,7 @@ var Filter = function() {
 
   /**
    * Returns the protected areas that match the given value.
+   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} value - Value to be used in the search of protected areas
    * @param {object} searchFor - Flags that indicates in which tables the search should be performed. Format: { 'UCE': true/false, 'UCF': true/false, 'TI': true/false }
    * @param {function} callback - Callback function
