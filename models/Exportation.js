@@ -38,21 +38,33 @@ var Exportation = function() {
    * @param {json} result - Result of the operation
    */
 
-   // new
-
+   /**
+    * Returns the PostgreSQL connection string.
+    * @returns {string} connectionString - PostgreSQL connection string
+    *
+    * @function getPgConnectionString
+    * @memberof Exportation
+    * @inner
+    */
    this.getPgConnectionString = function() {
      var connectionString = "PG:host=" + memberDatabaseConfigurations.Host + " user=" + memberDatabaseConfigurations.User + " dbname=" + memberDatabaseConfigurations.Database;
 
      return connectionString;
    };
 
+   /**
+    * Returns the ogr2ogr application string.
+    * @returns {string} ogr2ogr - ogr2ogr application
+    *
+    * @function ogr2ogr
+    * @memberof Exportation
+    * @inner
+    */
    this.ogr2ogr = function() {
      var ogr2ogr = memberApplicationConfigurations.OGR2OGR;
 
      return ogr2ogr;
    };
-
-   // new
 
   /**
    * Returns the fires data in GeoJSON format.
@@ -191,14 +203,19 @@ var Exportation = function() {
     });
   };
 
-  // new
-
+  /**
+   * Returns the query accordingly with the received parameters.
+   * @param {boolean} selectGeometry - Flag that indicates if the geometry field should be selected
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
+   * @param {json} options - Filtering options
+   * @returns {string} finalQuery - Query
+   *
+   * @function getQuery
+   * @memberof Exportation
+   * @inner
+   */
   this.getQuery = function(selectGeometry, dateTimeFrom, dateTimeTo, options) {
-    // %% outputs a literal % character.
-    // %I outputs an escaped SQL identifier.
-    // %L outputs an escaped SQL literal.
-    // %|s outputs a simple string.
-
     // Setting of the query columns string
     var columns = "";
 
@@ -317,8 +334,6 @@ var Exportation = function() {
 
     return finalQuery;
   };
-
-  // new
 
   /**
    * Registers the downloads in the database.
