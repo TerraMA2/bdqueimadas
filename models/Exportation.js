@@ -172,20 +172,51 @@ var Exportation = function() {
 
           if(options.protectedArea.type === 'UCE') {
             var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var schemaAndTable5Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName5KM;
+            var schemaAndTable10Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName10KM;
             var geom = memberTablesConfig.UCE.GeometryFieldName;
             var id = memberTablesConfig.UCE.IdFieldName;
           } else if(options.protectedArea.type === 'UCF') {
             var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var schemaAndTable5Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName5KM;
+            var schemaAndTable10Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName10KM;
             var geom = memberTablesConfig.UCF.GeometryFieldName;
             var id = memberTablesConfig.UCF.IdFieldName;
           } else {
             var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var schemaAndTable5Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName5KM;
+            var schemaAndTable10Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName10KM;
             var geom = memberTablesConfig.TI.GeometryFieldName;
             var id = memberTablesConfig.TI.IdFieldName;
           }
 
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
-          params.push(options.protectedArea.id);
+          if(!options.bufferInternal && options.bufferFive && options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + ")))";
+            params.push(options.protectedArea.id, options.protectedArea.id);
+          } else if(options.bufferInternal && !options.bufferFive && options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))" +
+                     " or (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + "))))";
+            params.push(options.protectedArea.id, options.protectedArea.id, options.protectedArea.id);
+          } else if(options.bufferInternal && options.bufferFive && !options.bufferTen) {
+            query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + "))";
+            params.push(options.protectedArea.id);
+          } else if(!options.bufferInternal && !options.bufferFive && options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + ")))";
+            params.push(options.protectedArea.id, options.protectedArea.id);
+          } else if(options.bufferInternal && !options.bufferFive && !options.bufferTen) {
+            query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+            params.push(options.protectedArea.id);
+          } else if(!options.bufferInternal && options.bufferFive && !options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + ")))";
+            params.push(options.protectedArea.id, options.protectedArea.id);
+          } else {
+            query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))";
+            params.push(options.protectedArea.id);
+          }
         }
 
         // If the 'options.limit' parameter exists, a limit clause is created
@@ -307,20 +338,51 @@ var Exportation = function() {
 
       if(options.protectedArea.type === 'UCE') {
         var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+        var schemaAndTable5Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName5KM;
+        var schemaAndTable10Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName10KM;
         var geom = memberTablesConfig.UCE.GeometryFieldName;
         var id = memberTablesConfig.UCE.IdFieldName;
       } else if(options.protectedArea.type === 'UCF') {
         var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+        var schemaAndTable5Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName5KM;
+        var schemaAndTable10Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName10KM;
         var geom = memberTablesConfig.UCF.GeometryFieldName;
         var id = memberTablesConfig.UCF.IdFieldName;
       } else {
         var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+        var schemaAndTable5Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName5KM;
+        var schemaAndTable10Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName10KM;
         var geom = memberTablesConfig.TI.GeometryFieldName;
         var id = memberTablesConfig.TI.IdFieldName;
       }
 
-      query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L))";
-      params.push(options.protectedArea.id);
+      if(!options.bufferInternal && options.bufferFive && options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L)))";
+        params.push(options.protectedArea.id, options.protectedArea.id);
+      } else if(options.bufferInternal && !options.bufferFive && options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L))" +
+                 " or (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L))))";
+        params.push(options.protectedArea.id, options.protectedArea.id, options.protectedArea.id);
+      } else if(options.bufferInternal && options.bufferFive && !options.bufferTen) {
+        query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L))";
+        params.push(options.protectedArea.id);
+      } else if(!options.bufferInternal && !options.bufferFive && options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L)))";
+        params.push(options.protectedArea.id, options.protectedArea.id);
+      } else if(options.bufferInternal && !options.bufferFive && !options.bufferTen) {
+        query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L))";
+        params.push(options.protectedArea.id);
+      } else if(!options.bufferInternal && options.bufferFive && !options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L)))";
+        params.push(options.protectedArea.id, options.protectedArea.id);
+      } else {
+        query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))";
+        params.push(options.protectedArea.id);
+      }
     }
 
     // If the 'options.limit' parameter exists, a limit clause is created

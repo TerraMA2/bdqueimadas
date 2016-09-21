@@ -43,6 +43,9 @@ var ExportController = function(app) {
       if(request.query.states !== '') options.states = request.query.states;
       if(request.query.cities !== '') options.cities = request.query.cities;
       if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
+      options.bufferInternal = (request.query.bufferInternal == "true");
+      options.bufferFive = (request.query.bufferFive == "true");
+      options.bufferTen = (request.query.bufferTen == "true");
 
       var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
 

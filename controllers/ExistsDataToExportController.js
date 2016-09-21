@@ -34,6 +34,9 @@ var ExistsDataToExportController = function(app) {
     if(request.body.cities !== '') options.cities = request.body.cities;
     if(request.body.protectedArea !== null && request.body.protectedArea !== '') options.protectedArea = request.body.protectedArea;
     options.limit = 1;
+    options.bufferInternal = (request.body.bufferInternal == "true");
+    options.bufferFive = (request.body.bufferFive == "true");
+    options.bufferTen = (request.body.bufferTen == "true");
 
     // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
     memberExportation.getGeoJSONData(request.pgPool, request.body.dateTimeFrom, request.body.dateTimeTo, options, function(err, GeoJSONData) {

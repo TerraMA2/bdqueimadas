@@ -272,6 +272,30 @@ define(
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
+              '<div class="row">' +
+                '<div class="col-md-4">' +
+                  '<div class="checkbox">' +
+                    '<label>' +
+                      '<input type="checkbox" id="buffer-internal" name="buffer-internal" disabled> Interno' +
+                    '</label>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="col-md-4">' +
+                  '<div class="checkbox">' +
+                    '<label>' +
+                      '<input type="checkbox" id="buffer-five" name="buffer-five" disabled> Buffer 5Km' +
+                    '</label>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="col-md-4">' +
+                  '<div class="checkbox">' +
+                    '<label>' +
+                      '<input type="checkbox" id="buffer-ten" name="buffer-ten" disabled> Buffer 10Km' +
+                    '</label>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
                   '<label for="filter-date-from-export">Data / Hora Início</label>' +
@@ -374,6 +398,8 @@ define(
                   $("#filter-error-export").text('Selecione algum bioma!');
                 } else if($("#exportation-type").val() === "") {
                   $("#filter-error-export").text('Formato da exportação inválido!');
+                } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
+                  $("#filter-error-export").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
                 } else {
                   var exportationSpatialFilterData = getExportationSpatialFilterDataSync();
 
@@ -389,7 +415,10 @@ define(
                       countries: exportationSpatialFilterData.allCountries,
                       states: exportationSpatialFilterData.states,
                       cities: exportationSpatialFilterData.cities,
-                      protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null)
+                      protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
+                      bufferInternal: $('#buffer-internal').is(':checked'),
+                      bufferFive: $('#buffer-five').is(':checked'),
+                      bufferTen: $('#buffer-ten').is(':checked')
                     },
                     success: function(existsDataToExport) {
                       if(existsDataToExport.existsDataToExport) {
@@ -402,6 +431,9 @@ define(
                                          "&cities=" + exportationSpatialFilterData.cities +
                                          "&format=" + $("#exportation-type").val() +
                                          "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
+                                         "&bufferInternal=" + $('#buffer-internal').is(':checked') +
+                                         "&bufferFive=" + $('#buffer-five').is(':checked') +
+                                         "&bufferTen=" + $('#buffer-ten').is(':checked') +
                                          "&t=" + existsDataToExport.token;
 
                         window.open(exportLink, '_blank');
@@ -489,6 +521,10 @@ define(
           },
           select: function(event, ui) {
             event.preventDefault();
+
+            $('#buffer-internal').removeAttr('disabled');
+            $('#buffer-five').removeAttr('disabled');
+            $('#buffer-ten').removeAttr('disabled');
 
             $('#pas-export').val(ui.item.label);
 
@@ -750,6 +786,10 @@ define(
           },
           success: function(data) {
             if(data.length > 0) {
+              $('#buffer-internal').removeAttr('disabled');
+              $('#buffer-five').removeAttr('disabled');
+              $('#buffer-ten').removeAttr('disabled');
+
               $('#pas-export').val(data[0].label);
 
               $('#pas-export').data('value', JSON.stringify({
