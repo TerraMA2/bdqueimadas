@@ -454,7 +454,15 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   left: 46%;
 }
 
+.navbar-custom-menu {
+  height: 50px;
+  background-color: #f8b802;
+  z-index: 9999999;
+  position: relative;
+}
+
 #page-title {
+  position: absolute;
   padding-top: 10px;
   padding-bottom: 10px;
   float: left;
