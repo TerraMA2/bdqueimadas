@@ -90,7 +90,7 @@
       "Id": "citiesWithTheBiggestNumberOfFires",
       "Y": "{municipio} / {estado}",
       "Key": "municipio",
-      "Title": "Municípios com mais focos (<= 30)",
+      "Title": "Municípios no país com mais focos (<= 30)",
       "Limit": 30,
       "Expanded": false,
       "PAGraphic": false,
