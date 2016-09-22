@@ -330,10 +330,10 @@ define(function() {
           }
 
           filterDateTo.val('');
-        } else if(diffDaysBetweenDates >= 365) {
+        } else if(diffDaysBetweenDates > 366) {
           if(showAlerts) {
             vex.dialog.alert({
-              message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+              message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
               buttons: [{
                 type: 'submit',
                 text: 'Ok',

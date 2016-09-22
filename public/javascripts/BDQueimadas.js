@@ -378,8 +378,8 @@ define(
                 } else if($("#filter-date-to-export").datepicker('getDate') > new Date()) {
                   $("#filter-error-export").text('Data final posterior à atual - corrigir!');
                   $("#filter-date-to-export").val('');
-                } else if(diffDaysBetweenDates >= 365) {
-                  $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
+                } else if(diffDaysBetweenDates > 366) {
+                  $("#filter-error-export").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
                   $("#filter-date-from-export").val('');
                   $("#filter-date-to-export").val('');
                 } else if(!Utils.isTimeValid($("#filter-time-from-export").val()) && !Utils.isTimeValid($("#filter-time-to-export").val())) {
@@ -481,8 +481,8 @@ define(
           if(dateFrom === null) {
             $("#filter-error-export").text('A data inicial deve ser preenchida primeiro!');
             $("#filter-date-to-export").val('');
-          } else if(diffDaysBetweenDates >= 365) {
-            $("#filter-error-export").text('O período do filtro deve ser menor que 365 dias - corrigir!');
+          } else if(diffDaysBetweenDates > 366) {
+            $("#filter-error-export").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
             $("#filter-date-from-export").val('');
             $("#filter-date-to-export").val('');
           } else {
@@ -1740,9 +1740,9 @@ define(
           });
 
           $("#filter-date-to").val('');
-        } else if(diffDaysBetweenDates >= 365) {
+        } else if(diffDaysBetweenDates > 366) {
           vex.dialog.alert({
-            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
@@ -1794,9 +1794,9 @@ define(
           });
 
           $("#filter-date-to-attributes-table").val('');
-        } else if(diffDaysBetweenDates >= 365) {
+        } else if(diffDaysBetweenDates > 366) {
           vex.dialog.alert({
-            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
@@ -1848,9 +1848,9 @@ define(
           });
 
           $("#filter-date-to-graphics").val('');
-        } else if(diffDaysBetweenDates >= 365) {
+        } else if(diffDaysBetweenDates > 366) {
           vex.dialog.alert({
-            message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
+            message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
             buttons: [{
               type: 'submit',
               text: 'Ok',
