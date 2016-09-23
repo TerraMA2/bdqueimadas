@@ -291,6 +291,7 @@ define(
           if($('#' + backgroundLayers[i].replace(':', '') + ' > input').is(":checked")) {
             TerraMA2WebComponents.MapDisplay.setLayerVisibilityById(backgroundLayers[i], false);
             $('#' + backgroundLayers[i].replace(':', '') + ' > input').attr('checked', false);
+            removeVisibleLayer(backgroundLayers[i]);
           }
         }
       }
