@@ -455,6 +455,17 @@ define(
           },
           legend: {
             display: false
+          },
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  stepSize: 5,
+                  maxTicksLimit: 20
+                }
+              }
+            ]
           }
         }
       });
