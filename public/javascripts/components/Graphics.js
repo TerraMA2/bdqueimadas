@@ -409,7 +409,9 @@ define(
           label = label.replace("{" + yFields[j] + "}", field);
         }
 
-        labels.push(label);
+        var percentage = ((parseFloat(firesCountItems[i].count) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(1);
+
+        labels.push(label + ' (' + firesCountItems[i].count + ' F | ' + percentage + '%)');
         values.push(firesCountItems[i].count);
       }
 
