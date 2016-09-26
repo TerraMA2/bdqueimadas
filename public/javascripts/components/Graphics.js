@@ -470,7 +470,9 @@ define(
         }
       });
 
-      var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
+      var graphicTotalCount = Utils.sumIntegerArrayItems(values);
+
+      var additionalTitle = " | " + graphicTotalCount + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
       $("#fires-count-" + firesCount.id + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
       $("#fires-count-" + firesCount.id + "-graphic").parent().children('.export-graphic-data').show();
       $("#fires-count-" + firesCount.id + "-graphic").parents('.graphic-item').show();

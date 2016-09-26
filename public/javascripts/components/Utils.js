@@ -643,6 +643,36 @@ define(function() {
   };
 
   /**
+   * Sums the items of an integer array.
+   * @param {array} values - Integer array
+   * @returns {integer} sum - Sum of the array items
+   *
+   * @function sumIntegerArrayItems
+   * @memberof Utils
+   * @inner
+   */
+  var sumIntegerArrayItems = function(values) {
+    var sum = values.reduce(sumTwoStringIntegers, 0);
+
+    return sum;
+  };
+
+  /**
+   * Sums the two received items.
+   * @param {string} a - Item a
+   * @param {string} b - Item b
+   * @returns {integer} sum - Sum of the two items
+   *
+   * @function sumTwoStringIntegers
+   * @memberof Utils
+   * @inner
+   */
+  var sumTwoStringIntegers = function(a, b) {
+    var sum = parseInt(a) + parseInt(b);
+    return sum;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
    * @param {string} baseUrl - Base Url
@@ -677,6 +707,8 @@ define(function() {
     areArraysEqual: areArraysEqual,
     getStateIds: getStateIds,
     getBaseUrl: getBaseUrl,
+    sumIntegerArrayItems: sumIntegerArrayItems,
+    sumTwoStringIntegers: sumTwoStringIntegers,
     init: init
   };
 });
