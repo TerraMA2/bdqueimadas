@@ -783,7 +783,10 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
   clear: both;
 }
 
-#terrama2-layerexplorer li > span { padding: 0px !important; }
+#terrama2-layerexplorer li > span {
+  padding: 0px !important;
+  margin-top: 2px !important;
+}
 
 .terrama2-layerexplorer-checkbox { margin-bottom: -17px !important; }
 
