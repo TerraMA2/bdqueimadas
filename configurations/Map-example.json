@@ -552,7 +552,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable float-left clear-left"
+      "Classes": "unsortable float-left clear-left",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:paises_multi",
@@ -577,7 +578,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable unsortable-separator float-left clear-none"
+      "Classes": "unsortable unsortable-separator float-left clear-none",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:labels_paises",
@@ -602,7 +604,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable unsortable-separator float-left clear-none"
+      "Classes": "unsortable unsortable-separator float-left clear-none",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:estados",
@@ -627,7 +630,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable float-left clear-left"
+      "Classes": "unsortable float-left clear-left",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:labels_estados",
@@ -652,7 +656,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable unsortable-separator float-left clear-none"
+      "Classes": "unsortable unsortable-separator float-left clear-none",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:municipios",
@@ -677,7 +682,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable float-left clear-left"
+      "Classes": "unsortable float-left clear-left",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:sedes_municipios",
@@ -702,7 +708,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable unsortable-separator float-left clear-none"
+      "Classes": "unsortable unsortable-separator float-left clear-none",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:biomas_brasileiros",
@@ -727,7 +734,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable float-left clear-left"
+      "Classes": "unsortable float-left clear-left",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:labels_biomas_brasileiros",
@@ -752,7 +760,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable unsortable-separator float-left clear-none"
+      "Classes": "unsortable unsortable-separator float-left clear-none",
+      "Style": null
     },
     {
       "Id": "BDQueimadas:hidrografia",
@@ -777,7 +786,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": null
+      "Classes": null,
+      "Style": null
     },
     {
       "Id": "BDQueimadas:rodovias",
@@ -802,13 +812,15 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": null
+      "Classes": null,
+      "Style": null
     },
     {
       "Id": "protected_areas",
       "Name": "Áreas Protegidas",
       "LayerGroup": true,
       "Classes": null,
+      "Style": null,
       "Layers": [
         {
           "Id": "BDQueimadas:unidades_conservacao_federais",
@@ -833,7 +845,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable float-left clear-left"
+          "Classes": "unsortable float-left clear-left",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_federais",
@@ -858,7 +871,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:buffer_5_unidades_conservacao_federais",
@@ -883,7 +897,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:buffer_10_unidades_conservacao_federais",
@@ -908,7 +923,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:unidades_conservacao_estaduais",
@@ -933,7 +949,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable float-left clear-left"
+          "Classes": "unsortable float-left clear-left",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
@@ -958,7 +975,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:buffer_5_unidades_conservacao_estaduais",
@@ -983,7 +1001,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:buffer_10_unidades_conservacao_estaduais",
@@ -1008,7 +1027,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:terras_indigenas",
@@ -1033,7 +1053,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable float-left clear-left"
+          "Classes": "unsortable float-left clear-left",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:labels_terras_indigenas",
@@ -1058,7 +1079,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:buffer_5_terras_indigenas",
@@ -1083,7 +1105,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:buffer_10_terras_indigenas",
@@ -1108,7 +1131,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:protectedplanet",
@@ -1133,7 +1157,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable float-left clear-left"
+          "Classes": "unsortable float-left clear-left",
+          "Style": null
         },
         {
           "Id": "BDQueimadas:labels_protectedplanet",
@@ -1158,7 +1183,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": "unsortable unsortable-separator float-left clear-none"
+          "Classes": "unsortable unsortable-separator float-left clear-none",
+          "Style": null
         }
       ]
     },
@@ -1167,6 +1193,7 @@
       "Name": "Imagens Satélites",
       "LayerGroup": true,
       "Classes": null,
+      "Style": null,
       "Layers": [
         {
           "Id": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
@@ -1196,7 +1223,8 @@
             "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
             "tileSize": 512
           },
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "MODIS_Aqua_CorrectedReflectance_TrueColor",
@@ -1226,7 +1254,8 @@
             "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
             "tileSize": 512
           },
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "MODIS_Terra_CorrectedReflectance_TrueColor",
@@ -1256,7 +1285,8 @@
             "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
             "tileSize": 512
           },
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "quicklook_noaa16",
@@ -1281,7 +1311,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "quicklook_noaa18",
@@ -1306,7 +1337,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "quicklook_noaa19",
@@ -1331,7 +1363,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "goes",
@@ -1356,7 +1389,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "msg",
@@ -1381,7 +1415,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         }
       ]
     },
@@ -1390,6 +1425,7 @@
       "Name": "Risco de Fogo / Meteorologia",
       "LayerGroup": true,
       "Classes": null,
+      "Style": null,
       "Layers": [
         {
           "Id": "mrp0",
@@ -1414,13 +1450,15 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "ndsc",
           "Name": "Número de Dias sem Chuva",
           "LayerGroup": true,
           "Classes": null,
+          "Style": null,
           "Layers": [
             {
               "Id": "observacao_ndsc_obs",
@@ -1445,7 +1483,8 @@
               "Format": null,
               "MatrixSet": null,
               "TileGrid": null,
-              "Classes": null
+              "Classes": null,
+              "Style": null
             },
             {
               "Id": "observacao_ndsc_obssat",
@@ -1470,7 +1509,8 @@
               "Format": null,
               "MatrixSet": null,
               "TileGrid": null,
-              "Classes": null
+              "Classes": null,
+              "Style": null
             }
           ]
         }
@@ -1481,6 +1521,7 @@
       "Name": "Mapa Espacial de Focos",
       "LayerGroup": true,
       "Classes": null,
+      "Style": null,
       "Layers": [
         {
           "Id": "BDQueimadas:current_situation_biomes",
@@ -1505,7 +1546,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "BDQueimadas:current_situation_cities",
@@ -1530,7 +1572,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "BDQueimadas:current_situation_states",
@@ -1555,7 +1598,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         },
         {
           "Id": "BDQueimadas:current_situation_countries",
@@ -1580,7 +1624,8 @@
           "Format": null,
           "MatrixSet": null,
           "TileGrid": null,
-          "Classes": null
+          "Classes": null,
+          "Style": null
         }
       ]
     },
@@ -1607,7 +1652,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable float-left clear-left"
+      "Classes": "unsortable float-left clear-left",
+      "Style": null
     },
     {
       "Id": "osm",
@@ -1632,7 +1678,8 @@
       "Format": null,
       "MatrixSet": null,
       "TileGrid": null,
-      "Classes": "unsortable unsortable-separator float-left clear-none"
+      "Classes": "unsortable unsortable-separator float-left clear-none",
+      "Style": null
     }
   ]
 }

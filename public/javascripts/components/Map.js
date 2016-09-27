@@ -140,7 +140,7 @@ define(
       if(layer.LayerGroup) {
         if(configuration.UseLayerGroupsInTheLayerExplorer) {
           if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId, null, layer.Classes);
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId, null, layer.Classes, layer.Style);
         }
 
         for(var j = layer.Layers.length - 1; j >= 0; j--) {
@@ -179,13 +179,13 @@ define(
 
       if(layer.TerraMA2WebComponentsFunction !== null) {
         if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, layer.Classes);
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, layer.Classes, layer.Style);
       } else if(layer.Wmts) {
         if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Url, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Format, layer.MatrixSet, layer.TileGrid))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes);
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes, layer.Style);
       } else {
         if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes);
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes, layer.Style);
       }
 
       if(!initialProcess) {
