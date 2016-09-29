@@ -1057,7 +1057,7 @@ define(
      */
     var processLayers = function(layers) {
       $.each(layers, function(j, layer) {
-        if(layer.Time !== null) {
+        if(layer.Params.Time !== undefined && layer.Params.Time !== null) {
           Map.updateLayerTime(layer);
         }
 

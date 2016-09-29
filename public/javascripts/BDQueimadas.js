@@ -237,6 +237,18 @@ define(
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
 
+      /*'<div class="form-group bdqueimadas-form">' +
+        '<label for="pas-export">Municípios</label>' +
+        '<div class="input-group">' +
+          '<input type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
+          '<span class="input-group-btn">' +
+            '<button type="button" id="search-cities-btn-export" class="btn btn-flat">' +
+              '<i class="fa fa-search"></i>' +
+            '</button>' +
+          '</span>' +
+        '</div>' +
+      '</div>' +*/
+
       // Export click event
       $('#export').on('click', function() {
         vex.dialog.alert({
@@ -534,6 +546,24 @@ define(
             }));
           }
         });
+
+        /*$('#city-export').autocomplete({
+          minLength: 4,
+          source: function(request, response) {
+            $.get(Utils.getBaseUrl() + "search-for-cities", {
+              value: request.term,
+              minLength: 4
+            }, function(data) {
+              response(data);
+            });
+          },
+          select: function(event, ui) {
+            event.preventDefault();
+
+            $('#city-export').val(ui.item.label);
+            $('#city-export').data('value', ui.item.value.id);
+          }
+        });*/
       });
 
       // Filter Events
@@ -813,6 +843,35 @@ define(
           }
         });
       });
+
+      /*$(document).on('click', '#search-cities-btn-export', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-cities",
+          type: "GET",
+          data: {
+            value: $('#city-export').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#city-export').val(data[0].label);
+              $('#city-export').data('value', data[0].value.id);
+              $('#filter-button-export').click();
+            } else {
+              $('#city-export').data('value', '');
+
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });*/
 
       $(document).on('change', '#continents-export', function() {
         if($(this).val() !== "") {

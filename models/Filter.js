@@ -959,6 +959,37 @@ var Filter = function() {
       } else return callback(err);
     });
   };
+
+  /**
+   * Returns the cities that match the given value.
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} value - Value to be used in the search of cities
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function searchForCities
+   * @memberof Filter
+   * @inner
+   */
+  this.searchForCities = function(pgPool, value, callback) {
+    // Connection with the PostgreSQL database
+    pgPool.connect(function(err, client, done) {
+      if(!err) {
+        var query = "select " + memberTablesConfig.Cities.IdFieldName + " as id, upper(" + memberTablesConfig.Cities.NameFieldName +
+                    ") as name, " + memberTablesConfig.Cities.StateNameFieldName + " as state " +
+                    "from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName +
+                    " where unaccent(upper(" + memberTablesConfig.Cities.NameFieldName + ")) like unaccent(upper($1))";
+        var parameters = ['%' + value + '%'];
+
+        // Execution of the query
+        client.query(query, parameters, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
 };
 
 module.exports = Filter;

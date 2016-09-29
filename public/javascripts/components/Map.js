@@ -140,7 +140,7 @@ define(
       if(layer.LayerGroup) {
         if(configuration.UseLayerGroupsInTheLayerExplorer) {
           if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name))
-            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId, null, layer.Classes, layer.Style);
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId, null, (layer.Params !== undefined ? layer.Params.Classes : null), (layer.Params !== undefined ? layer.Params.Style : null));
         }
 
         for(var j = layer.Layers.length - 1; j >= 0; j--) {
@@ -175,17 +175,35 @@ define(
 
       var layerName = Utils.processStringWithDatePattern(layer.Name);
       var layerTitle = Utils.processStringWithDatePattern(layer.Title);
-      var layerTime = Utils.processStringWithDatePattern(layer.Time);
+      var layerTime = Utils.processStringWithDatePattern(layer.Params.Time);
 
-      if(layer.TerraMA2WebComponentsFunction !== null) {
-        if(TerraMA2WebComponents.MapDisplay[layer.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, layer.Classes, layer.Style);
+      var classes = layer.Params !== undefined ? layer.Params.Classes : null;
+      var style = layer.Params !== undefined ? layer.Params.Style : null;
+
+      if(layer.Params.TerraMA2WebComponentsFunction !== undefined && layer.Params.TerraMA2WebComponentsFunction !== null) {
+        if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, classes, style);
       } else if(layer.Wmts) {
-        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Url, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Format, layer.MatrixSet, layer.TileGrid))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes, layer.Style);
+        var params = {
+          minResolution: layer.Params.MinResolution,
+          maxResolution: layer.Params.MaxResolution
+        };
+
+        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Visible, layer.Disabled, layerTime, layer.Params.Format, layer.Params.MatrixSet, layer.Params.TileGrid, parent, params))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, classes, style);
       } else {
-        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Url, layer.ServerType, layer.Id, layerName, layerTitle, layer.Visible, layer.MinResolution, layer.MaxResolution, parent, layerTime, layer.Disabled, layer.Buffer, layer.Version, layer.Format, layer.TileGrid))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, layer.Classes, layer.Style);
+        var params = {
+          minResolution: layer.Params.MinResolution,
+          maxResolution: layer.Params.MaxResolution,
+          time: layerTime,
+          buffer: layer.Params.Buffer,
+          version: layer.Params.Version,
+          format: layer.Params.Format,
+          tileGrid: layer.Params.TileGrid
+        };
+
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Params.ServerType, layer.Visible, layer.Disabled, parent, params))
+          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, classes, style);
       }
 
       if(!initialProcess) {
@@ -595,14 +613,14 @@ define(
      */
     var updateLayerTime = function(layer) {
       var currentDate = moment().tz('America/Sao_Paulo');
-      var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Time);
-      var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Time));
+      var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Params.Time);
+      var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time));
       var useTodaysImage = true;
 
-      if(layer.MinTimeForTodaysImage !== null) {
-        layerMinTime = moment(Utils.processStringWithDatePattern(layer.Time) + " " + layer.MinTimeForTodaysImage, layerTimeFormat + " HH:mm:ss");
+      if(layer.Params.MinTimeForTodaysImage !== undefined && layer.Params.MinTimeForTodaysImage !== null) {
+        layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time) + " " + layer.Params.MinTimeForTodaysImage, layerTimeFormat + " HH:mm:ss");
 
-        if(Utils.processStringWithDatePattern(layer.Time) === currentDate.format(layerTimeFormat))
+        if(Utils.processStringWithDatePattern(layer.Params.Time) === currentDate.format(layerTimeFormat))
           useTodaysImage = currentDate.isAfter(layerMinTime);
       }
 
@@ -611,7 +629,7 @@ define(
       if(!useTodaysImage) {
         layerMinTime = layerMinTime.subtract(1, "days");
 
-        layer.Time = layerMinTime.format(layerTimeFormat);
+        layer.Params.Time = layerMinTime.format(layerTimeFormat);
         layerName = Utils.replaceDatePatternWithString(layerName, layerMinTime.format('YYYY/MM/DD'));
       } else {
         layerName = Utils.processStringWithDatePattern(layerName);
@@ -619,15 +637,15 @@ define(
 
       if(layer.Wmts) {
         var options = {
-          url: layer.Url,
-          format: layer.Format,
-          matrixSet: layer.MatrixSet,
-          tileGrid: layer.TileGrid
+          url: layer.Params.Url,
+          format: layer.Params.Format,
+          matrixSet: layer.Params.MatrixSet,
+          tileGrid: layer.Params.TileGrid
         };
 
-        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Time), options);
+        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time), options);
       } else {
-        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Time));
+        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time));
       }
 
       $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
