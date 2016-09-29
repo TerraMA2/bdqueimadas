@@ -181,8 +181,19 @@ define(
       var style = layer.Params !== undefined ? layer.Params.Style : null;
 
       if(layer.Params.TerraMA2WebComponentsFunction !== undefined && layer.Params.TerraMA2WebComponentsFunction !== null) {
-        if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
-          TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, classes, style);
+
+        if(layer.Params.TerraMA2WebComponentsFunction === "addBingMapsLayer") {
+          var params = {
+            minResolution: layer.Params.MinResolution,
+            maxResolution: layer.Params.MaxResolution
+          };
+
+          if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, layer.Disabled, layer.Params.ImagerySet, layer.Params.BingMapsKey, parent, layer.AppendAtTheEnd, params))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, classes, style);
+        } else {
+          if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
+            TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, classes, style);
+        }
       } else if(layer.Wmts) {
         var params = {
           minResolution: layer.Params.MinResolution,
