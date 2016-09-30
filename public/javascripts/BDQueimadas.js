@@ -1126,7 +1126,7 @@ define(
 
         $.each(Map.getLayers(), function(j, layer) {
           if(layer.Id === self.data('id')) {
-            layer.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
+            layer.Params.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
 
             self.parent().find('> span.layer-time-update > a').text(self.val());
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');

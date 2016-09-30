@@ -203,6 +203,16 @@ define(
         if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Visible, layer.Disabled, layerTime, layer.Params.Format, layer.Params.MatrixSet, layer.Params.TileGrid, parent, params))
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, classes, style);
       } else {
+        var sourceParams = {};
+
+        if(layerTime !== undefined && layer.Params !== undefined && layer.Params.TimeYear !== undefined && layer.Params.TimeMonth !== undefined && layer.Params.TimeDay !== undefined) {
+          var layerTimeDate = Utils.stringToDate(layerTime, 'YYYY-MM-DD');
+
+          sourceParams[layer.Params.TimeYear] = layerTimeDate.getFullYear().toString();
+          sourceParams[layer.Params.TimeMonth] = ('0' + (layerTimeDate.getMonth() + 1)).slice(-2);
+          sourceParams[layer.Params.TimeDay] = ('0' + layerTimeDate.getDate()).slice(-2);
+        }
+
         var params = {
           minResolution: layer.Params.MinResolution,
           maxResolution: layer.Params.MaxResolution,
@@ -210,7 +220,8 @@ define(
           buffer: layer.Params.Buffer,
           version: layer.Params.Version,
           format: layer.Params.Format,
-          tileGrid: layer.Params.TileGrid
+          tileGrid: layer.Params.TileGrid,
+          sourceParams: sourceParams
         };
 
         if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Params.ServerType, layer.Visible, layer.Disabled, parent, params))
@@ -657,6 +668,18 @@ define(
         TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time), options);
       } else {
         TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time));
+      }
+
+      if(layer.Params !== undefined && layer.Params.Time !== undefined && layer.Params.TimeYear !== undefined && layer.Params.TimeMonth !== undefined && layer.Params.TimeDay !== undefined) {
+        var sourceParams = {};
+
+        var layerTimeDate = Utils.stringToDate(Utils.processStringWithDatePattern(layer.Params.Time), 'YYYY-MM-DD');
+
+        sourceParams[layer.Params.TimeYear] = layerTimeDate.getFullYear().toString();
+        sourceParams[layer.Params.TimeMonth] = ('0' + (layerTimeDate.getMonth() + 1)).slice(-2);
+        sourceParams[layer.Params.TimeDay] = ('0' + layerTimeDate.getDate()).slice(-2);
+
+        TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, sourceParams, true);
       }
 
       $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
