@@ -460,33 +460,38 @@ define(
       var configuration = Utils.getConfigurations().mapConfigurations;
 
       $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-        elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + "\"><a><span style=\"font-weight: bold;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
 
-        var liStyle = mapSubtitleItem.LayerId === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId ? "display: none;" : "";
+        var layersIds = mapSubtitleItem.LayerId.split('|');
 
-        $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
-          var css = "";
+        $.each(layersIds, function(x, layersIdsItem) {
+          elem += "<li class=\"" + layersIdsItem.replace(':', '') + "\"><a><span style=\"font-weight: bold;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
 
-          if(layerSubtitleItem.FillColor !== null)
-            css += "background-color: " + layerSubtitleItem.FillColor + ";";
+          var liStyle = layersIdsItem === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId ? "display: none;" : "";
 
-          if(layerSubtitleItem.BorderColor !== null)
-            css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
+          $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
+            var css = "";
 
-          if(layerSubtitleItem.Image !== null)
-            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
+            if(layerSubtitleItem.FillColor !== null)
+              css += "background-color: " + layerSubtitleItem.FillColor + ";";
 
-          elem += "<li class=\"" + mapSubtitleItem.LayerId.replace(':', '') + " subtitle-item";
+            if(layerSubtitleItem.BorderColor !== null)
+              css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
 
-          if(mapSubtitleItem.LayerId === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId)
-            elem += " satellite-subtitle-item";
+            if(layerSubtitleItem.Image !== null)
+              css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
 
-          elem += "\"";
+            elem += "<li class=\"" + layersIdsItem.replace(':', '') + " subtitle-item";
 
-          if(layerSubtitleItem.SubtitleId !== null)
-            elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
+            if(layersIdsItem === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId)
+              elem += " satellite-subtitle-item";
 
-          elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
+            elem += "\"";
+
+            if(layerSubtitleItem.SubtitleId !== null)
+              elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
+
+            elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
+          });
         });
       });
 
@@ -563,13 +568,18 @@ define(
       var configuration = Utils.getConfigurations().mapConfigurations;
 
       $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-        if(layerId === undefined || layerId === mapSubtitleItem.LayerId) {
-          if(TerraMA2WebComponents.MapDisplay.isCurrentResolutionValidForLayer(mapSubtitleItem.LayerId) && TerraMA2WebComponents.MapDisplay.isLayerVisible(mapSubtitleItem.LayerId)) {
-            showSubtitle(mapSubtitleItem.LayerId);
-          } else {
-            hideSubtitle(mapSubtitleItem.LayerId);
+
+        var layersIds = mapSubtitleItem.LayerId.split('|');
+
+        $.each(layersIds, function(x, layersIdsItem) {
+          if(layerId === undefined || layerId === layersIdsItem) {
+            if(TerraMA2WebComponents.MapDisplay.isCurrentResolutionValidForLayer(layersIdsItem) && TerraMA2WebComponents.MapDisplay.isLayerVisible(layersIdsItem)) {
+              showSubtitle(layersIdsItem);
+            } else {
+              hideSubtitle(layersIdsItem);
+            }
           }
-        }
+        });
       });
     };
 
