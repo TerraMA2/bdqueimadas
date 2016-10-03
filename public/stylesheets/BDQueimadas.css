@@ -270,11 +270,6 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   margin-bottom: 10px;
 }
 
-.component-filter-content {
-  /*max-width: 1185px;
-  margin: 0 auto;*/
-}
-
 .component-filter-error { color: #dd4b39; }
 
 .graphic-item { margin-bottom: 8px !important; }
@@ -286,11 +281,6 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 #filter-button-attributes-table, #filter-button-graphics {
   float: left;
   margin-left: 15px;
-}
-
-#filter-satellite-attributes-table, #filter-satellite-graphics, #filter-biome-attributes-table, #filter-biome-graphics {
-  /*float: left;
-  max-width: 200px;*/
 }
 
 .graphic-item .collapse-btn {
@@ -707,10 +697,6 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 #languages-secondary {
-  /*border-right: solid 2px #333;
-  margin-right: 10px;
-  margin-top: 10px;*/
-
   margin-right: 3px;
   margin-top: 10px;
 }
@@ -795,8 +781,6 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
 #terrama2-layerexplorer ul.children span.group-name { padding-left: 0px !important; }
 
 .terrama2-layerexplorer-plus, .terrama2-layerexplorer-minus { padding-right: 3px !important; }
-
-#terrama2-layerexplorer li.parent_li { margin-left: 10px !important; }
 
 #terrama2-layerexplorer ul { padding-left: 15px !important; }
 
