@@ -120,7 +120,6 @@ define(
       }
 
       $('.children:empty').parent().hide();
-      $('#terrama2-layerexplorer').append('<div class="clear: both;"></div>');
     };
 
     /**
@@ -139,7 +138,7 @@ define(
 
       if(layer.LayerGroup) {
         if(configuration.UseLayerGroupsInTheLayerExplorer) {
-          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name))
+          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name, parentId))
             TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId, null, (layer.Params !== undefined ? layer.Params.Classes : null), (layer.Params !== undefined ? layer.Params.Style : null));
         }
 
