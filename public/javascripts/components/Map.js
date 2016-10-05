@@ -497,6 +497,12 @@ define(
 
       setSubtitlesVisibility();
       updateZoomTop(false);
+
+      if($('#map-subtitle-items').children(':visible').length == 0) {
+        $('#no-subtitles').show();
+      } else {
+        $('#no-subtitles').hide();
+      }
     };
 
     /**
