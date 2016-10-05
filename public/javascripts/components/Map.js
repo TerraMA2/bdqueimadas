@@ -458,24 +458,23 @@ define(
       var elem = "";
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
-        elem += "<li id=\"" + mapSubtitleItem.Id + "\"><ul class=\"nav nav-pills nav-stacked\"><li><a><span style=\"font-weight: bold; margin-left: 3px;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
+      for(var i = 0, subtitlesLength = configuration.Subtitles.length; i < subtitlesLength; i++) {
+        elem += "<li id=\"" + configuration.Subtitles[i].Id + "\"><ul class=\"nav nav-pills nav-stacked\"><li><a><span style=\"font-weight: bold; margin-left: 3px;\">" + configuration.Subtitles[i].LayerName + "</span></a></li>";
 
-        var index = mapSubtitleItem.LayerId.indexOf(Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
-
+        var index = configuration.Subtitles[i].LayerId.indexOf(Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
         var liStyle = index > -1 ? "display: none;" : "";
 
-        $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
+        for(var j = 0, layerSubtitleItemsLength = configuration.Subtitles[i].Subtitles.length; j < layerSubtitleItemsLength; j++) {
           var css = "";
 
-          if(layerSubtitleItem.FillColor !== null)
-            css += "background-color: " + layerSubtitleItem.FillColor + ";";
+          if(configuration.Subtitles[i].Subtitles[j].FillColor !== null)
+            css += "background-color: " + configuration.Subtitles[i].Subtitles[j].FillColor + ";";
 
-          if(layerSubtitleItem.BorderColor !== null)
-            css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
+          if(configuration.Subtitles[i].Subtitles[j].BorderColor !== null)
+            css += "border: solid 2px " + configuration.Subtitles[i].Subtitles[j].BorderColor + ";";
 
-          if(layerSubtitleItem.Image !== null)
-            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
+          if(configuration.Subtitles[i].Subtitles[j].Image !== null)
+            css += "background: url(" + configuration.Subtitles[i].Subtitles[j].Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
 
           elem += "<li class=\"subtitle-item";
 
@@ -484,25 +483,19 @@ define(
 
           elem += "\"";
 
-          if(layerSubtitleItem.SubtitleId !== null)
-            elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
+          if(configuration.Subtitles[i].Subtitles[j].SubtitleId !== null)
+            elem += " id=\"" + configuration.Subtitles[i].Subtitles[j].SubtitleId + "\"";
 
-          elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
-        });
+          elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + configuration.Subtitles[i].Subtitles[j].SubtitleText + "</span></a></li>";
+        }
 
         elem += "</ul></li>";
-      });
+      }
 
       $('#map-subtitle-items').append(elem);
 
       setSubtitlesVisibility();
       updateZoomTop(false);
-
-      if($('#map-subtitle-items').children(':visible').length == 0) {
-        $('#no-subtitles').show();
-      } else {
-        $('#no-subtitles').hide();
-      }
     };
 
     /**
