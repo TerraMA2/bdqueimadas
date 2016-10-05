@@ -1206,7 +1206,7 @@ define(
         } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layer.Id)) {
           var countries = $('#countries').val();
 
-          if(memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter && (Utils.stringInArray(countries, "") || countries.length === 0)) {
+          if(memberContinent !== null && countries !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter && (Utils.stringInArray(countries, "") || countries.length === 0)) {
             var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
             var initialContinentCountriesLength = initialContinentCountries.length;
 

@@ -628,8 +628,12 @@ define(
         Filter.resetDropdowns();
 
         Filter.updateDatesToCurrent();
+        $('#pas').val('');
+        $('#pas-attributes-table').val('');
         $('#filter-satellite').val('all');
         $('#filter-biome').val('all');
+
+        searchForPAs(false, false);
 
         Filter.applyFilter();
         updateComponents();
@@ -703,73 +707,7 @@ define(
       });
 
       $("#search-pas-btn").on('click', function() {
-        $.ajax({
-          url: Utils.getBaseUrl() + "search-for-pas",
-          type: "GET",
-          data: {
-            value: $('#pas').val(),
-            minLength: 1
-          },
-          success: function(data) {
-            if(data.length > 0) {
-              $('#pas').val(data[0].label);
-              $('#pas-graphics').val(data[0].label);
-              $('#pas-attributes-table').val(data[0].label);
-
-              Filter.setProtectedArea({
-                id: data[0].value.id,
-                type: data[0].value.type
-              });
-
-              Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
-            } else {
-              Filter.setProtectedArea(null);
-
-              vex.dialog.alert({
-                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
-                buttons: [{
-                  type: 'submit',
-                  text: 'Ok',
-                  className: 'bdqueimadas-btn'
-                }]
-              });
-            }
-          }
-        });
-      });
-
-      $("#search-pas-btn-graphics").on('click', function() {
-        $.ajax({
-          url: Utils.getBaseUrl() + "search-for-pas",
-          type: "GET",
-          data: {
-            value: $('#pas-graphics').val(),
-            minLength: 1
-          },
-          success: function(data) {
-            if(data.length > 0) {
-              $('#pas-graphics').val(data[0].label);
-
-              $('#pas-graphics').data('value', JSON.stringify({
-                id: data[0].value.id,
-                type: data[0].value.type
-              }));
-
-              $('#filter-button-graphics').click();
-            } else {
-              $('#pas-graphics').data('value', '');
-
-              vex.dialog.alert({
-                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
-                buttons: [{
-                  type: 'submit',
-                  text: 'Ok',
-                  className: 'bdqueimadas-btn'
-                }]
-              });
-            }
-          }
-        });
+        searchForPAs(true, true);
       });
 
       $("#search-pas-btn-attributes-table").on('click', function() {
@@ -1581,6 +1519,48 @@ define(
       });
     };
 
+    // new
+
+    var searchForPAs = function(showAlerts, async) {
+      $.ajax({
+        url: Utils.getBaseUrl() + "search-for-pas",
+        type: "GET",
+        async: async,
+        data: {
+          value: $('#pas').val(),
+          minLength: 1
+        },
+        success: function(data) {
+          if(data.length > 0) {
+            $('#pas').val(data[0].label);
+            $('#pas-attributes-table').val(data[0].label);
+
+            Filter.setProtectedArea({
+              id: data[0].value.id,
+              type: data[0].value.type
+            });
+
+            Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
+          } else {
+            Filter.setProtectedArea(null);
+
+            if(showAlerts) {
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        }
+      });
+    };
+
+    // new
+
     /**
      * Returns the countries, states and cities to be filtered in the exportation.
      * @param {function} callback - Callback function
@@ -1962,7 +1942,6 @@ define(
           event.preventDefault();
 
           $('#pas').val(ui.item.label);
-          $('#pas-graphics').val(ui.item.label);
           $('#pas-attributes-table').val(ui.item.label);
 
           Filter.setProtectedArea({
@@ -1971,30 +1950,6 @@ define(
           });
 
           Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
-        }
-      });
-
-      $('#pas-graphics').autocomplete({
-        minLength: 4,
-        source: function(request, response) {
-          $.get(Utils.getBaseUrl() + "search-for-pas", {
-            value: request.term,
-            minLength: 4
-          }, function(data) {
-            response(data);
-          });
-        },
-        select: function(event, ui) {
-          event.preventDefault();
-
-          $('#pas-graphics').val(ui.item.label);
-
-          $('#pas-graphics').data('value', JSON.stringify({
-            id: ui.item.value.id,
-            type: ui.item.value.type
-          }));
-
-          $('#filter-button-graphics').click();
         }
       });
 

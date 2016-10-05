@@ -496,10 +496,13 @@ define(function() {
    * @inner
    */
   var stringInArray = function(array, string) {
-    for(var i = 0; i < array.length; i++) {
-      if(array[i].toString() === string.toString())
-        return true;
+    if(array !== null) {
+      for(var i = 0, arrayLength = array.length; i < arrayLength; i++) {
+        if(array[i].toString() === string.toString())
+          return true;
+      }
     }
+
     return false;
   };
 

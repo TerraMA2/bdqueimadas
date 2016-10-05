@@ -7,7 +7,7 @@
           <div class="row">
             <div class="col-md-5" style="border-right: 1px solid black;">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="continents-graphics"><%= __('Continentes') %></label>
                     <select id="continents-graphics" name="continents-graphics" class="form-control">
@@ -28,28 +28,13 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="pas-graphics"><%= __('UCs / TIs') %></label>
-                    <div class="input-group">
-                      <input type="text" id="pas-graphics" name="pas-graphics" class="form-control" placeholder="<%= __('UCs / TIs') %>">
-                      <span class="input-group-btn">
-                        <button type="button" id="search-pas-btn-graphics" class="btn btn-flat">
-                          <i class="fa fa-search"></i>
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="countries-graphics"><%= __('Países') %></label>
                     <select multiple id="countries-graphics" name="countries-graphics" class="form-control"></select>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="states-graphics"><%= __('Estados') %></label>
                     <select multiple id="states-graphics" name="states-graphics" class="form-control" disabled></select>
@@ -79,7 +64,7 @@
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="filter-satellite-graphics"><%= __('Focos dos Sat&eacute;lites') %></label>
+                <label for="filter-satellite-graphics"><%= __('Focos dos Satélites') %></label>
                 <select multiple class="form-control" id="filter-satellite-graphics">
                   <%
                   var satelliteOptions = "";

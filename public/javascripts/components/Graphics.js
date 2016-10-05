@@ -232,9 +232,7 @@ define(
                        (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
                        Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
 
-          var protectedArea = useGraphicsFilter ?
-                              ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? JSON.parse($('#pas-graphics').data('value')) : null) :
-                              Filter.getProtectedArea();
+          var protectedArea = Filter.getProtectedArea();
 
           if(!useGraphicsFilter) {
             $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
@@ -532,7 +530,7 @@ define(
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
-          var protectedArea = ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? $('#pas-graphics').data('value') : '');
+          var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
 
           getSpatialFilterData(function(allCountries, countries, states, cities) {
             var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
