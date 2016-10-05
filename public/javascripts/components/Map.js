@@ -556,14 +556,16 @@ define(
         for(var i = 0; i < satellitesLength; i++) {
           $("#" + satellites[i].satelite).show();
         }
+
+        $('#no-subtitles').hide();
       } else {
         $('.satellite-subtitle-item').parent().parent().hide();
-      }
 
-      if($('#map-subtitle-items').children(':visible').length == 0) {
-        $('#no-subtitles').show();
-      } else {
-        $('#no-subtitles').hide();
+        if($('#map-subtitle-items').children(':visible').length == 0) {
+          $('#no-subtitles').show();
+        } else {
+          $('#no-subtitles').hide();
+        }
       }
 
       updateZoomTop(false);
