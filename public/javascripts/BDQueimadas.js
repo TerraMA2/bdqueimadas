@@ -1519,8 +1519,16 @@ define(
       });
     };
 
-    // new
-
+    /**
+     * Returns the protected area corresponding to the protected area filter.
+     * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
+     * @param {boolean} async - Flag that indicates if the ajax request should be asynchronous
+     *
+     * @private
+     * @function searchForPAs
+     * @memberof BDQueimadas
+     * @inner
+     */
     var searchForPAs = function(showAlerts, async) {
       $.ajax({
         url: Utils.getBaseUrl() + "search-for-pas",
@@ -1558,8 +1566,6 @@ define(
         }
       });
     };
-
-    // new
 
     /**
      * Returns the countries, states and cities to be filtered in the exportation.

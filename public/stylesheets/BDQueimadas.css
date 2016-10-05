@@ -248,19 +248,25 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   overflow: auto;
 }
 
-#map-subtitle > .box > .box-body > ul > li > a {
+#map-subtitle > .box > .box-body > ul > li > ul > li > a {
   padding: 2px;
   cursor: default;
 }
 
-#map-subtitle > .box > .box-body > ul > li > a > div {
+#map-subtitle > .box > .box-body > ul > li > ul > li > a > div {
   width: 12px;
   height: 12px;
   margin-left: 5px;
   display: inline-block;
 }
 
-#map-subtitle > .box > .box-body > ul > li > a > span { margin-left: 15px; }
+#map-subtitle > .box > .box-body > ul > li > ul > li > a > span {
+  text-decoration: none;
+  color: black;
+  margin-left: 15px;
+}
+
+#map-subtitle > .box > .box-body > ul > li > ul { padding-left: 0; }
 
 #box-attributes-table { overflow: auto; }
 

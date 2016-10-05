@@ -1,246 +1,7 @@
 {
   "Subtitles": [
     {
-      "LayerId": "BDQueimadas:current_situation_countries",
-      "LayerName": "Camada: Mapa Espacial de Focos - Países",
-      "Subtitles": [
-        {
-          "SubtitleId": null,
-          "SubtitleText": "0 focos",
-          "FillColor": "#FFEBCD",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1 a 100 focos",
-          "FillColor": "#FFC387",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 101 a 500 focos",
-          "FillColor": "#FAA046",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1001 a 5000 focos",
-          "FillColor": "#FA5C25",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 5001 a 25000 focos",
-          "FillColor": "#C34231",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 25001 a 50000 focos",
-          "FillColor": "#A21C0D",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        }
-      ]
-    },
-    {
-      "LayerId": "BDQueimadas:current_situation_states",
-      "LayerName": "Camada: Mapa Espacial de Focos - Estados",
-      "Subtitles": [
-        {
-          "SubtitleId": null,
-          "SubtitleText": "0 focos",
-          "FillColor": "#FFEBCD",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1 a 100 focos",
-          "FillColor": "#FFC387",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 101 a 500 focos",
-          "FillColor": "#FAA046",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1001 a 5000 focos",
-          "FillColor": "#FA5C25",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 5001 a 25000 focos",
-          "FillColor": "#C34231",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 25001 a 50000 focos",
-          "FillColor": "#A21C0D",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        }
-      ]
-    },
-    {
-      "LayerId": "BDQueimadas:current_situation_cities",
-      "LayerName": "Camada: Mapa Espacial de Focos - Municípios",
-      "Subtitles": [
-        {
-          "SubtitleId": null,
-          "SubtitleText": "0 focos",
-          "FillColor": "#FFEBCD",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1 a 100 focos",
-          "FillColor": "#FFC387",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 101 a 500 focos",
-          "FillColor": "#FAA046",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1001 a 5000 focos",
-          "FillColor": "#FA5C25",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 5001 a 25000 focos",
-          "FillColor": "#C34231",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 25001 a 50000 focos",
-          "FillColor": "#A21C0D",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        }
-      ]
-    },
-    {
-      "LayerId": "BDQueimadas:current_situation_biomes",
-      "LayerName": "Camada: Mapa Espacial de Focos - Biomas Brasileiros",
-      "Subtitles": [
-        {
-          "SubtitleId": null,
-          "SubtitleText": "0 focos",
-          "FillColor": "#FFEBCD",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1 a 100 focos",
-          "FillColor": "#FFC387",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 101 a 500 focos",
-          "FillColor": "#FAA046",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 1001 a 5000 focos",
-          "FillColor": "#FA5C25",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 5001 a 25000 focos",
-          "FillColor": "#C34231",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        },
-        {
-          "SubtitleId": null,
-          "SubtitleText": "De 25001 a 50000 focos",
-          "FillColor": "#A21C0D",
-          "BorderColor": "black",
-          "Image": null,
-          "MinResolution": 0.025,
-          "MaxResolution": "Infinity"
-        }
-      ]
-    },
-    {
+      "Id": "fires-subtitles",
       "LayerId": "BDQueimadas:focos",
       "LayerName": "Camada: Focos",
       "Subtitles": [
@@ -524,6 +285,971 @@
           "MaxResolution": "Infinity"
         }
       ]
+    },
+    {
+      "Id": "smoke-subtitles",
+      "LayerId": "pm25",
+      "LayerName": "Camada: Fumaça (mg/m²)",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "10",
+          "FillColor": "#00004A",
+          "BorderColor": "#00004A",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "15",
+          "FillColor": "#00007A",
+          "BorderColor": "#00007A",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "20",
+          "FillColor": "#0000CE",
+          "BorderColor": "#0000CE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "25",
+          "FillColor": "#4E5BFF",
+          "BorderColor": "#4E5BFF",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "30",
+          "FillColor": "#A2BEFF",
+          "BorderColor": "#A2BEFF",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "35",
+          "FillColor": "#006000",
+          "BorderColor": "#006000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "40",
+          "FillColor": "#00AE01",
+          "BorderColor": "#00AE01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "45",
+          "FillColor": "#13CC16",
+          "BorderColor": "#13CC16",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "50",
+          "FillColor": "#4FF45C",
+          "BorderColor": "#4FF45C",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "60",
+          "FillColor": "#FEFF63",
+          "BorderColor": "#FEFF63",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "70",
+          "FillColor": "#FFC84A",
+          "BorderColor": "#FFC84A",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "80",
+          "FillColor": "#FFA03C",
+          "BorderColor": "#FFA03C",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "100",
+          "FillColor": "#FF782C",
+          "BorderColor": "#FF782C",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "120",
+          "FillColor": "#F6501E",
+          "BorderColor": "#F6501E",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "150",
+          "FillColor": "#E22811",
+          "BorderColor": "#E22811",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "200",
+          "FillColor": "#B40001",
+          "BorderColor": "#B40001",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "250",
+          "FillColor": "#860000",
+          "BorderColor": "#860000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "fire-risk-subtitles",
+      "LayerId": "observacao_rf_obs|previsao_rf_prev1d|previsao_rf_prev2d|previsao_rf_prev3d",
+      "LayerName": "Camada: Risco de Fogo",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Mínimo",
+          "FillColor": "#17B617",
+          "BorderColor": "#17B617",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Baixo",
+          "FillColor": "#79F674",
+          "BorderColor": "#79F674",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Médio",
+          "FillColor": "#FFFF82",
+          "BorderColor": "#FFFF82",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Alto",
+          "FillColor": "#FF2E00",
+          "BorderColor": "#FF2E00",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Crítico",
+          "FillColor": "#A70000",
+          "BorderColor": "#A70000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Indeterminado",
+          "FillColor": "#FFFFFF",
+          "BorderColor": "#000000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "precipitation-subtitles",
+      "LayerId": "observacao_prec_obs01d|observacao_prec_cosh01d|previsao_prec_prev1d|previsao_prec_prev2d|previsao_prec_prev3d",
+      "LayerName": "Camada: Precipitação (mm)",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0",
+          "FillColor": "#FFFFFF",
+          "BorderColor": "#000000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "5",
+          "FillColor": "#FE9000",
+          "BorderColor": "#FE9000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "10",
+          "FillColor": "#FEB800",
+          "BorderColor": "#FEB800",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "20",
+          "FillColor": "#FEE000",
+          "BorderColor": "#FEE000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "30",
+          "FillColor": "#F5FE00",
+          "BorderColor": "#F5FE00",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "40",
+          "FillColor": "#D2FE00",
+          "BorderColor": "#D2FE00",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "50",
+          "FillColor": "#A0FE00",
+          "BorderColor": "#A0FE00",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "100",
+          "FillColor": "#5AFE00",
+          "BorderColor": "#5AFE00",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "150",
+          "FillColor": "#00FE96",
+          "BorderColor": "#00FE96",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "200",
+          "FillColor": "#00FEBF",
+          "BorderColor": "#00FEBF",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "250",
+          "FillColor": "#00FEE6",
+          "BorderColor": "#00FEE6",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "300",
+          "FillColor": "#00EFFE",
+          "BorderColor": "#00EFFE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "350",
+          "FillColor": "#00C8FE",
+          "BorderColor": "#00C8FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "400",
+          "FillColor": "#009FFE",
+          "BorderColor": "#009FFE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "500",
+          "FillColor": "#0077FE",
+          "BorderColor": "#0077FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "600",
+          "FillColor": "#004FFE",
+          "BorderColor": "#004FFE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "700",
+          "FillColor": "#004FFE",
+          "BorderColor": "#004FFE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "800",
+          "FillColor": "#0027FE",
+          "BorderColor": "#0027FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "900",
+          "FillColor": "#9E76FA",
+          "BorderColor": "#9E76FA",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "1000",
+          "FillColor": "#765AB7",
+          "BorderColor": "#765AB7",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "days-without-rain-subtitles",
+      "LayerId": "observacao_ndsc_obs|observacao_ndsc_obssat",
+      "LayerName": "Camada: Número de Dias Sem Chuva",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0",
+          "FillColor": "#E6FFE1",
+          "BorderColor": "#000000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "5",
+          "FillColor": "#0FA00F",
+          "BorderColor": "#0FA00F",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "15",
+          "FillColor": "#FFA000",
+          "BorderColor": "#FFA000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "30",
+          "FillColor": "#E11400",
+          "BorderColor": "#E11400",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "50",
+          "FillColor": "#DCDCFF",
+          "BorderColor": "#000000",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "70",
+          "FillColor": "#7060DC",
+          "BorderColor": "#7060DC",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "120",
+          "FillColor": "#3C28B4",
+          "BorderColor": "#3C28B4",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "maximum-temperature-subtitles",
+      "LayerId": "observacao_tmax_obs01d|previsao_tmax_prev1d|previsao_tmax_prev2d|previsao_tmax_prev3d",
+      "LayerName": "Camada: Temperatura Máxima (ºC)",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "4",
+          "FillColor": "#00C0FE",
+          "BorderColor": "#00C0FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "8",
+          "FillColor": "#00F5FE",
+          "BorderColor": "#00F5FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "12",
+          "FillColor": "#00FFD0",
+          "BorderColor": "#00FFD0",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "16",
+          "FillColor": "#00FF90",
+          "BorderColor": "#00FF90",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "20",
+          "FillColor": "#00FF2B",
+          "BorderColor": "#00FF2B",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "24",
+          "FillColor": "#BAFF01",
+          "BorderColor": "#BAFF01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "26",
+          "FillColor": "#FEFB01",
+          "BorderColor": "#FEFB01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "28",
+          "FillColor": "#FEDD01",
+          "BorderColor": "#FEDD01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "30",
+          "FillColor": "#FEBE01",
+          "BorderColor": "#FEBE01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "32",
+          "FillColor": "#FEA001",
+          "BorderColor": "#FEA001",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "34",
+          "FillColor": "#FE7801",
+          "BorderColor": "#FE7801",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "36",
+          "FillColor": "#FE4601",
+          "BorderColor": "#FE4601",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "38",
+          "FillColor": "#FE1E01",
+          "BorderColor": "#FE1E01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "40",
+          "FillColor": "#FE0101",
+          "BorderColor": "#FE0101",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Indeterminado",
+          "FillColor": "#7D7D7D",
+          "BorderColor": "#7D7D7D",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "relative-humidity-subtitles",
+      "LayerId": "observacao_ur_obs01d|previsao_ur_prev1d|previsao_ur_prev2d|previsao_ur_prev3d",
+      "LayerName": "Camada: Umidade Relativa do Ar (%)",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0",
+          "FillColor": "#FE0101",
+          "BorderColor": "#FE0101",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "10",
+          "FillColor": "#FE1E01",
+          "BorderColor": "#FE1E01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "20",
+          "FillColor": "#FE4601",
+          "BorderColor": "#FE4601",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "30",
+          "FillColor": "#FE7801",
+          "BorderColor": "#FE7801",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "40",
+          "FillColor": "#FEA001",
+          "BorderColor": "#FEA001",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "50",
+          "FillColor": "#FEBE01",
+          "BorderColor": "#FEBE01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "60",
+          "FillColor": "#FEDD01",
+          "BorderColor": "#FEDD01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "70",
+          "FillColor": "#FEFB01",
+          "BorderColor": "#FEFB01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "75",
+          "FillColor": "#BAFF01",
+          "BorderColor": "#BAFF01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "80",
+          "FillColor": "#00FF2B",
+          "BorderColor": "#00FF2B",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "85",
+          "FillColor": "#00FF90",
+          "BorderColor": "#00FF90",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "90",
+          "FillColor": "#00FFD0",
+          "BorderColor": "#00FFD0",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "95",
+          "FillColor": "#00F5FE",
+          "BorderColor": "#00F5FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "100",
+          "FillColor": "#00C0FE",
+          "BorderColor": "#00C0FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "Indeterminado",
+          "FillColor": "#7D7D7D",
+          "BorderColor": "#7D7D7D",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "wind-subtitles",
+      "LayerId": "observacao_vm_obs01d",
+      "LayerName": "Camada: Vento Médio (m/s)",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0",
+          "FillColor": "#FE0101",
+          "BorderColor": "#FE0101",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "1",
+          "FillColor": "#FD1D01",
+          "BorderColor": "#FD1D01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "2",
+          "FillColor": "#FE4701",
+          "BorderColor": "#FE4701",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "3",
+          "FillColor": "#FE7801",
+          "BorderColor": "#FE7801",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "4",
+          "FillColor": "#FEA201",
+          "BorderColor": "#FEA201",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "5",
+          "FillColor": "#FEBE01",
+          "BorderColor": "#FEBE01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "6",
+          "FillColor": "#FEDD01",
+          "BorderColor": "#FEDD01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "7",
+          "FillColor": "#FEFB01",
+          "BorderColor": "#FEFB01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "8",
+          "FillColor": "#BBFF01",
+          "BorderColor": "#BBFF01",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "9",
+          "FillColor": "#01FF2A",
+          "BorderColor": "#01FF2A",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "10",
+          "FillColor": "#00FF92",
+          "BorderColor": "#00FF92",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "11",
+          "FillColor": "#00FFD1",
+          "BorderColor": "#00FFD1",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "12",
+          "FillColor": "#00F8FE",
+          "BorderColor": "#00F8FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "13",
+          "FillColor": "#00C3FE",
+          "BorderColor": "#00C3FE",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "14",
+          "FillColor": "#7D7D7D",
+          "BorderColor": "#7D7D7D",
+          "Image": null,
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        }
+      ]
+    },
+    {
+      "Id": "current-situation-subtitles",
+      "LayerId": "BDQueimadas:current_situation_countries|BDQueimadas:current_situation_states|BDQueimadas:current_situation_cities|BDQueimadas:current_situation_biomes",
+      "LayerName": "Camada: Mapa Espacial de Focos",
+      "Subtitles": [
+        {
+          "SubtitleId": null,
+          "SubtitleText": "0 focos",
+          "FillColor": "#FFEBCD",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 1 a 100 focos",
+          "FillColor": "#FFC387",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 101 a 500 focos",
+          "FillColor": "#FAA046",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 1001 a 5000 focos",
+          "FillColor": "#FA5C25",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 5001 a 25000 focos",
+          "FillColor": "#C34231",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        },
+        {
+          "SubtitleId": null,
+          "SubtitleText": "De 25001 a 50000 focos",
+          "FillColor": "#A21C0D",
+          "BorderColor": "black",
+          "Image": null,
+          "MinResolution": 0.025,
+          "MaxResolution": "Infinity"
+        }
+      ]
     }
   ],
   "UseLayerGroupsInTheLayerExplorer": true,
@@ -782,6 +1508,24 @@
         "MaxResolution": "Infinity",
         "Classes": "unsortable unsortable-separator float-left clear-none",
         "Style": "left: -62px;"
+      }
+    },
+    {
+      "Id": "pm25",
+      "Name": "Fumaça",
+      "Title": "Fumaça",
+      "LayerGroup": false,
+      "Background": false,
+      "Wmts": false,
+      "Visible": false,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "AppendAtTheEnd": false,
+      "Params": {
+        "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
+        "ServerType": "mapserver",
+        "MinResolution": 0,
+        "MaxResolution": "Infinity"
       }
     },
     {
@@ -1246,32 +1990,36 @@
       "LayerGroup": true,
       "Layers": [
         {
-          "Id": "mrp0",
+          "Id": "fire_risk",
           "Name": "Risco de Fogo",
-          "Title": "Risco de Fogo",
-          "LayerGroup": false,
-          "Background": true,
-          "Wmts": false,
-          "Visible": false,
-          "Disabled": false,
-          "AddsInTheStart": true,
-          "AppendAtTheEnd": false,
-          "Params": {
-            "Url": "http://sigma.cptec.inpe.br/cgi-bin/mapserv?map=/extra2/sigma/www/webservice/relatorio_queimadas.map",
-            "ServerType": "mapserver",
-            "MinResolution": 0,
-            "MaxResolution": "Infinity"
-          }
-        },
-        {
-          "Id": "ndsc",
-          "Name": "Número de Dias sem Chuva",
           "LayerGroup": true,
           "Layers": [
             {
-              "Id": "observacao_ndsc_obs",
-              "Name": "Pluviômetros",
-              "Title": "Pluviômetros",
+              "Id": "observacao_rf_obs",
+              "Name": "Observado {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Risco de Fogo Observado",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            },
+            {
+              "Id": "previsao_rf_prev1d",
+              "Name": "Previsto {{0=YYYY/MM/DD}}",
+              "Title": "Risco de Fogo Previsto",
               "LayerGroup": false,
               "Background": true,
               "Wmts": false,
@@ -1287,9 +2035,27 @@
               }
             },
             {
-              "Id": "observacao_ndsc_obssat",
-              "Name": "Pluviômetros / Dados de Satélite",
-              "Title": "Pluviômetros / Dados de Satélite",
+              "Id": "previsao_rf_prev2d",
+              "Name": "Previsto {{+|1|d=YYYY/MM/DD}}",
+              "Title": "Risco de Fogo Previsto",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_rf_prev3d",
+              "Name": "Previsto {{+|2|d=YYYY/MM/DD}}",
+              "Title": "Risco de Fogo Previsto",
               "LayerGroup": false,
               "Background": true,
               "Wmts": false,
@@ -1305,6 +2071,350 @@
               }
             }
           ]
+        },
+        {
+          "Id": "precipitation",
+          "Name": "Precipitação",
+          "LayerGroup": true,
+          "Layers": [
+            {
+              "Id": "observacao_prec_obs01d",
+              "Name": "Observada (Pluv.) {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Precipitação Observada (Pluviômetros)",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            },
+            {
+              "Id": "observacao_prec_cosh01d",
+              "Name": "Observada (Pluv. + Sat.) {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Precipitação Observada (Pluviômetros + Satélite)",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            },
+            {
+              "Id": "previsao_prec_prev1d",
+              "Name": "Prevista {{0=YYYY/MM/DD}}",
+              "Title": "Precipitação Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_prec_prev2d",
+              "Name": "Prevista {{+|1|d=YYYY/MM/DD}}",
+              "Title": "Precipitação Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_prec_prev3d",
+              "Name": "Prevista {{+|2|d=YYYY/MM/DD}}",
+              "Title": "Precipitação Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "days_without_rain",
+          "Name": "Número de Dias Sem Chuva",
+          "LayerGroup": true,
+          "Layers": [
+            {
+              "Id": "observacao_ndsc_obs",
+              "Name": "Pluviômetros {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Número de Dias Sem Chuva (Pluviômetros)",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            },
+            {
+              "Id": "observacao_ndsc_obssat",
+              "Name": "Pluviômetros + Satélite {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Número de Dias Sem Chuva (Pluviômetros + Satélite)",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "maximum_temperature",
+          "Name": "Temperatura Máxima",
+          "LayerGroup": true,
+          "Layers": [
+            {
+              "Id": "observacao_tmax_obs01d",
+              "Name": "Observada {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Temperatura Máxima Observada",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            },
+            {
+              "Id": "previsao_tmax_prev1d",
+              "Name": "Prevista {{0=YYYY/MM/DD}}",
+              "Title": "Temperatura Máxima Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_tmax_prev2d",
+              "Name": "Prevista {{+|1|d=YYYY/MM/DD}}",
+              "Title": "Temperatura Máxima Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_tmax_prev3d",
+              "Name": "Prevista {{+|2|d=YYYY/MM/DD}}",
+              "Title": "Temperatura Máxima Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "relative_humidity",
+          "Name": "Umidade Relativa do Ar",
+          "LayerGroup": true,
+          "Layers": [
+            {
+              "Id": "observacao_ur_obs01d",
+              "Name": "Observada {{-|1|d=YYYY/MM/DD}}",
+              "Title": "Umidade Relativa do Ar Observada",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity",
+                "Time": "{{-|1|d=YYYY-MM-DD}}",
+                "TimeYear": "ano",
+                "TimeMonth": "mes",
+                "TimeDay": "dia"
+              }
+            },
+            {
+              "Id": "previsao_ur_prev1d",
+              "Name": "Prevista {{0=YYYY/MM/DD}}",
+              "Title": "Umidade Relativa do Ar Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_ur_prev2d",
+              "Name": "Prevista {{+|1|d=YYYY/MM/DD}}",
+              "Title": "Umidade Relativa do Ar Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            },
+            {
+              "Id": "previsao_ur_prev3d",
+              "Name": "Prevista {{+|2|d=YYYY/MM/DD}}",
+              "Title": "Umidade Relativa do Ar Prevista",
+              "LayerGroup": false,
+              "Background": true,
+              "Wmts": false,
+              "Visible": false,
+              "Disabled": false,
+              "AddsInTheStart": true,
+              "AppendAtTheEnd": false,
+              "Params": {
+                "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+                "ServerType": "mapserver",
+                "MinResolution": 0,
+                "MaxResolution": "Infinity"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "observacao_vm_obs01d",
+          "Name": "Vento Médio {{-|1|d=YYYY/MM/DD}}",
+          "Title": "Vento Médio",
+          "LayerGroup": false,
+          "Background": true,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "http://sirc.dgi.inpe.br/cgi-bin/mapserv?map=/srv/queimadas/meteorologia/mapfiles/meteorologia.map",
+            "ServerType": "mapserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Time": "{{-|1|d=YYYY-MM-DD}}",
+            "TimeYear": "ano",
+            "TimeMonth": "mes",
+            "TimeDay": "dia"
+          }
         }
       ]
     },
@@ -1419,6 +2529,26 @@
       "AppendAtTheEnd": true,
       "Params": {
         "TerraMA2WebComponentsFunction": "addOSMLayer",
+        "MinResolution": 0,
+        "MaxResolution": "Infinity",
+        "Classes": "unsortable unsortable-separator float-left clear-none"
+      }
+    },
+    {
+      "Id": "bing",
+      "Name": "Bing",
+      "Title": "Bing Maps",
+      "LayerGroup": false,
+      "Background": true,
+      "Wmts": false,
+      "Visible": false,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "AppendAtTheEnd": true,
+      "Params": {
+        "TerraMA2WebComponentsFunction": "addBingMapsLayer",
+        "ImagerySet": "AerialWithLabels",
+        "BingMapsKey": "AsGmbY20D1mSnOYZneUWzOWQTT1johyNyu84NvqHMbBG25CLM5gM0bsiKlqzedTS",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
         "Classes": "unsortable unsortable-separator float-left clear-none"

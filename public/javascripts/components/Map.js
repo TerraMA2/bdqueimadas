@@ -459,39 +459,38 @@ define(
       var configuration = Utils.getConfigurations().mapConfigurations;
 
       $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
+        elem += "<li id=\"" + mapSubtitleItem.Id + "\"><ul class=\"nav nav-pills nav-stacked\"><li><a><span style=\"font-weight: bold; margin-left: 3px;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
 
-        var layersIds = mapSubtitleItem.LayerId.split('|');
+        var index = mapSubtitleItem.LayerId.indexOf(Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
 
-        $.each(layersIds, function(x, layersIdsItem) {
-          elem += "<li class=\"" + layersIdsItem.replace(':', '') + "\"><a><span style=\"font-weight: bold;\">" + mapSubtitleItem.LayerName + "</span></a></li>";
+        var liStyle = index > -1 ? "display: none;" : "";
 
-          var liStyle = layersIdsItem === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId ? "display: none;" : "";
+        $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
+          var css = "";
 
-          $.each(mapSubtitleItem.Subtitles, function(j, layerSubtitleItem) {
-            var css = "";
+          if(layerSubtitleItem.FillColor !== null)
+            css += "background-color: " + layerSubtitleItem.FillColor + ";";
 
-            if(layerSubtitleItem.FillColor !== null)
-              css += "background-color: " + layerSubtitleItem.FillColor + ";";
+          if(layerSubtitleItem.BorderColor !== null)
+            css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
 
-            if(layerSubtitleItem.BorderColor !== null)
-              css += "border: solid 2px " + layerSubtitleItem.BorderColor + ";";
+          if(layerSubtitleItem.Image !== null)
+            css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
 
-            if(layerSubtitleItem.Image !== null)
-              css += "background: url(" + layerSubtitleItem.Image + ");background-size: 12px;background-position: center;background-repeat: no-repeat;";
+          elem += "<li class=\"subtitle-item";
 
-            elem += "<li class=\"" + layersIdsItem.replace(':', '') + " subtitle-item";
+          if(index > -1)
+            elem += " satellite-subtitle-item";
 
-            if(layersIdsItem === Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId)
-              elem += " satellite-subtitle-item";
+          elem += "\"";
 
-            elem += "\"";
+          if(layerSubtitleItem.SubtitleId !== null)
+            elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
 
-            if(layerSubtitleItem.SubtitleId !== null)
-              elem += " id=\"" + layerSubtitleItem.SubtitleId + "\"";
-
-            elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
-          });
+          elem += " style=\"" + liStyle + "\"><a><div style=\"" + css + "\"></div><span>" + layerSubtitleItem.SubtitleText + "</span></a></li>";
         });
+
+        elem += "</ul></li>";
       });
 
       $('#map-subtitle-items').append(elem);
@@ -550,9 +549,25 @@ define(
     var updateSubtitles = function(satellites) {
       $(".satellite-subtitle-item").hide();
 
-      $.each(satellites, function(i, satellite) {
-        $("#" + satellite.satelite).show();
-      });
+      var satellitesLength = satellites.length;
+
+      if(satellitesLength > 0) {
+        $('.satellite-subtitle-item').parent().parent().show();
+
+        for(var i = 0; i < satellitesLength; i++) {
+          $("#" + satellites[i].satelite).show();
+        }
+      } else {
+        $('.satellite-subtitle-item').parent().parent().hide();
+      }
+
+      if($('#map-subtitle-items').children(':visible').length == 0) {
+        $('#no-subtitles').show();
+      } else {
+        $('#no-subtitles').hide();
+      }
+
+      updateZoomTop(false);
     };
 
     /**
@@ -566,51 +581,54 @@ define(
     var setSubtitlesVisibility = function(layerId) {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      $.each(configuration.Subtitles, function(i, mapSubtitleItem) {
+      for(var i = 0, subtitlesLength = configuration.Subtitles.length; i < subtitlesLength; i++) {
+        var layersIds = configuration.Subtitles[i].LayerId.split('|');
+        var showSubtitles = false;
 
-        var layersIds = mapSubtitleItem.LayerId.split('|');
-
-        $.each(layersIds, function(x, layersIdsItem) {
-          if(layerId === undefined || layerId === layersIdsItem) {
-            if(TerraMA2WebComponents.MapDisplay.isCurrentResolutionValidForLayer(layersIdsItem) && TerraMA2WebComponents.MapDisplay.isLayerVisible(layersIdsItem)) {
-              showSubtitle(layersIdsItem);
+        for(var j = 0, layersIdsLength = layersIds.length; j < layersIdsLength; j++) {
+          if(layerId === undefined || layerId === layersIds[j]) {
+            if(TerraMA2WebComponents.MapDisplay.isCurrentResolutionValidForLayer(layersIds[j]) && TerraMA2WebComponents.MapDisplay.isLayerVisible(layersIds[j])) {
+              showSubtitle(configuration.Subtitles[i].Id);
+              break;
             } else {
-              hideSubtitle(layersIdsItem);
+              hideSubtitle(configuration.Subtitles[i].Id);
             }
           }
-        });
-      });
+        }
+      }
+
+      if($('#map-subtitle-items').children(':visible').length == 0) {
+        $('#no-subtitles').show();
+      } else {
+        $('#no-subtitles').hide();
+      }
     };
 
     /**
-     * Shows the subtitles of a given layer.
-     * @param {string} layerId - Layer id
+     * Shows the subtitles with the given id.
+     * @param {string} subtitlesId - Subtitles id
      *
      * @private
      * @function showSubtitle
      * @memberof Map
      * @inner
      */
-    var showSubtitle = function(layerId) {
-      if(!$("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").is(":visible") && ($("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === "" || $("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === undefined))
-        $("#map-subtitle-items > li." + layerId.replace(':', '')).show();
-
+    var showSubtitle = function(subtitlesId) {
+      $("#" + subtitlesId).show();
       updateZoomTop(false);
     };
 
     /**
-     * Hides the subtitles of a given layer.
-     * @param {string} layerId - Layer id
+     * Hides the subtitles with the given id.
+     * @param {string} subtitlesId - Subtitles id
      *
      * @private
      * @function hideSubtitle
      * @memberof Map
      * @inner
      */
-    var hideSubtitle = function(layerId) {
-      if($("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === "" || $("#map-subtitle-items > li." + layerId.replace(':', '') + ".subtitle-item").attr("id") === undefined)
-        $("#map-subtitle-items > li." + layerId.replace(':', '')).hide();
-
+    var hideSubtitle = function(subtitlesId) {
+      $("#" + subtitlesId).hide();
       updateZoomTop(false);
     };
 
