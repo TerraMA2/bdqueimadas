@@ -252,8 +252,8 @@ var Exportation = function() {
 
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
-        if(memberTablesConfig.Fires.DateFieldName == memberAttributesTableConfig.Columns[i].Name)
-          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
+        if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
+          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH:MM:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else if(memberTablesConfig.Fires.TimeFieldName == memberAttributesTableConfig.Columns[i].Name)
           columns += memberAttributesTableConfig.Columns[i].Name + "::text as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else

@@ -46,8 +46,8 @@ var AttributesTable = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateFieldName) {
-        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD'), ";
+      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateTimeFieldName) {
+        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH:MM:SS'), ";
       } else {
         columns += memberAttributesTableConfig.Columns[i].Name + ", ";
       }

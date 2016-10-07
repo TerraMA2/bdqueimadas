@@ -505,8 +505,8 @@ var Graphics = function() {
     pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
-        var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ")::date, 'YYYY/MM/DD') as start, " +
-        "TO_CHAR((date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ") + '6 days')::date, 'YYYY/MM/DD') as end, count(*) AS count " +
+        var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateTimeFieldName + ")::date, 'YYYY/MM/DD') as start, " +
+        "TO_CHAR((date_trunc('week', " + memberTablesConfig.Fires.DateTimeFieldName + ") + '6 days')::date, 'YYYY/MM/DD') as end, count(*) AS count " +
         "from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
