@@ -358,36 +358,6 @@ var Filter = function() {
   };
 
   /**
-   * Returns the continent extent correspondent to the received id.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {number} continent - Continent id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getContinentExtent
-   * @memberof Filter
-   * @inner
-   */
-  this.getContinentExtent = function(pgPool, continent, callback) {
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + ") as extent from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
-            params = [continent];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
    * Returns the countries extent correspondent to the received ids.
    * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
