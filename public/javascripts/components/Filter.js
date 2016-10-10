@@ -590,23 +590,6 @@ define(
     };
 
     /**
-     * Creates the date filter.
-     * @returns {string} cql - Date cql filter
-     *
-     * @private
-     * @function createDateFilter
-     * @memberof Filter(2)
-     * @inner
-     */
-    /*var createDateFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + ">=" + Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-      cql += " and ";
-      cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFieldName + "<=" + Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.LayerToFilter.DateFormat);
-
-      return cql;
-    };*/
-
-    /**
      * Creates the date / time filter.
      * @returns {string} cql - Date / time cql filter
      *

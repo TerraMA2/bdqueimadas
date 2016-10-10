@@ -68,6 +68,38 @@ define(function() {
   };
 
   /**
+   * Converts a datetime into a string datetime formatted accordingly with the received format.
+   * @param {Date} dateTime - Datetime
+   * @param {string} format - Format
+   * @returns {string} stringDateTime - Formatted string datetime
+   *
+   * @function dateTimeToString
+   * @memberof Utils
+   * @inner
+   */
+  var dateTimeToString = function(dateTime, format) {
+    var stringDateTime = format;
+
+    var dd = ('0' + dateTime.getDate()).slice(-2);
+    var mm = ('0' + (dateTime.getMonth() + 1)).slice(-2);
+    var yyyy = dateTime.getFullYear().toString();
+
+    var hh = ('0' + dateTime.getHours()).slice(-2);
+    var min = ('0' + dateTime.getMinutes()).slice(-2);
+    var sec = ('0' + dateTime.getSeconds()).slice(-2);
+
+    if(format.match(/YYYY/)) stringDateTime = stringDateTime.replace("YYYY", yyyy);
+    if(format.match(/MM/)) stringDateTime = stringDateTime.replace("MM", mm);
+    if(format.match(/DD/)) stringDateTime = stringDateTime.replace("DD", dd);
+
+    if(format.match(/HH/)) stringDateTime = stringDateTime.replace("HH", hh);
+    if(format.match(/II/)) stringDateTime = stringDateTime.replace("II", min);
+    if(format.match(/SS/)) stringDateTime = stringDateTime.replace("SS", sec);
+
+    return stringDateTime;
+  };
+
+  /**
    * Converts a string date formatted accordingly with the received format into a date.
    * @param {string} date - String date
    * @param {string} format - Format
@@ -87,6 +119,38 @@ define(function() {
     var date = date.substring(datePosition, datePosition + 2);
 
     var finalDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(date), 0, 0, 0);
+
+    return finalDate;
+  };
+
+  /**
+   * Converts a string datetime formatted accordingly with the received format into a datetime.
+   * @param {string} dateTime - String datetime
+   * @param {string} format - Format
+   * @returns {date} finalDate - Datetime
+   *
+   * @function stringToDateTime
+   * @memberof Utils
+   * @inner
+   */
+  var stringToDateTime = function(dateTime, format) {
+    var yearPosition = format.indexOf("YYYY");
+    var monthPosition = format.indexOf("MM");
+    var datePosition = format.indexOf("DD");
+
+    var hourPosition = format.indexOf("HH");
+    var minutePosition = format.indexOf("II");
+    var secondPosition = format.indexOf("SS");
+
+    var year = dateTime.substring(yearPosition, yearPosition + 4);
+    var month = dateTime.substring(monthPosition, monthPosition + 2);
+    var date = dateTime.substring(datePosition, datePosition + 2);
+
+    var hour = dateTime.substring(hourPosition, hourPosition + 2);
+    var minute = dateTime.substring(minutePosition, minutePosition + 2);
+    var second = dateTime.substring(secondPosition, secondPosition + 2);
+
+    var finalDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(date), parseInt(hour), parseInt(minute), parseInt(second));
 
     return finalDate;
   };
@@ -694,7 +758,9 @@ define(function() {
     getSocket: getSocket,
     getConfigurations: getConfigurations,
     dateToString: dateToString,
+    dateTimeToString: dateTimeToString,
     stringToDate: stringToDate,
+    stringToDateTime: stringToDateTime,
     formatTime: formatTime,
     processStringWithDatePattern: processStringWithDatePattern,
     getFormatFromStringWithDatePattern: getFormatFromStringWithDatePattern,

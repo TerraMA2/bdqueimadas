@@ -254,8 +254,6 @@ var Exportation = function() {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
           columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH:MM:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
-        else if(memberTablesConfig.Fires.TimeFieldName == memberAttributesTableConfig.Columns[i].Name)
-          columns += memberAttributesTableConfig.Columns[i].Name + "::text as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else
           columns += memberAttributesTableConfig.Columns[i].Name + ", ";
       }
@@ -426,13 +424,12 @@ var Exportation = function() {
 
         // Creation of the query
         var query = "insert into " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " (" +
-                    memberTablesConfig.Downloads.DateFieldName + ", " + memberTablesConfig.Downloads.TimeFieldName + ", " +
-                    memberTablesConfig.Downloads.IpFieldName + ", " + memberTablesConfig.Downloads.FilterBeginFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterEndFieldName + ", " + memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterBiomesFieldName + ", " + memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterStatesFieldName + ", " + memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
-            params = [dateString, timeString, ip, dateTimeFrom, dateTimeTo];
+                    memberTablesConfig.Downloads.DateTimeFieldName + ", " + memberTablesConfig.Downloads.IpFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterBeginFieldName + ", " + memberTablesConfig.Downloads.FilterEndFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " + memberTablesConfig.Downloads.FilterBiomesFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterCountriesFieldName + ", " + memberTablesConfig.Downloads.FilterStatesFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterCitiesFieldName + ", " + memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);",
+            params = [dateString + ' ' + timeString, ip, dateTimeFrom, dateTimeTo];
 
         if(options.satellites !== undefined)
           params.push(options.satellites.split(','));

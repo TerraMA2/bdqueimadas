@@ -8,6 +8,7 @@
  *
  * @property {object} memberSockets - Sockets object.
  * @property {object} memberHttp - 'http' module.
+ * @property {object} memberHttps - 'https' module.
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberPiwikConfigurations - Piwik configurations.
@@ -18,6 +19,8 @@ var Proxy = function(io) {
   var memberSockets = io.sockets;
   // 'http' module
   var memberHttp = require('http');
+  // 'https' module
+  var memberHttps = require('https');
   // 'path' module
   var memberPath = require('path');
   // 'fs' module
@@ -31,8 +34,10 @@ var Proxy = function(io) {
     // Proxy request event
     client.on('proxyRequest', function(json) {
 
+      var requestObject = json.url.substring(0, 5) === "https" ? memberHttps : memberHttp;
+
       // Http request to the received url
-      memberHttp.get(json.url, function(resp) {
+      requestObject.get(json.url, function(resp) {
         var body = '';
 
         // Data receiving event
@@ -72,8 +77,10 @@ var Proxy = function(io) {
 
       var url = memberPiwikConfigurations.Url + "/index.php?module=API&method=API.getBulkRequest&format=json&token_auth=" + memberPiwikConfigurations.TokenAuth + "&urls[0]=method=VisitsSummary.get&idSite=" + memberPiwikConfigurations.IdSite + "&period=range&date=2016-07-25," + year + "-" + month + "-" + day;
 
+      var requestObject = url.substring(0, 5) === "https" ? memberHttps : memberHttp;
+
       // Http request to the Piwik url
-      memberHttp.get(url, function(resp) {
+      requestObject.get(url, function(resp) {
         var body = '';
 
         // Data receiving event
