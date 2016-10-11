@@ -199,27 +199,36 @@ var Graphics = function() {
           var tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.FiresTableName + " a";
           var tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName + " b";
           var idField = "b." + memberTablesConfig.UCE.IdFieldName;
+          var ngoField = "b." + memberTablesConfig.UCE.NGOFieldName;
           var PAField = "a." + memberTablesConfig.UCE.FiresPAFieldName;
+          var ngoPAField = "a." + memberTablesConfig.UCE.NGOFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCE.FiresIdsFieldName;
           var dateField = "a." + memberTablesConfig.UCE.FiresDateFieldName;
+          var optionalWhere = " " + memberTablesConfig.UCE.IsFederal + "=false and";
         } else if(key === "UCF" || key === "UCF_5KM" || key === "UCF_10KM") {
           var fields = "b." + memberTablesConfig.UCF.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.UCF.NameFieldName;
           var tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.FiresTableName + " a";
           var tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName + " b";
           var idField = "b." + memberTablesConfig.UCF.IdFieldName;
+          var ngoField = "b." + memberTablesConfig.UCF.NGOFieldName;
           var PAField = "a." + memberTablesConfig.UCF.FiresPAFieldName;
+          var ngoPAField = "a." + memberTablesConfig.UCF.NGOFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCF.FiresIdsFieldName;
           var dateField = "a." + memberTablesConfig.UCF.FiresDateFieldName;
+          var optionalWhere = " " + memberTablesConfig.UCF.IsFederal + "=true and";
         } else {
           var fields = "b." + memberTablesConfig.TI.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.TI.NameFieldName;
           var tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.FiresTableName + " a";
           var tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName + " b";
           var idField = "b." + memberTablesConfig.TI.IdFieldName;
+          var ngoField = "b." + memberTablesConfig.TI.NGOFieldName;
           var PAField = "a." + memberTablesConfig.TI.FiresPAFieldName;
+          var ngoPAField = "a." + memberTablesConfig.TI.NGOFieldName;
           var firesIdsField = "a." + memberTablesConfig.TI.FiresIdsFieldName;
           var dateField = "a." + memberTablesConfig.TI.FiresDateFieldName;
+          var optionalWhere = "";
         }
 
         if(key === "UCE_5KM") {
@@ -244,10 +253,11 @@ var Graphics = function() {
 
         // Creation of the query
         var query = "select " + fields + " from " + tableFires +
-        " inner join " + tablePA + " on (" + idField + " = " + PAField + ")" +
+        " inner join " + tablePA + " on (concat(" + ngoField + ", " + idField + ") = concat(" + ngoPAField + ", " + PAField + "))" +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " c on (c." + memberTablesConfig.Fires.IdFieldName + " = ANY (" + firesIdsField + "))" +
-        " where (c." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
+        " where" + optionalWhere +
+        " (c." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
         " and (" + dateField + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo, dateTimeFrom, dateTimeTo];
 
