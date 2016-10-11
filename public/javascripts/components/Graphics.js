@@ -279,7 +279,7 @@ define(
                                        "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
 
                     if(firesCountGraphicsConfig[i].PAGraphic)
-                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+                      htmlElements += "<a href=\"https://dev-queimadas.dgi.inpe.br/estatisticas/ucs_tis/repositorio_relat/relatorio.html\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
 
                     htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
                                     "-graphic-message-container\" class=\"text-center\">" +
@@ -295,7 +295,7 @@ define(
                                        "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
 
                     if(firesCountGraphicsConfig[i].PAGraphic)
-                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+                      htmlElements += "<a href=\"https://dev-queimadas.dgi.inpe.br/estatisticas/ucs_tis/repositorio_relat/relatorio.html\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
 
                     htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
                                     "-graphic-message-container\" class=\"text-center\">" +
