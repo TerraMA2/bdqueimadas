@@ -6,8 +6,6 @@
     "LongitudeFieldName": "lon",
     "LatitudeDMSFieldName": "lat_gms",
     "LongitudeDMSFieldName": "lon_gms",
-    "DateFieldName": "data",
-    "TimeFieldName": "hora",
     "DateTimeFieldName": "data_hora",
     "SatelliteFieldName": "satelite",
     "CityFieldName": "municipio",

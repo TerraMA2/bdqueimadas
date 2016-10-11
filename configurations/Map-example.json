@@ -2,7 +2,7 @@
   "Subtitles": [
     {
       "Id": "fires-subtitles",
-      "LayerId": "BDQueimadas:focos",
+      "LayerId": "bdqueimadas:focos",
       "LayerName": "Camada: Focos",
       "Subtitles": [
         {
@@ -1192,7 +1192,7 @@
     },
     {
       "Id": "current-situation-subtitles",
-      "LayerId": "BDQueimadas:current_situation_countries|BDQueimadas:current_situation_states|BDQueimadas:current_situation_cities|BDQueimadas:current_situation_biomes",
+      "LayerId": "bdqueimadas:situacao_atual_paises|bdqueimadas:situacao_atual_estados|bdqueimadas:situacao_atual_municipios|bdqueimadas:situacao_atual_biomas",
       "LayerName": "Camada: Mapa Espacial de Focos",
       "Subtitles": [
         {
@@ -1256,7 +1256,7 @@
   "EnableAddAndRemoveLayers": false,
   "Layers": [
     {
-      "Id": "BDQueimadas:focos",
+      "Id": "bdqueimadas:focos",
       "Name": "Focos",
       "Title": "Focos",
       "LayerGroup": false,
@@ -1267,7 +1267,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1275,7 +1275,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:paises_multi",
+      "Id": "bdqueimadas:paises",
       "Name": "Países",
       "Title": "Países",
       "LayerGroup": false,
@@ -1286,7 +1286,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1294,7 +1294,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:labels_paises",
+      "Id": "bdqueimadas:labels_paises",
       "Name": "Nomes",
       "Title": "Nomes dos Países",
       "LayerGroup": false,
@@ -1305,7 +1305,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1314,7 +1314,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:estados",
+      "Id": "bdqueimadas:estados",
       "Name": "Estados",
       "Title": "Estados",
       "LayerGroup": false,
@@ -1325,7 +1325,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1333,7 +1333,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:labels_estados",
+      "Id": "bdqueimadas:labels_estados",
       "Name": "Nomes",
       "Title": "Nomes dos Estados",
       "LayerGroup": false,
@@ -1344,7 +1344,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1353,7 +1353,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:municipios",
+      "Id": "bdqueimadas:municipios",
       "Name": "Municípios",
       "Title": "Municípios",
       "LayerGroup": false,
@@ -1364,7 +1364,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1372,7 +1372,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:sedes_municipios",
+      "Id": "bdqueimadas:labels_municipios",
       "Name": "Nomes",
       "Title": "Nomes dos Municípios",
       "LayerGroup": false,
@@ -1383,7 +1383,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1392,9 +1392,9 @@
       }
     },
     {
-      "Id": "BDQueimadas:biomas_brasileiros",
+      "Id": "bdqueimadas:biomas_brasileiros",
       "Name": "Biomas Brasileiros",
-      "Title": "Biomas Brasileiros",
+  	  "Title": "Biomas Brasileiros",
       "LayerGroup": false,
       "Background": false,
       "Wmts": false,
@@ -1403,7 +1403,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1411,7 +1411,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:labels_biomas_brasileiros",
+      "Id": "bdqueimadas:labels_biomas_brasileiros",
       "Name": "Nomes",
       "Title": "Nomes dos Biomas Brasileiros",
       "LayerGroup": false,
@@ -1422,7 +1422,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1431,7 +1431,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:labels_hidrografia",
+      "Id": "bdqueimadas:labels_hidrografia",
       "Name": "Nomes",
       "Title": "Nomes Hidrografia",
       "LayerGroup": false,
@@ -1442,7 +1442,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1451,7 +1451,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:hidrografia",
+      "Id": "bdqueimadas:hidrografia",
       "Name": "Hidrografia",
       "Title": "Hidrografia",
       "LayerGroup": false,
@@ -1462,7 +1462,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1471,7 +1471,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:labels_rodovias",
+      "Id": "bdqueimadas:labels_rodovias",
       "Name": "Nomes",
       "Title": "Nomes das Rodovias",
       "LayerGroup": false,
@@ -1482,7 +1482,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1491,7 +1491,7 @@
       }
     },
     {
-      "Id": "BDQueimadas:rodovias",
+      "Id": "bdqueimadas:rodovias",
       "Name": "Rodovias",
       "Title": "Rodovias",
       "LayerGroup": false,
@@ -1502,7 +1502,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -1534,9 +1534,9 @@
       "LayerGroup": true,
       "Layers": [
         {
-          "Id": "BDQueimadas:unidades_conservacao_federais",
+          "Id": "bdqueimadas:unidades_conservacao_federais_nao_reservas",
           "Name": "UCFs",
-          "Title": "Unidades de Conservação Federais",
+		      "Title": "Unidades de Conservação Federais",
           "LayerGroup": false,
           "Background": false,
           "Wmts": false,
@@ -1545,7 +1545,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1553,7 +1553,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:labels_unidades_conservacao_federais",
+          "Id": "bdqueimadas:labels_unidades_conservacao_federais_nao_reservas",
           "Name": "Nomes",
           "Title": "Nomes das Unidades de Conservação Federais",
           "LayerGroup": false,
@@ -1564,7 +1564,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1573,7 +1573,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:buffer_5_unidades_conservacao_federais",
+          "Id": "bdqueimadas:buffer_5_unidades_conservacao_federais_nao_reservas",
           "Name": "_5Km",
           "Title": "Buffer de 5Km das Unidades de Conservação Federais",
           "LayerGroup": false,
@@ -1584,7 +1584,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1593,7 +1593,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:buffer_10_unidades_conservacao_federais",
+          "Id": "bdqueimadas:buffer_10_unidades_conservacao_federais_nao_reservas",
           "Name": "_10Km",
           "Title": "Buffer de 10Km das Unidades de Conservação Federais",
           "LayerGroup": false,
@@ -1604,7 +1604,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1613,7 +1613,86 @@
           }
         },
         {
-          "Id": "BDQueimadas:unidades_conservacao_estaduais",
+          "Id": "bdqueimadas:unidades_conservacao_federais_reservas",
+          "Name": "RPPN_F",
+          "Title": "Reservas Particulares do Patrimônio Natural Federais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Classes": "unsortable float-left clear-left"
+          }
+        },
+        {
+          "Id": "bdqueimadas:labels_unidades_conservacao_federais_reservas",
+          "Name": "Nomes",
+          "Title": "Nomes das Reservas Particulares do Patrimônio Natural Federais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Buffer": 512,
+            "Classes": "unsortable unsortable-separator float-left clear-none"
+          }
+        },
+        {
+          "Id": "bdqueimadas:buffer_5_unidades_conservacao_federais_reservas",
+          "Name": "_5Km",
+          "Title": "Buffer de 5Km das Reservas Particulares do Patrimônio Natural Federais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Buffer": 512,
+            "Classes": "unsortable unsortable-separator float-left clear-none"
+          }
+        },
+        {
+          "Id": "bdqueimadas:buffer_10_unidades_conservacao_federais_reservas",
+          "Name": "_10Km",
+          "Title": "Buffer de 10Km das Reservas Particulares do Patrimônio Natural Federais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Buffer": 512,
+            "Classes": "unsortable unsortable-separator float-left clear-none"
+          }
+        },
+        {
+          "Id": "bdqueimadas:unidades_conservacao_estaduais_nao_reservas",
           "Name": "UCEs",
           "Title": "Unidades de Conservação Estaduais",
           "LayerGroup": false,
@@ -1624,7 +1703,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1632,7 +1711,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:labels_unidades_conservacao_estaduais",
+          "Id": "bdqueimadas:labels_unidades_conservacao_estaduais_nao_reservas",
           "Name": "Nomes",
           "Title": "Nomes das Unidades de Conservação Estaduais",
           "LayerGroup": false,
@@ -1643,7 +1722,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1652,7 +1731,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:buffer_5_unidades_conservacao_estaduais",
+          "Id": "bdqueimadas:buffer_5_unidades_conservacao_estaduais_nao_reservas",
           "Name": "_5Km",
           "Title": "Buffer de 5Km das Unidades de Conservação Estaduais",
           "LayerGroup": false,
@@ -1663,7 +1742,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1672,7 +1751,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:buffer_10_unidades_conservacao_estaduais",
+          "Id": "bdqueimadas:buffer_10_unidades_conservacao_estaduais_nao_reservas",
           "Name": "_10Km",
           "Title": "Buffer de 10Km das Unidades de Conservação Estaduais",
           "LayerGroup": false,
@@ -1683,7 +1762,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1692,7 +1771,86 @@
           }
         },
         {
-          "Id": "BDQueimadas:terras_indigenas",
+          "Id": "bdqueimadas:unidades_conservacao_estaduais_reservas",
+          "Name": "RPPN_E",
+      	  "Title": "Reservas Particulares do Patrimônio Natural Estaduais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Classes": "unsortable float-left clear-left"
+          }
+        },
+        {
+          "Id": "bdqueimadas:labels_unidades_conservacao_estaduais_reservas",
+          "Name": "Nomes",
+          "Title": "Nomes das Reservas Particulares do Patrimônio Natural Estaduais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Buffer": 512,
+            "Classes": "unsortable unsortable-separator float-left clear-none"
+          }
+        },
+        {
+          "Id": "bdqueimadas:buffer_5_unidades_conservacao_estaduais_reservas",
+          "Name": "_5Km",
+          "Title": "Buffer de 5Km das Reservas Particulares do Patrimônio Natural Estaduais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Buffer": 512,
+            "Classes": "unsortable unsortable-separator float-left clear-none"
+          }
+        },
+        {
+          "Id": "bdqueimadas:buffer_10_unidades_conservacao_estaduais_reservas",
+          "Name": "_10Km",
+          "Title": "Buffer de 10Km das Reservas Particulares do Patrimônio Natural Estaduais",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Buffer": 512,
+            "Classes": "unsortable unsortable-separator float-left clear-none"
+          }
+        },
+        {
+          "Id": "bdqueimadas:terras_indigenas",
           "Name": "TIs",
           "Title": "Terras Indígenas",
           "LayerGroup": false,
@@ -1703,7 +1861,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1711,7 +1869,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:labels_terras_indigenas",
+          "Id": "bdqueimadas:labels_terras_indigenas",
           "Name": "Nomes",
           "Title": "Nomes das Terras Indígenas",
           "LayerGroup": false,
@@ -1722,7 +1880,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1731,7 +1889,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:buffer_5_terras_indigenas",
+          "Id": "bdqueimadas:buffer_5_terras_indigenas",
           "Name": "_5Km",
           "Title": "Buffer de 5Km das Terras Indígenas",
           "LayerGroup": false,
@@ -1742,7 +1900,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1751,7 +1909,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:buffer_10_terras_indigenas",
+          "Id": "bdqueimadas:buffer_10_terras_indigenas",
           "Name": "_10Km",
           "Title": "Buffer de 10Km das Terras Indígenas",
           "LayerGroup": false,
@@ -1762,7 +1920,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1771,7 +1929,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:protectedplanet",
+          "Id": "bdqueimadas:protectedplanet",
           "Name": "Áreas Protegidas Américas",
           "Title": "Áreas Protegidas das Américas",
           "LayerGroup": false,
@@ -1782,7 +1940,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1790,7 +1948,7 @@
           }
         },
         {
-          "Id": "BDQueimadas:labels_protectedplanet",
+          "Id": "bdqueimadas:labels_protectedplanet",
           "Name": "Nomes",
           "Title": "Nomes das Áreas Protegidas das Américas",
           "LayerGroup": false,
@@ -1801,7 +1959,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity",
@@ -1871,9 +2029,63 @@
           }
         },
         {
+          "Id": "MODIS_Aqua_CorrectedReflectance_Bands721",
+          "Name": "Aqua / Modis - Bandas 7-2-1 {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "Aqua / Modis - Bandas 7-2-1",
+          "LayerGroup": false,
+          "Background": true,
+          "Wmts": true,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "//map1{a-c}.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
+            "ServerType": "mapserver",
+            "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+            "MinTimeForTodaysImage": "18:00:00",
+            "Version": "1.1.0",
+            "Format": "image/jpeg",
+            "MatrixSet": "EPSG4326_250m",
+            "TileGrid": {
+              "origin": [-180, 90],
+              "resolutions": [0.5625, 0.28125, 0.140625, 0.0703125, 0.03515625, 0.017578125, 0.0087890625, 0.00439453125, 0.002197265625],
+              "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+              "tileSize": 512
+            }
+          }
+        },
+        {
           "Id": "MODIS_Terra_CorrectedReflectance_TrueColor",
           "Name": "Terra / Modis {{FINAL_DATE=YYYY/MM/DD}}",
           "Title": "Terra / Modis",
+          "LayerGroup": false,
+          "Background": true,
+          "Wmts": true,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "//map1{a-c}.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
+            "ServerType": "mapserver",
+            "Time": "{{FINAL_DATE=YYYY-MM-DD}}",
+            "MinTimeForTodaysImage": "15:00:00",
+            "Version": "1.1.0",
+            "Format": "image/jpeg",
+            "MatrixSet": "EPSG4326_250m",
+            "TileGrid": {
+              "origin": [-180, 90],
+              "resolutions": [0.5625, 0.28125, 0.140625, 0.0703125, 0.03515625, 0.017578125, 0.0087890625, 0.00439453125, 0.002197265625],
+              "matrixIds": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+              "tileSize": 512
+            }
+          }
+        },
+        {
+          "Id": "MODIS_Terra_CorrectedReflectance_Bands721",
+          "Name": "Terra / Modis - Bandas 7-2-1 {{FINAL_DATE=YYYY/MM/DD}}",
+          "Title": "Terra / Modis - Bandas 7-2-1",
           "LayerGroup": false,
           "Background": true,
           "Wmts": true,
@@ -2424,7 +2636,7 @@
       "LayerGroup": true,
       "Layers": [
         {
-          "Id": "BDQueimadas:current_situation_biomes",
+          "Id": "bdqueimadas:situacao_atual_biomas",
           "Name": "Biomas Brasileiros",
           "Title": "Mapa Espacial de Focos dos Biomas Brasileiros",
           "LayerGroup": false,
@@ -2435,14 +2647,14 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity"
           }
         },
         {
-          "Id": "BDQueimadas:current_situation_cities",
+          "Id": "bdqueimadas:situacao_atual_municipios",
           "Name": "Municípios",
           "Title": "Mapa Espacial de Focos dos Municípios",
           "LayerGroup": false,
@@ -2453,14 +2665,14 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity"
           }
         },
         {
-          "Id": "BDQueimadas:current_situation_states",
+          "Id": "bdqueimadas:situacao_atual_estados",
           "Name": "Estados",
           "Title": "Mapa Espacial de Focos dos Estados",
           "LayerGroup": false,
@@ -2471,14 +2683,14 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity"
           }
         },
         {
-          "Id": "BDQueimadas:current_situation_countries",
+          "Id": "bdqueimadas:situacao_atual_paises",
           "Name": "Países",
           "Title": "Mapa Espacial de Focos dos Países",
           "LayerGroup": false,
@@ -2489,7 +2701,7 @@
           "AddsInTheStart": true,
           "AppendAtTheEnd": false,
           "Params": {
-            "Url": "http://localhost:8080/geoserver/ows",
+            "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
             "ServerType": "geoserver",
             "MinResolution": 0,
             "MaxResolution": "Infinity"
@@ -2498,7 +2710,7 @@
       ]
     },
     {
-      "Id": "BDQueimadas:pyr_nasa",
+      "Id": "bdqueimadas:blue_marble_pyramid",
       "Name": "Blue Marble",
       "Title": "Blue Marble (NASA)",
       "LayerGroup": false,
@@ -2509,7 +2721,7 @@
       "AddsInTheStart": true,
       "AppendAtTheEnd": false,
       "Params": {
-        "Url": "http://localhost:8080/geoserver/ows",
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
         "ServerType": "geoserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
@@ -2548,7 +2760,7 @@
       "Params": {
         "TerraMA2WebComponentsFunction": "addBingMapsLayer",
         "ImagerySet": "AerialWithLabels",
-        "BingMapsKey": "AsGmbY20D1mSnOYZneUWzOWQTT1johyNyu84NvqHMbBG25CLM5gM0bsiKlqzedTS",
+        "BingMapsKey": "ArJAq__N0jG-XKUaeHWESd-qn0Z9uSF42caP_NoJmGRt7o59mTP8bwfJjfBD8RPK",
         "MinResolution": 0,
         "MaxResolution": "Infinity",
         "Classes": "unsortable unsortable-separator float-left clear-none"
