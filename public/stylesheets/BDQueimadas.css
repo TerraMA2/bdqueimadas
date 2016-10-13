@@ -301,6 +301,18 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   outline: none;
 }
 
+.export-dialog {
+  padding-top: 50px !important;
+  padding-bottom: 50px !important;
+}
+
+#filter-time-from-export, #filter-time-to-export { width: 100px !important; }
+
+.component-filter-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .component-filter-content > label {
   float: left;
   margin-right: 10px;

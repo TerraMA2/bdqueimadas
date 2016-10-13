@@ -61,7 +61,7 @@ define(
       $('#about-btn').on('click', function() {
         $('#about-dialog').dialog({
           width: 800,
-          height: 900,
+          height: $(window).outerHeight() - 30,
           closeOnEscape: true,
           closeText: "",
           position: { my: 'top', at: 'top+15' }
@@ -74,7 +74,7 @@ define(
 
         $('#presentation-dialog').dialog({
           width: 950,
-          height: 900,
+          height: $(window).outerHeight() - 30,
           closeOnEscape: true,
           closeText: "",
           position: { my: 'top', at: 'top+15' }
@@ -84,7 +84,7 @@ define(
       $('#frequently-asked-questions-btn').on('click', function() {
         $('#frequently-asked-questions').dialog({
           width: 800,
-          height: 900,
+          height: $(window).outerHeight() - 30,
           closeOnEscape: true,
           closeText: "",
           position: { my: 'top', at: 'top+15' }
@@ -231,6 +231,12 @@ define(
           setFullContentSize(0);
         }
 
+        // Setting the max height of the exportation window
+        $('.component-filter-content').css('max-height', ($(window).outerHeight() - 212) + 'px');
+
+        // Closing all the jQuery UI dialogs
+        $('.ui-dialog-content').dialog('close');
+
         // Updates the padding top of the sidebar
         //$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
@@ -252,9 +258,10 @@ define(
       // Export click event
       $('#export').on('click', function() {
         vex.dialog.alert({
+          className: 'vex-theme-default export-dialog',
           message: '<div class="component-filter">' +
             '<div class="component-filter-title">Confirme abaixo os filtros da exportação.</div>' +
-            '<div class="component-filter-content">' +
+            '<div class="component-filter-content" style="max-height: ' + ($(window).outerHeight() - 212) + 'px;">' +
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
                   '<label for="continents-export" class="col-sm-3 control-label" style="text-align: left;">Continentes</label>' +
@@ -343,8 +350,8 @@ define(
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
-                '<div class="col-sm-6">' +
-                  '<select id="exportation-type" class="form-control" style="width: 232px;">' +
+                '<div class="col-sm-6" style="float: right; width: 245px;">' +
+                  '<select id="exportation-type" class="form-control">' +
                     '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
                     '<option value="kml">KML</option>' +
