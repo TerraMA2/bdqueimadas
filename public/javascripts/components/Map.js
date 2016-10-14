@@ -502,14 +502,14 @@ define(
      * Calls the socket method that returns the list of satellites for the subtitles.
      * @param {array} satellites - Satellites filter
      * @param {array} biomes - Biomes filter
-     * @param {array} countriesBdqNames - Countries filter
-     * @param {array} statesBdqNames - States filter
+     * @param {array} countriesIds - Countries filter
+     * @param {array} statesIds - States filter
      *
      * @function getSubtitlesSatellites
      * @memberof Map
      * @inner
      */
-    var getSubtitlesSatellites = function(satellites, biomes, countriesBdqNames, statesBdqNames) {
+    var getSubtitlesSatellites = function(satellites, biomes, countriesIds, statesIds) {
       var dates = Utils.getFilterDates(true, 0);
       var times = Utils.getFilterTimes(true, 0);
 
@@ -519,8 +519,8 @@ define(
         var satellites = Utils.stringInArray(satellites, "all") ? '' : satellites.toString();
         var biomes = Utils.stringInArray(biomes, "all") ? '' : biomes.toString();
         var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-        var countries = (Utils.stringInArray(countriesBdqNames, "") || countriesBdqNames.length === 0 ? '' : countriesBdqNames.toString());
-        var states = (Utils.stringInArray(statesBdqNames, "") || statesBdqNames.length === 0 ? '' : statesBdqNames.toString());
+        var countries = (Utils.stringInArray(countriesIds, "") || countriesIds.length === 0 ? '' : countriesIds.toString());
+        var states = (Utils.stringInArray(statesIds, "") || statesIds.length === 0 ? '' : statesIds.toString());
 
         Utils.getSocket().emit(
           'getSatellitesRequest',

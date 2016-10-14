@@ -139,6 +139,8 @@ var Filter = function(io) {
         memberFilter.getSpecialRegions(client.pgPool, json.countries, function(err, specialRegions) {
           if(err) return console.error(err);
 
+          console.log(specialRegions);
+
           client.emit('statesByCountriesResponse', { states: states, specialRegions: specialRegions, filter: json.filter });
         });
       });

@@ -25,7 +25,7 @@ var SearchForCitiesController = function(app) {
   var searchForCitiesController = function(request, response) {
 
     // Setting the string to uppercase, removing excessive spaces and non alphanumeric characters
-    var searchValue = request.query.value.toUpperCase().replace(/\W /g, '').replace(/\s+/g, ' ').trim();
+    var searchValue = request.query.value.toUpperCase().replace(/( )+/g, ' ').trim();
 
     if(searchValue.length >= request.query.minLength) {
       // Call of the method 'searchForCities', responsible for returning the cities that match the provided value

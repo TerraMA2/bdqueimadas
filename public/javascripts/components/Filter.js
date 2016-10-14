@@ -15,9 +15,7 @@
  * @property {array} memberBiomes - Current biomes.
  * @property {string} memberContinent - Current continent.
  * @property {array} memberCountries - Current countries.
- * @property {array} memberCountriesBdqNames - Current countries BDQ names.
  * @property {array} memberStates - Current states.
- * @property {array} memberStatesBdqNames - Current states BDQ names.
  * @property {array} memberSpecialRegions - Current special regions.
  * @property {object} memberProtectedArea - Current protected area.
  */
@@ -41,12 +39,8 @@ define(
     var memberContinent = null;
     // Current countries
     var memberCountries = [];
-    // Current countries BDQ names
-    var memberCountriesBdqNames = [];
     // Current states
     var memberStates = [];
-    // Current states BDQ names
-    var memberStatesBdqNames = [];
     // Current special regions
     var memberSpecialRegions = [];
     // Current special regions countries
@@ -211,87 +205,6 @@ define(
     };
 
     /**
-     * Sets the countries BDQ names array.
-     * @param {array} countriesBdqNames - Countries BDQ names array
-     *
-     * @function setCountriesBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var setCountriesBdqNames = function(countriesBdqNames) {
-      memberCountriesBdqNames = countriesBdqNames;
-    };
-
-    /**
-     * Updates the countries BDQ names array.
-     * @param {function} callback - Callback function
-     * @param {string} countries - Countries ids
-     *
-     * @function updateCountriesBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var updateCountriesBdqNames = function(callback, countries) {
-      $.ajax({
-        url: Utils.getBaseUrl() + "get-bdq-names",
-        type: "GET",
-        data: {
-          key: "Countries",
-          ids: countries === undefined || countries === null ? getCountries().toString() : countries
-        },
-        success: function(names) {
-          var namesArray = [];
-
-          for(var i = 0; i < names.names.rowCount; i++) {
-            namesArray.push(names.names.rows[i].name);
-          }
-
-          if(countries === undefined || countries === null) {
-            setCountriesBdqNames(namesArray);
-            if(callback !== null) callback();
-          } else {
-            if(callback !== null) callback(namesArray);
-          }
-        }
-      });
-    };
-
-    /**
-     * Updates the countries BDQ names array (synchronous).
-     * @param {string} countries - Countries ids
-     * @returns {array} namesArray - Countries names
-     *
-     * @function updateCountriesBdqNamesSync
-     * @memberof Filter(2)
-     * @inner
-     */
-    var updateCountriesBdqNamesSync = function(countries) {
-      var namesArray = JSON.parse($.ajax({
-        async: false,
-        url: Utils.getBaseUrl() + "get-bdq-names",
-        type: "GET",
-        data: {
-          key: "Countries",
-          ids: countries === undefined || countries === null ? getCountries().toString() : countries
-        }
-      }).responseText);
-
-      return namesArray;
-    };
-
-    /**
-     * Returns the countries BDQ names array.
-     * @returns {array} memberCountriesBdqNames - Countries BDQ names array
-     *
-     * @function getCountriesBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getCountriesBdqNames = function() {
-      return memberCountriesBdqNames;
-    };
-
-    /**
      * Clears the list of selected countries.
      *
      * @function clearCountries
@@ -300,7 +213,6 @@ define(
      */
     var clearCountries = function() {
       setCountries([]);
-      setCountriesBdqNames([]);
       $("#countries option:selected").removeAttr("selected");
     };
 
@@ -329,87 +241,6 @@ define(
     };
 
     /**
-     * Sets the states BDQ names array.
-     * @param {array} statesBdqNames - States BDQ names array
-     *
-     * @function setStatesBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var setStatesBdqNames = function(statesBdqNames) {
-      memberStatesBdqNames = statesBdqNames;
-    };
-
-    /**
-     * Updates the states BDQ names array.
-     * @param {function} callback - Callback function
-     * @param {string} states - States ids
-     *
-     * @function updateStatesBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var updateStatesBdqNames = function(callback, states) {
-      $.ajax({
-        url: Utils.getBaseUrl() + "get-bdq-names",
-        type: "GET",
-        data: {
-          key: "States",
-          ids: states === undefined || states === null ? getStates().toString() : states
-        },
-        success: function(names) {
-          var namesArray = [];
-
-          for(var i = 0; i < names.names.rowCount; i++) {
-            namesArray.push(names.names.rows[i].name);
-          }
-
-          if(states === undefined || states === null) {
-            setStatesBdqNames(namesArray);
-            if(callback !== null) callback();
-          } else {
-            if(callback !== null) callback(namesArray);
-          }
-        }
-      });
-    };
-
-    /**
-     * Updates the states BDQ names array (synchronous).
-     * @param {string} states - States ids
-     * @returns {array} namesArray - States names
-     *
-     * @function updateStatesBdqNamesSync
-     * @memberof Filter(2)
-     * @inner
-     */
-    var updateStatesBdqNamesSync = function(states) {
-      var namesArray = JSON.parse($.ajax({
-        async: false,
-        url: Utils.getBaseUrl() + "get-bdq-names",
-        type: "GET",
-        data: {
-          key: "States",
-          ids: states === undefined || states === null ? getStates().toString() : states
-        }
-      }).responseText);
-
-      return namesArray;
-    };
-
-    /**
-     * Returns the states BDQ names array.
-     * @returns {array} memberStatesBdqNames - States BDQ names array
-     *
-     * @function getStatesBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getStatesBdqNames = function() {
-      return memberStatesBdqNames;
-    };
-
-    /**
      * Clears the list of selected states.
      *
      * @function clearStates
@@ -418,7 +249,6 @@ define(
      */
     var clearStates = function() {
       setStates([]);
-      setStatesBdqNames([]);
       $("#states option:selected[value!='0']").removeAttr("selected");
     };
 
@@ -431,42 +261,6 @@ define(
      */
     var clearSpecialRegions = function() {
       setSpecialRegions([]);
-    };
-
-    /**
-     * Updates the BDQ names arrays.
-     * @param {function} callback - Callback function
-     *
-     * @function updateBdqNames
-     * @memberof Filter(2)
-     * @inner
-     */
-    var updateBdqNames = function(callback) {
-      $.ajax({
-        url: Utils.getBaseUrl() + "get-bdq-names",
-        type: "GET",
-        data: {
-          statesIds: getStates().toString(),
-          countriesIds: getCountries().toString()
-        },
-        success: function(names) {
-          var countriesNamesArray = [];
-          var statesNamesArray = [];
-
-          for(var i = 0; i < names.countriesNames.rowCount; i++) {
-            countriesNamesArray.push(names.countriesNames.rows[i].name);
-          }
-
-          for(var i = 0; i < names.statesNames.rowCount; i++) {
-            statesNamesArray.push(names.statesNames.rows[i].name);
-          }
-
-          setCountriesBdqNames(countriesNamesArray);
-          setStatesBdqNames(statesNamesArray);
-
-          if(callback !== null) callback();
-        }
-      });
     };
 
     /**
@@ -506,18 +300,6 @@ define(
     };
 
     /**
-     * Returns the special regions countries ids array.
-     * @returns {array} memberSpecialRegionsCountriesIds - Special regions countries ids
-     *
-     * @function getSpecialRegionsCountriesIds
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getSpecialRegionsCountriesIds = function() {
-      return memberSpecialRegionsCountriesIds;
-    };
-
-    /**
      * Returns the special regions states array.
      * @returns {array} memberSpecialRegionsStates - Special regions states
      *
@@ -530,18 +312,6 @@ define(
     };
 
     /**
-     * Returns the special regions states ids array.
-     * @returns {array} memberSpecialRegionsStatesIds - Special regions states ids
-     *
-     * @function getSpecialRegionsStatesIds
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getSpecialRegionsStatesIds = function() {
-      return memberSpecialRegionsStatesIds;
-    };
-
-    /**
      * Returns the special regions cities array.
      * @returns {array} memberSpecialRegionsCities - Special regions cities
      *
@@ -551,18 +321,6 @@ define(
      */
     var getSpecialRegionsCities = function() {
       return memberSpecialRegionsCities;
-    };
-
-    /**
-     * Returns the special regions cities ids array.
-     * @returns {array} memberSpecialRegionsCitiesIds - Special regions cities ids
-     *
-     * @function getSpecialRegionsCitiesIds
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getSpecialRegionsCitiesIds = function() {
-      return memberSpecialRegionsCitiesIds;
     };
 
     /**
@@ -745,13 +503,13 @@ define(
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
       if(!Utils.stringInArray(memberCountries, "")) {
-        for(var i = 0; i < memberCountriesBdqNames.length; i++) {
-          cql += "'" + memberCountriesBdqNames[i] + "',";
+        for(var i = 0; i < memberCountries.length; i++) {
+          cql += memberCountries[i] + ",";
         }
       }
 
       for(var i = 0; i < memberSpecialRegionsCountries.length; i++) {
-        cql += "'" + memberSpecialRegionsCountries[i] + "',";
+        cql += memberSpecialRegionsCountries[i] + ",";
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -775,7 +533,7 @@ define(
       var countriesLength = countries.length;
 
       for(var i = 0; i < countriesLength; i++) {
-        cql += "'" + countries[i].Name + "',";
+        cql += countries[i] + ",";
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -796,8 +554,8 @@ define(
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
 
       if(!Utils.stringInArray(memberStates, "")) {
-        for(var i = 0; i < memberStatesBdqNames.length; i++) {
-          cql += "'" + memberStatesBdqNames[i] + "',";
+        for(var i = 0; i < memberStates.length; i++) {
+          cql += "'" + memberStates[i] + "',";
         }
       }
 
@@ -888,11 +646,8 @@ define(
         var specialRegionsData = createSpecialRegionsArrays(memberSpecialRegions);
 
         memberSpecialRegionsCountries = specialRegionsData.specialRegionsCountries;
-        memberSpecialRegionsCountriesIds = specialRegionsData.specialRegionsCountriesIds;
         memberSpecialRegionsStates = specialRegionsData.specialRegionsStates;
-        memberSpecialRegionsStatesIds = specialRegionsData.specialRegionsStatesIds;
         memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
-        memberSpecialRegionsCitiesIds = specialRegionsData.specialRegionsCitiesIds;
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
@@ -949,11 +704,8 @@ define(
     var createSpecialRegionsArrays = function(specialRegions) {
       var specialRegionsData = {
         specialRegionsCountries: [],
-        specialRegionsCountriesIds: [],
         specialRegionsStates: [],
-        specialRegionsStatesIds: [],
-        specialRegionsCities: [],
-        specialRegionsCitiesIds: []
+        specialRegionsCities: []
       };
 
       if(specialRegions.length > 0) {
@@ -963,20 +715,11 @@ define(
               for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length; x++)
                 specialRegionsData.specialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
 
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds.length; x++)
-                specialRegionsData.specialRegionsCountriesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CountriesIds[x]);
-
               for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length; x++)
                 specialRegionsData.specialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
 
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds.length; x++)
-                specialRegionsData.specialRegionsStatesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].StatesIds[x]);
-
               for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length; x++)
                 specialRegionsData.specialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
-
-              for(var x = 0; x < Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds.length; x++)
-                specialRegionsData.specialRegionsCitiesIds.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].CitiesIds[x]);
 
               break;
             }
@@ -1004,15 +747,15 @@ define(
       var satellites = Utils.stringInArray(getSatellites(), "all") ? '' : getSatellites().toString();
       var biomes = Utils.stringInArray(getBiomes(), "all") ? '' : getBiomes().toString();
       var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-      var countries = (Utils.stringInArray(getCountriesBdqNames(), "") || getCountriesBdqNames().length === 0 ? '' : getCountriesBdqNames().toString());
-      var states = (Utils.stringInArray(getStatesBdqNames(), "") || getStatesBdqNames().length === 0 ? '' : getStatesBdqNames().toString());
+      var countries = (Utils.stringInArray(getCountries(), "") || getCountries().length === 0 ? '' : getCountries().toString());
+      var states = (Utils.stringInArray(getStates(), "") || getStates().length === 0 ? '' : getStates().toString());
 
       if((memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
         var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
         var initialContinentCountriesLength = initialContinentCountries.length;
 
         for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countries += initialContinentCountries[i].Name + ',';
+          countries += initialContinentCountries[i] + ',';
         }
 
         countries = countries.substring(0, countries.length - 1);
@@ -1195,21 +938,18 @@ define(
 
             countries = [];
 
-            for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i].Id);
+            for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i]);
           }
 
-          updateBdqNames(function() {
-            applyCurrentSituationFilter(
-              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
-              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
-              countries,
-              memberStates,
-              memberStatesBdqNames,
-              memberSatellites,
-              memberBiomes,
-              layer.Id
-            );
-          });
+          applyCurrentSituationFilter(
+            Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+            Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
+            countries,
+            memberStates,
+            memberSatellites,
+            memberBiomes,
+            layer.Id
+          );
         }
       });
     };
@@ -1220,7 +960,6 @@ define(
      * @param {int} end - Final date / time
      * @param {array} countries - Countries ids
      * @param {array} states - States ids
-     * @param {array} statesNames - States names
      * @param {array} satellites - Satellites
      * @param {array} biomes - Biomes
      * @param {string} layer - Layer id
@@ -1229,7 +968,7 @@ define(
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, countries, states, statesNames, satellites, biomes, layer) {
+    var applyCurrentSituationFilter = function(begin, end, countries, states, satellites, biomes, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
@@ -1238,7 +977,6 @@ define(
 
       if(states !== undefined && states !== null && states !== "" && states !== '' && states !== [] && !Utils.stringInArray(states, "")) {
         currentSituationFilter += ";states:'" + Utils.replaceAll(states.toString(), ',', '\'\\,\'') + "'";
-        currentSituationFilter += ";statesnames:'" + Utils.replaceAll(statesNames.toString(), ',', '\'\\,\'') + "'";
       }
 
       if(satellites !== undefined && satellites !== null && satellites !== "" && satellites !== '' && satellites !== [] && !Utils.stringInArray(satellites, "all")) {
@@ -1437,28 +1175,16 @@ define(
       getContinent: getContinent,
       setCountries: setCountries,
       getCountries: getCountries,
-      setCountriesBdqNames: setCountriesBdqNames,
-      updateCountriesBdqNames: updateCountriesBdqNames,
-      updateCountriesBdqNamesSync: updateCountriesBdqNamesSync,
-      getCountriesBdqNames: getCountriesBdqNames,
       clearCountries: clearCountries,
       setStates: setStates,
       getStates: getStates,
-      setStatesBdqNames: setStatesBdqNames,
-      updateStatesBdqNames: updateStatesBdqNames,
-      updateStatesBdqNamesSync: updateStatesBdqNamesSync,
-      getStatesBdqNames: getStatesBdqNames,
       clearStates: clearStates,
       clearSpecialRegions: clearSpecialRegions,
-      updateBdqNames: updateBdqNames,
       setSpecialRegions: setSpecialRegions,
       getSpecialRegions: getSpecialRegions,
       getSpecialRegionsCountries: getSpecialRegionsCountries,
-      getSpecialRegionsCountriesIds: getSpecialRegionsCountriesIds,
       getSpecialRegionsStates: getSpecialRegionsStates,
-      getSpecialRegionsStatesIds: getSpecialRegionsStatesIds,
       getSpecialRegionsCities: getSpecialRegionsCities,
-      getSpecialRegionsCitiesIds: getSpecialRegionsCitiesIds,
       setProtectedArea: setProtectedArea,
       getProtectedArea: getProtectedArea,
       updateDates: updateDates,

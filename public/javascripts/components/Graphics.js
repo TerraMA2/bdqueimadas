@@ -122,14 +122,14 @@ define(
      */
     var getSpatialFilterData = function(callback) {
       var countries = $('#countries-graphics').val() === null || (Utils.stringInArray($('#countries-graphics').val(), "") || $('#countries-graphics').val().length === 0) ? [] : $('#countries-graphics').val();
-      var countriesNames = [];
+      var initialContinentCountriesArray = [];
 
       if(($('#continents-graphics').val() !== null && $('#continents-graphics').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
         var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
         var initialContinentCountriesLength = initialContinentCountries.length;
 
         for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countriesNames.push(initialContinentCountries[i].Name);
+          initialContinentCountriesArray.push(initialContinentCountries[i]);
         }
       }
 
@@ -150,42 +150,38 @@ define(
 
       countries = countries.toString();
 
-      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
-        Filter.updateCountriesBdqNames(function(namesArrayCountries) {
-          var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+        var arrayOne = JSON.parse(JSON.stringify(countries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-          namesArrayCountries = $.merge(arrayOne, arrayTwo);
+        var arrayCountries = $.merge(arrayOne, arrayTwo);
 
-          states = JSON.parse(JSON.stringify(filterStates));
-          states = states.toString();
+        states = JSON.parse(JSON.stringify(filterStates));
+        states = states.toString();
 
-          var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-          var cities = specialRegionsData.specialRegionsCities.toString();
+        var cities = specialRegionsData.specialRegionsCities.toString();
 
-          if(states.length > 0) {
-            Filter.updateStatesBdqNames(function(namesArrayStates) {
-              var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
-              var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
+        if(states.length > 0) {
+          var arrayOne = JSON.parse(JSON.stringify(states));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
 
-              namesArrayStates = $.merge(arrayOne, arrayTwo);
+          var arrayStates = $.merge(arrayOne, arrayTwo);
 
-              callback(namesArrayCountries.toString(), namesArrayCountries.toString(), namesArrayStates.toString(), cities);
-            }, states);
-          } else {
-            callback(namesArrayCountries.toString(), namesArrayCountries.toString(), specialRegionsStatesNames.toString(), cities);
-          }
-        }, countries);
+          callback(arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), cities);
+        } else {
+          callback(arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), cities);
+        }
       } else {
-        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+        var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-        countriesNames = $.merge(arrayOne, arrayTwo);
+        initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
-        callback(countriesNames.toString(), "", "", "");
+        callback(initialContinentCountriesArray.toString(), "", "", "");
       }
     };
 

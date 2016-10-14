@@ -44,7 +44,7 @@ define(
     var updateComponents = function() {
       AttributesTable.updateAttributesTable(false);
       Graphics.updateGraphics(false);
-      Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountriesBdqNames(), Filter.getStatesBdqNames());
+      Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountries(), Filter.getStates());
     };
 
     /**
@@ -235,25 +235,13 @@ define(
         $('.component-filter-content').css('max-height', ($(window).outerHeight() - 212) + 'px');
 
         // Closing all the jQuery UI dialogs
-        $('.ui-dialog-content').dialog('close');
+        //$('.ui-dialog-content').dialog('close');
 
         // Updates the padding top of the sidebar
         //$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
-
-      /*'<div class="form-group bdqueimadas-form">' +
-        '<label for="pas-export">Municípios</label>' +
-        '<div class="input-group">' +
-          '<input type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
-          '<span class="input-group-btn">' +
-            '<button type="button" id="search-cities-btn-export" class="btn btn-flat">' +
-              '<i class="fa fa-search"></i>' +
-            '</button>' +
-          '</span>' +
-        '</div>' +
-      '</div>' +*/
 
       // Export click event
       $('#export').on('click', function() {
@@ -277,6 +265,17 @@ define(
                 '<div class="float-right" style="width: 200px;">' +
                   '<label for="states-export">Estados</label>' +
                   '<select multiple id="states-export" name="states-export" class="form-control float-left">' + $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '') + '</select>' +
+                '</div>' +
+              '</div>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<label for="pas-export">Municípios</label>' +
+                '<div class="input-group">' +
+                  '<input type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
+                  '<span class="input-group-btn">' +
+                    '<button type="button" id="search-cities-btn-export" class="btn btn-flat">' +
+                      '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                  '</span>' +
                 '</div>' +
               '</div>' +
               '<div class="form-group bdqueimadas-form">' +
@@ -554,7 +553,7 @@ define(
           }
         });
 
-        /*$('#city-export').autocomplete({
+        $('#city-export').autocomplete({
           minLength: 4,
           source: function(request, response) {
             $.get(Utils.getBaseUrl() + "search-for-cities", {
@@ -567,10 +566,12 @@ define(
           select: function(event, ui) {
             event.preventDefault();
 
+            console.log(ui.item);
+
             $('#city-export').val(ui.item.label);
             $('#city-export').data('value', ui.item.value.id);
           }
-        });*/
+        });
       });
 
       // Filter Events
@@ -1186,6 +1187,8 @@ define(
             Filter.clearStates();
             Filter.clearSpecialRegions();
 
+            console.log(result.ids);
+
             Utils.getSocket().emit('statesByCountriesRequest', { countries: result.ids });
 
             Filter.enableDropdown('countries', result.ids);
@@ -1217,27 +1220,7 @@ define(
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
         }
 
-        if(result.key === 'Countries') {
-          if(!Utils.stringInArray(Filter.getCountries(), "") && Filter.getCountries().length > 0) {
-            Filter.updateBdqNames(function() {
-              Filter.checkFiresCount();
-            });
-          } else {
-            Filter.setCountriesBdqNames([]);
-            Filter.checkFiresCount();
-          }
-        } else if(result.key === 'States') {
-          if(!Utils.stringInArray(Filter.getStates(), "") && Filter.getStates().length > 0) {
-            Filter.updateBdqNames(function() {
-              Filter.checkFiresCount();
-            });
-          } else {
-            Filter.setStatesBdqNames([]);
-            Filter.checkFiresCount();
-          }
-        } else {
-          Filter.checkFiresCount();
-        }
+        Filter.checkFiresCount();
       });
 
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
@@ -1293,22 +1276,20 @@ define(
 
         Filter.setCountries(countriesIds);
 
-        Filter.updateBdqNames(function() {
-          Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
+        Utils.getSocket().emit('statesByCountriesRequest', { countries: countriesIds });
 
-          var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
-              countriesCount = result.countries.rowCount;
+        var html = "<option value=\"\" selected>Todos os pa&iacute;ses</option>",
+            countriesCount = result.countries.rowCount;
 
-          for(var i = 0; i < countriesCount; i++) {
-            html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
-          }
+        for(var i = 0; i < countriesCount; i++) {
+          html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
+        }
 
-          $('#countries').empty().html(html);
+        $('#countries').empty().html(html);
 
-          Filter.enableDropdown('countries', countriesIds);
+        Filter.enableDropdown('countries', countriesIds);
 
-          Filter.checkFiresCount();
-        });
+        Filter.checkFiresCount();
       });
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
@@ -1354,6 +1335,7 @@ define(
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
+        console.log(result);
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           var statesId = '#states-attributes-table';
           var html = "<option value=\"\" selected>Todos os estados</option>";
@@ -1396,6 +1378,7 @@ define(
       });
 
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
+        console.log(result);
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           var statesId = '#states-attributes-table';
           var html = "<option value=\"\" selected>Todos os estados</option>";
@@ -1586,14 +1569,14 @@ define(
      */
     var getExportationSpatialFilterData = function(callback) {
       var countries = $('#countries-export').val() === null || (Utils.stringInArray($('#countries-export').val(), "") || $('#countries-export').val().length === 0) ? [] : $('#countries-export').val();
-      var countriesNames = [];
+      var countriesIds = [];
 
       if(($('#continents-export').val() !== null && $('#continents-export').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
         var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
         var initialContinentCountriesLength = initialContinentCountries.length;
 
         for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countriesNames.push(initialContinentCountries[i].Name);
+          countriesIds.push(initialContinentCountries[i]);
         }
       }
 
@@ -1614,42 +1597,38 @@ define(
 
       countries = countries.toString();
 
-      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
-        Filter.updateCountriesBdqNames(function(namesArrayCountries) {
-          var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+          var arrayOne = JSON.parse(JSON.stringify(countries));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-          namesArrayCountries = $.merge(arrayOne, arrayTwo);
+          var arrayCountries = $.merge(arrayOne, arrayTwo);
 
           states = JSON.parse(JSON.stringify(filterStates));
           states = states.toString();
 
-          var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+          var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
           var cities = specialRegionsData.specialRegionsCities.toString();
 
           if(states.length > 0) {
-            Filter.updateStatesBdqNames(function(namesArrayStates) {
-              var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
-              var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
+            var arrayOne = JSON.parse(JSON.stringify(states));
+            var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
 
-              namesArrayStates = $.merge(arrayOne, arrayTwo);
+            var arrayStates = $.merge(arrayOne, arrayTwo);
 
-              callback(namesArrayCountries.toString(), namesArrayCountries.toString(), namesArrayStates.toString(), cities);
-            }, states);
+            callback(arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), cities);
           } else {
-            callback(namesArrayCountries.toString(), namesArrayCountries.toString(), specialRegionsStatesNames.toString(), cities);
+            callback(arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), cities);
           }
-        }, countries);
       } else {
-        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+        var arrayOne = JSON.parse(JSON.stringify(countries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-        countriesNames = $.merge(arrayOne, arrayTwo);
+        countriesIds = $.merge(arrayOne, arrayTwo);
 
-        callback(countriesNames.toString(), "", "", "");
+        callback(countriesIds.toString(), "", "", "");
       }
     };
 
@@ -1664,14 +1643,14 @@ define(
      */
     var getExportationSpatialFilterDataSync = function() {
       var countries = $('#countries-export').val() === null || (Utils.stringInArray($('#countries-export').val(), "") || $('#countries-export').val().length === 0) ? [] : $('#countries-export').val();
-      var countriesNames = [];
+      var initialContinentCountriesArray = [];
 
       if(($('#continents-export').val() !== null && $('#continents-export').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
         var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
         var initialContinentCountriesLength = initialContinentCountries.length;
 
         for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countriesNames.push(initialContinentCountries[i].Name);
+          initialContinentCountriesArray.push(initialContinentCountries[i]);
         }
       }
 
@@ -1692,63 +1671,49 @@ define(
 
       countries = countries.toString();
 
-      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
-        var namesArray = Filter.updateCountriesBdqNamesSync(countries);
-        var namesArrayCountries = [];
+        var arrayOne = JSON.parse(JSON.stringify(countries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-        for(var i = 0; i < namesArray.names.rowCount; i++) {
-          namesArrayCountries.push(namesArray.names.rows[i].name);
-        }
-
-        var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
-
-        namesArrayCountries = $.merge(arrayOne, arrayTwo);
+        var arrayCountries = $.merge(arrayOne, arrayTwo);
 
         states = JSON.parse(JSON.stringify(filterStates));
         states = states.toString();
 
-        var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
         var cities = specialRegionsData.specialRegionsCities.toString();
 
         if(states.length > 0) {
-          var namesArray = Filter.updateStatesBdqNamesSync(states);
-          var namesArrayStates = [];
+          var arrayOne = JSON.parse(JSON.stringify(states));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
 
-          for(var i = 0; i < namesArray.names.rowCount; i++) {
-            namesArrayStates.push(namesArray.names.rows[i].name);
-          }
-
-          var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
-
-          namesArrayStates = $.merge(arrayOne, arrayTwo);
+          var arrayStates = $.merge(arrayOne, arrayTwo);
 
           return {
-            allCountries: namesArrayCountries.toString(),
-            countries: namesArrayCountries.toString(),
-            states: namesArrayStates.toString(),
+            allCountries: arrayCountries.toString(),
+            countries: arrayCountries.toString(),
+            states: arrayStates.toString(),
             cities: cities
           };
         } else {
           return {
-            allCountries: namesArrayCountries.toString(),
-            countries: namesArrayCountries.toString(),
-            states: specialRegionsStatesNames.toString(),
+            allCountries: arrayCountries.toString(),
+            countries: arrayCountries.toString(),
+            states: specialRegionsStatesJson.toString(),
             cities: cities
           };
         }
       } else {
-        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+        var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-        countriesNames = $.merge(arrayOne, arrayTwo);
+        initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
         return {
-          allCountries: countriesNames.toString(),
+          allCountries: initialContinentCountriesArray.toString(),
           countries: "",
           states: "",
           cities: ""

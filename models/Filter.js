@@ -875,8 +875,8 @@ var Filter = function() {
           var inArray = false;
 
           for(var j = 0, countriesLength = countries.length; j < countriesLength; j++) {
-            for(var x = 0, specialRegionsCountriesLength = memberFilterConfig.SpecialRegions[i].CountriesIds.length; x < specialRegionsCountriesLength; x++) {
-              if(countries[j] == memberFilterConfig.SpecialRegions[i].CountriesIds[x]) {
+            for(var x = 0, specialRegionsCountriesLength = memberFilterConfig.SpecialRegions[i].Countries.length; x < specialRegionsCountriesLength; x++) {
+              if(countries[j] == memberFilterConfig.SpecialRegions[i].Countries[x]) {
                 inArray = true;
                 break;
               }
