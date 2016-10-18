@@ -566,8 +566,6 @@ define(
           select: function(event, ui) {
             event.preventDefault();
 
-            console.log(ui.item);
-
             $('#city-export').val(ui.item.label);
             $('#city-export').data('value', ui.item.value.id);
           }
@@ -585,15 +583,8 @@ define(
 
           if(dates.length === 0) Filter.updateDatesToCurrent();
 
-          if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
-            if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
-              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
-              Filter.clearStates();
-            } else {
-              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
-              Filter.clearCountries();
-              Filter.clearStates();
-            }
+          if(Filter.getCity() !== null) {
+            Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: Filter.getCity() });
           } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && (statesField[0] == "" || statesField[0] == "0")) ? [] : statesField), false) || Filter.getSpecialRegions().length > 0) {
             if($('#states').val() !== null) {
               var states = $('#states').val();
@@ -616,6 +607,15 @@ define(
               Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: specialRegions, key: 'States', filterForm: true });
             } else {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
+              Filter.clearStates();
+            }
+          } else if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
+            if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
+              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
+              Filter.clearStates();
+            } else {
+              Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
+              Filter.clearCountries();
               Filter.clearStates();
             }
           } else {
@@ -790,7 +790,42 @@ define(
         });
       });
 
-      /*$(document).on('click', '#search-cities-btn-export', function() {
+      $('#search-cities-btn').on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-cities",
+          type: "GET",
+          data: {
+            value: $('#city').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#city').val(data[0].label);
+              Filter.setCity(data[0].value.id);
+
+              Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: data[0].value.id });
+            } else {
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $('#city').on('change', function() {
+        if($('#city').val().length === 0) {
+          $('#city').val("");
+          Filter.setCity(null);
+        }
+      });
+
+      $(document).on('click', '#search-cities-btn-export', function() {
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
           type: "GET",
@@ -817,7 +852,7 @@ define(
             }
           }
         });
-      });*/
+      });
 
       $(document).on('change', '#continents-export', function() {
         if($(this).val() !== "") {
@@ -1187,8 +1222,6 @@ define(
             Filter.clearStates();
             Filter.clearSpecialRegions();
 
-            console.log(result.ids);
-
             Utils.getSocket().emit('statesByCountriesRequest', { countries: result.ids });
 
             Filter.enableDropdown('countries', result.ids);
@@ -1335,7 +1368,6 @@ define(
       });
 
       Utils.getSocket().on('statesByCountryResponse', function(result) {
-        console.log(result);
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           var statesId = '#states-attributes-table';
           var html = "<option value=\"\" selected>Todos os estados</option>";
@@ -1378,7 +1410,6 @@ define(
       });
 
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
-        console.log(result);
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           var statesId = '#states-attributes-table';
           var html = "<option value=\"\" selected>Todos os estados</option>";
@@ -1954,6 +1985,31 @@ define(
           $('#filter-button-attributes-table').click();
         }
       });
+
+      // new
+
+      $('#city').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-cities", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
+
+          $('#city').val(ui.item.label);
+          Filter.setCity(ui.item.value.id);
+
+          Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: ui.item.value.id });
+        }
+      });
+
+      // new
+
     };
 
     /**

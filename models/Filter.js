@@ -600,6 +600,36 @@ var Filter = function() {
   };
 
   /**
+   * Returns the extent of the city corresponding to the received id.
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} id - Id of the city
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCityExtent
+   * @memberof Filter
+   * @inner
+   */
+  this.getCityExtent = function(pgPool, id, callback) {
+    var parameters = [id];
+
+    // Connection with the PostgreSQL database
+    pgPool.connect(function(err, client, done) {
+      if(!err) {
+        // Creation of the query
+        var query = "select ST_Extent(" + memberTablesConfig.Cities.GeometryFieldName + ") as extent from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " = $1;";
+
+        // Execution of the query
+        client.query(query, parameters, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns the number of the fires located in the country correspondent to the received id.
    * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} country - Country id
