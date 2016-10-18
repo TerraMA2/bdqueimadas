@@ -163,7 +163,8 @@ define(
 
         var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-        var cities = specialRegionsData.specialRegionsCities.toString();
+        var cities = Filter.getCity() !== null ? $.merge(specialRegionsData.specialRegionsCities, [Filter.getCity()]) : specialRegionsData.specialRegionsCities;
+        var citiesString = cities.toString();
 
         if(states.length > 0) {
           var arrayOne = JSON.parse(JSON.stringify(states));
@@ -171,9 +172,9 @@ define(
 
           var arrayStates = $.merge(arrayOne, arrayTwo);
 
-          callback(arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), cities);
+          callback(arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
         } else {
-          callback(arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), cities);
+          callback(arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
         }
       } else {
         var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));

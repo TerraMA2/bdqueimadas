@@ -268,9 +268,9 @@ define(
                 '</div>' +
               '</div>' +
               '<div class="form-group bdqueimadas-form">' +
-                '<label for="pas-export">Municípios</label>' +
+                '<label for="city-export">Municípios</label>' +
                 '<div class="input-group">' +
-                  '<input type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
+                  '<input value="' + $('#city').val() + '" type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
                   '<span class="input-group-btn">' +
                     '<button type="button" id="search-cities-btn-export" class="btn btn-flat">' +
                       '<i class="fa fa-search"></i>' +
@@ -718,6 +718,17 @@ define(
         searchForPAs(true, true);
       });
 
+      $('#pas').on('change', function() {
+        if($('#pas').val().length === 0) {
+          $('#pas').val('');
+          $('#pas-attributes-table').val('');
+
+          Filter.setProtectedArea(null);
+
+          $('#filter-button').click();
+        }
+      });
+
       $("#search-pas-btn-attributes-table").on('click', function() {
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-pas",
@@ -752,6 +763,15 @@ define(
         });
       });
 
+      $('#pas-attributes-table').on('change', function() {
+        if($('#pas-attributes-table').val().length === 0) {
+          $('#pas-attributes-table').val('');
+          $('#pas-attributes-table').data('value', '');
+
+          $('#filter-button-attributes-table').click();
+        }
+      });
+
       $(document).on('click', '#search-pas-btn-export', function() {
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-pas",
@@ -772,8 +792,6 @@ define(
                 id: data[0].value.id,
                 type: data[0].value.type
               }));
-
-              $('#filter-button-export').click();
             } else {
               $('#pas-export').data('value', '');
 
@@ -790,6 +808,13 @@ define(
         });
       });
 
+      $(document).on('change', '#pas-export', function() {
+        if($('#pas-export').val().length === 0) {
+          $('#pas-export').val('');
+          $('#pas-export').data('value', '');
+        }
+      });
+
       $('#search-cities-btn').on('click', function() {
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
@@ -801,6 +826,8 @@ define(
           success: function(data) {
             if(data.length > 0) {
               $('#city').val(data[0].label);
+              $('#city-attributes-table').val(data[0].label);
+
               Filter.setCity(data[0].value.id);
 
               Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: data[0].value.id });
@@ -822,6 +849,45 @@ define(
         if($('#city').val().length === 0) {
           $('#city').val("");
           Filter.setCity(null);
+
+          $('#filter-button').click();
+        }
+      });
+
+      $('#search-cities-btn-attributes-table').on('click', function() {
+        $.ajax({
+          url: Utils.getBaseUrl() + "search-for-cities",
+          type: "GET",
+          data: {
+            value: $('#city-attributes-table').val(),
+            minLength: 1
+          },
+          success: function(data) {
+            if(data.length > 0) {
+              $('#city-attributes-table').val(data[0].label);
+              $('#city-attributes-table').data('value', data[0].value.id);
+
+              $('#filter-button-attributes-table').click();
+            } else {
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        });
+      });
+
+      $('#city-attributes-table').on('change', function() {
+        if($('#city-attributes-table').val().length === 0) {
+          $('#city-attributes-table').val('');
+          $('#city-attributes-table').data('value', '');
+
+          $('#filter-button-attributes-table').click();
         }
       });
 
@@ -837,7 +903,6 @@ define(
             if(data.length > 0) {
               $('#city-export').val(data[0].label);
               $('#city-export').data('value', data[0].value.id);
-              $('#filter-button-export').click();
             } else {
               $('#city-export').data('value', '');
 
@@ -852,6 +917,13 @@ define(
             }
           }
         });
+      });
+
+      $(document).on('change', '#city-export', function() {
+        if($('#city-export').val().length === 0) {
+          $('#city-export').val('');
+          $('#city-export').data('value', '');
+        }
       });
 
       $(document).on('change', '#continents-export', function() {
@@ -1715,7 +1787,9 @@ define(
 
         var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-        var cities = specialRegionsData.specialRegionsCities.toString();
+        var filterCity = $('#city-export').data('value') !== undefined && $('#city-export').data('value') !== '' ? $('#city-export').data('value') : Filter.getCity();
+        var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
+        var citiesString = cities.toString();
 
         if(states.length > 0) {
           var arrayOne = JSON.parse(JSON.stringify(states));
@@ -1727,14 +1801,14 @@ define(
             allCountries: arrayCountries.toString(),
             countries: arrayCountries.toString(),
             states: arrayStates.toString(),
-            cities: cities
+            cities: citiesString
           };
         } else {
           return {
             allCountries: arrayCountries.toString(),
             countries: arrayCountries.toString(),
             states: specialRegionsStatesJson.toString(),
-            cities: cities
+            cities: citiesString
           };
         }
       } else {
@@ -1986,8 +2060,6 @@ define(
         }
       });
 
-      // new
-
       $('#city').autocomplete({
         minLength: 4,
         source: function(request, response) {
@@ -2002,14 +2074,33 @@ define(
           event.preventDefault();
 
           $('#city').val(ui.item.label);
+          $('#city-attributes-table').val(ui.item.label);
+
           Filter.setCity(ui.item.value.id);
 
           Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: ui.item.value.id });
         }
       });
 
-      // new
+      $('#city-attributes-table').autocomplete({
+        minLength: 4,
+        source: function(request, response) {
+          $.get(Utils.getBaseUrl() + "search-for-cities", {
+            value: request.term,
+            minLength: 4
+          }, function(data) {
+            response(data);
+          });
+        },
+        select: function(event, ui) {
+          event.preventDefault();
 
+          $('#city-attributes-table').val(ui.item.label);
+          $('#city-attributes-table').data('value', ui.item.value.id);
+
+          $('#filter-button-attributes-table').click();
+        }
+      });
     };
 
     /**

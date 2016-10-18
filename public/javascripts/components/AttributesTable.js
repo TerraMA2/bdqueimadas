@@ -134,7 +134,8 @@ define(
 
         var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-        var cities = Filter.getCity() !== null ? $.merge(specialRegionsData.specialRegionsCities, [Filter.getCity()]) : specialRegionsData.specialRegionsCities;
+        var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
+        var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
         var citiesString = cities.toString();
 
         if(states.length > 0) {
