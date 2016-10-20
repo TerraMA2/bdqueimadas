@@ -1001,15 +1001,42 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.searchForCities = function(pgPool, value, callback) {
+  this.searchForCities = function(pgPool, value, countries, states, callback) {
+    // Counter of the query parameters
+    var parameter = 1;
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
         var query = "select " + memberTablesConfig.Cities.IdFieldName + " as id, upper(" + memberTablesConfig.Cities.NameFieldName +
                     ") as name, " + memberTablesConfig.Cities.StateNameFieldName + " as state " +
                     "from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName +
-                    " where unaccent(upper(" + memberTablesConfig.Cities.NameFieldName + ")) like unaccent(upper($1))";
+                    " where unaccent(upper(" + memberTablesConfig.Cities.NameFieldName + ")) like unaccent(upper($" + (parameter++) + "))";
         var parameters = ['%' + value + '%'];
+
+        if(countries !== null) {
+          var countriesArray = countries.split(',');
+          query += " and " + memberTablesConfig.Cities.CountryIdFieldName + " in (";
+
+          for(var i = 0; i < countriesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            parameters.push(countriesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        if(states !== null) {
+          var statesArray = states.split(',');
+          query += " and " + memberTablesConfig.Cities.StateIdFieldName + " in (";
+
+          for(var i = 0; i < statesArray.length; i++) {
+            query += "$" + (parameter++) + ",";
+            parameters.push(statesArray[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        }
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {

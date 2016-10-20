@@ -556,11 +556,20 @@ define(
         $('#city-export').autocomplete({
           minLength: 4,
           source: function(request, response) {
-            $.get(Utils.getBaseUrl() + "search-for-cities", {
-              value: request.term,
-              minLength: 4
-            }, function(data) {
-              response(data);
+            var countriesAndStates = getCountriesAndStates(3);
+
+            $.ajax({
+              url: Utils.getBaseUrl() + "search-for-cities",
+              dataType: "json",
+              data: {
+                minLength: 4,
+                value: request.term,
+                countries: countriesAndStates.countries,
+                states: countriesAndStates.states
+              },
+              success: function(data) {
+                response(data);
+              }
             });
           },
           select: function(event, ui) {
@@ -816,11 +825,15 @@ define(
       });
 
       $('#search-cities-btn').on('click', function() {
+        var countriesAndStates = getCountriesAndStates(0);
+
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
           type: "GET",
           data: {
             value: $('#city').val(),
+            countries: countriesAndStates.countries,
+            states: countriesAndStates.states,
             minLength: 1
           },
           success: function(data) {
@@ -855,11 +868,15 @@ define(
       });
 
       $('#search-cities-btn-attributes-table').on('click', function() {
+        var countriesAndStates = getCountriesAndStates(1);
+
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
           type: "GET",
           data: {
             value: $('#city-attributes-table').val(),
+            countries: countriesAndStates.countries,
+            states: countriesAndStates.states,
             minLength: 1
           },
           success: function(data) {
@@ -892,11 +909,15 @@ define(
       });
 
       $(document).on('click', '#search-cities-btn-export', function() {
+        var countriesAndStates = getCountriesAndStates(3);
+
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
           type: "GET",
           data: {
             value: $('#city-export').val(),
+            countries: countriesAndStates.countries,
+            states: countriesAndStates.states,
             minLength: 1
           },
           success: function(data) {
@@ -1826,6 +1847,110 @@ define(
       }
     };
 
+    // new
+
+    /**
+     * Returns the countries and states to be filtered.
+     * @param {integer} filter - Parameter that indicates witch filter should be used
+     * @returns {object} return - Countries and states data
+     *
+     * @private
+     * @function getCountriesAndStates
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var getCountriesAndStates = function(filter) {
+      var continentsId = '#continents';
+      var countriesId = '#countries';
+      var statesId = '#states';
+
+      if(filter === 1) {
+        continentsId += '-attributes-table';
+        countriesId += '-attributes-table';
+        statesId += '-attributes-table';
+      } else if(filter === 2) {
+        continentsId += '-graphics';
+        countriesId += '-graphics';
+        statesId += '-graphics';
+      } else if(filter === 3) {
+        continentsId += '-export';
+        countriesId += '-export';
+        statesId += '-export';
+      }
+
+      var countries = $(countriesId).val() === null || (Utils.stringInArray($(countriesId).val(), "") || $(countriesId).val().length === 0) ? [] : $(countriesId).val();
+      var initialContinentCountriesArray = [];
+
+      if(($(continentsId).val() !== null && $(continentsId).val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
+        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
+        var initialContinentCountriesLength = initialContinentCountries.length;
+
+        for(var i = 0; i < initialContinentCountriesLength; i++) {
+          initialContinentCountriesArray.push(initialContinentCountries[i]);
+        }
+      }
+
+      var states = $(statesId).val() === null || Utils.stringInArray($(statesId).val(), "") || $(statesId).val().length === 0 ? [] : $(statesId).val();
+
+      var filterStates = [];
+      var specialRegions = [];
+
+      $(statesId + ' > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
+          specialRegions.push($(this).val());
+        } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
+          filterStates.push($(this).val());
+        }
+      });
+
+      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+
+      countries = countries.toString();
+
+      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+
+      if(countries.length > 0) {
+        var arrayOne = JSON.parse(JSON.stringify(countries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
+
+        var arrayCountries = $.merge(arrayOne, arrayTwo);
+
+        states = JSON.parse(JSON.stringify(filterStates));
+        states = states.toString();
+
+        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+
+        if(states.length > 0) {
+          var arrayOne = JSON.parse(JSON.stringify(states));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
+
+          var arrayStates = $.merge(arrayOne, arrayTwo);
+
+          return {
+            countries: arrayCountries.toString(),
+            states: arrayStates.toString()
+          };
+        } else {
+          return {
+            countries: arrayCountries.toString(),
+            states: specialRegionsStatesJson.toString()
+          };
+        }
+      } else {
+        var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
+
+        initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
+
+        return {
+          countries: initialContinentCountriesArray.toString(),
+          states: ""
+        };
+      }
+    };
+
+    // new
+
     /**
      * Loads external plugins.
      *
@@ -2063,11 +2188,20 @@ define(
       $('#city').autocomplete({
         minLength: 4,
         source: function(request, response) {
-          $.get(Utils.getBaseUrl() + "search-for-cities", {
-            value: request.term,
-            minLength: 4
-          }, function(data) {
-            response(data);
+          var countriesAndStates = getCountriesAndStates(0);
+
+          $.ajax({
+            url: Utils.getBaseUrl() + "search-for-cities",
+            dataType: "json",
+            data: {
+              minLength: 4,
+              value: request.term,
+              countries: countriesAndStates.countries,
+              states: countriesAndStates.states
+            },
+            success: function(data) {
+              response(data);
+            }
           });
         },
         select: function(event, ui) {
@@ -2085,11 +2219,20 @@ define(
       $('#city-attributes-table').autocomplete({
         minLength: 4,
         source: function(request, response) {
-          $.get(Utils.getBaseUrl() + "search-for-cities", {
-            value: request.term,
-            minLength: 4
-          }, function(data) {
-            response(data);
+          var countriesAndStates = getCountriesAndStates(1);
+
+          $.ajax({
+            url: Utils.getBaseUrl() + "search-for-cities",
+            dataType: "json",
+            data: {
+              minLength: 4,
+              value: request.term,
+              countries: countriesAndStates.countries,
+              states: countriesAndStates.states
+            },
+            success: function(data) {
+              response(data);
+            }
           });
         },
         select: function(event, ui) {

@@ -27,9 +27,12 @@ var SearchForCitiesController = function(app) {
     // Setting the string to uppercase, removing excessive spaces and non alphanumeric characters
     var searchValue = request.query.value.toUpperCase().replace(/( )+/g, ' ').trim();
 
+    var countries = request.query.countries !== undefined && request.query.countries !== null && request.query.countries !== "" ? request.query.countries : null;
+    var states = request.query.states !== undefined && request.query.states !== null && request.query.states !== "" ? request.query.states : null;
+
     if(searchValue.length >= request.query.minLength) {
       // Call of the method 'searchForCities', responsible for returning the cities that match the provided value
-      memberFilter.searchForCities(request.pgPool, searchValue, function(err, result) {
+      memberFilter.searchForCities(request.pgPool, searchValue, countries, states, function(err, result) {
         if(err) return console.error(err);
 
         // Array responsible for keeping the data obtained by the method 'searchForCities'
