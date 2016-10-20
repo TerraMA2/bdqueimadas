@@ -154,7 +154,10 @@ define(
 
         initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
-        callback(initialContinentCountriesArray.toString(), "", "");
+        var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
+        filterCity = filterCity !== null ? filterCity : "";
+
+        callback(initialContinentCountriesArray.toString(), "", filterCity);
       }
     };
 

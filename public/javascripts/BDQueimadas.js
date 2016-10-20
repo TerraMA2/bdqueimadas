@@ -589,11 +589,18 @@ define(
         if(dates !== null) {
           var countriesField = $('#countries').val();
           var statesField = $('#states').val();
+          var cityField = $('#city').data('value');
 
           if(dates.length === 0) Filter.updateDatesToCurrent();
 
-          if(Filter.getCity() !== null) {
-            Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: Filter.getCity() });
+          if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField === null) {
+            Filter.setCity(null);
+
+            Filter.checkFiresCount();
+          } else if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField !== null) {
+            Filter.setCity(cityField);
+
+            Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: cityField });
           } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && (statesField[0] == "" || statesField[0] == "0")) ? [] : statesField), false) || Filter.getSpecialRegions().length > 0) {
             if($('#states').val() !== null) {
               var states = $('#states').val();
@@ -841,9 +848,9 @@ define(
               $('#city').val(data[0].label);
               $('#city-attributes-table').val(data[0].label);
 
-              Filter.setCity(data[0].value.id);
+              $('#city').data('value', data[0].value.id);
 
-              Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: data[0].value.id });
+              $('#filter-button').click();
             } else {
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
@@ -861,7 +868,7 @@ define(
       $('#city').on('change', function() {
         if($('#city').val().length === 0) {
           $('#city').val("");
-          Filter.setCity(null);
+          $('#city').data('value', null);
 
           $('#filter-button').click();
         }
@@ -2124,9 +2131,9 @@ define(
           $('#city').val(ui.item.label);
           $('#city-attributes-table').val(ui.item.label);
 
-          Filter.setCity(ui.item.value.id);
+          $('#city').data('value', ui.item.value.id);
 
-          Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: ui.item.value.id });
+          $('#filter-button').click();
         }
       });
 

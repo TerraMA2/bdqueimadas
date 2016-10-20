@@ -182,7 +182,9 @@ define(
 
         initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
-        callback(initialContinentCountriesArray.toString(), "", "", "");
+        var city = Filter.getCity() !== null ? Filter.getCity() : "";
+
+        callback(initialContinentCountriesArray.toString(), "", "", city);
       }
     };
 
