@@ -1863,11 +1863,13 @@ define(
 
         initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
+        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
+
         return {
           allCountries: initialContinentCountriesArray.toString(),
           countries: "",
           states: "",
-          cities: ""
+          cities: city
         };
       }
     };

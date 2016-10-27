@@ -12,6 +12,7 @@
  * @property {string} memberCountries - Current countries filter, not considering the countries of the initial continent.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
+ * @property {integer} memberLoadingCounter - Counter that indicates how many graphics are loading.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/Map', 'TerraMA2WebComponents'],
@@ -27,6 +28,8 @@ define(
     var memberStates = null;
     // Current cities filter
     var memberCities = null;
+    // Counter that indicates how many graphics are loading
+    var memberLoadingCounter = 0;
 
     /**
      * Activates or deactivates the time series tool.
@@ -305,6 +308,10 @@ define(
                   memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
                 }
 
+                memberLoadingCounter++;
+                $('#loading-span-graphics-background').removeClass('hide');
+                $('#graph-box').addClass('overflow-hidden');
+
                 Utils.getSocket().emit(
                   'graphicsFiresCountRequest',
                   {
@@ -388,6 +395,13 @@ define(
      * @inner
      */
     var loadFiresCountGraphic = function(firesCount) {
+      memberLoadingCounter--;
+
+      if(memberLoadingCounter === 0) {
+        $('#loading-span-graphics-background').addClass('hide');
+        $('#graph-box').removeClass('overflow-hidden');
+      }
+
       var graphHeight = (firesCount.firesCount.rowCount * 20) + 100;
       var labels = [];
       var values = [];
