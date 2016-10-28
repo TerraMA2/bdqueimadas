@@ -206,8 +206,8 @@ define(function() {
         if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
           var patterns = patternFormat[0].split(',');
 
-          $.each(patterns, function(i, patternItem) {
-            var patternArray = patternItem.split('|');
+          for(var i = 0, patternsLength = patterns.length; i < patternsLength; i++) {
+            var patternArray = patterns[i].split('|');
 
             var signal = patternArray[0];
             var number = parseInt(patternArray[1]);
@@ -229,7 +229,7 @@ define(function() {
               default:
                 break;
             }
-          });
+          }
         } else if(patternFormat[0] === "INITIAL_DATE") {
           var dates = getFilterDates(false, 0);
 
@@ -669,7 +669,7 @@ define(function() {
       b = sortArray(b, 'asc');
     }
 
-    for(var i = 0; i < a.length; ++i) {
+    for(var i = 0, aLength = a.length; i < aLength; ++i) {
       var aValue = isNaN(a[i]) ? a[i] : parseFloat(a[i]);
       var bValue = isNaN(b[i]) ? b[i] : parseFloat(b[i]);
 

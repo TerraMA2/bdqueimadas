@@ -980,7 +980,7 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
   background-repeat: no-repeat;
 }
 
-.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini{background-image:url("../externals/adminlte/img/logo_bd.png");}
+.skin-queimadas .main-header .logo .logo-lg, .skin-queimadas .main-header .logo .logo-mini { background-image: url("../externals/adminlte/img/logo_bd.png") !important; }
 
 .content {
   min-height: 0px !important;

@@ -113,8 +113,10 @@ define(
     var addLayersToMap = function() {
       var configuration = Utils.getConfigurations().mapConfigurations;
 
-      if(configuration.Layers.length > 0) {
-        for(var i = configuration.Layers.length - 1; i >= 0; i--) {
+      var layersLength = configuration.Layers.length;
+
+      if(layersLength > 0) {
+        for(var i = layersLength - 1; i >= 0; i--) {
           processLayer(configuration.Layers[i], 'terrama2-layerexplorer', 'Camadas Principais');
         }
       }
@@ -230,12 +232,12 @@ define(
       if(!initialProcess) {
         $.event.trigger({type: "applyFilter"});
 
-        $.each(memberNotAddedLayers, function(i, notAddedLayer) {
-          if(notAddedLayer.Id === layer.Id) {
+        for(var i = 0, memberNotAddedLayersLength = memberNotAddedLayers.length; i < memberNotAddedLayersLength; i++) {
+          if(memberNotAddedLayers[i].Id === layer.Id) {
             memberNotAddedLayers.splice(i, 1);
             return false;
           }
-        });
+        }
       }
 
       if(Utils.getConfigurations().mapConfigurations.EnableAddAndRemoveLayers)
@@ -267,12 +269,12 @@ define(
     var removeLayerFromMap = function(layerId) {
       var layerToRemove = null;
 
-      $.each(memberLayers, function(i, layer) {
-        if(layerId === layer.Id) {
+      for(var i = 0, memberLayersLength = memberLayers.length; i < memberLayersLength; i++) {
+        if(layerId === memberLayers[i].Id) {
           layerToRemove = memberLayers.splice(i, 1);
           return false;
         }
-      });
+      }
 
       if(layerToRemove !== null) {
         addNotAddedLayer(layerToRemove[0]);

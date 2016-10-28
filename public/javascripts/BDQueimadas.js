@@ -170,7 +170,7 @@ define(
       });
 
       // Sidebar toggle click event
-      $('.sidebar-toggle').on('click', function() {
+      /*$('.sidebar-toggle').on('click', function() {
         // Updates the variables that keep DOM elements sizes
         updateSizeVars();
 
@@ -217,7 +217,7 @@ define(
 
         // Updates the map size
         TerraMA2WebComponents.MapDisplay.updateMapSize();
-      });
+      });*/
 
       // Window resize event
       $(window).resize(function() {
@@ -225,17 +225,14 @@ define(
         updateSizeVars();
 
         // Elements sizes adjustments, accordingly with the sidebar width
-        if($("body").hasClass('sidebar-collapse')) {
+        //if($("body").hasClass('sidebar-collapse')) {
           setReducedContentSize(0);
-        } else {
-          setFullContentSize(0);
-        }
+        //} else {
+          //setFullContentSize(0);
+        //}
 
         // Setting the max height of the exportation window
         $('.component-filter-content').css('max-height', ($(window).outerHeight() - 212) + 'px');
-
-        // Closing all the jQuery UI dialogs
-        //$('.ui-dialog-content').dialog('close');
 
         // Updates the padding top of the sidebar
         //$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
@@ -367,7 +364,7 @@ define(
             {
               type: 'submit',
               text: 'Cancelar',
-              className: 'bdqueimadas-btn teste123'
+              className: 'bdqueimadas-btn'
             },
             {
               type: 'button',
@@ -595,13 +592,21 @@ define(
 
           if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField === null) {
             Filter.setCity(null);
-
+//jean
             Filter.checkFiresCount();
           } else if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField !== null) {
             Filter.setCity(cityField);
 
             Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: cityField });
           } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && (statesField[0] == "" || statesField[0] == "0")) ? [] : statesField), false) || Filter.getSpecialRegions().length > 0) {
+            Filter.setCity(null);
+
+            $('#city').val("");
+            $('#city').data('value', null);
+
+            $('#city-attributes-table').val("");
+            $('#city-attributes-table').data('value', null);
+
             if($('#states').val() !== null) {
               var states = $('#states').val();
               var index = states.indexOf("0");
@@ -626,6 +631,14 @@ define(
               Filter.clearStates();
             }
           } else if(!Utils.areArraysEqual(Filter.getCountries(), (countriesField == null || (countriesField.length == 1 && countriesField[0] == "") ? [] : countriesField), false)) {
+            Filter.setCity(null);
+
+            $('#city').val("");
+            $('#city').data('value', null);
+
+            $('#city-attributes-table').val("");
+            $('#city-attributes-table').data('value', null);
+
             if(!Utils.stringInArray($('#countries').val(), "") && $('#countries').val().length > 0) {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -869,6 +882,9 @@ define(
         if($('#city').val().length === 0) {
           $('#city').val("");
           $('#city').data('value', null);
+
+          $('#city-attributes-table').val("");
+          $('#city-attributes-table').data('value', null);
 
           $('#filter-button').click();
         }
@@ -1116,18 +1132,18 @@ define(
 
         vex.close();
 
-        $.each(Map.getNotAddedLayers(), function(i, layer) {
-          if(layerId === layer.Id) {
+        for(var i = 0, count = Map.getNotAddedLayers().length; i < count; i++) {
+          if(layerId === layer[i].Id) {
             if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
-              Map.addLayerToMap(layer, layer.LayerGroup.Id, false);
-              $('#' + layer.LayerGroup.Id.replace(':', '')).show();
+              Map.addLayerToMap(layer[i], layer[i].LayerGroup.Id, false);
+              $('#' + layer[i].LayerGroup.Id.replace(':', '')).show();
             } else {
-              Map.addLayerToMap(layer, 'terrama2-layerexplorer', false);
+              Map.addLayerToMap(layer[i], 'terrama2-layerexplorer', false);
             }
 
             return false;
           }
-        });
+        }
       });
 
       $('#add-layer').on('click', function() {
@@ -1136,27 +1152,29 @@ define(
           "LayerGroupsNames": []
         };
 
-        if(Map.getNotAddedLayers().length > 0) {
-          $.each(Map.getNotAddedLayers(), function(i, layer) {
-            var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer.Name) + "<span class=\"new-layer\" data-layerid=\"" + layer.Id + "\"><a href=\"#\">Adicionar</a></span></li>";
+        var notAddedLayersLength = Map.getNotAddedLayers().length;
 
-            if(layerGroups[layer.LayerGroup.Id] !== undefined) {
-              layerGroups[layer.LayerGroup.Id] += layerHtml;
+        if(notAddedLayersLength > 0) {
+          for(var i = 0; i < notAddedLayersLength; i++) {
+            var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer[i].Name) + "<span class=\"new-layer\" data-layerid=\"" + layer[i].Id + "\"><a href=\"#\">Adicionar</a></span></li>";
+
+            if(layerGroups[layer[i].LayerGroup.Id] !== undefined) {
+              layerGroups[layer[i].LayerGroup.Id] += layerHtml;
             } else {
-              layerGroups[layer.LayerGroup.Id] = layerHtml;
+              layerGroups[layer[i].LayerGroup.Id] = layerHtml;
 
-              layerGroups.LayerGroupsIds.push(layer.LayerGroup.Id);
-              layerGroups.LayerGroupsNames.push(layer.LayerGroup.Name);
+              layerGroups.LayerGroupsIds.push(layer[i].LayerGroup.Id);
+              layerGroups.LayerGroupsNames.push(layer[i].LayerGroup.Name);
             }
-          });
+          }
 
           var availableLayers = "<h4 class=\"text-center\"><strong>Camadas dispon&iacute;veis:</strong></h4>";
           availableLayers += "<div id=\"available-layers\">";
 
-          $.each(layerGroups.LayerGroupsIds, function(i, layerGroupId) {
-            availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroupId + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
-            availableLayers += "<ul id=\"layer-group-" + layerGroupId + "\">" + layerGroups[layerGroupId] + "</ul>";
-          });
+          for(var i = 0, count = layerGroups.LayerGroupsIds.length; i < count; i++) {
+            availableLayers += "<span class=\"span-group-name\" data-available-layer-group=\"layer-group-" + layerGroups.LayerGroupsIds[i] + "\"><div class=\"layer-group-plus\">+</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + layerGroups.LayerGroupsNames[i] + "</strong></span>";
+            availableLayers += "<ul id=\"layer-group-" + layerGroups.LayerGroupsIds[i] + "\">" + layerGroups[layerGroups.LayerGroupsIds[i]] + "</ul>";
+          }
 
           availableLayers += "</div>";
 
@@ -1205,19 +1223,19 @@ define(
       $(document).on('change', '.hidden-layer-time-update', function() {
         var self = $(this);
 
-        $.each(Map.getLayers(), function(j, layer) {
-          if(layer.Id === self.data('id')) {
-            layer.Params.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
+        for(var i = 0, count = Map.getLayers().length; i < count; i++) {
+          if(layer[i].Id === self.data('id')) {
+            layer[i].Params.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
 
             self.parent().find('> span.layer-time-update > a').text(self.val());
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
-            layer.Name = self.parent().html();
+            layer[i].Name = self.parent().html();
 
-            Map.updateLayerTime(layer);
+            Map.updateLayerTime(layer[i]);
 
             return false;
           }
-        });
+        }
 
         $.event.trigger({type: "updateMapInformationsBox"});
       });
@@ -1300,7 +1318,7 @@ define(
       // Filter Listeners
 
       Utils.getSocket().on('spatialFilterResponse', function(result) {
-        if(result.extent.rowCount > 0) {
+        if(result.extent.rowCount > 0 && result.extent.rows[0].extent !== null) {
           var extent = result.extent.rows[0].extent.replace('BOX(', '').replace(')', '').split(',');
           var extentArray = extent[0].split(' ');
           extentArray = extentArray.concat(extent[1].split(' '));
@@ -1575,29 +1593,31 @@ define(
         if(result.requestId === 'GetFeatureInfoTool') {
           var featureInfo = JSON.parse(result.msg);
 
-          if(featureInfo.features.length > 0) {
+          var featuresLength = featureInfo.features.length;
+
+          if(featuresLength > 0) {
             var firesAttributes = "";
 
-            $.each(featureInfo.features, function(i, feature) {
-              firesAttributes += "<strong>Id:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
-              firesAttributes += "<br/><strong>Latitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + ' - ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
-              firesAttributes += "<br/><strong>Longitude:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + ' - ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
-              firesAttributes += "<br/><strong>Data / Hora:</strong> " + Utils.dateTimeToString(Utils.stringToDateTime(feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFormat), "YYYY/MM/DD HH:II:SS");
-              firesAttributes += "<br/><strong>Satélite:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
-              firesAttributes += "<br/><strong>Município:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName];
-              firesAttributes += "<br/><strong>Estado / País:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName] + ' / ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
-              firesAttributes += "<br/><strong>Precipitação 24h:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
-              firesAttributes += "<br/><strong>Nº dias sem precipitação:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
-              firesAttributes += "<br/><strong>Risco Fogo / Bioma:</strong> " + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName] + ' / ' + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
-              firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + feature.properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
-              if(featureInfo.features.length > (i + 1)) firesAttributes += "<hr/>";
-            });
+            for(var i = 0; i < featuresLength; i++) {
+              firesAttributes += "<strong>Id:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
+              firesAttributes += "<br/><strong>Latitude:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + ' - ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Longitude:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + ' - ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeDMSFieldName];
+              firesAttributes += "<br/><strong>Data / Hora:</strong> " + Utils.dateTimeToString(Utils.stringToDateTime(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFieldName].toString(), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFormat), "YYYY/MM/DD HH:II:SS");
+              firesAttributes += "<br/><strong>Satélite:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
+              firesAttributes += "<br/><strong>Município:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName];
+              firesAttributes += "<br/><strong>Estado / País:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName] + ' / ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName];
+              firesAttributes += "<br/><strong>Precipitação 24h:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
+              firesAttributes += "<br/><strong>Nº dias sem precipitação:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
+              firesAttributes += "<br/><strong>Risco Fogo / Bioma:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName] + ' / ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
+              firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
+              if(featuresLength > (i + 1)) firesAttributes += "<hr/>";
+            }
 
             $('#feature-info-box').html(firesAttributes);
 
             $('#feature-info-box').dialog({
               dialogClass: "feature-info-box",
-              title: (featureInfo.features.length > 1 ? "Atributos dos focos" : "Atributos do foco"),
+              title: (featuresLength > 1 ? "Atributos dos focos" : "Atributos do foco"),
               width: 300,
               height: 280,
               modal: false,
@@ -1686,81 +1706,6 @@ define(
           }
         }
       });
-    };
-
-    /**
-     * Returns the countries, states and cities to be filtered in the exportation.
-     * @param {function} callback - Callback function
-     * @returns {function} callback - Execution of the callback function, which will process the received data
-     *
-     * @private
-     * @function getExportationSpatialFilterData
-     * @memberof BDQueimadas
-     * @inner
-     */
-    var getExportationSpatialFilterData = function(callback) {
-      var countries = $('#countries-export').val() === null || (Utils.stringInArray($('#countries-export').val(), "") || $('#countries-export').val().length === 0) ? [] : $('#countries-export').val();
-      var countriesIds = [];
-
-      if(($('#continents-export').val() !== null && $('#continents-export').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
-        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-        var initialContinentCountriesLength = initialContinentCountries.length;
-
-        for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countriesIds.push(initialContinentCountries[i]);
-        }
-      }
-
-      var states = $('#states-export').val() === null || Utils.stringInArray($('#states-export').val(), "") || $('#states-export').val().length === 0 ? [] : $('#states-export').val();
-
-      var filterStates = [];
-      var specialRegions = [];
-
-      $('#states-export > option').each(function() {
-        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
-          specialRegions.push($(this).val());
-        } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
-          filterStates.push($(this).val());
-        }
-      });
-
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
-
-      countries = countries.toString();
-
-      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
-
-      if(countries.length > 0) {
-          var arrayOne = JSON.parse(JSON.stringify(countries));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-          var arrayCountries = $.merge(arrayOne, arrayTwo);
-
-          states = JSON.parse(JSON.stringify(filterStates));
-          states = states.toString();
-
-          var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
-
-          var cities = specialRegionsData.specialRegionsCities.toString();
-
-          if(states.length > 0) {
-            var arrayOne = JSON.parse(JSON.stringify(states));
-            var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
-
-            var arrayStates = $.merge(arrayOne, arrayTwo);
-
-            callback(arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), cities);
-          } else {
-            callback(arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), cities);
-          }
-      } else {
-        var arrayOne = JSON.parse(JSON.stringify(countries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        countriesIds = $.merge(arrayOne, arrayTwo);
-
-        callback(countriesIds.toString(), "", "", "");
-      }
     };
 
     /**
@@ -2189,11 +2134,11 @@ define(
         width = '370px';
       }
 
-      if($("body").hasClass('sidebar-collapse')) {
+      //if($("body").hasClass('sidebar-collapse')) {
         left = '30px';
-      } else {
-        left = '210px';
-      }
+      //} else {
+        //left = '210px';
+      //}
 
       $("#left-content-box-background").addClass('active');
       $("#left-content-box-background").attr('leftContentBoxButton', leftContentBoxButton);
@@ -2227,20 +2172,20 @@ define(
     var openLeftContentBox = function(leftContentBox, headerText) {
       $("#" + leftContentBox).addClass('active');
 
-      if($("body").hasClass('sidebar-collapse')) {
+      //if($("body").hasClass('sidebar-collapse')) {
         $("#" + leftContentBox).animate({ left: '50px' }, { duration: 300, queue: false });
-      } else {
-        if($("#" + leftContentBox).hasClass('fullscreen')) $("#" + leftContentBox).addClass('fullmenu');
-        $("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
-      }
+      //} else {
+        //if($("#" + leftContentBox).hasClass('fullscreen')) $("#" + leftContentBox).addClass('fullmenu');
+        //$("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
+      //}
 
       $("#page-title > .dynamic-text").html(headerText);
 
-      if($("body").hasClass('sidebar-collapse')) {
+      //if($("body").hasClass('sidebar-collapse')) {
         $("#page-second-title").show();
-      } else {
-        $("#page-second-title").hide();
-      }
+      //} else {
+        //$("#page-second-title").hide();
+      //}
     };
 
     /**
@@ -2279,11 +2224,11 @@ define(
     var closeAllLeftContentBoxes = function() {
       $("#page-title > .dynamic-text").html("Banco de Dados de Queimadas");
 
-      if($("body").hasClass('sidebar-collapse')) {
+      //if($("body").hasClass('sidebar-collapse')) {
         $("#page-second-title").show();
-      } else {
-        $("#page-second-title").hide();
-      }
+      //} else {
+        //$("#page-second-title").hide();
+      //}
 
       $(".left-content-box").removeClass('active');
       $(".left-content-box").removeClass('fullmenu');
@@ -2363,8 +2308,10 @@ define(
         var html = 'Período Inválido<br/>';
       }
 
-      if(visibleLayers.length > 0) {
-        for(var i = 0, count = visibleLayers.length; i < count; i++) {
+      var visibleLayersLength = visibleLayers.length;
+
+      if(visibleLayersLength > 0) {
+        for(var i = 0; i < visibleLayersLength; i++) {
           if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
           html += $('#' + visibleLayers[i].elementId + ' > span').text() + '<br/>';
         }
