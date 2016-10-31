@@ -1111,16 +1111,17 @@ define(
 
       $(document).on('click', '.new-layer', function() {
         var layerId = $(this).data('layerid');
+        var layers = Map.getNotAddedLayers();
 
         vex.close();
 
-        for(var i = 0, count = Map.getNotAddedLayers().length; i < count; i++) {
-          if(layerId === layer[i].Id) {
+        for(var i = 0, count = layers.length; i < count; i++) {
+          if(layerId === layers[i].Id) {
             if(Utils.getConfigurations().mapConfigurations.UseLayerGroupsInTheLayerExplorer) {
-              Map.addLayerToMap(layer[i], layer[i].LayerGroup.Id, false);
-              $('#' + layer[i].LayerGroup.Id.replace(':', '')).show();
+              Map.addLayerToMap(layers[i], layers[i].LayerGroup.Id, false);
+              $('#' + layers[i].LayerGroup.Id.replace(':', '')).show();
             } else {
-              Map.addLayerToMap(layer[i], 'terrama2-layerexplorer', false);
+              Map.addLayerToMap(layers[i], 'terrama2-layerexplorer', false);
             }
 
             return false;
@@ -1134,19 +1135,20 @@ define(
           "LayerGroupsNames": []
         };
 
-        var notAddedLayersLength = Map.getNotAddedLayers().length;
+        var notAddedLayers = Map.getNotAddedLayers();
+        var notAddedLayersLength = notAddedLayers.length;
 
         if(notAddedLayersLength > 0) {
           for(var i = 0; i < notAddedLayersLength; i++) {
-            var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(layer[i].Name) + "<span class=\"new-layer\" data-layerid=\"" + layer[i].Id + "\"><a href=\"#\">Adicionar</a></span></li>";
+            var layerHtml = "<li style=\"display: none;\">" + Utils.processStringWithDatePattern(notAddedLayers[i].Name) + "<span class=\"new-layer\" data-layerid=\"" + notAddedLayers[i].Id + "\"><a href=\"#\">Adicionar</a></span></li>";
 
-            if(layerGroups[layer[i].LayerGroup.Id] !== undefined) {
-              layerGroups[layer[i].LayerGroup.Id] += layerHtml;
+            if(layerGroups[notAddedLayers[i].LayerGroup.Id] !== undefined) {
+              layerGroups[notAddedLayers[i].LayerGroup.Id] += layerHtml;
             } else {
-              layerGroups[layer[i].LayerGroup.Id] = layerHtml;
+              layerGroups[notAddedLayers[i].LayerGroup.Id] = layerHtml;
 
-              layerGroups.LayerGroupsIds.push(layer[i].LayerGroup.Id);
-              layerGroups.LayerGroupsNames.push(layer[i].LayerGroup.Name);
+              layerGroups.LayerGroupsIds.push(notAddedLayers[i].LayerGroup.Id);
+              layerGroups.LayerGroupsNames.push(notAddedLayers[i].LayerGroup.Name);
             }
           }
 
@@ -1204,16 +1206,17 @@ define(
 
       $(document).on('change', '.hidden-layer-time-update', function() {
         var self = $(this);
+        var layers = Map.getLayers();
 
-        for(var i = 0, count = Map.getLayers().length; i < count; i++) {
-          if(layer[i].Id === self.data('id')) {
-            layer[i].Params.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
+        for(var i = 0, count = layers.length; i < count; i++) {
+          if(layers[i].Id === self.data('id')) {
+            layers[i].Params.Time = Utils.dateToString(Utils.stringToDate(self.val(), 'YYYY/MM/DD'), 'YYYY-MM-DD');
 
             self.parent().find('> span.layer-time-update > a').text(self.val());
             self.parent().find('> input.hidden-layer-time-update').removeClass('hasDatepicker');
-            layer[i].Name = self.parent().html();
+            layers[i].Name = self.parent().html();
 
-            Map.updateLayerTime(layer[i]);
+            Map.updateLayerTime(layers[i]);
 
             return false;
           }
