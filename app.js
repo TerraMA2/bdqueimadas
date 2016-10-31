@@ -46,8 +46,7 @@ app.use(function(req, res, next) {
     req.lang = match[1];
     req.url = match[2] || '/';
 
-    if(req.lang !== undefined && (req.lang === 'es' || req.lang === 'en'))
-      res.setLocale(req.lang);
+    if(req.lang !== undefined && (req.lang === 'es' || req.lang === 'en')) res.setLocale(req.lang);
   }
   next();
 });

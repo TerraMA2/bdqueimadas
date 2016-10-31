@@ -2,22 +2,7 @@
   "Port": "38000",
   "BaseUrl": "/",
   "InitialContinentToFilter": 8,
-  "InitialContinentCountries": [
-    { "Id": 33, "Name": "Brasil" },
-    { "Id": 75, "Name": "Islas Malvinas" },
-    { "Id": 53, "Name": "Colombia" },
-    { "Id": 68, "Name": "Ecuador" },
-    { "Id": 98, "Name": "Guyana" },
-    { "Id": 48, "Name": "Chile" },
-    { "Id": 177, "Name": "Paraguai" },
-    { "Id": 245, "Name": "Uruguai" },
-    { "Id": 219, "Name": "Suriname" },
-    { "Id": 249, "Name": "Venezuela" },
-    { "Id": 178, "Name": "Peru" },
-    { "Id": 28, "Name": "Bolivia" },
-    { "Id": 80, "Name": "Guyana Francesa" },
-    { "Id": 12, "Name": "Argentina" }
-  ],
+  "InitialContinentCountries": [33, 75, 53, 68, 98, 48, 177, 245, 219, 249, 178, 28, 80, 12],
   "DatePickerDefaultOptions": {
     "maxDate": 0,
     "markerClassName": "hasDatepicker",

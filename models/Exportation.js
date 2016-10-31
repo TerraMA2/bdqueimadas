@@ -85,7 +85,7 @@ var Exportation = function() {
 
     // Setting of the query columns string
     var columns = "";
-    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
+    for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       if(memberAttributesTableConfig.Columns[i].Name !== "geom")
         columns += memberAttributesTableConfig.Columns[i].Name + ", ";
     }
@@ -107,7 +107,7 @@ var Exportation = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -120,7 +120,7 @@ var Exportation = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -133,7 +133,7 @@ var Exportation = function() {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -146,7 +146,7 @@ var Exportation = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -159,7 +159,7 @@ var Exportation = function() {
           var citiesArray = options.cities.split(',');
           query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-          for(var i = 0; i < citiesArray.length; i++) {
+          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(citiesArray[i]);
           }
@@ -250,7 +250,7 @@ var Exportation = function() {
     // Setting of the query columns string
     var columns = "";
 
-    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
+    for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
           columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH:MM:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
@@ -273,7 +273,7 @@ var Exportation = function() {
       var satellitesArray = options.satellites.split(',');
       query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-      for(var i = 0; i < satellitesArray.length; i++) {
+      for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
         query += "%L,";
         params.push(satellitesArray[i]);
       }
@@ -286,7 +286,7 @@ var Exportation = function() {
       var biomesArray = options.biomes.split(',');
       query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-      for(var i = 0; i < biomesArray.length; i++) {
+      for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
         query += "%L,";
         params.push(biomesArray[i]);
       }
@@ -299,7 +299,7 @@ var Exportation = function() {
       var countriesArray = options.countries.split(',');
       query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-      for(var i = 0; i < countriesArray.length; i++) {
+      for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
         query += "%L,";
         params.push(countriesArray[i]);
       }
@@ -312,7 +312,7 @@ var Exportation = function() {
       var statesArray = options.states.split(',');
       query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-      for(var i = 0; i < statesArray.length; i++) {
+      for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
         query += "%L,";
         params.push(statesArray[i]);
       }
@@ -325,7 +325,7 @@ var Exportation = function() {
       var citiesArray = options.cities.split(',');
       query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-      for(var i = 0; i < citiesArray.length; i++) {
+      for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
         query += "%L,";
         params.push(citiesArray[i]);
       }

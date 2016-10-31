@@ -823,14 +823,6 @@ define(
       });
     };
 
-    // new
-
-    var applyCQLFilterToLayer = function() {
-
-    };
-
-    // new
-
     /**
      * Processes a list of layers and applies filters to the layers that should be filtered.
      * @param {array} layers - Layers array
@@ -1124,6 +1116,23 @@ define(
       $('#countries').empty();
       disableDropdown('states', '');
       $('#states').empty();
+
+      enableDropdown('continents-graphics', '');
+      enableDropdown('countries-graphics', '');
+      $('#countries-graphics').empty();
+      disableDropdown('states-graphics', '');
+      $('#states-graphics').empty();
+
+      enableDropdown('continents-attributes-table', '');
+      enableDropdown('countries-attributes-table', '');
+      $('#countries-attributes-table').empty();
+      disableDropdown('states-attributes-table', '');
+      $('#states-attributes-table').empty();
+
+      $('#continents-graphics').val(Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter);
+      $('#continents-graphics').change();
+      $('#continents-attributes-table').val(Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter);
+      $('#continents-attributes-table').change();
     };
 
     /**

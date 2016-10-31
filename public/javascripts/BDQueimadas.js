@@ -416,7 +416,7 @@ define(
                 } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
                   $("#filter-error-export").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
                 } else {
-                  var exportationSpatialFilterData = getCountriesAndStates(2);
+                  var exportationSpatialFilterData = getSpatialData(2);
 
                   $.ajax({
                     async: false,
@@ -553,7 +553,7 @@ define(
         $('#city-export').autocomplete({
           minLength: 4,
           source: function(request, response) {
-            var countriesAndStates = getCountriesAndStates(2);
+            var countriesAndStates = getSpatialData(2);
 
             $.ajax({
               url: Utils.getBaseUrl() + "search-for-cities",
@@ -592,7 +592,7 @@ define(
 
           if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField === null) {
             Filter.setCity(null);
-//jean
+
             Filter.checkFiresCount();
           } else if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField !== null) {
             Filter.setCity(cityField);
@@ -665,12 +665,24 @@ define(
         Filter.resetDropdowns();
 
         Filter.updateDatesToCurrent();
+
         $('#pas').val('');
         $('#pas-attributes-table').val('');
+
+        $('#city').val('');
+        $('#city-attributes-table').val('');
+
         $('#filter-satellite').val('all');
         $('#filter-biome').val('all');
 
+        $('#filter-satellite-graphics').val('all');
+        $('#filter-biome-graphics').val('all');
+
+        $('#filter-satellite-attributes-table').val('all');
+        $('#filter-biome-attributes-table').val('all');
+
         searchForPAs(false, false);
+        searchForCities(false, false);
 
         Filter.applyFilter();
         updateComponents();
@@ -845,37 +857,7 @@ define(
       });
 
       $('#search-cities-btn').on('click', function() {
-        var countriesAndStates = getCountriesAndStates(0);
-
-        $.ajax({
-          url: Utils.getBaseUrl() + "search-for-cities",
-          type: "GET",
-          data: {
-            value: $('#city').val(),
-            countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
-            states: countriesAndStates.states,
-            minLength: 1
-          },
-          success: function(data) {
-            if(data.length > 0) {
-              $('#city').val(data[0].label);
-              $('#city-attributes-table').val(data[0].label);
-
-              $('#city').data('value', data[0].value.id);
-
-              $('#filter-button').click();
-            } else {
-              vex.dialog.alert({
-                message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
-                buttons: [{
-                  type: 'submit',
-                  text: 'Ok',
-                  className: 'bdqueimadas-btn'
-                }]
-              });
-            }
-          }
-        });
+        searchForCities(true, true);
       });
 
       $('#city').on('change', function() {
@@ -891,7 +873,7 @@ define(
       });
 
       $('#search-cities-btn-attributes-table').on('click', function() {
-        var countriesAndStates = getCountriesAndStates(1);
+        var countriesAndStates = getSpatialData(1);
 
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
@@ -932,7 +914,7 @@ define(
       });
 
       $(document).on('click', '#search-cities-btn-export', function() {
-        var countriesAndStates = getCountriesAndStates(2);
+        var countriesAndStates = getSpatialData(2);
 
         $.ajax({
           url: Utils.getBaseUrl() + "search-for-cities",
@@ -1433,7 +1415,15 @@ define(
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
+          var countryName = result.countries.rows[i].name;
+
+          if(result.countries.rows[i].name === "Falkland Islands") {
+            countryName = "I. Malvinas";
+          } else if(result.countries.rows[i].name === "Brazil") {
+            countryName = "Brasil";
+          }
+
+          html += "<option value='" + result.countries.rows[i].id + "'>" + countryName + "</option>";
         }
 
         $('#countries').empty().html(html);
@@ -1460,7 +1450,15 @@ define(
             countriesCount = result.countries.rowCount;
 
         for(var i = 0; i < countriesCount; i++) {
-          html += "<option value='" + result.countries.rows[i].id + "'>" + (result.countries.rows[i].name === "Falkland Islands" ? "I. Malvinas" : result.countries.rows[i].name) + "</option>";
+          var countryName = result.countries.rows[i].name;
+
+          if(result.countries.rows[i].name === "Falkland Islands") {
+            countryName = "I. Malvinas";
+          } else if(result.countries.rows[i].name === "Brazil") {
+            countryName = "Brasil";
+          }
+
+          html += "<option value='" + result.countries.rows[i].id + "'>" + countryName + "</option>";
         }
 
         $(countriesId).empty().html(html);
@@ -1709,16 +1707,66 @@ define(
     };
 
     /**
+     * Returns the city corresponding to the city filter.
+     * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
+     * @param {boolean} async - Flag that indicates if the ajax request should be asynchronous
+     *
+     * @private
+     * @function searchForCities
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var searchForCities = function(showAlerts, async) {
+      var countriesAndStates = getSpatialData(0);
+
+      $.ajax({
+        url: Utils.getBaseUrl() + "search-for-cities",
+        type: "GET",
+        async: async,
+        data: {
+          value: $('#city').val(),
+          countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+          states: countriesAndStates.states,
+          minLength: 1
+        },
+        success: function(data) {
+          if(data.length > 0) {
+            $('#city').val(data[0].label);
+            $('#city-attributes-table').val(data[0].label);
+
+            $('#city').data('value', data[0].value.id);
+
+            $('#filter-button').click();
+          } else {
+            Filter.setCity(null);
+            $('#city').data('value', null);
+
+            if(showAlerts) {
+              vex.dialog.alert({
+                message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
+                buttons: [{
+                  type: 'submit',
+                  text: 'Ok',
+                  className: 'bdqueimadas-btn'
+                }]
+              });
+            }
+          }
+        }
+      });
+    };
+
+    /**
      * Returns the countries, states and cities to be filtered.
      * @param {integer} filter - Parameter that indicates witch filter should be used
      * @returns {object} return - Countries, states and cities data
      *
      * @private
-     * @function getCountriesAndStates
+     * @function getSpatialData
      * @memberof BDQueimadas
      * @inner
      */
-    var getCountriesAndStates = function(filter) {
+    var getSpatialData = function(filter) {
       var continentsId = '#continents';
       var countriesId = '#countries';
       var statesId = '#states';
@@ -1778,7 +1826,7 @@ define(
 
         var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-        var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
+        var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
         var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
         var citiesString = cities.toString();
 
@@ -1808,7 +1856,7 @@ define(
 
         initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
-        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
+        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
 
         return {
           allCountries: initialContinentCountriesArray.toString(),
@@ -2056,7 +2104,7 @@ define(
       $('#city').autocomplete({
         minLength: 4,
         source: function(request, response) {
-          var countriesAndStates = getCountriesAndStates(0);
+          var countriesAndStates = getSpatialData(0);
 
           $.ajax({
             url: Utils.getBaseUrl() + "search-for-cities",
@@ -2087,7 +2135,7 @@ define(
       $('#city-attributes-table').autocomplete({
         minLength: 4,
         source: function(request, response) {
-          var countriesAndStates = getCountriesAndStates(1);
+          var countriesAndStates = getSpatialData(1);
 
           $.ajax({
             url: Utils.getBaseUrl() + "search-for-cities",

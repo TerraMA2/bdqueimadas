@@ -1,68 +1,50 @@
 {
   "Columns": [
     {
-      "Name": "data",
-      "Alias": "",
+      "Name": "data_hora",
+      "Alias": "Data / Hora",
       "Order": "desc",
       "String": false
     },
     {
-      "Name": "hora",
-      "Alias": "",
-      "Order": "desc",
-      "String": true
-    },
-    {
       "Name": "satelite",
-      "Alias": "",
+      "Alias": "Satélite",
       "Order": null,
       "String": true
     },
     {
       "Name": "pais",
-      "Alias": "",
+      "Alias": "País",
       "Order": null,
       "String": true
     },
     {
       "Name": "estado",
-      "Alias": "",
+      "Alias": "Estado",
       "Order": null,
       "String": true
     },
     {
       "Name": "municipio",
-      "Alias": "",
+      "Alias": "Município",
       "Order": null,
       "String": true
     },
     {
-      "Name": "bioma_brasileiro",
-      "Alias": "",
+      "Name": "bioma",
+      "Alias": "Bioma",
       "Order": null,
       "String": true
     },
     {
-      "Name": "lat",
-      "Alias": "",
+      "Name": "latitude",
+      "Alias": "Latitude",
       "Order": null,
       "String": false
     },
     {
-      "Name": "lon",
-      "Alias": "",
-      "Order": null,
-      "String": false
-    },
-    {
-      "Name": "lat_gms",
-      "Alias": "",
-      "Order": null,
-      "String": false
-    },
-    {
-      "Name": "lon_gms",
-      "Alias": "",
+      "Name": "longitude",
+      "Alias": "Longitude",
       "Order": null,
       "String": false
     }

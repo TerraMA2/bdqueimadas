@@ -23,6 +23,18 @@
     "BdqNameFieldName": "bdq_name",
     "GeometryFieldName": "geometry"
   },
+  "Cities": {
+    "Schema": "schema",
+    "TableName": "cities",
+    "IdFieldName": "id",
+    "NameFieldName": "name",
+    "BdqNameFieldName": "bdq_name",
+    "StateIdFieldName": "id_state",
+    "StateNameFieldName": "name_state",
+    "CountryIdFieldName": "id_country",
+    "CountryNameFieldName": "name_country",
+    "GeometryFieldName": "geometry"
+  },
   "SpecialRegions": {
     "Schema": "schema",
     "TableName": "special_regions",

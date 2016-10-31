@@ -39,7 +39,7 @@ var GetAttributesTableController = function(app) {
 
     // Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {
-      for(var i = 0; i < request.body.order.length; i++) {
+      for(var i = 0, orderLength = request.body.order.length; i < orderLength; i++) {
         if(item.data === request.body.order[i].column)
           order.push({ "column": item.name, "dir": request.body.order[i].dir });
       }

@@ -53,7 +53,7 @@ var Filter = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -66,7 +66,7 @@ var Filter = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -85,7 +85,7 @@ var Filter = function() {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -98,7 +98,7 @@ var Filter = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -240,7 +240,7 @@ var Filter = function() {
                     " c on (a." + memberTablesConfig.Countries.ContinentFieldName + " = c." + memberTablesConfig.Continents.IdFieldName +
                     ") where b." + memberTablesConfig.States.IdFieldName + " in (";
 
-        for(var i = 0; i < states.length; i++) {
+        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(states[i]);
         }
@@ -370,7 +370,7 @@ var Filter = function() {
         memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName +
         " where " + memberTablesConfig.Countries.IdFieldName + " in (";
 
-        for(var i = 0; i < countries.length; i++) {
+        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(countries[i]);
         }
@@ -409,7 +409,7 @@ var Filter = function() {
         var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." +
         memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
 
-        for(var i = 0; i < countries.length; i++) {
+        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(countries[i]);
         }
@@ -448,7 +448,7 @@ var Filter = function() {
         var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." +
         memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
-        for(var i = 0; i < states.length; i++) {
+        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(states[i]);
         }
@@ -487,7 +487,7 @@ var Filter = function() {
         var query = "select ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent from " + memberTablesConfig.SpecialRegions.Schema + "." +
         memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
 
-        for(var i = 0; i < specialRegions.length; i++) {
+        for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(specialRegions[i]);
         }
@@ -528,7 +528,7 @@ var Filter = function() {
         "SELECT ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent FROM " + memberTablesConfig.States.Schema + "." +
         memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
-        for(var i = 0; i < states.length; i++) {
+        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(states[i]);
         }
@@ -537,7 +537,7 @@ var Filter = function() {
         "SELECT ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." +
         memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
 
-        for(var i = 0; i < specialRegions.length; i++) {
+        for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(specialRegions[i]);
         }
@@ -727,7 +727,7 @@ var Filter = function() {
         var query = "select " + memberTablesConfig.Countries.BdqNameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." +
                     memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
 
-        for(var i = 0; i < countries.length; i++) {
+        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(countries[i]);
         }
@@ -770,7 +770,7 @@ var Filter = function() {
         var query = "select " + memberTablesConfig.States.BdqNameFieldName + " as name from " + memberTablesConfig.States.Schema + "." +
                     memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
-        for(var i = 0; i < states.length; i++) {
+        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
           query += "$" + (parameter++) + ",";
           params.push(states[i]);
         }
@@ -821,7 +821,7 @@ var Filter = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -834,7 +834,7 @@ var Filter = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -853,7 +853,7 @@ var Filter = function() {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -866,7 +866,7 @@ var Filter = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -1018,7 +1018,7 @@ var Filter = function() {
           var countriesArray = countries.split(',');
           query += " and " + memberTablesConfig.Cities.CountryIdFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             parameters.push(countriesArray[i]);
           }
@@ -1030,7 +1030,7 @@ var Filter = function() {
           var statesArray = states.split(',');
           query += " and " + memberTablesConfig.Cities.StateIdFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             parameters.push(statesArray[i]);
           }
