@@ -1828,7 +1828,7 @@ define(
 
         var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
         var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
-        var citiesString = cities.toString();
+        var citiesString = cities !== null ? cities.toString() : '';
 
         if(states.length > 0) {
           var arrayOne = JSON.parse(JSON.stringify(states));
@@ -1856,7 +1856,7 @@ define(
 
         initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
 
-        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
+        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : (Filter.getCity() !== null ? Filter.getCity() : '');
 
         return {
           allCountries: initialContinentCountriesArray.toString(),
