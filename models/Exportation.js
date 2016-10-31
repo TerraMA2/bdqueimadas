@@ -47,7 +47,7 @@ var Exportation = function() {
     * @inner
     */
    this.getPgConnectionString = function() {
-     var connectionString = "PG:host=" + memberDatabaseConfigurations.Host + " user=" + memberDatabaseConfigurations.User + " dbname=" + memberDatabaseConfigurations.Database;
+     var connectionString = "PG:host=" + memberDatabaseConfigurations.Host + " port=" + memberDatabaseConfigurations.Port + " user=" + memberDatabaseConfigurations.User + " dbname=" + memberDatabaseConfigurations.Database;
 
      return connectionString;
    };
