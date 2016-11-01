@@ -758,6 +758,64 @@ define(function() {
   };
 
   /**
+   * Converts a latitude from decimal format to DMS.
+   * @param {float} latitude - Latitude
+   * @returns {string} dmsCoordinate - Latitude in DMS format
+   *
+   * @function convertLatitudeToDMS
+   * @memberof Utils
+   * @inner
+   */
+  var convertLatitudeToDMS = function(latitude) {
+    var dmsCoordinate = "";
+
+    var signal = latitude.toString().substring(0, 1);
+
+    if(signal == "-") {
+      latitude = latitude.toString().substring(1);
+      dmsCoordinate += "S ";
+    } else {
+      dmsCoordinate += "N ";
+    }
+
+    var valuesOne = latitude.toString().split(".");
+    dmsCoordinate += valuesOne[0] + " ";
+    var valuesTwo = (parseFloat("0." + valuesOne[1]) * 60).toString().split(".");
+    dmsCoordinate += valuesTwo[0] + " " + (parseFloat("0." + valuesTwo[1]) * 60).toFixed(2).toString();
+
+    return dmsCoordinate;
+  };
+
+  /**
+   * Converts a longitude from decimal format to DMS.
+   * @param {float} longitude - Longitude
+   * @returns {string} dmsCoordinate - Longitude in DMS format
+   *
+   * @function convertLongitudeToDMS
+   * @memberof Utils
+   * @inner
+   */
+  var convertLongitudeToDMS = function(longitude) {
+    var dmsCoordinate = "";
+
+    var signal = longitude.toString().substring(0, 1);
+
+    if(signal == "-") {
+      longitude = longitude.toString().substring(1);
+      dmsCoordinate += "O ";
+    } else {
+      dmsCoordinate += "L ";
+    }
+
+    var valuesOne = longitude.toString().split(".");
+    dmsCoordinate += valuesOne[0] + " ";
+    var valuesTwo = (parseFloat("0." + valuesOne[1]) * 60).toString().split(".");
+    dmsCoordinate += valuesTwo[0] + " " + (parseFloat("0." + valuesTwo[1]) * 60).toFixed(2).toString();
+
+    return dmsCoordinate;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
    * @param {string} baseUrl - Base Url
@@ -797,6 +855,8 @@ define(function() {
     sumIntegerArrayItems: sumIntegerArrayItems,
     sumTwoStringIntegers: sumTwoStringIntegers,
     getCurrentDate: getCurrentDate,
+    convertLatitudeToDMS: convertLatitudeToDMS,
+    convertLongitudeToDMS: convertLongitudeToDMS,
     init: init
   };
 });

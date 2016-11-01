@@ -4,8 +4,6 @@
     "IdFieldName": "id_foco_bdq",
     "LatitudeFieldName": "latitude",
     "LongitudeFieldName": "longitude",
-    "LatitudeDMSFieldName": "lat_gms",
-    "LongitudeDMSFieldName": "lon_gms",
     "DateTimeFieldName": "data_hora_gmt",
     "SatelliteFieldName": "satelite",
     "CityFieldName": "municipio_complete_id",
