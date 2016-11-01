@@ -434,8 +434,8 @@ define(
      * @inner
      */
     var updateDatesToCurrent = function() {
-      memberDateFrom = new Date();
-      memberDateTo = new Date();
+      memberDateFrom = Utils.getCurrentDate(true);
+      memberDateTo = Utils.getCurrentDate(true);
       memberDateFrom.setHours(memberDateFrom.getHours() - 24);
 
       memberDateFrom.setHours(0,0,0,0);
@@ -984,11 +984,11 @@ define(
       var satellitesList = Utils.getConfigurations().filterConfigurations.Satellites;
 
       for(var i = 0, satellitesListLength = satellitesList.length; i < satellitesListLength; i++) {
-        var satelliteBegin = new Date();
-        var satelliteEnd = new Date();
+        var satelliteBegin = Utils.getCurrentDate(true);
+        var satelliteEnd = Utils.getCurrentDate(true);
 
-        var satelliteReferenceBegin = new Date();
-        var satelliteReferenceEnd = new Date();
+        var satelliteReferenceBegin = Utils.getCurrentDate(true);
+        var satelliteReferenceEnd = Utils.getCurrentDate(true);
 
         if(satellitesList[i].Begin !== "") {
           var satelliteBeginArray = satellitesList[i].Begin.split('-');

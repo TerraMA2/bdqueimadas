@@ -264,6 +264,7 @@ define(
                   '<select multiple id="states-export" name="states-export" class="form-control float-left">' + $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '') + '</select>' +
                 '</div>' +
               '</div>' +
+              '<div class="clear"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<label for="city-export">Municípios</label>' +
                 '<div class="input-group">' +
@@ -313,7 +314,7 @@ define(
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-date-from-export">Data / Hora Início</label>' +
+                  '<label for="filter-date-from-export">Data / Hora Início - TMG (Z)</label>' +
                   '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
@@ -323,7 +324,7 @@ define(
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
-                  '<label for="filter-date-to-export">Data / Hora Fim</label>' +
+                  '<label for="filter-date-to-export">Data / Hora Fim - TMG (Z)</label>' +
                   '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
@@ -387,10 +388,10 @@ define(
                 } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
                   $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
                   $("#filter-date-to-export").val('');
-                } else if($("#filter-date-from-export").datepicker('getDate') > new Date()) {
+                } else if($("#filter-date-from-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
                   $("#filter-error-export").text('Data inicial posterior à atual - corrigir!');
                   $("#filter-date-from-export").val('');
-                } else if($("#filter-date-to-export").datepicker('getDate') > new Date()) {
+                } else if($("#filter-date-to-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
                   $("#filter-error-export").text('Data final posterior à atual - corrigir!');
                   $("#filter-date-to-export").val('');
                 } else if(diffDaysBetweenDates > 366) {

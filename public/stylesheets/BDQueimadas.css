@@ -306,7 +306,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
   padding-bottom: 50px !important;
 }
 
-#filter-time-from-export, #filter-time-to-export { width: 100px !important; }
+#filter-time-from-export, #filter-time-to-export { width: 75px !important; }
 
 .component-filter-content {
   overflow-y: auto;
@@ -326,7 +326,7 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 }
 
 .div-date-filter-export > label {
-  width: 178px;
+  width: 200px;
   float: left;
   margin-right: 10px;
   margin-top: 5px;

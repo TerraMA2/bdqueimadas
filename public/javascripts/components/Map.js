@@ -664,7 +664,7 @@ define(
      * @inner
      */
     var updateLayerTime = function(layer) {
-      var currentDate = moment().tz('America/Sao_Paulo');
+      var currentDate = moment.utc();
       var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Params.Time);
       var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time));
       var useTodaysImage = true;

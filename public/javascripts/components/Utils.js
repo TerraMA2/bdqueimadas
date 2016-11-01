@@ -201,7 +201,7 @@ define(function() {
       if(datePattern !== null) {
         var patternFormat = datePattern[1].split('=');
         var format = patternFormat[1];
-        var currentDate = new Date();
+        var currentDate = getCurrentDate(true);
 
         if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
           var patterns = patternFormat[0].split(',');
@@ -368,7 +368,7 @@ define(function() {
           }
 
           filterDateTo.val('');
-        } else if(filterDateFrom.datepicker('getDate') > new Date()) {
+        } else if(filterDateFrom.datepicker('getDate') > getCurrentDate(true)) {
           if(showAlerts) {
             vex.dialog.alert({
               message: '<p class="text-center">Data inicial posterior à atual - corrigir!</p>',
@@ -381,7 +381,7 @@ define(function() {
           }
 
           filterDateFrom.val('');
-        } else if(filterDateTo.datepicker('getDate') > new Date()) {
+        } else if(filterDateTo.datepicker('getDate') > getCurrentDate(true)) {
           if(showAlerts) {
             vex.dialog.alert({
               message: '<p class="text-center">Data final posterior à atual - corrigir!</p>',
@@ -740,6 +740,24 @@ define(function() {
   };
 
   /**
+   * Returns the current date.
+   * @param {boolean} utc - Flag that indicates if the date should be in UTC
+   * @returns {Date} currentDate - Current date
+   *
+   * @function getCurrentDate
+   * @memberof Utils
+   * @inner
+   */
+  var getCurrentDate = function(utc) {
+    var now = new Date();
+    var nowUTC = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+
+    var currentDate = utc ? nowUTC : now;
+
+    return currentDate;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
    * @param {string} baseUrl - Base Url
@@ -778,6 +796,7 @@ define(function() {
     getBaseUrl: getBaseUrl,
     sumIntegerArrayItems: sumIntegerArrayItems,
     sumTwoStringIntegers: sumTwoStringIntegers,
+    getCurrentDate: getCurrentDate,
     init: init
   };
 });
