@@ -1047,6 +1047,43 @@ var Filter = function() {
       } else return callback(err);
     });
   };
+
+  /**
+   * Returns the names of the country, state and city for the given cities ids.
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {array} ids - Cities ids
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getCountryStateAndCityNamesByCities
+   * @memberof Filter
+   * @inner
+   */
+  this.getCountryStateAndCityNamesByCities = function(pgPool, ids, callback) {
+    // Connection with the PostgreSQL database
+    pgPool.connect(function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select name_0 as country, name_1 as state, name_2 as city from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " in (",
+            params = [];
+
+        for(var i = 0, idsLength = ids.length; i < idsLength; i++) {
+          query += "$" + (i + 1) + ",";
+          params.push(ids[i]);
+        }
+
+        query = query.substring(0, (query.length - 1)) + ") order by position(" + memberTablesConfig.Cities.IdFieldName + " in '" + ids.toString() + "');";
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
 };
 
 module.exports = Filter;

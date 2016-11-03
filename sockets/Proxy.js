@@ -12,6 +12,7 @@
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberPiwikConfigurations - Piwik configurations.
+ * @property {object} memberFilter - Filter model.
  */
 var Proxy = function(io) {
 
@@ -27,6 +28,8 @@ var Proxy = function(io) {
   var memberFs = require('fs');
   // Piwik configurations
   var memberPiwikConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Piwik.json'), 'utf8'));
+  // Filter model
+  var memberFilter = new (require('../models/Filter.js'))();
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -58,8 +61,23 @@ var Proxy = function(io) {
             }
           }
 
-          // Socket response
-          client.emit('proxyResponse', { msg: body, requestId: json.requestId });
+          if(json.requestId == 'GetFeatureInfoTool') {
+            /*var citiesIds = [];
+
+            for(var i = 0, featuresLength = body.features.length; i < featuresLength; i++) {
+              citiesIds.push(body.features[i].properties.municipio_complete_id);
+            }
+
+            memberFilter.getCountryStateAndCityNamesByCities(client.pgPool, citiesIds, function(err, result) {
+              body['spatialData'] = result.rows;*/
+
+              // Socket response
+              client.emit('proxyResponse', { msg: body, requestId: json.requestId });
+            //});
+          } else {
+            // Socket response
+            client.emit('proxyResponse', { msg: body, requestId: json.requestId });
+          }
         });
 
       }).on("error", function(e) {
