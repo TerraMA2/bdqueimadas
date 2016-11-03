@@ -47,7 +47,7 @@ var AttributesTable = function() {
     var columns = "";
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateTimeFieldName) {
-        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH:MM:SS'), ";
+        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS'), ";
       } else {
         columns += memberAttributesTableConfig.Columns[i].Name + ", ";
       }

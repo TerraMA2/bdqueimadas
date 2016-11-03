@@ -253,7 +253,7 @@ var Exportation = function() {
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
-          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH:MM:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
+          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else
           columns += memberAttributesTableConfig.Columns[i].Name + ", ";
       }
