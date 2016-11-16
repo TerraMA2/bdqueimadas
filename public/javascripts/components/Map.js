@@ -433,7 +433,7 @@ define(
      * @inner
      */
     var showFogoGrama = function(longitude, latitude) {
-      $('#fogograma-box').html("<iframe style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"http://poitara.cptec.inpe.br/queimada/risco_fogo/fogograma2.jsp?x=" + longitude + "&y=" + latitude + "\"></iframe>");
+      $('#fogograma-box').html("<iframe style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"https://oldwww-queimadas.dgi.inpe.br/queimada/risco_fogo/fogograma2.jsp?x=" + longitude + "&y=" + latitude + "\"></iframe>");
       $('#fogograma-box').dialog({
         dialogClass: "fogograma-box",
         title: "FogoGrama",
