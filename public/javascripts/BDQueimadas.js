@@ -311,6 +311,7 @@ define(
                   '</div>' +
                 '</div>' +
               '</div>' +
+              '<span class="help-block component-filter-error" id="filter-error-export-aps"></span>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
@@ -331,6 +332,8 @@ define(
                   '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
                 '</div>' +
               '</div>' +
+              '<div class="clear"></div>' +
+              '<span class="help-block component-filter-error" id="filter-error-export-dates"></span>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-horizontal" style="margin-bottom: 7px;">' +
                 '<div class="form-group bdqueimadas-form">' +
@@ -338,16 +341,18 @@ define(
                   '<div class="col-sm-7"><select multiple class="form-control" id="filter-satellite-export">' + $('#filter-satellite').html() + '</select></div>' +
                 '</div>' +
               '</div>' +
+              '<span class="help-block component-filter-error" id="filter-error-export-satellite"></span>' +
               '<div class="form-horizontal" style="margin-bottom: 7px;">' +
                 '<div class="form-group bdqueimadas-form">' +
                   '<label for="filter-biome-export" class="col-sm-5 control-label" style="text-align: left;">Focos nos Biomas</label>' +
                   '<div class="col-sm-7"><select multiple class="form-control" id="filter-biome-export">' + $('#filter-biome').html() + '</select></div>' +
                 '</div>' +
               '</div>' +
+              '<span class="help-block component-filter-error" id="filter-error-export-biome"></span>' +
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
-                '<div class="col-sm-6" style="float: right; width: 245px;">' +
+                '<div class="col-sm-6" style="float: right; width: 240px;">' +
                   '<select id="exportation-type" class="form-control">' +
                     '<option value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
@@ -357,8 +362,7 @@ define(
                 '</div>' +
                 '</div>' +
               '</div>' +
-              '<div class="clear"></div>' +
-              '<span class="help-block component-filter-error" id="filter-error-export"></span>' +
+              '<span class="help-block component-filter-error" id="filter-error-export-type"></span>' +
             '</div>' +
           '</div>',
           buttons: [
@@ -372,7 +376,11 @@ define(
               text: 'Exportar',
               className: 'bdqueimadas-btn',
               click: function() {
-                $("#filter-error-export").text('');
+                $("#filter-error-export-aps").text('');
+                $("#filter-error-export-dates").text('');
+                $("#filter-error-export-satellite").text('');
+                $("#filter-error-export-biome").text('');
+                $("#filter-error-export-type").text('');
 
                 if($("#filter-date-to-export").datepicker('getDate') !== null && $("#filter-date-from-export").datepicker('getDate') !== null) {
                   var timeDiffBetweenDates = Math.abs($("#filter-date-to-export").datepicker('getDate').getTime() - $("#filter-date-from-export").datepicker('getDate').getTime());
@@ -382,40 +390,40 @@ define(
                 }
 
                 if($("#filter-date-from-export").val() === "") {
-                  $("#filter-error-export").text('Data inicial inválida!');
+                  $("#filter-error-export-dates").text('Data inicial inválida!');
                 } else if($("#filter-date-to-export").val() === "") {
-                  $("#filter-error-export").text('Data final inválida!');
+                  $("#filter-error-export-dates").text('Data final inválida!');
                 } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
-                  $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
+                  $("#filter-error-export-dates").text('Data final anterior à inicial - corrigir!');
                   $("#filter-date-to-export").val('');
                 } else if($("#filter-date-from-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
-                  $("#filter-error-export").text('Data inicial posterior à atual - corrigir!');
+                  $("#filter-error-export-dates").text('Data inicial posterior à atual - corrigir!');
                   $("#filter-date-from-export").val('');
                 } else if($("#filter-date-to-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
-                  $("#filter-error-export").text('Data final posterior à atual - corrigir!');
+                  $("#filter-error-export-dates").text('Data final posterior à atual - corrigir!');
                   $("#filter-date-to-export").val('');
                 } else if(diffDaysBetweenDates > 366) {
-                  $("#filter-error-export").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
+                  $("#filter-error-export-dates").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
                   $("#filter-date-from-export").val('');
                   $("#filter-date-to-export").val('');
                 } else if(!Utils.isTimeValid($("#filter-time-from-export").val()) && !Utils.isTimeValid($("#filter-time-to-export").val())) {
-                  $("#filter-error-export").text('Horas inválidas!');
+                  $("#filter-error-export-dates").text('Horas inválidas!');
                   $("#filter-time-from-expor").val('');
                   $("#filter-time-to-expor").val('');
                 } else if($("#filter-time-from-export").val() === "" || !Utils.isTimeValid($("#filter-time-from-export").val())) {
-                  $("#filter-error-export").text('Hora inicial inválida!');
+                  $("#filter-error-export-dates").text('Hora inicial inválida!');
                   $("#filter-time-from-expor").val('');
                 } else if($("#filter-time-to-export").val() === "" || !Utils.isTimeValid($("#filter-time-to-export").val())) {
-                  $("#filter-error-export").text('Hora final inválida!');
+                  $("#filter-error-export-dates").text('Hora final inválida!');
                   $("#filter-time-to-expor").val('');
                 } else if($('#filter-satellite-export').val() === null) {
-                  $("#filter-error-export").text('Selecione algum satélite!');
+                  $("#filter-error-export-satellite").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
-                  $("#filter-error-export").text('Selecione algum bioma!');
+                  $("#filter-error-export-biome").text('Selecione algum bioma!');
                 } else if($("#exportation-type").val() === "") {
-                  $("#filter-error-export").text('Formato da exportação inválido!');
+                  $("#filter-error-export-type").text('Formato da exportação inválido!');
                 } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
-                  $("#filter-error-export").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
+                  $("#filter-error-export-aps").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
                 } else {
                   var exportationSpatialFilterData = getSpatialData(2);
 
@@ -495,19 +503,23 @@ define(
           }
 
           if(dateFrom === null) {
-            $("#filter-error-export").text('A data inicial deve ser preenchida primeiro!');
+            $("#filter-error-export-dates").text('A data inicial deve ser preenchida primeiro!');
             $("#filter-date-to-export").val('');
           } else if(diffDaysBetweenDates > 366) {
-            $("#filter-error-export").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
+            $("#filter-error-export-dates").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
             $("#filter-date-from-export").val('');
             $("#filter-date-to-export").val('');
           } else {
             if(dateFrom > dateTo && dateTo !== null) {
-              $("#filter-error-export").text('Data final anterior à inicial - corrigir!');
+              $("#filter-error-export-dates").text('Data final anterior à inicial - corrigir!');
               $("#filter-date-from-export").val('');
               $("#filter-date-to-export").val('');
             } else {
-              $("#filter-error-export").text('');
+              $("#filter-error-export-aps").text('');
+              $("#filter-error-export-dates").text('');
+              $("#filter-error-export-satellite").text('');
+              $("#filter-error-export-biome").text('');
+              $("#filter-error-export-type").text('');
             }
           }
         };
