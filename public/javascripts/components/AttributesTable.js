@@ -241,29 +241,17 @@ define(
      * @inner
      */
     var updateAttributesTable = function(useAttributesTableFilter) {
+      $('#filter-error-dates-attributes-table').text('');
+
       if(memberAttributesTable !== null) {
         var dates = Utils.getFilterDates(true, (useAttributesTableFilter ? 1 : 0));
         var times = Utils.getFilterTimes(true, (useAttributesTableFilter ? 1 : 0));
 
         if(dates !== null && times !== null) {
           if(dates.length === 0) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Datas inválidas!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates-attributes-table').text('Datas inválidas!');
           } else if(times.length === 0) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Horas inválidas!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates-attributes-table').text('Horas inválidas!');
           } else {
             memberDateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
             memberDateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];

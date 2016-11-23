@@ -278,6 +278,12 @@ body, .skin-queimadas { font-family: 'Source Sans Pro','Helvetica Neue',Helvetic
 
 .component-filter-error { color: #dd4b39; }
 
+.component-filter-error-main {
+  margin: 0 !important;
+  font-size: 14px !important;
+  color: #dd4b39;
+}
+
 .graphic-item { margin-bottom: 8px !important; }
 
 #graph-box > .box { margin-bottom: 8px !important; }

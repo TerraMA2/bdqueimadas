@@ -1903,6 +1903,8 @@ define(
       var datePickerOptions = $.extend(true, {}, Utils.getConfigurations().applicationConfigurations.DatePickerDefaultOptions);
 
       datePickerOptions['onSelect'] = function (date) {
+        $('#filter-error-dates').text('');
+
         var dateFrom = $('#filter-date-from').datepicker('getDate');
         var dateTo = $('#filter-date-to').datepicker('getDate');
 
@@ -1914,39 +1916,15 @@ define(
         }
 
         if(dateFrom === null) {
-          vex.dialog.alert({
-            message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates').text('A data inicial deve ser preenchida primeiro!');
           $("#filter-date-to").val('');
         } else if(diffDaysBetweenDates > 366) {
-          vex.dialog.alert({
-            message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates').text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
           $('#filter-date-from').val('');
           $("#filter-date-to").val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
-
+            $('#filter-error-dates').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from").val('');
             $("#filter-date-to").val('');
           }
@@ -1957,6 +1935,8 @@ define(
       $("#filter-date-to").datepicker(datePickerOptions);
 
       datePickerOptions['onSelect'] = function (date) {
+        $('#filter-error-dates-attributes-table').text('');
+
         var dateFrom = $('#filter-date-from-attributes-table').datepicker('getDate');
         var dateTo = $('#filter-date-to-attributes-table').datepicker('getDate');
 
@@ -1968,39 +1948,15 @@ define(
         }
 
         if(dateFrom === null) {
-          vex.dialog.alert({
-            message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates-attributes-table').text('A data inicial deve ser preenchida primeiro!');
           $("#filter-date-to-attributes-table").val('');
         } else if(diffDaysBetweenDates > 366) {
-          vex.dialog.alert({
-            message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates-attributes-table').text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
           $('#filter-date-from-attributes-table').val('');
           $('#filter-date-to-attributes-table').val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
-
+            $('#filter-error-dates-attributes-table').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from-attributes-table").val('');
             $("#filter-date-to-attributes-table").val('');
           }
@@ -2011,6 +1967,8 @@ define(
       $("#filter-date-to-attributes-table").datepicker(datePickerOptions);
 
       datePickerOptions['onSelect'] = function (date) {
+        $('#filter-error-dates-graphics').text('');
+
         var dateFrom = $('#filter-date-from-graphics').datepicker('getDate');
         var dateTo = $('#filter-date-to-graphics').datepicker('getDate');
 
@@ -2022,39 +1980,15 @@ define(
         }
 
         if(dateFrom === null) {
-          vex.dialog.alert({
-            message: '<p class="text-center">A data inicial deve ser preenchida primeiro!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates-graphics').text('A data inicial deve ser preenchida primeiro!');
           $("#filter-date-to-graphics").val('');
         } else if(diffDaysBetweenDates > 366) {
-          vex.dialog.alert({
-            message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates-graphics').text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
           $('#filter-date-from-graphics').val('');
           $('#filter-date-to-graphics').val('');
         } else {
           if(dateFrom > dateTo && dateTo !== null) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
-
+            $('#filter-error-dates-graphics').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from-graphics").val('');
             $("#filter-date-to-graphics").val('');
           }

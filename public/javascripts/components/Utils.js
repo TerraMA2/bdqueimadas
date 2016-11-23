@@ -357,53 +357,25 @@ define(function() {
 
         if(filterDateFrom.datepicker('getDate') > filterDateTo.datepicker('getDate')) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('Data final anterior à inicial - corrigir!');
           }
 
           filterDateTo.val('');
         } else if(filterDateFrom.datepicker('getDate') > getCurrentDate(true)) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data inicial posterior à atual - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('Data inicial posterior à atual - corrigir!');
           }
 
           filterDateFrom.val('');
         } else if(filterDateTo.datepicker('getDate') > getCurrentDate(true)) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final posterior à atual - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('Data final posterior à atual - corrigir!');
           }
 
           filterDateTo.val('');
         } else if(diffDaysBetweenDates > 366) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">O período do filtro deve ser menor ou igual a 366 dias - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
           }
 
           filterDateFrom.val('');
@@ -414,25 +386,11 @@ define(function() {
       }
     } else {
       if(filterDateFrom.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Data inicial inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Data inicial inválida!');
       }
 
       if(filterDateTo.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Data final inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Data final inválida!');
       }
     }
 
@@ -472,62 +430,24 @@ define(function() {
         if(isTimeValid(filterTimeFrom.val()) && isTimeValid(filterTimeTo.val())) {
           returnValue = [filterTimeFrom.val() + ':00', filterTimeTo.val() + ':59'];
         } else if(!isTimeValid(filterTimeFrom.val()) && !isTimeValid(filterTimeTo.val())) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Horas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates' + filterFieldsExtention).text('Horas inválidas!');
           filterTimeFrom.val('');
           filterTimeTo.val('');
         } else if(!isTimeValid(filterTimeFrom.val())) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Hora inicial inválida!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates' + filterFieldsExtention).text('Hora inicial inválida!');
           filterTimeFrom.val('');
         } else {
-          vex.dialog.alert({
-            message: '<p class="text-center">Hora final inválida!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates' + filterFieldsExtention).text('Hora final inválida!');
           filterTimeTo.val('');
         }
       }
     } else {
       if(filterTimeFrom.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Hora inicial inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Hora inicial inválida!');
       }
 
       if(filterTimeTo.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Hora final inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Hora final inválida!');
       }
     }
 

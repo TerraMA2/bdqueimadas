@@ -200,28 +200,16 @@ define(
      * @inner
      */
     var updateGraphics = function(useGraphicsFilter) {
+      $('#filter-error-dates-graphics').text('');
+
       var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
       var times = Utils.getFilterTimes(true, (useGraphicsFilter ? 2 : 0));
 
       if(dates !== null && times !== null) {
         if(dates.length === 0) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Datas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
+          $('#filter-error-dates-graphics').text('Datas inválidas!');
         } else if(times.length === 0) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Horas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
+          $('#filter-error-dates-graphics').text('Horas inválidas!');
         } else {
           var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
@@ -525,19 +513,14 @@ define(
      * @inner
      */
     var exportGraphicData = function(id) {
+      $('#filter-error-dates-graphics').text('');
+
       var dates = Utils.getFilterDates(true, 2);
       var times = Utils.getFilterTimes(true, 2);
 
       if(dates !== null) {
         if(dates.length === 0) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Datas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
+          $('#filter-error-dates-graphics').text('Datas inválidas!');
         } else {
           var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
