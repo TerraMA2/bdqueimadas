@@ -12,3 +12,4 @@ public/dist
 public/docs
 node_modules
 npm-debug.log
+.vscode

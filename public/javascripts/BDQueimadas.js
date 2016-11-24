@@ -292,21 +292,21 @@ define(
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-internal" name="buffer-internal" disabled> Interno' +
+                      '<input type="checkbox" id="buffer-internal" name="buffer-internal"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Interno' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-five" name="buffer-five" disabled> Buffer 5Km' +
+                      '<input type="checkbox" id="buffer-five" name="buffer-five"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Buffer 5Km' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-ten" name="buffer-ten" disabled> Buffer 10Km' +
+                      '<input type="checkbox" id="buffer-ten" name="buffer-ten"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Buffer 10Km' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
