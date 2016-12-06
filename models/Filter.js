@@ -80,6 +80,12 @@ var Filter = function() {
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined) {
           var countriesArray = options.countries.split(',');
@@ -846,6 +852,12 @@ var Filter = function() {
         if(options.extent !== undefined) {
           query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
           params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
+        }
+
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
         }
 
         // If the 'options.countries' parameter exists, a countries 'where' clause is created

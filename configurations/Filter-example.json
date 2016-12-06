@@ -12,6 +12,7 @@
     "StateNameFieldName": "estado",
     "CountryFieldName": "pais_complete_id",
     "CountryNameFieldName": "pais",
+    "ContinentFieldName": "continente",
     "PrecipitationFieldName": "precipitacao",
     "NumberOfDaysWithoutPrecipitationFieldName": "numero_dias_sem_chuva",
     "RiskFieldName": "risco_fogo",

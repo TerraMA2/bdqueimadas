@@ -32,6 +32,7 @@ var GetAttributesTableController = function(app) {
     // Verifications of the 'options' object items
     if(request.body.satellites !== '') options.satellites = request.body.satellites;
     if(request.body.biomes !== '') options.biomes = request.body.biomes;
+    if(request.body.continent !== undefined && request.body.continent !== null && request.body.continent !== '') options.continent = request.body.continent;
     if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
     if(request.body.cities !== null && request.body.cities !== '') options.cities = request.body.cities;

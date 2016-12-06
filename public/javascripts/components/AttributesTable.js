@@ -12,6 +12,7 @@
  * @property {date} memberDateTimeTo - Current final date / time filter.
  * @property {string} memberSatellites - Current satellites filter.
  * @property {string} memberBiomes - Current biomes filter.
+ * @property {int} memberContinent - Current continent filter.
  * @property {string} memberCountries - Current countries filter.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
@@ -31,6 +32,8 @@ define(
     var memberSatellites = "all";
     // Current biomes filter
     var memberBiomes = "all";
+    // Current continent filter
+    var memberContinent = null;
     // Current countries filter
     var memberCountries = null;
     // Current states filter
@@ -92,18 +95,8 @@ define(
      * @inner
      */
     var getSpatialFilterData = function(callback) {
+      var continent = $('#continents-attributes-table').val();
       var countries = $('#countries-attributes-table').val() === null || (Utils.stringInArray($('#countries-attributes-table').val(), "") || $('#countries-attributes-table').val().length === 0) ? [] : $('#countries-attributes-table').val();
-      var initialContinentCountriesArray = [];
-
-      if(($('#continents-attributes-table').val() !== null && $('#continents-attributes-table').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
-        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-        var initialContinentCountriesLength = initialContinentCountries.length;
-
-        for(var i = 0; i < initialContinentCountriesLength; i++) {
-          initialContinentCountriesArray.push(initialContinentCountries[i]);
-        }
-      }
-
       var states = $('#states-attributes-table').val() === null || Utils.stringInArray($('#states-attributes-table').val(), "") || $('#states-attributes-table').val().length === 0 ? [] : $('#states-attributes-table').val();
 
       var filterStates = [];
@@ -144,20 +137,15 @@ define(
 
           var arrayStates = $.merge(arrayOne, arrayTwo);
 
-          callback(arrayCountries.toString(), arrayStates.toString(), citiesString);
+          callback(continent.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
         } else {
-          callback(arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
+          callback(continent.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
         }
       } else {
-        var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
-
         var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
         filterCity = filterCity !== null ? filterCity : "";
 
-        callback(initialContinentCountriesArray.toString(), "", filterCity);
+        callback(continent.toString(), specialRegionsCountriesJson.toString(), "", filterCity);
       }
     };
 
@@ -185,7 +173,8 @@ define(
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
       memberProtectedArea = Filter.getProtectedArea();
 
-      getSpatialFilterData(function(countries, states, cities) {
+      getSpatialFilterData(function(continent, countries, states, cities) {
+        memberContinent = continent;
         memberCountries = countries;
         memberStates = states;
         memberCities = cities;
@@ -203,6 +192,7 @@ define(
                 data.dateTimeTo = memberDateTimeTo;
                 data.satellites = memberSatellites;
                 data.biomes = memberBiomes;
+                data.continent = memberContinent;
                 data.countries = memberCountries;
                 data.states = memberStates;
                 data.cities = memberCities;
@@ -271,7 +261,8 @@ define(
                                   ($('#pas-attributes-table').data('value') !== undefined && $('#pas-attributes-table').data('value') !== '' ? JSON.parse($('#pas-attributes-table').data('value')) : null) :
                                   Filter.getProtectedArea();
 
-            getSpatialFilterData(function(countries, states, cities) {
+            getSpatialFilterData(function(continent, countries, states, cities) {
+              memberContinent = continent;
               memberCountries = countries;
               memberStates = states;
               memberCities = cities;

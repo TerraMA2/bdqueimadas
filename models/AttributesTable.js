@@ -106,6 +106,12 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined) {
           var countriesArray = options.countries.split(',');
@@ -239,6 +245,12 @@ var AttributesTable = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined) {
           var countriesArray = options.countries.split(',');
@@ -359,6 +371,12 @@ var AttributesTable = function() {
           }
 
           query = query.substring(0, (query.length - 1)) + ")";
+        }
+
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
         }
 
         // If the 'options.countries' parameter exists, a countries 'where' clause is created

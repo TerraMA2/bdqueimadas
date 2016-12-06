@@ -550,8 +550,8 @@ define(
     };
 
     /**
-     * Creates the continent filter, valid only for the initial continent.
-     * @returns {string} cql - Countries cql filter
+     * Creates the continent filter.
+     * @returns {string} cql - Continent cql filter
      *
      * @private
      * @function createContinentFilter
@@ -559,16 +559,7 @@ define(
      * @inner
      */
     var createContinentFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
-
-      var countries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-      var countriesLength = countries.length;
-
-      for(var i = 0; i < countriesLength; i++) {
-        cql += countries[i] + ",";
-      }
-
-      cql = cql.substring(0, cql.length - 1) + ")";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " = " + memberContinent;
 
       return cql;
     };
@@ -708,7 +699,7 @@ define(
           cql += createBiomesFilter() + " AND ";
         }
 
-        if((memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && (Utils.stringInArray(memberCountries, "") || memberCountries.length === 0)) {
+        if(memberContinent !== null) {
           cql += createContinentFilter() + " AND ";
         }
 
@@ -798,19 +789,9 @@ define(
       var satellites = Utils.stringInArray(getSatellites(), "all") ? '' : getSatellites().toString();
       var biomes = Utils.stringInArray(getBiomes(), "all") ? '' : getBiomes().toString();
       var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
+      var continent = memberContinent === null ? '' : memberContinent.toString();
       var countries = (Utils.stringInArray(getCountries(), "") || getCountries().length === 0 ? '' : getCountries().toString());
       var states = (Utils.stringInArray(getStates(), "") || getStates().length === 0 ? '' : getStates().toString());
-
-      if((memberContinent !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries === '') {
-        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-        var initialContinentCountriesLength = initialContinentCountries.length;
-
-        for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countries += initialContinentCountries[i] + ',';
-        }
-
-        countries = countries.substring(0, countries.length - 1);
-      }
 
       Utils.getSocket().emit('checkFiresCountRequest', {
         dateFrom: dateFrom,
@@ -818,6 +799,7 @@ define(
         satellites: satellites,
         biomes: biomes,
         extent: extent,
+        continent: continent,
         countries: countries,
         states: states
       });
@@ -909,18 +891,10 @@ define(
         } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layers[i].Id)) {
           var countries = $('#countries').val();
 
-          if(memberContinent !== null && countries !== null && memberContinent == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter && (Utils.stringInArray(countries, "") || countries.length === 0)) {
-            var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-            var initialContinentCountriesLength = initialContinentCountries.length;
-
-            countries = [];
-
-            for(var i = 0; i < initialContinentCountriesLength; i++) countries.push(initialContinentCountries[i]);
-          }
-
           applyCurrentSituationFilter(
             Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
             Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
+            memberContinent,
             countries,
             memberStates,
             memberSatellites,
@@ -935,6 +909,7 @@ define(
      * Applies filters to the current situation layers.
      * @param {int} begin - Initial date / time
      * @param {int} end - Final date / time
+     * @param {int} continent - Continent id
      * @param {array} countries - Countries ids
      * @param {array} states - States ids
      * @param {array} satellites - Satellites
@@ -945,8 +920,12 @@ define(
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, countries, states, satellites, biomes, layer) {
+    var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
+
+      if(continent !== undefined && continent !== null && continent !== "" && continent !== '') {
+        currentSituationFilter += ";continent:" + continent;
+      }
 
       if(countries !== undefined && countries !== null && countries !== "" && countries !== '' && countries !== [] && !Utils.stringInArray(countries, "")) {
         currentSituationFilter += ";countries:" + Utils.replaceAll(countries.toString(), ',', '\\,');

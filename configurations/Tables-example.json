@@ -50,6 +50,7 @@
     "TimeFieldName": "time",
     "DateTimeFieldName": "date_time_gmt",
     "SatelliteFieldName": "satellite",
+    "ContinentFieldName": "continent",
     "CountryFieldName": "country",
     "StateFieldName": "state",
     "CityFieldName": "city",

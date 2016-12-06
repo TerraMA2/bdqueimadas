@@ -8,6 +8,7 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberFiresCountGraphics - Graphics of fires count.
+ * @property {integer} memberContinent - Current continent filter.
  * @property {string} memberAllCountries - Current countries filter, considering the countries of the initial continent, in case there is no country filtered.
  * @property {string} memberCountries - Current countries filter, not considering the countries of the initial continent.
  * @property {string} memberStates - Current states filter.
@@ -20,6 +21,8 @@ define(
 
     // Graphics of fires count
     var memberFiresCountGraphics = {};
+    // Current continent filter
+    var memberContinent = null;
     // Current countries filter, considering the countries of the initial continent, in case there is no country filtered
     var memberAllCountries = null;
     // Current countries filter, not considering the countries of the initial continent
@@ -124,18 +127,8 @@ define(
      * @inner
      */
     var getSpatialFilterData = function(callback) {
+      var continent = $('#continents-graphics').val();
       var countries = $('#countries-graphics').val() === null || (Utils.stringInArray($('#countries-graphics').val(), "") || $('#countries-graphics').val().length === 0) ? [] : $('#countries-graphics').val();
-      var initialContinentCountriesArray = [];
-
-      if(($('#continents-graphics').val() !== null && $('#continents-graphics').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
-        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-        var initialContinentCountriesLength = initialContinentCountries.length;
-
-        for(var i = 0; i < initialContinentCountriesLength; i++) {
-          initialContinentCountriesArray.push(initialContinentCountries[i]);
-        }
-      }
-
       var states = $('#states-graphics').val() === null || Utils.stringInArray($('#states-graphics').val(), "") || $('#states-graphics').val().length === 0 ? [] : $('#states-graphics').val();
 
       var filterStates = [];
@@ -175,19 +168,14 @@ define(
 
           var arrayStates = $.merge(arrayOne, arrayTwo);
 
-          callback(arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
+          callback(continent.toString(), arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
         } else {
-          callback(arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
+          callback(continent.toString(), arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
         }
       } else {
-        var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
-
         var city = Filter.getCity() !== null ? Filter.getCity() : "";
 
-        callback(initialContinentCountriesArray.toString(), "", "", city);
+        callback(continent.toString(), specialRegionsCountriesJson.toString(), "", "", city);
       }
     };
 
@@ -229,7 +217,8 @@ define(
             $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
           }
 
-          getSpatialFilterData(function(allCountries, countries, states, cities) {
+          getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
+            memberContinent = continent;
             memberAllCountries = allCountries;
             memberCountries = countries;
             memberStates = states;
@@ -312,6 +301,7 @@ define(
                     title: firesCountGraphicsConfig[i].Title,
                     satellites: satellites,
                     biomes: biomes,
+                    continent: memberContinent,
                     countries: memberAllCountries,
                     states: memberStates,
                     cities: memberCities,
@@ -528,8 +518,8 @@ define(
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
           var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
 
-          getSpatialFilterData(function(allCountries, countries, states, cities) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
+          getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&continent=" + continent + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
             location.href = exportLink;
           });
         }
