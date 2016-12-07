@@ -32,6 +32,7 @@ var GetAttributesTableController = function(app) {
     // Verifications of the 'options' object items
     if(request.body.satellites !== '') options.satellites = request.body.satellites;
     if(request.body.biomes !== '') options.biomes = request.body.biomes;
+    if(request.body.continent !== undefined && request.body.continent !== null && request.body.continent !== '') options.continent = request.body.continent;
     if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
     if(request.body.cities !== null && request.body.cities !== '') options.cities = request.body.cities;
@@ -39,7 +40,7 @@ var GetAttributesTableController = function(app) {
 
     // Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {
-      for(var i = 0; i < request.body.order.length; i++) {
+      for(var i = 0, orderLength = request.body.order.length; i < orderLength; i++) {
         if(item.data === request.body.order[i].column)
           order.push({ "column": item.name, "dir": request.body.order[i].dir });
       }

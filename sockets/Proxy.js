@@ -8,9 +8,11 @@
  *
  * @property {object} memberSockets - Sockets object.
  * @property {object} memberHttp - 'http' module.
+ * @property {object} memberHttps - 'https' module.
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberPiwikConfigurations - Piwik configurations.
+ * @property {object} memberFilter - Filter model.
  */
 var Proxy = function(io) {
 
@@ -18,12 +20,16 @@ var Proxy = function(io) {
   var memberSockets = io.sockets;
   // 'http' module
   var memberHttp = require('http');
+  // 'https' module
+  var memberHttps = require('https');
   // 'path' module
   var memberPath = require('path');
   // 'fs' module
   var memberFs = require('fs');
   // Piwik configurations
   var memberPiwikConfigurations = JSON.parse(memberFs.readFileSync(memberPath.join(__dirname, '../configurations/Piwik.json'), 'utf8'));
+  // Filter model
+  var memberFilter = new (require('../models/Filter.js'))();
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -31,8 +37,10 @@ var Proxy = function(io) {
     // Proxy request event
     client.on('proxyRequest', function(json) {
 
+      var requestObject = json.url.substring(0, 5) === "https" ? memberHttps : memberHttp;
+
       // Http request to the received url
-      memberHttp.get(json.url, function(resp) {
+      requestObject.get(json.url, function(resp) {
         var body = '';
 
         // Data receiving event
@@ -53,8 +61,23 @@ var Proxy = function(io) {
             }
           }
 
-          // Socket response
-          client.emit('proxyResponse', { msg: body, requestId: json.requestId });
+          if(json.requestId == 'GetFeatureInfoTool') {
+            /*var citiesIds = [];
+
+            for(var i = 0, featuresLength = body.features.length; i < featuresLength; i++) {
+              citiesIds.push(body.features[i].properties.municipio_complete_id);
+            }
+
+            memberFilter.getCountryStateAndCityNamesByCities(client.pgPool, citiesIds, function(err, result) {
+              body['spatialData'] = result.rows;*/
+
+              // Socket response
+              client.emit('proxyResponse', { msg: body, requestId: json.requestId });
+            //});
+          } else {
+            // Socket response
+            client.emit('proxyResponse', { msg: body, requestId: json.requestId });
+          }
         });
 
       }).on("error", function(e) {
@@ -72,8 +95,10 @@ var Proxy = function(io) {
 
       var url = memberPiwikConfigurations.Url + "/index.php?module=API&method=API.getBulkRequest&format=json&token_auth=" + memberPiwikConfigurations.TokenAuth + "&urls[0]=method=VisitsSummary.get&idSite=" + memberPiwikConfigurations.IdSite + "&period=range&date=2016-07-25," + year + "-" + month + "-" + day;
 
+      var requestObject = url.substring(0, 5) === "https" ? memberHttps : memberHttp;
+
       // Http request to the Piwik url
-      memberHttp.get(url, function(resp) {
+      requestObject.get(url, function(resp) {
         var body = '';
 
         // Data receiving event

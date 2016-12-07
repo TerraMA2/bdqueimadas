@@ -68,6 +68,38 @@ define(function() {
   };
 
   /**
+   * Converts a datetime into a string datetime formatted accordingly with the received format.
+   * @param {Date} dateTime - Datetime
+   * @param {string} format - Format
+   * @returns {string} stringDateTime - Formatted string datetime
+   *
+   * @function dateTimeToString
+   * @memberof Utils
+   * @inner
+   */
+  var dateTimeToString = function(dateTime, format) {
+    var stringDateTime = format;
+
+    var dd = ('0' + dateTime.getDate()).slice(-2);
+    var mm = ('0' + (dateTime.getMonth() + 1)).slice(-2);
+    var yyyy = dateTime.getFullYear().toString();
+
+    var hh = ('0' + dateTime.getHours()).slice(-2);
+    var min = ('0' + dateTime.getMinutes()).slice(-2);
+    var sec = ('0' + dateTime.getSeconds()).slice(-2);
+
+    if(format.match(/YYYY/)) stringDateTime = stringDateTime.replace("YYYY", yyyy);
+    if(format.match(/MM/)) stringDateTime = stringDateTime.replace("MM", mm);
+    if(format.match(/DD/)) stringDateTime = stringDateTime.replace("DD", dd);
+
+    if(format.match(/HH/)) stringDateTime = stringDateTime.replace("HH", hh);
+    if(format.match(/II/)) stringDateTime = stringDateTime.replace("II", min);
+    if(format.match(/SS/)) stringDateTime = stringDateTime.replace("SS", sec);
+
+    return stringDateTime;
+  };
+
+  /**
    * Converts a string date formatted accordingly with the received format into a date.
    * @param {string} date - String date
    * @param {string} format - Format
@@ -87,6 +119,38 @@ define(function() {
     var date = date.substring(datePosition, datePosition + 2);
 
     var finalDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(date), 0, 0, 0);
+
+    return finalDate;
+  };
+
+  /**
+   * Converts a string datetime formatted accordingly with the received format into a datetime.
+   * @param {string} dateTime - String datetime
+   * @param {string} format - Format
+   * @returns {date} finalDate - Datetime
+   *
+   * @function stringToDateTime
+   * @memberof Utils
+   * @inner
+   */
+  var stringToDateTime = function(dateTime, format) {
+    var yearPosition = format.indexOf("YYYY");
+    var monthPosition = format.indexOf("MM");
+    var datePosition = format.indexOf("DD");
+
+    var hourPosition = format.indexOf("HH");
+    var minutePosition = format.indexOf("II");
+    var secondPosition = format.indexOf("SS");
+
+    var year = dateTime.substring(yearPosition, yearPosition + 4);
+    var month = dateTime.substring(monthPosition, monthPosition + 2);
+    var date = dateTime.substring(datePosition, datePosition + 2);
+
+    var hour = dateTime.substring(hourPosition, hourPosition + 2);
+    var minute = dateTime.substring(minutePosition, minutePosition + 2);
+    var second = dateTime.substring(secondPosition, secondPosition + 2);
+
+    var finalDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(date), parseInt(hour), parseInt(minute), parseInt(second));
 
     return finalDate;
   };
@@ -137,13 +201,13 @@ define(function() {
       if(datePattern !== null) {
         var patternFormat = datePattern[1].split('=');
         var format = patternFormat[1];
-        var currentDate = new Date();
+        var currentDate = getCurrentDate(true);
 
         if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
           var patterns = patternFormat[0].split(',');
 
-          $.each(patterns, function(i, patternItem) {
-            var patternArray = patternItem.split('|');
+          for(var i = 0, patternsLength = patterns.length; i < patternsLength; i++) {
+            var patternArray = patterns[i].split('|');
 
             var signal = patternArray[0];
             var number = parseInt(patternArray[1]);
@@ -165,7 +229,7 @@ define(function() {
               default:
                 break;
             }
-          });
+          }
         } else if(patternFormat[0] === "INITIAL_DATE") {
           var dates = getFilterDates(false, 0);
 
@@ -293,53 +357,25 @@ define(function() {
 
         if(filterDateFrom.datepicker('getDate') > filterDateTo.datepicker('getDate')) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final anterior à inicial - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('Data final anterior à inicial - corrigir!');
           }
 
           filterDateTo.val('');
-        } else if(filterDateFrom.datepicker('getDate') > new Date()) {
+        } else if(filterDateFrom.datepicker('getDate') > getCurrentDate(true)) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data inicial posterior à atual - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('Data inicial posterior à atual - corrigir!');
           }
 
           filterDateFrom.val('');
-        } else if(filterDateTo.datepicker('getDate') > new Date()) {
+        } else if(filterDateTo.datepicker('getDate') > getCurrentDate(true)) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">Data final posterior à atual - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('Data final posterior à atual - corrigir!');
           }
 
           filterDateTo.val('');
-        } else if(diffDaysBetweenDates >= 365) {
+        } else if(diffDaysBetweenDates > 366) {
           if(showAlerts) {
-            vex.dialog.alert({
-              message: '<p class="text-center">O período do filtro deve ser menor que 365 dias - corrigir!</p>',
-              buttons: [{
-                type: 'submit',
-                text: 'Ok',
-                className: 'bdqueimadas-btn'
-              }]
-            });
+            $('#filter-error-dates' + filterFieldsExtention).text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
           }
 
           filterDateFrom.val('');
@@ -350,25 +386,11 @@ define(function() {
       }
     } else {
       if(filterDateFrom.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Data inicial inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Data inicial inválida!');
       }
 
       if(filterDateTo.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Data final inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Data final inválida!');
       }
     }
 
@@ -408,62 +430,24 @@ define(function() {
         if(isTimeValid(filterTimeFrom.val()) && isTimeValid(filterTimeTo.val())) {
           returnValue = [filterTimeFrom.val() + ':00', filterTimeTo.val() + ':59'];
         } else if(!isTimeValid(filterTimeFrom.val()) && !isTimeValid(filterTimeTo.val())) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Horas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates' + filterFieldsExtention).text('Horas inválidas!');
           filterTimeFrom.val('');
           filterTimeTo.val('');
         } else if(!isTimeValid(filterTimeFrom.val())) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Hora inicial inválida!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates' + filterFieldsExtention).text('Hora inicial inválida!');
           filterTimeFrom.val('');
         } else {
-          vex.dialog.alert({
-            message: '<p class="text-center">Hora final inválida!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-
+          $('#filter-error-dates' + filterFieldsExtention).text('Hora final inválida!');
           filterTimeTo.val('');
         }
       }
     } else {
       if(filterTimeFrom.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Hora inicial inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Hora inicial inválida!');
       }
 
       if(filterTimeTo.val().length === 0) {
-        vex.dialog.alert({
-          message: '<p class="text-center">Hora final inválida!</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok',
-            className: 'bdqueimadas-btn'
-          }]
-        });
+        $('#filter-error-dates' + filterFieldsExtention).text('Hora final inválida!');
       }
     }
 
@@ -496,10 +480,13 @@ define(function() {
    * @inner
    */
   var stringInArray = function(array, string) {
-    for(var i = 0; i < array.length; i++) {
-      if(array[i].toString() === string.toString())
-        return true;
+    if(array !== null) {
+      for(var i = 0, arrayLength = array.length; i < arrayLength; i++) {
+        if(array[i].toString() === string.toString())
+          return true;
+      }
     }
+
     return false;
   };
 
@@ -602,7 +589,7 @@ define(function() {
       b = sortArray(b, 'asc');
     }
 
-    for(var i = 0; i < a.length; ++i) {
+    for(var i = 0, aLength = a.length; i < aLength; ++i) {
       var aValue = isNaN(a[i]) ? a[i] : parseFloat(a[i]);
       var bValue = isNaN(b[i]) ? b[i] : parseFloat(b[i]);
 
@@ -643,6 +630,112 @@ define(function() {
   };
 
   /**
+   * Sums the items of an integer array.
+   * @param {array} values - Integer array
+   * @returns {integer} sum - Sum of the array items
+   *
+   * @function sumIntegerArrayItems
+   * @memberof Utils
+   * @inner
+   */
+  var sumIntegerArrayItems = function(values) {
+    var sum = values.reduce(sumTwoStringIntegers, 0);
+
+    return sum;
+  };
+
+  /**
+   * Sums the two received items.
+   * @param {string} a - Item a
+   * @param {string} b - Item b
+   * @returns {integer} sum - Sum of the two items
+   *
+   * @function sumTwoStringIntegers
+   * @memberof Utils
+   * @inner
+   */
+  var sumTwoStringIntegers = function(a, b) {
+    var sum = parseInt(a) + parseInt(b);
+    return sum;
+  };
+
+  /**
+   * Returns the current date.
+   * @param {boolean} utc - Flag that indicates if the date should be in UTC
+   * @returns {Date} currentDate - Current date
+   *
+   * @function getCurrentDate
+   * @memberof Utils
+   * @inner
+   */
+  var getCurrentDate = function(utc) {
+    var now = new Date();
+    var nowUTC = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+
+    var currentDate = utc ? nowUTC : now;
+
+    return currentDate;
+  };
+
+  /**
+   * Converts a latitude from decimal format to DMS.
+   * @param {float} latitude - Latitude
+   * @returns {string} dmsCoordinate - Latitude in DMS format
+   *
+   * @function convertLatitudeToDMS
+   * @memberof Utils
+   * @inner
+   */
+  var convertLatitudeToDMS = function(latitude) {
+    var dmsCoordinate = "";
+
+    var signal = latitude.toString().substring(0, 1);
+
+    if(signal == "-") {
+      latitude = latitude.toString().substring(1);
+      dmsCoordinate += "S ";
+    } else {
+      dmsCoordinate += "N ";
+    }
+
+    var valuesOne = latitude.toString().split(".");
+    dmsCoordinate += valuesOne[0] + " ";
+    var valuesTwo = (parseFloat("0." + valuesOne[1]) * 60).toString().split(".");
+    dmsCoordinate += valuesTwo[0] + " " + (parseFloat("0." + valuesTwo[1]) * 60).toFixed(2).toString();
+
+    return dmsCoordinate;
+  };
+
+  /**
+   * Converts a longitude from decimal format to DMS.
+   * @param {float} longitude - Longitude
+   * @returns {string} dmsCoordinate - Longitude in DMS format
+   *
+   * @function convertLongitudeToDMS
+   * @memberof Utils
+   * @inner
+   */
+  var convertLongitudeToDMS = function(longitude) {
+    var dmsCoordinate = "";
+
+    var signal = longitude.toString().substring(0, 1);
+
+    if(signal == "-") {
+      longitude = longitude.toString().substring(1);
+      dmsCoordinate += "O ";
+    } else {
+      dmsCoordinate += "L ";
+    }
+
+    var valuesOne = longitude.toString().split(".");
+    dmsCoordinate += valuesOne[0] + " ";
+    var valuesTwo = (parseFloat("0." + valuesOne[1]) * 60).toString().split(".");
+    dmsCoordinate += valuesTwo[0] + " " + (parseFloat("0." + valuesTwo[1]) * 60).toFixed(2).toString();
+
+    return dmsCoordinate;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
    * @param {string} baseUrl - Base Url
@@ -661,7 +754,9 @@ define(function() {
     getSocket: getSocket,
     getConfigurations: getConfigurations,
     dateToString: dateToString,
+    dateTimeToString: dateTimeToString,
     stringToDate: stringToDate,
+    stringToDateTime: stringToDateTime,
     formatTime: formatTime,
     processStringWithDatePattern: processStringWithDatePattern,
     getFormatFromStringWithDatePattern: getFormatFromStringWithDatePattern,
@@ -677,6 +772,11 @@ define(function() {
     areArraysEqual: areArraysEqual,
     getStateIds: getStateIds,
     getBaseUrl: getBaseUrl,
+    sumIntegerArrayItems: sumIntegerArrayItems,
+    sumTwoStringIntegers: sumTwoStringIntegers,
+    getCurrentDate: getCurrentDate,
+    convertLatitudeToDMS: convertLatitudeToDMS,
+    convertLongitudeToDMS: convertLongitudeToDMS,
     init: init
   };
 });

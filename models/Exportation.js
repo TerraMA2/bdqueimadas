@@ -31,10 +31,6 @@ var Exportation = function() {
   // Application configurations
   var memberApplicationConfigurations = require(memberPath.join(__dirname, '../configurations/Application.json'));
 
-  var Cursor = require('pg-cursor');
-  var json2csv = require('json2csv');
-  var fs = require('fs');
-
   /**
    * Callback of the database operations.
    * @callback Graphics~databaseOperationCallback
@@ -42,21 +38,33 @@ var Exportation = function() {
    * @param {json} result - Result of the operation
    */
 
-   // new
-
+   /**
+    * Returns the PostgreSQL connection string.
+    * @returns {string} connectionString - PostgreSQL connection string
+    *
+    * @function getPgConnectionString
+    * @memberof Exportation
+    * @inner
+    */
    this.getPgConnectionString = function() {
-     var connectionString = "PG:host=" + memberDatabaseConfigurations.Host + " user=" + memberDatabaseConfigurations.User + " dbname=" + memberDatabaseConfigurations.Database;
+     var connectionString = "PG:host=" + memberDatabaseConfigurations.Host + " port=" + memberDatabaseConfigurations.Port + " user=" + memberDatabaseConfigurations.User + " dbname=" + memberDatabaseConfigurations.Database;
 
      return connectionString;
    };
 
+   /**
+    * Returns the ogr2ogr application string.
+    * @returns {string} ogr2ogr - ogr2ogr application
+    *
+    * @function ogr2ogr
+    * @memberof Exportation
+    * @inner
+    */
    this.ogr2ogr = function() {
      var ogr2ogr = memberApplicationConfigurations.OGR2OGR;
 
      return ogr2ogr;
    };
-
-   // new
 
   /**
    * Returns the fires data in GeoJSON format.
@@ -77,7 +85,7 @@ var Exportation = function() {
 
     // Setting of the query columns string
     var columns = "";
-    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
+    for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       if(memberAttributesTableConfig.Columns[i].Name !== "geom")
         columns += memberAttributesTableConfig.Columns[i].Name + ", ";
     }
@@ -99,7 +107,7 @@ var Exportation = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -112,7 +120,7 @@ var Exportation = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -120,12 +128,18 @@ var Exportation = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined) {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -138,7 +152,7 @@ var Exportation = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -151,7 +165,7 @@ var Exportation = function() {
           var citiesArray = options.cities.split(',');
           query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-          for(var i = 0; i < citiesArray.length; i++) {
+          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(citiesArray[i]);
           }
@@ -164,20 +178,51 @@ var Exportation = function() {
 
           if(options.protectedArea.type === 'UCE') {
             var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+            var schemaAndTable5Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName5KM;
+            var schemaAndTable10Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName10KM;
             var geom = memberTablesConfig.UCE.GeometryFieldName;
             var id = memberTablesConfig.UCE.IdFieldName;
           } else if(options.protectedArea.type === 'UCF') {
             var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+            var schemaAndTable5Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName5KM;
+            var schemaAndTable10Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName10KM;
             var geom = memberTablesConfig.UCF.GeometryFieldName;
             var id = memberTablesConfig.UCF.IdFieldName;
           } else {
             var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+            var schemaAndTable5Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName5KM;
+            var schemaAndTable10Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName10KM;
             var geom = memberTablesConfig.TI.GeometryFieldName;
             var id = memberTablesConfig.TI.IdFieldName;
           }
 
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
-          params.push(options.protectedArea.id);
+          if(!options.bufferInternal && options.bufferFive && options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + ")))";
+            params.push(options.protectedArea.id, options.protectedArea.id);
+          } else if(options.bufferInternal && !options.bufferFive && options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))" +
+                     " or (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + "))))";
+            params.push(options.protectedArea.id, options.protectedArea.id, options.protectedArea.id);
+          } else if(options.bufferInternal && options.bufferFive && !options.bufferTen) {
+            query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + "))";
+            params.push(options.protectedArea.id);
+          } else if(!options.bufferInternal && !options.bufferFive && options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + ")))";
+            params.push(options.protectedArea.id, options.protectedArea.id);
+          } else if(options.bufferInternal && !options.bufferFive && !options.bufferTen) {
+            query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
+            params.push(options.protectedArea.id);
+          } else if(!options.bufferInternal && options.bufferFive && !options.bufferTen) {
+            query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = $" + (parameter++) + "))" +
+                     " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + ")))";
+            params.push(options.protectedArea.id, options.protectedArea.id);
+          } else {
+            query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = $" + (parameter++) + "))";
+            params.push(options.protectedArea.id);
+          }
         }
 
         // If the 'options.limit' parameter exists, a limit clause is created
@@ -195,21 +240,26 @@ var Exportation = function() {
     });
   };
 
-  // new
-
+  /**
+   * Returns the query accordingly with the received parameters.
+   * @param {boolean} selectGeometry - Flag that indicates if the geometry field should be selected
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
+   * @param {json} options - Filtering options
+   * @returns {string} finalQuery - Query
+   *
+   * @function getQuery
+   * @memberof Exportation
+   * @inner
+   */
   this.getQuery = function(selectGeometry, dateTimeFrom, dateTimeTo, options) {
-    // %% outputs a literal % character.
-    // %I outputs an escaped SQL identifier.
-    // %L outputs an escaped SQL literal.
-    // %|s outputs a simple string.
-
     // Setting of the query columns string
     var columns = "";
 
-    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
+    for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
-        if(memberTablesConfig.Fires.DateFieldName == memberAttributesTableConfig.Columns[i].Name)
-          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
+        if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
+          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else
           columns += memberAttributesTableConfig.Columns[i].Name + ", ";
       }
@@ -229,7 +279,7 @@ var Exportation = function() {
       var satellitesArray = options.satellites.split(',');
       query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-      for(var i = 0; i < satellitesArray.length; i++) {
+      for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
         query += "%L,";
         params.push(satellitesArray[i]);
       }
@@ -242,7 +292,7 @@ var Exportation = function() {
       var biomesArray = options.biomes.split(',');
       query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-      for(var i = 0; i < biomesArray.length; i++) {
+      for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
         query += "%L,";
         params.push(biomesArray[i]);
       }
@@ -250,12 +300,18 @@ var Exportation = function() {
       query = query.substring(0, (query.length - 1)) + ")";
     }
 
+    // If the 'options.continent' parameter exists, a continent 'where' clause is created
+    if(options.continent !== undefined) {
+      query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = %L";
+      params.push(options.continent);
+    }
+
     // If the 'options.countries' parameter exists, a countries 'where' clause is created
     if(options.countries !== undefined) {
       var countriesArray = options.countries.split(',');
       query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-      for(var i = 0; i < countriesArray.length; i++) {
+      for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
         query += "%L,";
         params.push(countriesArray[i]);
       }
@@ -268,7 +324,7 @@ var Exportation = function() {
       var statesArray = options.states.split(',');
       query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-      for(var i = 0; i < statesArray.length; i++) {
+      for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
         query += "%L,";
         params.push(statesArray[i]);
       }
@@ -281,7 +337,7 @@ var Exportation = function() {
       var citiesArray = options.cities.split(',');
       query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-      for(var i = 0; i < citiesArray.length; i++) {
+      for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
         query += "%L,";
         params.push(citiesArray[i]);
       }
@@ -294,20 +350,51 @@ var Exportation = function() {
 
       if(options.protectedArea.type === 'UCE') {
         var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
+        var schemaAndTable5Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName5KM;
+        var schemaAndTable10Km = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName10KM;
         var geom = memberTablesConfig.UCE.GeometryFieldName;
         var id = memberTablesConfig.UCE.IdFieldName;
       } else if(options.protectedArea.type === 'UCF') {
         var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
+        var schemaAndTable5Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName5KM;
+        var schemaAndTable10Km = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName10KM;
         var geom = memberTablesConfig.UCF.GeometryFieldName;
         var id = memberTablesConfig.UCF.IdFieldName;
       } else {
         var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
+        var schemaAndTable5Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName5KM;
+        var schemaAndTable10Km = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName10KM;
         var geom = memberTablesConfig.TI.GeometryFieldName;
         var id = memberTablesConfig.TI.IdFieldName;
       }
 
-      query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L))";
-      params.push(options.protectedArea.id);
+      if(!options.bufferInternal && options.bufferFive && options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L)))";
+        params.push(options.protectedArea.id, options.protectedArea.id);
+      } else if(options.bufferInternal && !options.bufferFive && options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L))" +
+                 " or (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L))))";
+        params.push(options.protectedArea.id, options.protectedArea.id, options.protectedArea.id);
+      } else if(options.bufferInternal && options.bufferFive && !options.bufferTen) {
+        query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L))";
+        params.push(options.protectedArea.id);
+      } else if(!options.bufferInternal && !options.bufferFive && options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L)))";
+        params.push(options.protectedArea.id, options.protectedArea.id);
+      } else if(options.bufferInternal && !options.bufferFive && !options.bufferTen) {
+        query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L))";
+        params.push(options.protectedArea.id);
+      } else if(!options.bufferInternal && options.bufferFive && !options.bufferTen) {
+        query += " and (ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable5Km + " where " + id + " = %L))" +
+                 " and not ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = %L)))";
+        params.push(options.protectedArea.id, options.protectedArea.id);
+      } else {
+        query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable10Km + " where " + id + " = %L))";
+        params.push(options.protectedArea.id);
+      }
     }
 
     // If the 'options.limit' parameter exists, a limit clause is created
@@ -321,167 +408,6 @@ var Exportation = function() {
 
     return finalQuery;
   };
-
-  this.getCSVData = function(pgPool, dateTimeFrom, dateTimeTo, options) {
-
-    // Counter of the query parameters
-    var parameter = 1;
-
-    // Setting of the query columns string
-    var columns = "";
-    var fields = [];
-
-    for(var i = 0; i < memberAttributesTableConfig.Columns.length; i++) {
-      if(memberAttributesTableConfig.Columns[i].Name !== "geom") {
-        if(memberTablesConfig.Fires.DateFieldName == memberAttributesTableConfig.Columns[i].Name) {
-          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
-        } else {
-          columns += memberAttributesTableConfig.Columns[i].Name + ", ";
-        }
-
-        fields.push(memberAttributesTableConfig.Columns[i].Name);
-      }
-    }
-    columns = columns.substring(0, (columns.length - 2));
-
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateTimeFrom, dateTimeTo];
-
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
-
-          for(var i = 0; i < satellitesArray.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0; i < biomesArray.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0; i < countriesArray.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0; i < statesArray.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.cities' parameter exists, a cities 'where' clause is created
-        if(options.cities !== undefined) {
-          var citiesArray = options.cities.split(',');
-          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
-
-          for(var i = 0; i < citiesArray.length; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(citiesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
-        if(options.protectedArea !== undefined) {
-
-          if(options.protectedArea.type === 'UCE') {
-            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
-            var geom = memberTablesConfig.UCE.GeometryFieldName;
-            var id = memberTablesConfig.UCE.IdFieldName;
-          } else if(options.protectedArea.type === 'UCF') {
-            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
-            var geom = memberTablesConfig.UCF.GeometryFieldName;
-            var id = memberTablesConfig.UCF.IdFieldName;
-          } else {
-            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
-            var geom = memberTablesConfig.TI.GeometryFieldName;
-            var id = memberTablesConfig.TI.IdFieldName;
-          }
-
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
-          params.push(options.protectedArea.id);
-        }
-
-        // If the 'options.limit' parameter exists, a limit clause is created
-        if(options.limit !== undefined) {
-          query += " limit " + options.limit;
-        }
-
-        // Execution of the query
-        /*client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });*/
-
-        var cursor = client.query(new Cursor(query, params));
-
-        console.log(query);
-        console.log(params);
-
-        cursor.read(5000, function(err, rows) {
-          if(!err) {
-            if(rows.length == 0) {
-              console.log('cabou');
-              done();
-            } else {
-              try {
-                var result = json2csv({ data: rows, fields: fields });
-
-                fs.writeFile('C:\\Users\\jsouza\\Desktop\\file.csv', result, function(err) {
-                  if (err) throw err;
-                  console.log('file saved');
-                });
-              } catch (err) {
-                console.error(err);
-              }
-            }
-          } else {
-            done(err);
-          }
-        });
-
-      } else console.error(err);
-    });
-  };
-
-  // new
 
   /**
    * Registers the downloads in the database.
@@ -510,13 +436,12 @@ var Exportation = function() {
 
         // Creation of the query
         var query = "insert into " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " (" +
-                    memberTablesConfig.Downloads.DateFieldName + ", " + memberTablesConfig.Downloads.TimeFieldName + ", " +
-                    memberTablesConfig.Downloads.IpFieldName + ", " + memberTablesConfig.Downloads.FilterBeginFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterEndFieldName + ", " + memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterBiomesFieldName + ", " + memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterStatesFieldName + ", " + memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
-                    memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
-            params = [dateString, timeString, ip, dateTimeFrom, dateTimeTo];
+                    memberTablesConfig.Downloads.DateTimeFieldName + ", " + memberTablesConfig.Downloads.IpFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterBeginFieldName + ", " + memberTablesConfig.Downloads.FilterEndFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " + memberTablesConfig.Downloads.FilterBiomesFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterCountriesFieldName + ", " + memberTablesConfig.Downloads.FilterStatesFieldName + ", " +
+                    memberTablesConfig.Downloads.FilterCitiesFieldName + ", " + memberTablesConfig.Downloads.FilterFormatFieldName + ") values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);",
+            params = [dateString + ' ' + timeString, ip, dateTimeFrom, dateTimeTo];
 
         if(options.satellites !== undefined)
           params.push(options.satellites.split(','));

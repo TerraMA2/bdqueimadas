@@ -8,10 +8,12 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberFiresCountGraphics - Graphics of fires count.
+ * @property {integer} memberContinent - Current continent filter.
  * @property {string} memberAllCountries - Current countries filter, considering the countries of the initial continent, in case there is no country filtered.
  * @property {string} memberCountries - Current countries filter, not considering the countries of the initial continent.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
+ * @property {integer} memberLoadingCounter - Counter that indicates how many graphics are loading.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/Map', 'TerraMA2WebComponents'],
@@ -19,6 +21,8 @@ define(
 
     // Graphics of fires count
     var memberFiresCountGraphics = {};
+    // Current continent filter
+    var memberContinent = null;
     // Current countries filter, considering the countries of the initial continent, in case there is no country filtered
     var memberAllCountries = null;
     // Current countries filter, not considering the countries of the initial continent
@@ -27,6 +31,8 @@ define(
     var memberStates = null;
     // Current cities filter
     var memberCities = null;
+    // Counter that indicates how many graphics are loading
+    var memberLoadingCounter = 0;
 
     /**
      * Activates or deactivates the time series tool.
@@ -121,18 +127,8 @@ define(
      * @inner
      */
     var getSpatialFilterData = function(callback) {
+      var continent = $('#continents-graphics').val();
       var countries = $('#countries-graphics').val() === null || (Utils.stringInArray($('#countries-graphics').val(), "") || $('#countries-graphics').val().length === 0) ? [] : $('#countries-graphics').val();
-      var countriesNames = [];
-
-      if(($('#continents-graphics').val() !== null && $('#continents-graphics').val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
-        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-        var initialContinentCountriesLength = initialContinentCountries.length;
-
-        for(var i = 0; i < initialContinentCountriesLength; i++) {
-          countriesNames.push(initialContinentCountries[i].Name);
-        }
-      }
-
       var states = $('#states-graphics').val() === null || Utils.stringInArray($('#states-graphics').val(), "") || $('#states-graphics').val().length === 0 ? [] : $('#states-graphics').val();
 
       var filterStates = [];
@@ -150,42 +146,36 @@ define(
 
       countries = countries.toString();
 
-      var specialRegionsCountriesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
+      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
 
       if(countries.length > 0) {
-        Filter.updateCountriesBdqNames(function(namesArrayCountries) {
-          var arrayOne = JSON.parse(JSON.stringify(namesArrayCountries));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+        var arrayOne = JSON.parse(JSON.stringify(countries));
+        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
 
-          namesArrayCountries = $.merge(arrayOne, arrayTwo);
+        var arrayCountries = $.merge(arrayOne, arrayTwo);
 
-          states = JSON.parse(JSON.stringify(filterStates));
-          states = states.toString();
+        states = JSON.parse(JSON.stringify(filterStates));
+        states = states.toString();
 
-          var specialRegionsStatesNames = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
+        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
 
-          var cities = specialRegionsData.specialRegionsCities.toString();
+        var cities = Filter.getCity() !== null ? $.merge(specialRegionsData.specialRegionsCities, [Filter.getCity()]) : specialRegionsData.specialRegionsCities;
+        var citiesString = cities.toString();
 
-          if(states.length > 0) {
-            Filter.updateStatesBdqNames(function(namesArrayStates) {
-              var arrayOne = JSON.parse(JSON.stringify(namesArrayStates));
-              var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesNames));
+        if(states.length > 0) {
+          var arrayOne = JSON.parse(JSON.stringify(states));
+          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
 
-              namesArrayStates = $.merge(arrayOne, arrayTwo);
+          var arrayStates = $.merge(arrayOne, arrayTwo);
 
-              callback(namesArrayCountries.toString(), namesArrayCountries.toString(), namesArrayStates.toString(), cities);
-            }, states);
-          } else {
-            callback(namesArrayCountries.toString(), namesArrayCountries.toString(), specialRegionsStatesNames.toString(), cities);
-          }
-        }, countries);
+          callback(continent.toString(), arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
+        } else {
+          callback(continent.toString(), arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
+        }
       } else {
-        var arrayOne = JSON.parse(JSON.stringify(countriesNames));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesNames));
+        var city = Filter.getCity() !== null ? Filter.getCity() : "";
 
-        countriesNames = $.merge(arrayOne, arrayTwo);
-
-        callback(countriesNames.toString(), "", "", "");
+        callback(continent.toString(), specialRegionsCountriesJson.toString(), "", "", city);
       }
     };
 
@@ -198,28 +188,16 @@ define(
      * @inner
      */
     var updateGraphics = function(useGraphicsFilter) {
+      $('#filter-error-dates-graphics').text('');
+
       var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
       var times = Utils.getFilterTimes(true, (useGraphicsFilter ? 2 : 0));
 
       if(dates !== null && times !== null) {
         if(dates.length === 0) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Datas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
+          $('#filter-error-dates-graphics').text('Datas inválidas!');
         } else if(times.length === 0) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Horas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
+          $('#filter-error-dates-graphics').text('Horas inválidas!');
         } else {
           var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
@@ -232,16 +210,15 @@ define(
                        (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
                        Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
 
-          var protectedArea = useGraphicsFilter ?
-                              ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? JSON.parse($('#pas-graphics').data('value')) : null) :
-                              Filter.getProtectedArea();
+          var protectedArea = Filter.getProtectedArea();
 
           if(!useGraphicsFilter) {
             $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
             $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
           }
 
-          getSpatialFilterData(function(allCountries, countries, states, cities) {
+          getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
+            memberContinent = continent;
             memberAllCountries = allCountries;
             memberCountries = countries;
             memberStates = states;
@@ -281,7 +258,7 @@ define(
                                        "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
 
                     if(firesCountGraphicsConfig[i].PAGraphic)
-                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+                      htmlElements += "<a href=\"https://dev-queimadas.dgi.inpe.br/estatisticas/ucs_tis/repositorio_relat/relatorio.html\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
 
                     htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
                                     "-graphic-message-container\" class=\"text-center\">" +
@@ -297,7 +274,7 @@ define(
                                        "\"><i class=\"fa fa-download\"></i>Exportar Dados em CSV</a>";
 
                     if(firesCountGraphicsConfig[i].PAGraphic)
-                      htmlElements += "<a href=\"http://www.inpe.br/queimadas/sitAreaProt.php\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
+                      htmlElements += "<a href=\"https://dev-queimadas.dgi.inpe.br/estatisticas/ucs_tis/repositorio_relat/relatorio.html\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
 
                     htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
                                     "-graphic-message-container\" class=\"text-center\">" +
@@ -307,6 +284,10 @@ define(
                   insertGraphicAtPosition(htmlElements);
                   memberFiresCountGraphics[firesCountGraphicsConfig[i].Id] = null;
                 }
+
+                memberLoadingCounter++;
+                $('#loading-span-graphics-background').removeClass('hide');
+                $('#graph-box').addClass('overflow-hidden');
 
                 Utils.getSocket().emit(
                   'graphicsFiresCountRequest',
@@ -320,6 +301,7 @@ define(
                     title: firesCountGraphicsConfig[i].Title,
                     satellites: satellites,
                     biomes: biomes,
+                    continent: memberContinent,
                     countries: memberAllCountries,
                     states: memberStates,
                     cities: memberCities,
@@ -391,6 +373,13 @@ define(
      * @inner
      */
     var loadFiresCountGraphic = function(firesCount) {
+      memberLoadingCounter--;
+
+      if(memberLoadingCounter === 0) {
+        $('#loading-span-graphics-background').addClass('hide');
+        $('#graph-box').removeClass('overflow-hidden');
+      }
+
       var graphHeight = (firesCount.firesCount.rowCount * 20) + 100;
       var labels = [];
       var values = [];
@@ -409,7 +398,9 @@ define(
           label = label.replace("{" + yFields[j] + "}", field);
         }
 
-        labels.push(label);
+        var percentage = ((parseFloat(firesCountItems[i].count) / parseFloat(firesCount.firesTotalCount.rows[0].count)) * 100).toFixed(1);
+
+        labels.push(label + ' (' + firesCountItems[i].count + ' F | ' + percentage + '%)');
         values.push(firesCountItems[i].count);
       }
 
@@ -453,11 +444,24 @@ define(
           },
           legend: {
             display: false
+          },
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  stepSize: 5,
+                  maxTicksLimit: 20
+                }
+              }
+            ]
           }
         }
       });
 
-      var additionalTitle = " | " + firesCount.firesTotalCount.rows[0].count + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
+      var graphicTotalCount = Utils.sumIntegerArrayItems(values);
+
+      var additionalTitle = " | " + graphicTotalCount + " focos, de " + $('#filter-date-from-graphics').val() + " a " + $('#filter-date-to-graphics').val();
       $("#fires-count-" + firesCount.id + "-graphic").parents('.graphic-item').find('.box-title > .additional-title').text(additionalTitle);
       $("#fires-count-" + firesCount.id + "-graphic").parent().children('.export-graphic-data').show();
       $("#fires-count-" + firesCount.id + "-graphic").parents('.graphic-item').show();
@@ -499,28 +503,23 @@ define(
      * @inner
      */
     var exportGraphicData = function(id) {
+      $('#filter-error-dates-graphics').text('');
+
       var dates = Utils.getFilterDates(true, 2);
       var times = Utils.getFilterTimes(true, 2);
 
       if(dates !== null) {
         if(dates.length === 0) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Datas inválidas!</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
+          $('#filter-error-dates-graphics').text('Datas inválidas!');
         } else {
           var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
-          var protectedArea = ($('#pas-graphics').data('value') !== undefined && $('#pas-graphics').data('value') !== '' ? $('#pas-graphics').data('value') : '');
+          var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
 
-          getSpatialFilterData(function(allCountries, countries, states, cities) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
+          getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&continent=" + continent + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
             location.href = exportLink;
           });
         }

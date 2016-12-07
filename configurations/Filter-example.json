@@ -1,24 +1,24 @@
 {
   "LayerToFilter": {
-    "LayerId": "BDQueimadas:focos",
-    "IdFieldName": "id",
-    "LatitudeFieldName": "lat",
-    "LongitudeFieldName": "lon",
-    "LatitudeDMSFieldName": "lat_gms",
-    "LongitudeDMSFieldName": "lon_gms",
-    "DateFieldName": "data",
-    "TimeFieldName": "hora",
-    "DateTimeFieldName": "data_hora",
+    "LayerId": "bdqueimadas:focos",
+    "IdFieldName": "id_foco_bdq",
+    "LatitudeFieldName": "latitude",
+    "LongitudeFieldName": "longitude",
+    "DateTimeFieldName": "data_hora_gmt",
     "SatelliteFieldName": "satelite",
-    "CityFieldName": "municipio",
-    "StateFieldName": "estado",
-    "CountryFieldName": "pais",
+    "CityFieldName": "municipio_complete_id",
+    "CityNameFieldName": "municipio",
+    "StateFieldName": "estado_complete_id",
+    "StateNameFieldName": "estado",
+    "CountryFieldName": "pais_complete_id",
+    "CountryNameFieldName": "pais",
+    "ContinentFieldName": "continente",
     "PrecipitationFieldName": "precipitacao",
-    "NumberOfDaysWithoutPrecipitationFieldName": "num_dias_sem_precipitacao",
-    "RiskFieldName": "risco",
-    "BiomeFieldName": "bioma_brasileiro",
+    "NumberOfDaysWithoutPrecipitationFieldName": "numero_dias_sem_chuva",
+    "RiskFieldName": "risco_fogo",
+    "BiomeFieldName": "bioma",
     "DateFormat": "YYYY-MM-DD",
-    "TimeFormat": "HH:MM:SS",
+    "DateTimeFormat": "YYYY-MM-DD HH:MM:SS",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
     "FinalDate": "{{0=YYYY-MM-DD}}"
   },
@@ -26,71 +26,62 @@
     {
       "Id": 2,
       "Name": "MAP",
-      "CountriesIds": [33, 178, 28],
-      "Countries": ["Brasil", "Peru", "Bolivia"],
-      "StatesIds": ["0330001", "1780018", "0280006"],
-      "States": ["AC", "Madre de Dios", "Pando", "Tahuamanu", "Tambopata", "Manu"],
-      "CitiesIds": [],
+      "Countries": [33, 178, 28],
+      "States": ["0330001", "1780018", "0280006"],
       "Cities": []
     },
     {
       "Id": 3,
       "Name": "Amazônia Legal",
-      "CountriesIds": [33],
-      "Countries": ["Brasil"],
-      "StatesIds": ["0330001", "0330003", "0330004", "0330010", "0330012", "0330014", "0330022", "0330023", "0330027"],
-      "States": ["AC", "AP", "AM", "MA", "MT", "PA", "RO", "RR", "TO"],
-      "CitiesIds": [],
+      "Countries": [33],
+      "States": ["0330001", "0330003", "0330004", "0330010", "0330012", "0330014", "0330022", "0330023", "0330027"],
       "Cities": []
     },
     {
       "Id": 4,
       "Name": "Vale Paraíba - SP",
-      "CountriesIds": [33],
-      "Countries": ["Brasil"],
-      "StatesIds": ["0330024"],
-      "States": ["SP"],
-      "CitiesIds": ["03300244741", "03300244749", "03300244754", "03300244769", "03300244810", "03300244811", "03300244824", "03300244827", "03300244862", "03300244864", "03300244922", "03300244944", "03300244991", "03300244996", "03300245011", "03300245014", "03300245020", "03300245068", "03300245076", "03300245114", "03300245141", "03300245145", "03300245169", "03300245184", "03300245188", "03300245211", "03300245253", "03300245228", "03300245257", "03300245268", "03300245271", "03300245273", "03300245293", "03300245318", "03300245327"],
-      "Cities": ["Aparecida", "Arapeí", "Areias", "Bananal", "Caçapava", "Cachoeira Paulista", "Campos do Jordão", "Canas", "Cruzeiro", "Cunha", "Guaratinguetá", "Igaratá", "Jacareí", "Jambeiro", "Lagoinha", "Lavrinhas", "Lorena", "Monteiro Lobato", "Natividade da Serra", "Paraibuna", "Pindamonhangaba", "Piquete", "Potim", "Queluz", "Redenção da Serra", "Roseira", "Santo Antônio do Pinhal", "Santa Branca", "São Bento do Sapucaí", "São José do Barreiro", "São José dos Campos", "São Luís do Paraitinga", "Silveiras", "Taubaté", "Tremembé"]
+      "Countries": [33],
+      "States": ["0330024"],
+      "Cities": ["03300244741", "03300244749", "03300244754", "03300244769", "03300244810", "03300244811", "03300244824", "03300244827", "03300244862", "03300244864", "03300244922", "03300244944", "03300244991", "03300244996", "03300245011", "03300245014", "03300245020", "03300245068", "03300245076", "03300245114", "03300245141", "03300245145", "03300245169", "03300245184", "03300245188", "03300245211", "03300245253", "03300245228", "03300245257", "03300245268", "03300245271", "03300245273", "03300245293", "03300245318", "03300245327"]
     }
   ],
   "CurrentSituationLayers": {
     "Layers": [
-      "BDQueimadas:current_situation_countries",
-      "BDQueimadas:current_situation_states",
-      "BDQueimadas:current_situation_cities",
-      "BDQueimadas:current_situation_biomes"
+      "bdqueimadas:situacao_atual_paises",
+      "bdqueimadas:situacao_atual_estados",
+      "bdqueimadas:situacao_atual_municipios",
+      "bdqueimadas:situacao_atual_biomas"
     ],
     "DateFormat": "YYYY-MM-DD",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
     "FinalDate": "{{0=YYYY-MM-DD}}"
   },
   "CountriesLayer": {
-    "Id": "BDQueimadas:paises_multi",
+    "Id": "bdqueimadas:paises",
     "ContinentField": "continente_id"
   },
   "CountriesLabelsLayer": {
-    "Id": "BDQueimadas:labels_paises",
+    "Id": "bdqueimadas:labels_paises",
     "ContinentField": "continente_id"
   },
   "StatesLayer": {
-    "Id": "BDQueimadas:estados",
+    "Id": "bdqueimadas:estados",
     "CountryField": "id_0"
   },
   "StatesLabelsLayer": {
-    "Id": "BDQueimadas:labels_estados",
+    "Id": "bdqueimadas:labels_estados",
     "CountryField": "id_0"
   },
   "CitiesLayer": {
-    "Id": "BDQueimadas:municipios",
+    "Id": "bdqueimadas:municipios",
     "CountryField": "id_0",
-    "StateField": "complete_id",
+    "StateField": "complete_id_state",
     "CityField": "complete_id"
   },
   "CitiesLabelsLayer": {
-    "Id": "BDQueimadas:sedes_municipios",
+    "Id": "bdqueimadas:labels_municipios",
     "CountryField": "id_0",
-    "StateField": "complete_id",
+    "StateField": "complete_id_state",
     "CityField": "complete_id"
   },
   "SpatialFilter": {

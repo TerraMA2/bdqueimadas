@@ -72,7 +72,7 @@ var Graphics = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -85,7 +85,7 @@ var Graphics = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -93,12 +93,18 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -111,7 +117,7 @@ var Graphics = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -124,7 +130,7 @@ var Graphics = function() {
           var citiesArray = options.cities.split(',');
           query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-          for(var i = 0; i < citiesArray.length; i++) {
+          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(citiesArray[i]);
           }
@@ -199,27 +205,36 @@ var Graphics = function() {
           var tableFires = memberTablesConfig.UCE.FiresSchema + "." + memberTablesConfig.UCE.FiresTableName + " a";
           var tablePA = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName + " b";
           var idField = "b." + memberTablesConfig.UCE.IdFieldName;
+          var ngoField = "b." + memberTablesConfig.UCE.NGOFieldName;
           var PAField = "a." + memberTablesConfig.UCE.FiresPAFieldName;
+          var ngoPAField = "a." + memberTablesConfig.UCE.NGOFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCE.FiresIdsFieldName;
           var dateField = "a." + memberTablesConfig.UCE.FiresDateFieldName;
+          var optionalWhere = " " + memberTablesConfig.UCE.IsFederal + "=false and";
         } else if(key === "UCF" || key === "UCF_5KM" || key === "UCF_10KM") {
           var fields = "b." + memberTablesConfig.UCF.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.UCF.NameFieldName;
           var tableFires = memberTablesConfig.UCF.FiresSchema + "." + memberTablesConfig.UCF.FiresTableName + " a";
           var tablePA = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName + " b";
           var idField = "b." + memberTablesConfig.UCF.IdFieldName;
+          var ngoField = "b." + memberTablesConfig.UCF.NGOFieldName;
           var PAField = "a." + memberTablesConfig.UCF.FiresPAFieldName;
+          var ngoPAField = "a." + memberTablesConfig.UCF.NGOFieldName;
           var firesIdsField = "a." + memberTablesConfig.UCF.FiresIdsFieldName;
           var dateField = "a." + memberTablesConfig.UCF.FiresDateFieldName;
+          var optionalWhere = " " + memberTablesConfig.UCF.IsFederal + "=true and";
         } else {
           var fields = "b." + memberTablesConfig.TI.NameFieldName + " as name, count(c.*) as count";
           var group = "b." + memberTablesConfig.TI.NameFieldName;
           var tableFires = memberTablesConfig.TI.FiresSchema + "." + memberTablesConfig.TI.FiresTableName + " a";
           var tablePA = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName + " b";
           var idField = "b." + memberTablesConfig.TI.IdFieldName;
+          var ngoField = "b." + memberTablesConfig.TI.NGOFieldName;
           var PAField = "a." + memberTablesConfig.TI.FiresPAFieldName;
+          var ngoPAField = "a." + memberTablesConfig.TI.NGOFieldName;
           var firesIdsField = "a." + memberTablesConfig.TI.FiresIdsFieldName;
           var dateField = "a." + memberTablesConfig.TI.FiresDateFieldName;
+          var optionalWhere = "";
         }
 
         if(key === "UCE_5KM") {
@@ -244,10 +259,11 @@ var Graphics = function() {
 
         // Creation of the query
         var query = "select " + fields + " from " + tableFires +
-        " inner join " + tablePA + " on (" + idField + " = " + PAField + ")" +
+        " inner join " + tablePA + " on (concat(" + ngoField + ", " + idField + ") = concat(" + ngoPAField + ", " + PAField + "))" +
         " inner join " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " c on (c." + memberTablesConfig.Fires.IdFieldName + " = ANY (" + firesIdsField + "))" +
-        " where (c." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
+        " where" + optionalWhere +
+        " (c." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")" +
         " and (" + dateField + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo, dateTimeFrom, dateTimeTo];
 
@@ -256,7 +272,7 @@ var Graphics = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and c." + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -269,7 +285,7 @@ var Graphics = function() {
           var biomesArray = options.biomes.split(',');
           query += " and c." + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -277,12 +293,18 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and c." + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
           query += " and c." + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -295,7 +317,7 @@ var Graphics = function() {
           var statesArray = options.states.split(',');
           query += " and c." + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -308,7 +330,7 @@ var Graphics = function() {
           var citiesArray = options.cities.split(',');
           query += " and c." + memberTablesConfig.Fires.CityFieldName + " in (";
 
-          for(var i = 0; i < citiesArray.length; i++) {
+          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(citiesArray[i]);
           }
@@ -386,7 +408,7 @@ var Graphics = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -399,7 +421,7 @@ var Graphics = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -407,12 +429,18 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -425,7 +453,7 @@ var Graphics = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -438,7 +466,7 @@ var Graphics = function() {
           var citiesArray = options.cities.split(',');
           query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-          for(var i = 0; i < citiesArray.length; i++) {
+          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(citiesArray[i]);
           }
@@ -505,8 +533,8 @@ var Graphics = function() {
     pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
-        var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ")::date, 'YYYY/MM/DD') as start, " +
-        "TO_CHAR((date_trunc('week', " + memberTablesConfig.Fires.DateFieldName + ") + '6 days')::date, 'YYYY/MM/DD') as end, count(*) AS count " +
+        var query = "select TO_CHAR(date_trunc('week', " + memberTablesConfig.Fires.DateTimeFieldName + ")::date, 'YYYY/MM/DD') as start, " +
+        "TO_CHAR((date_trunc('week', " + memberTablesConfig.Fires.DateTimeFieldName + ") + '6 days')::date, 'YYYY/MM/DD') as end, count(*) AS count " +
         "from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
         " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
@@ -516,7 +544,7 @@ var Graphics = function() {
           var satellitesArray = options.satellites.split(',');
           query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
 
-          for(var i = 0; i < satellitesArray.length; i++) {
+          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(satellitesArray[i]);
           }
@@ -529,7 +557,7 @@ var Graphics = function() {
           var biomesArray = options.biomes.split(',');
           query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
-          for(var i = 0; i < biomesArray.length; i++) {
+          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(biomesArray[i]);
           }
@@ -537,12 +565,18 @@ var Graphics = function() {
           query = query.substring(0, (query.length - 1)) + ")";
         }
 
+        // If the 'options.continent' parameter exists, a continent 'where' clause is created
+        if(options.continent !== undefined) {
+          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
+          params.push(options.continent);
+        }
+
         // If the 'options.countries' parameter exists, a countries 'where' clause is created
         if(options.countries !== undefined && !filterRules.ignoreCountryFilter) {
           var countriesArray = options.countries.split(',');
           query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
 
-          for(var i = 0; i < countriesArray.length; i++) {
+          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(countriesArray[i]);
           }
@@ -555,7 +589,7 @@ var Graphics = function() {
           var statesArray = options.states.split(',');
           query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
 
-          for(var i = 0; i < statesArray.length; i++) {
+          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(statesArray[i]);
           }
@@ -568,7 +602,7 @@ var Graphics = function() {
           var citiesArray = options.cities.split(',');
           query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
 
-          for(var i = 0; i < citiesArray.length; i++) {
+          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
             query += "$" + (parameter++) + ",";
             params.push(citiesArray[i]);
           }

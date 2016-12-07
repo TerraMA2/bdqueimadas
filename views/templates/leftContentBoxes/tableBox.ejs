@@ -31,9 +31,9 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="pas-attributes-table"><%= __('UCs / TIs') %></label>
+                    <label for="pas-attributes-table"><%= __('UCs / TIs (Apenas Brasil)') %></label>
                     <div class="input-group">
-                      <input type="text" id="pas-attributes-table" name="pas-attributes-table" class="form-control" placeholder="<%= __('UCs / TIs') %>">
+                      <input type="text" id="pas-attributes-table" name="pas-attributes-table" class="form-control" placeholder="<%= __('UCs / TIs (Apenas Brasil)') %>">
                       <span class="input-group-btn">
                         <button type="button" id="search-pas-btn-attributes-table" class="btn btn-flat">
                           <i class="fa fa-search"></i>
@@ -56,25 +56,39 @@
                     <select multiple id="states-attributes-table" name="states-attributes-table" class="form-control" disabled></select>
                   </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="city-attributes-table">Municípios</label>
+                    <div class="input-group">
+                      <input type="text" id="city-attributes-table" name="city-attributes-table" class="form-control" placeholder="Municípios">
+                      <span class="input-group-btn">
+                        <button type="button" id="search-cities-btn-attributes-table" class="btn btn-flat">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <label for="filter-date-from-attributes-table"><%= __('Data Início') %></label>
+                <label for="filter-date-from-attributes-table"><%= __('Data Início - Z') %></label>
                 <input type="text" class="form-control date filter-date-from" id="filter-date-from-attributes-table" placeholder="<%= __('Data Início') %>">
               </div>
               <div class="form-group">
-                <label for="filter-date-to-attributes-table"><%= __('Data Fim') %></label>
+                <label for="filter-date-to-attributes-table"><%= __('Data Fim - Z') %></label>
                 <input type="text" class="form-control date filter-date-to" id="filter-date-to-attributes-table" placeholder="<%= __('Data Fim') %>">
               </div>
+              <span class="help-block component-filter-error-main" id="filter-error-dates-attributes-table" style="width: 213px;"></span>
             </div>
             <div class="col-md-1">
               <div class="form-group">
-                <label for="filter-time-from-attributes-table"><%= __('Hora Início') %></label>
+                <label for="filter-time-from-attributes-table"><%= __('Hora Início - Z') %></label>
                 <input type="text" class="form-control time filter-time-from" id="filter-time-from-attributes-table" placeholder="<%= __('Hora Início') %>" value="00:00">
               </div>
               <div class="form-group">
-                <label for="filter-time-to-attributes-table"><%= __('Hora Fim') %></label>
+                <label for="filter-time-to-attributes-table"><%= __('Hora Fim - Z') %></label>
                 <input type="text" class="form-control time filter-time-to" id="filter-time-to-attributes-table" placeholder="<%= __('Hora Fim') %>" value="23:59">
               </div>
             </div>

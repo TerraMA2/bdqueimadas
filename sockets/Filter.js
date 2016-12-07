@@ -59,6 +59,12 @@ var Filter = function(io) {
 
           client.emit('spatialFilterResponse', { key: json.key, id: json.id, type: json.type, extent: extent });
         });
+      } else if(json.key === 'City') {
+        memberFilter.getCityExtent(client.pgPool, json.id, function(err, extent) {
+          if(err) return console.error(err);
+
+          client.emit('spatialFilterResponse', { key: json.key, id: json.id, extent: extent });
+        });
       } else {
         var functionName = "get" + json.key + "Extent";
         memberFilter[functionName](client.pgPool, json.ids, function(err, extent) {

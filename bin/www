@@ -7,10 +7,15 @@ var app = require('../app');
 var load = require('express-load');
 var debug = require('debug')('bdqueimadas:server');
 var http = require('http');
-var portNumber = '38000';
 var pg = require('pg');
 var fs = require('fs');
 var path = require('path');
+
+/**
+ * Get port from configurations.
+ */
+var applicationConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, '../configurations/Application.json'), 'utf8'));
+var portNumber = applicationConfigurations.Port;
 
 /**
  * Get port from environment and store in Express.
@@ -21,7 +26,6 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 

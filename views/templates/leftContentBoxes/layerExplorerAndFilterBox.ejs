@@ -32,11 +32,22 @@
   </div>
   <div style="clear: both; height: 4px;"></div>
   <div class="form-group bdqueimadas-form">
-    <label for="pas"><%= __('UCs / TIs') %></label>
+    <label for="pas"><%= __('UCs / TIs (Apenas Brasil)') %></label>
     <div class="input-group">
-      <input type="text" id="pas" name="pas" class="form-control" placeholder="<%= __('UCs / TIs') %>">
+      <input type="text" id="pas" name="pas" class="form-control" placeholder="<%= __('UCs / TIs (Apenas Brasil)') %>">
       <span class="input-group-btn">
         <button type="button" id="search-pas-btn" class="btn btn-flat">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+  </div>
+  <div class="form-group bdqueimadas-form">
+    <label for="city">Municípios</label>
+    <div class="input-group">
+      <input type="text" id="city" name="city" class="form-control" placeholder="Municípios">
+      <span class="input-group-btn">
+        <button type="button" id="search-cities-btn" class="btn btn-flat">
           <i class="fa fa-search"></i>
         </button>
       </span>
@@ -47,23 +58,24 @@
   <div style="clear: both; height: 5px;"></div>
   <div class="form-group bdqueimadas-form">
     <div style="float: left;">
-      <label for="filter-date-from" style="float: left; margin-right: 4px; margin-top: 5px;"><%= __('Data / Hora Início') %></label>
-      <input type="text" style="width: 110px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="<%= __('Data Início') %>">
+      <label for="filter-date-from" style="float: left; margin-right: 4px; margin-top: 5px;"><%= __('Data / Hora Início - TMG (Z)') %></label>
+      <input type="text" style="width: 90px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="<%= __('Data Início') %>">
     </div>
     <div style="float: right;">
-      <input type="text" style="width: 95px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-from" id="filter-time-from" placeholder="<%= __('Hora Início') %>" value="00:00">
+      <input type="text" style="width: 50px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-from" id="filter-time-from" placeholder="<%= __('Hora Início') %>" value="00:00">
     </div>
   </div>
   <div style="clear: both; height: 4px;"></div>
   <div class="form-group bdqueimadas-form">
     <div style="float: left;">
-      <label for="filter-date-to" style="float: left; margin-right: 13px; margin-top: 5px;"><%= __('Data / Hora Fim') %></label>
-      <input type="text" style="width: 110px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="<%= __('Data Fim') %>">
+      <label for="filter-date-to" style="float: left; margin-right: 14px; margin-top: 5px;"><%= __('Data / Hora Fim - TMG (Z)') %></label>
+      <input type="text" style="width: 90px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="<%= __('Data Fim') %>">
     </div>
     <div style="float: right;">
-      <input type="text" style="width: 95px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-to" id="filter-time-to" placeholder="<%= __('Hora Fim') %>" value="23:59">
+      <input type="text" style="width: 50px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-to" id="filter-time-to" placeholder="<%= __('Hora Fim') %>" value="23:59">
     </div>
   </div>
+  <span class="help-block component-filter-error-main" id="filter-error-dates"></span>
   <div style="clear: both;"></div>
   <div class="form-group bdqueimadas-form float-left">
     <label for="filter-satellite"><%= __('Focos dos Satélites') %></label>
