@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Utilities class of the BDQueimadas.
+ * Utilities class of the BDQueimadas (client side).
  * @class Utils
  *
  * @author Jean Souza [jean.souza@funcate.org.br]

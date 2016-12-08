@@ -7,20 +7,20 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
  * @property {json} memberFilterConfig - Filter configuration.
  * @property {json} memberTablesConfig - Tables configuration.
+ * @property {object} memberUtils - 'Utils' model.
  */
 var Filter = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // 'PgConnectionPool' module
-  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Filter configuration
   var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter.json'));
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
+  // 'Utils' model
+  var memberUtils = new (require('./Utils.js'))();
 
   /**
    * Returns the count of the fires.
@@ -48,69 +48,11 @@ var Filter = function() {
         " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -822,69 +764,11 @@ var Filter = function() {
             " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
 
         // Execution of the query
         client.query(query, params, function(err, result) {
