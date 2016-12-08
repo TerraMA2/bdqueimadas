@@ -39,6 +39,7 @@ var ExportController = function(app) {
       // Verifications of the 'options' object items
       if(request.query.satellites !== '') options.satellites = request.query.satellites;
       if(request.query.biomes !== '') options.biomes = request.query.biomes;
+      if(request.query.continent !== '') options.continent = request.query.continent;
       if(request.query.countries !== '') options.countries = request.query.countries;
       if(request.query.states !== '') options.states = request.query.states;
       if(request.query.cities !== '') options.cities = request.query.cities;

@@ -29,6 +29,7 @@ var Filter = function(io) {
       if(json.satellites !== '') options.satellites = json.satellites;
       if(json.biomes !== '') options.biomes = json.biomes;
       if(json.extent !== '') options.extent = json.extent;
+      if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
 
@@ -159,6 +160,7 @@ var Filter = function(io) {
       if(json.satellites !== '') options.satellites = json.satellites;
       if(json.biomes !== '') options.biomes = json.biomes;
       if(json.extent !== '') options.extent = json.extent;
+      if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
 
