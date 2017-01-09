@@ -237,6 +237,40 @@
       "ShowOnlyIfThereIsNoCountryFiltered": false,
       "ShowOnlyIfThereIsAStateFiltered": false,
       "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Order": 15,
+      "Id": "firesByTIBuffer5KM",
+      "Y": "{name}",
+      "Key": "TI_5KM",
+      "Title": "Buffer 5 Km das Terras Indígenas com mais focos (<= 30)",
+      "Limit": 30,
+      "Expanded": false,
+      "PAGraphic": true,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreCityFilter": false,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
+    },
+    {
+      "Order": 16,
+      "Id": "firesByTIBuffer10KM",
+      "Y": "{name}",
+      "Key": "TI_10KM",
+      "Title": "Buffer 10 Km das Terras Indígenas com mais focos (<= 30)",
+      "Limit": 30,
+      "Expanded": false,
+      "PAGraphic": true,
+      "IgnoreCountryFilter": false,
+      "IgnoreStateFilter": false,
+      "IgnoreCityFilter": false,
+      "ShowOnlyIfThereIsACountryFiltered": true,
+      "ShowOnlyIfThereIsNoCountryFiltered": false,
+      "ShowOnlyIfThereIsAStateFiltered": false,
+      "ShowOnlyIfThereIsNoStateFiltered": false
     }
   ],
   "TimeSeries": {
