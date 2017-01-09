@@ -222,7 +222,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
+        var query = "select distinct " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
             params = [continent];
 
         // Execution of the query
