@@ -105,6 +105,15 @@
           "MaxResolution": "Infinity"
         },
         {
+          "SubtitleId": "METOP-B",
+          "SubtitleText": "METOP-B",
+          "FillColor": null,
+          "BorderColor": null,
+          "Image": "images/satellitesIcons/metop-b.png",
+          "MinResolution": 0,
+          "MaxResolution": "Infinity"
+        },
+        {
           "SubtitleId": "NOAA-12",
           "SubtitleText": "NOAA-12",
           "FillColor": null,

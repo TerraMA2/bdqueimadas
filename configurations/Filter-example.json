@@ -364,6 +364,17 @@
       "ReferenceCurrent": false
     },
     {
+      "Id": "METOP-B",
+      "Name": "METOP-B",
+      "Begin": "2016-12-01",
+      "End": "",
+      "Current": true,
+      "Selected": false,
+      "ReferenceBegin": "",
+      "ReferenceEnd": "",
+      "ReferenceCurrent": false
+    },
+    {
       "Id": "NOAA-19",
       "Name": "NOAA-19 Tarde",
       "Begin": "2010-02-06",
