@@ -47,6 +47,8 @@ var ExportController = function(app) {
       options.bufferInternal = (request.query.bufferInternal == "true");
       options.bufferFive = (request.query.bufferFive == "true");
       options.bufferTen = (request.query.bufferTen == "true");
+      options.encoding = request.query.encoding;
+      options.format = request.query.format;
 
       var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
 
@@ -60,8 +62,10 @@ var ExportController = function(app) {
             var connectionString = memberExportation.getPgConnectionString();
 
             if(request.query.format === 'csv') {
+              var separator = (options.encoding.toLowerCase() == "windows" ? "SEMICOLON" : "COMMA");
+
               var csvPath = memberPath.join(__dirname, '../tmp/csv-' + buffer.toString('hex') + '.csv');
-              var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
+              var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures -lco SEPARATOR=" + separator;
 
               memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
                 if(err) return console.error(err);
