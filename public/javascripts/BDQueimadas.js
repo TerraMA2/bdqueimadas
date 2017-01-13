@@ -305,6 +305,19 @@ define(
                 '</div>' +
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-type"></span>' +
+              '<div class="form-group bdqueimadas-form">' +
+                '<label for="city-export">Codifica&ccedil;&atilde;o de Caracteres</label>' +
+                '<div class="input-group" style="width: 100%;">' +
+                  '<div class="row">' +
+                    '<div class="col-sm-6">' +
+                      '<input type="radio" name="encoding" value="windows" checked> Windows (ISO 8859-1)' +
+                    '</div>' +
+                    '<div class="col-sm-6">' +
+                      '<input type="radio" name="encoding" value="unix"> Unix (UTF-8)' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
             '</div>' +
           '</div>',
           buttons: [
@@ -402,6 +415,7 @@ define(
                                          "&bufferInternal=" + $('#buffer-internal').is(':checked') +
                                          "&bufferFive=" + $('#buffer-five').is(':checked') +
                                          "&bufferTen=" + $('#buffer-ten').is(':checked') +
+                                         "&encoding=" + $('input[name=encoding]:checked').val() +
                                          "&t=" + existsDataToExport.token;
 
                         window.open(exportLink, '_blank');

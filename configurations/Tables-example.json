@@ -55,6 +55,8 @@
     "StateFieldName": "state",
     "CityFieldName": "city",
     "BiomeFieldName": "biome",
+    "LatitudeFieldName": "latitude",
+    "LongitudeFieldName": "longitude",
     "GeometryFieldName": "geometry",
     "DateFormat": "YYYY-MM-DD"
   },

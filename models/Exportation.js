@@ -145,6 +145,8 @@ var Exportation = function() {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
           columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
+        else if(options.format == "csv" && options.encoding.toLowerCase() == "windows" && (memberTablesConfig.Fires.LatitudeFieldName == memberAttributesTableConfig.Columns[i].Name || memberTablesConfig.Fires.LongitudeFieldName == memberAttributesTableConfig.Columns[i].Name))
+          columns += "replace(" + memberAttributesTableConfig.Columns[i].Name + "::text, '.', ',') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else
           columns += memberAttributesTableConfig.Columns[i].Name + ", ";
       }
@@ -155,8 +157,10 @@ var Exportation = function() {
     if(selectGeometry)
       columns += ", " + memberTablesConfig.Fires.GeometryFieldName;
 
+    var encoding = (options.encoding.toLowerCase() == "windows" ? "LATIN1" : "UTF-8");
+
     // Creation of the query
-    var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
+    var query = "SET CLIENT_ENCODING TO '" + encoding + "'; select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
         params = [dateTimeFrom, dateTimeTo];
 
     options.exportFilter = true;
@@ -176,7 +180,7 @@ var Exportation = function() {
 
     var finalQuery = memberPgFormat.apply(null, params);
 
-    return finalQuery;
+    return finalQuery + ";";
   };
 
   /**
