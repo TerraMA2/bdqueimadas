@@ -118,6 +118,32 @@ var Utils = function() {
       params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
     }
 
+    // If the 'options.risk' parameter exists, a risk 'where' clause is created
+    if(options.risk !== undefined) {
+      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.RiskFieldName;
+
+      switch(options.risk) {
+        case 'minimum':
+          query +=  " between 0 and 0.15";
+          break;
+        case 'low':
+          query += " between 0.15 and 0.4";
+          break;
+        case 'medium':
+          query += " between 0.4 and 0.7";
+          break;
+        case 'high':
+          query += " between 0.7 and 0.95";
+          break;
+        case 'critic':
+          query += " > 0.95";
+          break;
+        default:
+          query += " > 0";
+          break;
+      }
+    }
+
     // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
     if(options.protectedArea !== undefined) {
       if(options.protectedArea.type === 'UCE') {

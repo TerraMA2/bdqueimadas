@@ -210,6 +210,8 @@ define(
                        (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
                        Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
 
+          var risk = $('#risk-graphics').val();
+
           var protectedArea = Filter.getProtectedArea();
 
           if(!useGraphicsFilter) {
@@ -301,6 +303,7 @@ define(
                     title: firesCountGraphicsConfig[i].Title,
                     satellites: satellites,
                     biomes: biomes,
+                    risk: risk,
                     continent: memberContinent,
                     countries: memberAllCountries,
                     states: memberStates,
@@ -516,10 +519,11 @@ define(
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
           var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
           var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
+          var risk = $('#risk-graphics').val();
           var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
 
           getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&continent=" + continent + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&risk=" + risk + "&continent=" + continent + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
             location.href = exportLink;
           });
         }

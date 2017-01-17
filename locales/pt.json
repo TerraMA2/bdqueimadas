@@ -74,5 +74,28 @@
 	"Data Fim - Z": "Data Fim - Z",
 	"Hora Início - Z": "Hora Início - Z",
 	"Hora Fim - Z": "Hora Fim - Z",
-	"UCs / TIs (Apenas Brasil)": "UCs / TIs (Apenas Brasil)"
+	"UCs / TIs (Apenas Brasil)": "UCs / TIs (Apenas Brasil)",
+	"Selecione o nível": "Selecione o nível",
+	"Mínimo (0 a 0": {
+		"15)": "Mínimo (0 a 0.15)"
+	},
+	"Baixo (0": {
+		"15 a 0": {
+			"4)": "Baixo (0.15 a 0.4)"
+		}
+	},
+	"Médio (0": {
+		"4 a 0": {
+			"7)": "Médio (0.4 a 0.7)"
+		}
+	},
+	"Alto (0": {
+		"7 a 0": {
+			"95)": "Alto (0.7 a 0.95)"
+		}
+	},
+	"Crítico (> 0": {
+		"95)": "Crítico (> 0.95)"
+	},
+	"Selecione": "Selecione"
 }

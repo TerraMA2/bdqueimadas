@@ -66,63 +66,78 @@
                 <input type="text" class="form-control time filter-time-to" id="filter-time-to-graphics" placeholder="<%= __('Hora Fim') %>" value="23:59">
               </div>
             </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="filter-satellite-graphics"><%= __('Focos dos Satélites') %></label>
-                <select multiple class="form-control" id="filter-satellite-graphics">
-                  <%
-                  var satelliteOptions = "";
-                  var referenceSatellite = "";
-                  var isSatelliteSelected = false;
+            <div class="col-md-4" style="padding: 0;">
+              <div class="col-md-4" style="padding: 0;">
+                <div class="form-group">
+                  <label for="filter-satellite-graphics"><%= __('Focos dos Satélites') %></label>
+                  <select multiple class="form-control" id="filter-satellite-graphics">
+                    <%
+                    var satelliteOptions = "";
+                    var referenceSatellite = "";
+                    var isSatelliteSelected = false;
 
-                  configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
-                    if(satellite.Current) {
-                      if(satellite.ReferenceCurrent) {
-                        referenceSatellite += "<option value=\"" + satellite.Id + "\"";
+                    configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+                      if(satellite.Current) {
+                        if(satellite.ReferenceCurrent) {
+                          referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
-                        if(satellite.Selected) {
-                          referenceSatellite += " selected>";
+                          if(satellite.Selected) {
+                            referenceSatellite += " selected>";
 
-                          if(!isSatelliteSelected) isSatelliteSelected = true;
+                            if(!isSatelliteSelected) isSatelliteSelected = true;
+                          } else {
+                            referenceSatellite += ">";
+                          }
+
+                          referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
                         } else {
-                          referenceSatellite += ">";
+                          satelliteOptions += "<option value=\"" + satellite.Id + "\"";
+
+                          if(satellite.Selected) {
+                            satelliteOptions += " selected>";
+
+                            if(!isSatelliteSelected) isSatelliteSelected = true;
+                          } else {
+                            satelliteOptions += ">";
+                          }
+
+                          satelliteOptions += satellite.Name + "</option>";
                         }
-
-                        referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
-                      } else {
-                        satelliteOptions += "<option value=\"" + satellite.Id + "\"";
-
-                        if(satellite.Selected) {
-                          satelliteOptions += " selected>";
-
-                          if(!isSatelliteSelected) isSatelliteSelected = true;
-                        } else {
-                          satelliteOptions += ">";
-                        }
-
-                        satelliteOptions += satellite.Name + "</option>";
                       }
-                    }
-                  })
-                  %>
+                    })
+                    %>
 
-                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
-                  <%- referenceSatellite + satelliteOptions %>
-                </select>
+                    <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
+                    <%- referenceSatellite + satelliteOptions %>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="filter-biome-graphics"><%= __('Focos dos Biomas') %></label>
-                <select multiple class="form-control" id="filter-biome-graphics">
-                  <option value="all" selected><%= __('TODOS') %></option>
-                  <option value="Amazonia">Amaz&ocirc;nia</option>
-                  <option value="Caatinga">Caatinga</option>
-                  <option value="Cerrado">Cerrado</option>
-                  <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
-                  <option value="Pampa">Pampa</option>
-                  <option value="Pantanal">Pantanal</option>
-                </select>
+              <div class="col-md-4" style="padding: 0 10px 0 10px;">
+                <div class="form-group">
+                  <label for="filter-biome-graphics"><%= __('Focos dos Biomas') %></label>
+                  <select multiple class="form-control" id="filter-biome-graphics">
+                    <option value="all" selected><%= __('TODOS') %></option>
+                    <option value="Amazonia">Amaz&ocirc;nia</option>
+                    <option value="Caatinga">Caatinga</option>
+                    <option value="Cerrado">Cerrado</option>
+                    <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+                    <option value="Pampa">Pampa</option>
+                    <option value="Pantanal">Pantanal</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4" style="padding: 0;">
+                <div class="form-group">
+                  <label for="risk-graphics"><%= __('Risco de Fogo') %></label>
+                  <select id="risk-graphics" name="risk-graphics" class="form-control">
+                    <option value=""><%= __('Selecione o nível') %></option>
+                    <option value="minimum"><%= __('Mínimo (0 a 0.15)') %></option>
+                    <option value="low"><%= __('Baixo (0.15 a 0.4)') %></option>
+                    <option value="medium"><%= __('Médio (0.4 a 0.7)') %></option>
+                    <option value="high"><%= __('Alto (0.7 a 0.95)') %></option>
+                    <option value="critic"><%= __('Crítico (> 0.95)') %></option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="col-md-1">
