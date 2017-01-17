@@ -306,7 +306,7 @@ define(
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-type"></span>' +
               '<div class="form-group bdqueimadas-form">' +
-                '<label for="city-export">Codifica&ccedil;&atilde;o de Caracteres</label>' +
+                '<label>Codifica&ccedil;&atilde;o de Caracteres</label>' +
                 '<div class="input-group" style="width: 100%;">' +
                   '<div class="row">' +
                     '<div class="col-sm-6">' +
@@ -318,6 +318,34 @@ define(
                   '</div>' +
                 '</div>' +
               '</div>' +
+              '<span id="csvFields">' +
+                '<div class="form-group bdqueimadas-form">' +
+                  '<label>Separador Decimal (Latitude e Longitude)</label>' +
+                  '<div class="input-group" style="width: 100%;">' +
+                    '<div class="row">' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="decimalSeparator" value="comma" checked> Vírgula (,)' +
+                      '</div>' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="decimalSeparator" value="point"> Ponto (.)' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="form-group bdqueimadas-form">' +
+                  '<label>Caractere Separador de Campos</label>' +
+                  '<div class="input-group" style="width: 100%;">' +
+                    '<div class="row">' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="fieldSeparator" value="semicolon" checked> Ponto e Vírgula (;)' +
+                      '</div>' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="fieldSeparator" value="comma"> Vírgula (,)' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</span>' +
             '</div>' +
           '</div>',
           buttons: [
@@ -415,8 +443,14 @@ define(
                                          "&bufferInternal=" + $('#buffer-internal').is(':checked') +
                                          "&bufferFive=" + $('#buffer-five').is(':checked') +
                                          "&bufferTen=" + $('#buffer-ten').is(':checked') +
-                                         "&encoding=" + $('input[name=encoding]:checked').val() +
-                                         "&t=" + existsDataToExport.token;
+                                         "&encoding=" + $('input[name=encoding]:checked').val();
+
+                        if($('#exportation-type').val() === 'csv') {
+                          exportLink += "&decimalSeparator=" + $('input[name=decimalSeparator]:checked').val() +
+                          "&fieldSeparator=" + $('input[name=fieldSeparator]:checked').val();
+                        }
+
+                        exportLink += "&t=" + existsDataToExport.token;
 
                         window.open(exportLink, '_blank');
 
@@ -547,6 +581,11 @@ define(
             $('#city-export').data('value', ui.item.value.id);
           }
         });
+      });
+
+      $(document).on('change', '#exportation-type', function() {
+        if($('#exportation-type').val() === 'csv') $('#csvFields').css('display', '');
+        else $('#csvFields').css('display', 'none');
       });
 
       // Filter Events

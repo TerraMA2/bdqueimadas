@@ -44,6 +44,8 @@ var ExportController = function(app) {
       if(request.query.states !== '') options.states = request.query.states;
       if(request.query.cities !== '') options.cities = request.query.cities;
       if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
+      if(request.query.decimalSeparator !== undefined && request.query.decimalSeparator !== null && request.query.decimalSeparator !== '') options.decimalSeparator = request.query.decimalSeparator;
+      if(request.query.fieldSeparator !== undefined && request.query.fieldSeparator !== null && request.query.fieldSeparator !== '') options.fieldSeparator = request.query.fieldSeparator;
       options.bufferInternal = (request.query.bufferInternal == "true");
       options.bufferFive = (request.query.bufferFive == "true");
       options.bufferTen = (request.query.bufferTen == "true");
@@ -62,7 +64,7 @@ var ExportController = function(app) {
             var connectionString = memberExportation.getPgConnectionString();
 
             if(request.query.format === 'csv') {
-              var separator = (options.encoding.toLowerCase() == "windows" ? "SEMICOLON" : "COMMA");
+              var separator = (options.fieldSeparator !== undefined && options.fieldSeparator == "semicolon" ? "SEMICOLON" : "COMMA");
 
               var csvPath = memberPath.join(__dirname, '../tmp/csv-' + buffer.toString('hex') + '.csv');
               var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures -lco SEPARATOR=" + separator;
