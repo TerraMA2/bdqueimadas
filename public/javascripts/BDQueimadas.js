@@ -320,7 +320,7 @@ define(
               '</div>' +
               '<span id="csvFields">' +
                 '<div class="form-group bdqueimadas-form">' +
-                  '<label>Separador Decimal (Latitude e Longitude)</label>' +
+                  '<label>Separador Decimal</label>' +
                   '<div class="input-group" style="width: 100%;">' +
                     '<div class="row">' +
                       '<div class="col-sm-6">' +

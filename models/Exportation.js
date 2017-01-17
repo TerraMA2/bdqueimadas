@@ -145,7 +145,12 @@ var Exportation = function() {
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
           columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
-        else if(options.decimalSeparator !== undefined && options.decimalSeparator == "comma" && (memberTablesConfig.Fires.LatitudeFieldName == memberAttributesTableConfig.Columns[i].Name || memberTablesConfig.Fires.LongitudeFieldName == memberAttributesTableConfig.Columns[i].Name))
+        else if(options.decimalSeparator !== undefined && options.decimalSeparator == "comma" && 
+        (memberTablesConfig.Fires.LatitudeFieldName == memberAttributesTableConfig.Columns[i].Name || 
+        memberTablesConfig.Fires.LongitudeFieldName == memberAttributesTableConfig.Columns[i].Name ||
+        memberTablesConfig.Fires.PrecipitationFieldName == memberAttributesTableConfig.Columns[i].Name ||
+        memberTablesConfig.Fires.RiskFieldName == memberAttributesTableConfig.Columns[i].Name ||
+        memberTablesConfig.Fires.DaysWithoutRainFieldName == memberAttributesTableConfig.Columns[i].Name))
           columns += "replace(" + memberAttributesTableConfig.Columns[i].Name + "::text, '.', ',') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
         else
           columns += memberAttributesTableConfig.Columns[i].Name + ", ";
