@@ -358,7 +358,7 @@ var ExportController = function(app) {
     if(tokens !== undefined) {
       for(var i = 0, count = tokens.length; i < count; i++) {
         if(tokens[0].token === token) {
-          if(getDateDifferenceInSeconds(tokens[0].date) <= 5) {
+          if(getDateDifferenceInSeconds(tokens[0].date) <= 60) {
             tokens.splice(i, 1);
             return true;
           } else {
