@@ -591,6 +591,9 @@ define(
       // Filter Events
 
       $('#filter-button').on('click', function() {
+        if(Filter.isInitialFilter())
+          Filter.setInitialFilterToFalse();
+
         var dates = Utils.getFilterDates(true, 0);
 
         if(dates !== null) {
@@ -1288,6 +1291,9 @@ define(
       });
 
       TerraMA2WebComponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
+        if(Filter.isInitialFilter())
+          Filter.setInitialFilterToFalse();
+
         Utils.getSocket().emit('dataByIntersectionRequest', {
           longitude: longitude,
           latitude: latitude,

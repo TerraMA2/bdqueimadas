@@ -14,6 +14,7 @@
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
  * @property {integer} memberLoadingCounter - Counter that indicates how many graphics are loading.
+ * @property {boolean} memberUseGraphicsFilter - Flag that indicates if the last filter used was the one present in the graphics page.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/Map', 'TerraMA2WebComponents'],
@@ -33,6 +34,8 @@ define(
     var memberCities = null;
     // Counter that indicates how many graphics are loading
     var memberLoadingCounter = 0;
+    // Flag that indicates if the last filter used was the one present in the graphics page
+    var memberUseGraphicsFilter = false;
 
     /**
      * Activates or deactivates the time series tool.
@@ -188,6 +191,8 @@ define(
      * @inner
      */
     var updateGraphics = function(useGraphicsFilter) {
+      memberUseGraphicsFilter = useGraphicsFilter;
+
       $('#filter-error-dates-graphics').text('');
 
       var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
@@ -202,13 +207,18 @@ define(
           var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
 
-          var satellites = useGraphicsFilter ?
-                           (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString()) :
-                           Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+          if(useGraphicsFilter) {
+            var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
+            var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
+          } else {
+            if(Filter.isInitialFilter()) {
+              var satellites = Filter.getInitialSatellites().toString();
+            } else {
+              var satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+            }
 
-          var biomes = useGraphicsFilter ?
-                       (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString()) :
-                       Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
+            var biomes = Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
+          }
 
           var risk = $('#risk-graphics').val();
 
@@ -508,17 +518,31 @@ define(
     var exportGraphicData = function(id) {
       $('#filter-error-dates-graphics').text('');
 
-      var dates = Utils.getFilterDates(true, 2);
-      var times = Utils.getFilterTimes(true, 2);
+      var dates = Utils.getFilterDates(true, (memberUseGraphicsFilter ? 2 : 0));
+      var times = Utils.getFilterTimes(true, (memberUseGraphicsFilter ? 2 : 0));
 
-      if(dates !== null) {
+      if(dates !== null && times !== null) {
         if(dates.length === 0) {
           $('#filter-error-dates-graphics').text('Datas inválidas!');
+        } else if(times.length === 0) {
+          $('#filter-error-dates-graphics').text('Horas inválidas!');
         } else {
           var dateTimeFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[0];
           var dateTimeTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + times[1];
-          var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
-          var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
+
+          if(memberUseGraphicsFilter) {
+            var satellites = (Utils.stringInArray($('#filter-satellite-graphics').val(), "all") ? '' : $('#filter-satellite-graphics').val().toString());
+            var biomes = (Utils.stringInArray($('#filter-biome-graphics').val(), "all") ? '' : $('#filter-biome-graphics').val().toString());
+          } else {
+            if(Filter.isInitialFilter()) {
+              var satellites = Filter.getInitialSatellites().toString();
+            } else {
+              var satellites = Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString();
+            }
+
+            var biomes = Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString();
+          }
+
           var risk = $('#risk-graphics').val();
           var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
 

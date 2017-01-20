@@ -22,6 +22,8 @@
  * @property {array} memberSpecialRegionsStates - Current special regions states.
  * @property {array} memberSpecialRegionsCities - Current special regions cities.
  * @property {object} memberProtectedArea - Current protected area.
+ * @property {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one.
+ * @property {array} memberInitialSatellites - Initial satellites.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -57,6 +59,10 @@ define(
     var memberSpecialRegionsCities = [];
     // Current protected area
     var memberProtectedArea = null;
+    // Flag that indicates if the current filter is the initial one
+    var memberInitialFilter = true;
+    // Initial satellites
+    var memberInitialSatellites = null;
 
     /**
      * Returns the initial date formatted with the received format.
@@ -372,6 +378,41 @@ define(
     };
 
     /**
+     * Returns the initial filter flag.
+     * @returns {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one
+     *
+     * @function isInitialFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var isInitialFilter = function() {
+      return memberInitialFilter;
+    };
+
+    /**
+     * Sets the initial filter flag to false.
+     *
+     * @function setInitialFilterToFalse
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setInitialFilterToFalse = function() {
+      memberInitialFilter = false;
+    };
+
+    /**
+     * Returns the array of initial satellites.
+     * @returns {array} memberInitialSatellites - Initial satellites
+     *
+     * @function getInitialSatellites
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getInitialSatellites = function() {
+      return memberInitialSatellites;
+    };
+
+    /**
      * Creates the date / time filter.
      * @returns {string} cql - Date / time cql filter
      *
@@ -484,10 +525,18 @@ define(
     var createSatellitesFilter = function() {
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + " in (";
 
-      var memberSatellitesLength = memberSatellites.length;
+      if(memberInitialFilter) {
+        var memberSatellitesLength = memberInitialSatellites.length;
 
-      for(var i = 0; i < memberSatellitesLength; i++) {
-        cql += "'" + memberSatellites[i] + "',";
+        for(var i = 0; i < memberSatellitesLength; i++) {
+          cql += "'" + memberInitialSatellites[i] + "',";
+        }
+      } else {
+        var memberSatellitesLength = memberSatellites.length;
+
+        for(var i = 0; i < memberSatellitesLength; i++) {
+          cql += "'" + memberSatellites[i] + "',";
+        }
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -691,7 +740,7 @@ define(
           if(Map.getLayers().length > 0) processLayers(Map.getLayers());
         }
 
-        if(!Utils.stringInArray(memberSatellites, "all")) {
+        if(!Utils.stringInArray(memberSatellites, "all") || memberInitialFilter) {
           cql += createSatellitesFilter() + " AND ";
         }
 
@@ -1127,11 +1176,11 @@ define(
         updateTimesToDefault();
         Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
 
-        setTimeout(function() {
-          $('#filter-satellite').val('all');
-          $('#filter-satellite-graphics').val('all');
-          $('#filter-satellite-attributes-table').val('all');
-        }, 4000);
+        memberInitialSatellites = initialSatellites;
+
+        $('#filter-satellite').val('all');
+        $('#filter-satellite-graphics').val('all');
+        $('#filter-satellite-attributes-table').val('all');
       });
     };
 
@@ -1162,6 +1211,9 @@ define(
       getSpecialRegionsCities: getSpecialRegionsCities,
       setProtectedArea: setProtectedArea,
       getProtectedArea: getProtectedArea,
+      isInitialFilter: isInitialFilter,
+      setInitialFilterToFalse: setInitialFilterToFalse,
+      getInitialSatellites: getInitialSatellites,
       updateDates: updateDates,
       updateTimes: updateTimes,
       updateDatesToCurrent: updateDatesToCurrent,

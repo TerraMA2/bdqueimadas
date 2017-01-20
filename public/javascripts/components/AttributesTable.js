@@ -169,7 +169,13 @@ define(
 
       memberDateTimeFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat) + ' ' + Filter.getTimeFrom();
       memberDateTimeTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) + ' ' + Filter.getTimeTo();
-      memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+
+      if(Filter.isInitialFilter()) {
+        memberSatellites = Filter.getInitialSatellites().toString();
+      } else {
+        memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+      }
+
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
       memberProtectedArea = Filter.getProtectedArea();
 
@@ -250,7 +256,12 @@ define(
               memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());
               memberBiomes = (Utils.stringInArray($('#filter-biome-attributes-table').val(), "all") ? '' : $('#filter-biome-attributes-table').val().toString());
             } else {
-              memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+              if(Filter.isInitialFilter()) {
+                memberSatellites = Filter.getInitialSatellites().toString();
+              } else {
+                memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+              }
+
               memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
 
               $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));

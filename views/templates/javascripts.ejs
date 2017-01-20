@@ -48,6 +48,19 @@
 <script type="text/javascript">
   var configurations = JSON.parse('<%- JSON.stringify(configurations) %>');
   var BASE_URL = '<%- BASE_URL %>';
+
+  <%
+  var satellites = "";
+
+  for(var i = 0, satellitesLength = configurations.filterConfigurations.Satellites.length; i < satellitesLength; i++)
+    if(configurations.filterConfigurations.Satellites[i].Current)
+      if(configurations.filterConfigurations.Satellites[i].Selected)
+        satellites += "'" + configurations.filterConfigurations.Satellites[i].Id + "', ";
+
+  satellites = satellites.slice(0, -2);
+  %>
+
+  var initialSatellites = [<%- satellites %>];
 </script>
 <!-- BDQueimadas / RequireJS 2.2.0 -->
 <script type="text/javascript" src="<%- BASE_URL %>dist/BDQueimadas.min.js"></script>
