@@ -282,7 +282,7 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + ") as extent from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
             params = [continent];
 
         // Execution of the query
@@ -354,7 +354,7 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." +
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.Countries.Schema + "." +
         memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
 
         for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
@@ -393,7 +393,7 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." +
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.States.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.States.Schema + "." +
         memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
         for(var i = 0, statesLength = states.length; i < statesLength; i++) {
@@ -432,7 +432,7 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent from " + memberTablesConfig.SpecialRegions.Schema + "." +
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.SpecialRegions.Schema + "." +
         memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
 
         for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
@@ -473,7 +473,7 @@ var Filter = function() {
 
         // Creation of the query
         var query = "WITH all_geoms AS(" +
-        "SELECT ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent FROM " + memberTablesConfig.States.Schema + "." +
+        "SELECT ST_Expand(ST_Extent(" + memberTablesConfig.States.GeometryFieldName + "), 2) as extent FROM " + memberTablesConfig.States.Schema + "." +
         memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
         for(var i = 0, statesLength = states.length; i < statesLength; i++) {
@@ -482,7 +482,7 @@ var Filter = function() {
         }
 
         query = query.substring(0, (query.length - 1)) + ") UNION ALL " +
-        "SELECT ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." +
+        "SELECT ST_Expand(ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + "), 2) as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." +
         memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
 
         for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
@@ -490,7 +490,7 @@ var Filter = function() {
           params.push(specialRegions[i]);
         }
 
-        query = query.substring(0, (query.length - 1)) + ")) SELECT ST_Extent(extent) as extent FROM all_geoms";
+        query = query.substring(0, (query.length - 1)) + ")) SELECT ST_Expand(ST_Extent(extent), 2) as extent FROM all_geoms";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -535,7 +535,7 @@ var Filter = function() {
         }
 
         // Creation of the query
-        var query = "select ST_Extent(" + geom + ") as extent from " + schemaAndTable + " where " + id + " = $1;";
+        var query = "select ST_Expand(ST_Extent(" + geom + "), 2) as extent from " + schemaAndTable + " where " + id + " = $1;";
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
@@ -565,7 +565,7 @@ var Filter = function() {
     pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Cities.GeometryFieldName + ") as extent from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " = $1;";
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Cities.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " = $1;";
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
