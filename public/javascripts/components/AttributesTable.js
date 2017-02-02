@@ -272,6 +272,8 @@ define(
                                   ($('#pas-attributes-table').data('value') !== undefined && $('#pas-attributes-table').data('value') !== '' ? JSON.parse($('#pas-attributes-table').data('value')) : null) :
                                   Filter.getProtectedArea();
 
+            Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+
             getSpatialFilterData(function(continent, countries, states, cities) {
               memberContinent = continent;
               memberCountries = countries;

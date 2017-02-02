@@ -773,7 +773,7 @@ define(
           cql = cql.substring(0, cql.length - 5);
         }
 
-        updateSatellitesSelect();
+        updateSatellitesSelect(0);
         TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
       }
 
@@ -1012,14 +1012,32 @@ define(
 
     /**
      * Updates the satellites HTML select.
+     * @param {integer} filter - Number that indicates which filter fields should be used: 0 - main filter, 1 - attributes table filter, 2 - graphics filter
+     * @param {date} filterDateFrom - Filter date from
+     * @param {date} filterDateTo - Filter date to
      *
-     * @private
      * @function updateSatellitesSelect
      * @memberof Filter(2)
      * @inner
      */
-    var updateSatellitesSelect = function() {
-      var selectedOptions = $('#filter-satellite').val();
+    var updateSatellitesSelect = function(filter, filterDateFrom, filterDateTo) {
+      var filterFieldsExtention = '';
+
+      if(filter === 1) {
+        filterFieldsExtention = '-attributes-table';
+      } else if(filter === 2) {
+        filterFieldsExtention = '-graphics';
+      }
+
+      var dateFrom = memberDateFrom;
+      var dateTo = memberDateTo;
+
+      if(filterFieldsExtention !== '') {
+        dateFrom = filterDateFrom;
+        dateTo = filterDateTo;
+      }
+
+      var selectedOptions = (filterFieldsExtention !== '' ? $('#filter-satellite' + filterFieldsExtention).val() : $('#filter-satellite').val());
 
       var allOption = Utils.stringInArray(selectedOptions, "all") ? "<option value=\"all\" selected>TODOS</option>" : "<option value=\"all\">TODOS</option>";
       var referenceSatellite = "";
@@ -1053,15 +1071,15 @@ define(
           satelliteReferenceEnd = new Date(parseInt(satelliteReferenceEndArray[0]), parseInt(satelliteReferenceEndArray[1]) - 1, parseInt(satelliteReferenceEndArray[2]), 0, 0, 0);
         }
 
-        if((memberDateFrom <= satelliteBegin && memberDateTo >= satelliteEnd) || 
-          (memberDateFrom >= satelliteBegin && memberDateTo <= satelliteEnd) || 
-          (memberDateFrom <= satelliteBegin && memberDateTo >= satelliteBegin) || 
-          (memberDateFrom <= satelliteEnd && memberDateTo >= satelliteEnd)) {
+        if((dateFrom <= satelliteBegin && dateTo >= satelliteEnd) || 
+          (dateFrom >= satelliteBegin && dateTo <= satelliteEnd) || 
+          (dateFrom <= satelliteBegin && dateTo >= satelliteBegin) || 
+          (dateFrom <= satelliteEnd && dateTo >= satelliteEnd)) {
 
-          if((memberDateFrom <= satelliteReferenceBegin && memberDateTo >= satelliteReferenceEnd) || 
-            (memberDateFrom >= satelliteReferenceBegin && memberDateTo <= satelliteReferenceEnd) || 
-            (memberDateFrom <= satelliteReferenceBegin && memberDateTo >= satelliteReferenceBegin) || 
-            (memberDateFrom <= satelliteReferenceEnd && memberDateTo >= satelliteReferenceEnd)) {
+          if((dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceEnd) || 
+            (dateFrom >= satelliteReferenceBegin && dateTo <= satelliteReferenceEnd) || 
+            (dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceBegin) || 
+            (dateFrom <= satelliteReferenceEnd && dateTo >= satelliteReferenceEnd)) {
             if(Utils.stringInArray(selectedOptions, satellitesList[i].Id)) {
               referenceSatellite += "<option value=\"" + satellitesList[i].Id + "\" selected>Refer. (" + satellitesList[i].Name + ")</option>";
             } else {
@@ -1079,7 +1097,13 @@ define(
         }
       }
 
-      $('#filter-satellite').empty().html(allOption + referenceSatellite + elem);
+      if(filterFieldsExtention !== '')
+        $('#filter-satellite' + filterFieldsExtention).empty().html(allOption + referenceSatellite + elem);
+      else {
+        $('#filter-satellite').empty().html(allOption + referenceSatellite + elem);
+        $('#filter-satellite-attributes-table').empty().html(allOption + referenceSatellite + elem);
+        $('#filter-satellite-graphics').empty().html(allOption + referenceSatellite + elem);
+      }
     };
 
     /**
@@ -1244,6 +1268,7 @@ define(
       createSpecialRegionsArrays: createSpecialRegionsArrays,
       checkFiresCount: checkFiresCount,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
+      updateSatellitesSelect: updateSatellitesSelect,
       selectContinentItem: selectContinentItem,
       selectCountries: selectCountries,
       selectStates: selectStates,

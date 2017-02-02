@@ -229,6 +229,8 @@ define(
             $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
           }
 
+          Filter.updateSatellitesSelect(2, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+
           getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
             memberContinent = continent;
             memberAllCountries = allCountries;
