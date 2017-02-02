@@ -732,11 +732,16 @@ define(
         memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
+          //var updateLayersTime = ((getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom) || (getFormattedDateTo("YYYY/MM/DD") != filterDateTo));
+
+          //if(Map.getLayers().length > 0 && (getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom || getFormattedDateTo("YYYY/MM/DD") != filterDateTo))
+
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
           updateTimes(filterTimeFrom, filterTimeTo);
 
           cql += createDateTimeFilter() + " AND ";
 
+          //if(Map.getLayers().length > 0) processLayers(Map.getLayers(), updateLayersTime);
           if(Map.getLayers().length > 0) processLayers(Map.getLayers());
         }
 
@@ -863,9 +868,19 @@ define(
      * @memberof Filter(2)
      * @inner
      */
+    //var processLayers = function(layers, updateLayersTime) {
     var processLayers = function(layers) {
       for(var i = 0, layersLength = layers.length; i < layersLength; i++) {
+        //if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
         if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null) Map.updateLayerTime(layers[i]);
+
+
+        //if(Map.getLayers().length > 0 && (getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom || getFormattedDateTo("YYYY/MM/DD") != filterDateTo))
+
+        //console.log(Utils.getFilterDates(true, 0));
+        //console.log(getFormattedDateFrom("YYYY/MM/DD"));
+        //console.log(getFormattedDateTo("YYYY/MM/DD"));
+
 
         if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
           if(memberContinent !== null) {
@@ -1038,8 +1053,15 @@ define(
           satelliteReferenceEnd = new Date(parseInt(satelliteReferenceEndArray[0]), parseInt(satelliteReferenceEndArray[1]) - 1, parseInt(satelliteReferenceEndArray[2]), 0, 0, 0);
         }
 
-        if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satellitesList[i].Current)) {
-          if((satelliteReferenceBegin <= memberDateFrom && satelliteReferenceEnd >= memberDateTo) || (satelliteReferenceBegin <= memberDateFrom && satellitesList[i].ReferenceCurrent)) {
+        if((memberDateFrom <= satelliteBegin && memberDateTo >= satelliteEnd) || 
+          (memberDateFrom >= satelliteBegin && memberDateTo <= satelliteEnd) || 
+          (memberDateFrom <= satelliteBegin && memberDateTo >= satelliteBegin) || 
+          (memberDateFrom <= satelliteEnd && memberDateTo >= satelliteEnd)) {
+
+          if((memberDateFrom <= satelliteReferenceBegin && memberDateTo >= satelliteReferenceEnd) || 
+            (memberDateFrom >= satelliteReferenceBegin && memberDateTo <= satelliteReferenceEnd) || 
+            (memberDateFrom <= satelliteReferenceBegin && memberDateTo >= satelliteReferenceBegin) || 
+            (memberDateFrom <= satelliteReferenceEnd && memberDateTo >= satelliteReferenceEnd)) {
             if(Utils.stringInArray(selectedOptions, satellitesList[i].Id)) {
               referenceSatellite += "<option value=\"" + satellitesList[i].Id + "\" selected>Refer. (" + satellitesList[i].Name + ")</option>";
             } else {
