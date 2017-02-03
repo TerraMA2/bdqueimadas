@@ -256,6 +256,7 @@ define(
               '<span class="help-block component-filter-error" id="filter-error-export-aps"></span>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
+                '<label style="width: 100%; text-align: center; margin-bottom: 4px !important;">Obs: dados após Jun/1998</label>' +
                 '<div class="float-left div-date-filter-export">' +
                   '<label for="filter-date-from-export">Data / Hora Início - TMG (Z)</label>' +
                   '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
