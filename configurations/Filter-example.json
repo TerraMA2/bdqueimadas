@@ -98,6 +98,18 @@
       "MaxResolution": 0.080
     }
   },
+  "Extents": {
+    "Continents": {
+      "4": [-190, 1.6823687752355312, -4.5, 86.81763122476447]
+    },
+    "Countries": {
+      "244": [-195, 14.02086137281292, -60, 75.97913862718708]
+    },
+    "States": {},
+    "SpecialRegions": {},
+    "ProtectedAreas": {},
+    "Cities": {}
+  },
   "Satellites": [
     {
       "Id": "NOAA-12",

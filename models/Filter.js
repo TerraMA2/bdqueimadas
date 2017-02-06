@@ -277,6 +277,11 @@ var Filter = function() {
    * @inner
    */
   this.getContinentExtent = function(pgPool, continent, callback) {
+    if(memberFilterConfig.Extents.Continents[continent] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.Continents[continent].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -347,6 +352,30 @@ var Filter = function() {
    * @inner
    */
   this.getCountriesExtent = function(pgPool, countries, callback) {
+    if(countries.length === 1 && memberFilterConfig.Extents.Countries[countries[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.Countries[countries[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var countriesWithExtent = [];
+    var countriesWithoutExtent = [];
+
+    for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
+      if(memberFilterConfig.Extents.Countries[countries[i]] !== undefined)
+        countriesWithExtent.push(countries[i]);
+      else
+        countriesWithoutExtent.push(countries[i]);
+    }
+
+    var unionGeoms = "";
+
+    if(countriesWithExtent.length > 0) {
+      for(var i = 0, countriesWithExtentLength = countriesWithExtent.length; i < countriesWithExtentLength; i++)
+        unionGeoms += "ST_MakeEnvelope(" + memberFilterConfig.Extents.Countries[countriesWithExtent[i]] + ", 4326), ";
+
+      unionGeoms = unionGeoms.substring(0, (unionGeoms.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -354,15 +383,24 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.Countries.Schema + "." +
-        memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
+        if(countriesWithoutExtent.length > 0) {
+          var query = "select ST_Expand(ST_Extent(";
 
-        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(countries[i]);
-        }
+          if(unionGeoms !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.Countries.GeometryFieldName + ", " + unionGeoms + "])";
+          else
+            query += memberTablesConfig.Countries.GeometryFieldName;
 
-        query = query.substring(0, (query.length - 1)) + ")";
+          query += "), 2) as extent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
+
+          for(var i = 0, countriesWithoutExtentLength = countriesWithoutExtent.length; i < countriesWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countriesWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeoms + "])), 2) as extent";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -386,6 +424,30 @@ var Filter = function() {
    * @inner
    */
   this.getStatesExtent = function(pgPool, states, callback) {
+    if(states.length === 1 && memberFilterConfig.Extents.States[states[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.States[states[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var statesWithExtent = [];
+    var statesWithoutExtent = [];
+
+    for(var i = 0, statesLength = states.length; i < statesLength; i++) {
+      if(memberFilterConfig.Extents.States[states[i]] !== undefined)
+        statesWithExtent.push(states[i]);
+      else
+        statesWithoutExtent.push(states[i]);
+    }
+
+    var unionGeoms = "";
+
+    if(statesWithExtent.length > 0) {
+      for(var i = 0, statesWithExtentLength = statesWithExtent.length; i < statesWithExtentLength; i++)
+        unionGeoms += "ST_MakeEnvelope(" + memberFilterConfig.Extents.States[statesWithExtent[i]] + ", 4326), ";
+
+      unionGeoms = unionGeoms.substring(0, (unionGeoms.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -393,15 +455,24 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.States.GeometryFieldName + "), 0.5) as extent from " + memberTablesConfig.States.Schema + "." +
-        memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+        if(statesWithoutExtent.length > 0) {
+          var query = "select ST_Expand(ST_Extent(";
 
-        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(states[i]);
-        }
+          if(unionGeoms !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.States.GeometryFieldName + ", " + unionGeoms + "])";
+          else
+            query += memberTablesConfig.States.GeometryFieldName;
 
-        query = query.substring(0, (query.length - 1)) + ")";
+          query += "), 0.5) as extent from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+
+          for(var i = 0, statesWithoutExtentLength = statesWithoutExtent.length; i < statesWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeoms + "])), 2) as extent";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -425,6 +496,30 @@ var Filter = function() {
    * @inner
    */
   this.getSpecialRegionsExtent = function(pgPool, specialRegions, callback) {
+    if(specialRegions.length === 1 && memberFilterConfig.Extents.SpecialRegions[specialRegions[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.SpecialRegions[specialRegions[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var specialRegionsWithExtent = [];
+    var specialRegionsWithoutExtent = [];
+
+    for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
+      if(memberFilterConfig.Extents.SpecialRegions[specialRegions[i]] !== undefined)
+        specialRegionsWithExtent.push(specialRegions[i]);
+      else
+        specialRegionsWithoutExtent.push(specialRegions[i]);
+    }
+
+    var unionGeoms = "";
+
+    if(specialRegionsWithExtent.length > 0) {
+      for(var i = 0, specialRegionsWithExtentLength = specialRegionsWithExtent.length; i < specialRegionsWithExtentLength; i++)
+        unionGeoms += "ST_MakeEnvelope(" + memberFilterConfig.Extents.SpecialRegions[specialRegionsWithExtent[i]] + ", 4326), ";
+
+      unionGeoms = unionGeoms.substring(0, (unionGeoms.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -432,15 +527,24 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + "), 0.5) as extent from " + memberTablesConfig.SpecialRegions.Schema + "." +
-        memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+        if(specialRegionsWithoutExtent.length > 0) {
+          var query = "select ST_Expand(ST_Extent(";
 
-        for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(specialRegions[i]);
-        }
+          if(unionGeoms !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.SpecialRegions.GeometryFieldName + ", " + unionGeoms + "])";
+          else
+            query += memberTablesConfig.SpecialRegions.GeometryFieldName;
 
-        query = query.substring(0, (query.length - 1)) + ")";
+          query += "), 0.5) as extent from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+          for(var i = 0, specialRegionsWithoutExtentLength = specialRegionsWithoutExtent.length; i < specialRegionsWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(specialRegionsWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeoms + "])), 2) as extent";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -465,6 +569,54 @@ var Filter = function() {
    * @inner
    */
   this.getStatesAndSpecialRegionsExtent = function(pgPool, states, specialRegions, callback) {
+    if(states.length === 1 && memberFilterConfig.Extents.States[states[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.States[states[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    if(specialRegions.length === 1 && memberFilterConfig.Extents.SpecialRegions[specialRegions[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.SpecialRegions[specialRegions[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var statesWithExtent = [];
+    var statesWithoutExtent = [];
+
+    for(var i = 0, statesLength = states.length; i < statesLength; i++) {
+      if(memberFilterConfig.Extents.States[states[i]] !== undefined)
+        statesWithExtent.push(states[i]);
+      else
+        statesWithoutExtent.push(states[i]);
+    }
+
+    var unionGeomsStates = "";
+
+    if(statesWithExtent.length > 0) {
+      for(var i = 0, statesWithExtentLength = statesWithExtent.length; i < statesWithExtentLength; i++)
+        unionGeomsStates += "ST_MakeEnvelope(" + memberFilterConfig.Extents.States[statesWithExtent[i]] + ", 4326), ";
+
+      unionGeomsStates = unionGeomsStates.substring(0, (unionGeomsStates.length - 2));
+    }
+
+    var specialRegionsWithExtent = [];
+    var specialRegionsWithoutExtent = [];
+
+    for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
+      if(memberFilterConfig.Extents.SpecialRegions[specialRegions[i]] !== undefined)
+        specialRegionsWithExtent.push(specialRegions[i]);
+      else
+        specialRegionsWithoutExtent.push(specialRegions[i]);
+    }
+
+    var unionGeomsSpecialRegions = "";
+
+    if(specialRegionsWithExtent.length > 0) {
+      for(var i = 0, specialRegionsWithExtentLength = specialRegionsWithExtent.length; i < specialRegionsWithExtentLength; i++)
+        unionGeomsSpecialRegions += "ST_MakeEnvelope(" + memberFilterConfig.Extents.SpecialRegions[specialRegionsWithExtent[i]] + ", 4326), ";
+
+      unionGeomsSpecialRegions = unionGeomsSpecialRegions.substring(0, (unionGeomsSpecialRegions.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -472,25 +624,49 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "WITH all_geoms AS(" +
-        "SELECT ST_Expand(ST_Extent(" + memberTablesConfig.States.GeometryFieldName + "), 0.5) as extent FROM " + memberTablesConfig.States.Schema + "." +
-        memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+        var query = "WITH all_geoms AS(";
 
-        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(states[i]);
-        }
+        if(statesWithoutExtent.length > 0) {
+          query += "SELECT ST_Expand(ST_Extent(";
 
-        query = query.substring(0, (query.length - 1)) + ") UNION ALL " +
-        "SELECT ST_Expand(ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + "), 0.5) as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." +
-        memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+          if(unionGeomsStates !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.States.GeometryFieldName + ", " + unionGeomsStates + "])";
+          else
+            query += memberTablesConfig.States.GeometryFieldName;
 
-        for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(specialRegions[i]);
-        }
+          query += "), 0.5) as extent FROM " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
-        query = query.substring(0, (query.length - 1)) + ")) SELECT ST_Expand(ST_Extent(extent), 0.5) as extent FROM all_geoms";
+          for(var i = 0, statesWithoutExtentLength = statesWithoutExtent.length; i < statesWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeomsStates + "])), 2) as extent";
+
+        query += " UNION ALL ";
+
+        if(specialRegionsWithoutExtent.length > 0) {
+          query += "SELECT ST_Expand(ST_Extent(";
+
+          if(unionGeomsSpecialRegions !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.SpecialRegions.GeometryFieldName + ", " + unionGeomsSpecialRegions + "])";
+          else
+            query += memberTablesConfig.SpecialRegions.GeometryFieldName;
+
+          query += "), 0.5) as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+          for(var i = 0, specialRegionsWithoutExtentLength = specialRegionsWithoutExtent.length; i < specialRegionsWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(specialRegionsWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeomsSpecialRegions + "])), 2) as extent";
+
+        query += ") SELECT ST_Expand(ST_Extent(extent), 0.5) as extent FROM all_geoms";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -515,6 +691,11 @@ var Filter = function() {
    * @inner
    */
   this.getProtectedAreaExtent = function(pgPool, id, type, callback) {
+    if(memberFilterConfig.Extents.ProtectedAreas[type][id] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.ProtectedAreas[type][id].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
     var parameters = [parseInt(id)];
 
     // Connection with the PostgreSQL database
@@ -559,6 +740,11 @@ var Filter = function() {
    * @inner
    */
   this.getCityExtent = function(pgPool, id, callback) {
+    if(memberFilterConfig.Extents.Cities[id] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.Cities[id].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
     var parameters = [id];
 
     // Connection with the PostgreSQL database
