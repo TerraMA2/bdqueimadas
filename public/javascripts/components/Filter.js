@@ -872,7 +872,7 @@ define(
     var processLayers = function(layers) {
       for(var i = 0, layersLength = layers.length; i < layersLength; i++) {
         //if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
-        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null) Map.updateLayerTime(layers[i]);
+        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && layers[i].Params.Time.match("{{(.*)}}") !== null) Map.updateLayerTime(layers[i]);
 
 
         //if(Map.getLayers().length > 0 && (getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom || getFormattedDateTo("YYYY/MM/DD") != filterDateTo))

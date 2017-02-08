@@ -214,6 +214,9 @@ define(
           sourceParams[layer.Params.TimeDay] = ('0' + layerTimeDate.getDate()).slice(-2);
         }
 
+        if(layer.Params !== undefined && layer.Params.Styles !== undefined)
+          sourceParams['STYLES'] = layer.Params.Styles;
+
         var params = {
           minResolution: layer.Params.MinResolution,
           maxResolution: layer.Params.MaxResolution,
@@ -664,58 +667,56 @@ define(
      * @inner
      */
     var updateLayerTime = function(layer) {
-      //if(layer.Id != "Prodes:prodes_desflorestamento") {
-        var currentDate = moment.utc();
-        var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Params.Time);
-        var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time));
-        var useTodaysImage = true;
+      var currentDate = moment.utc();
+      var layerTimeFormat = Utils.getFormatFromStringWithDatePattern(layer.Params.Time);
+      var layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time));
+      var useTodaysImage = true;
 
-        if(layer.Params.MinTimeForTodaysImage !== undefined && layer.Params.MinTimeForTodaysImage !== null) {
-          layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time) + " " + layer.Params.MinTimeForTodaysImage, layerTimeFormat + " HH:mm:ss");
+      if(layer.Params.MinTimeForTodaysImage !== undefined && layer.Params.MinTimeForTodaysImage !== null) {
+        layerMinTime = moment(Utils.processStringWithDatePattern(layer.Params.Time) + " " + layer.Params.MinTimeForTodaysImage, layerTimeFormat + " HH:mm:ss");
 
-          if(Utils.processStringWithDatePattern(layer.Params.Time) === currentDate.format(layerTimeFormat))
-            useTodaysImage = currentDate.isAfter(layerMinTime);
-        }
+        if(Utils.processStringWithDatePattern(layer.Params.Time) === currentDate.format(layerTimeFormat))
+          useTodaysImage = currentDate.isAfter(layerMinTime);
+      }
 
-        var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
+      var layerName = Utils.applyLayerTimeUpdateButton(layer.Name, layer.Id);
 
-        if(!useTodaysImage) {
-          layerMinTime = layerMinTime.subtract(1, "days");
+      if(!useTodaysImage) {
+        layerMinTime = layerMinTime.subtract(1, "days");
 
-          layer.Params.Time = layerMinTime.format(layerTimeFormat);
-          layerName = Utils.replaceDatePatternWithString(layerName, layerMinTime.format('YYYY/MM/DD'));
-        } else {
-          layerName = Utils.processStringWithDatePattern(layerName);
-        }
+        layer.Params.Time = layerMinTime.format(layerTimeFormat);
+        layerName = Utils.replaceDatePatternWithString(layerName, layerMinTime.format('YYYY/MM/DD'));
+      } else {
+        layerName = Utils.processStringWithDatePattern(layerName);
+      }
 
-        if(layer.Wmts) {
-          var options = {
-            url: layer.Params.Url,
-            format: layer.Params.Format,
-            matrixSet: layer.Params.MatrixSet,
-            tileGrid: layer.Params.TileGrid
-          };
+      if(layer.Wmts) {
+        var options = {
+          url: layer.Params.Url,
+          format: layer.Params.Format,
+          matrixSet: layer.Params.MatrixSet,
+          tileGrid: layer.Params.TileGrid
+        };
 
-          TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time), options);
-        } else {
-          TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time));
-        }
+        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time), options);
+      } else {
+        TerraMA2WebComponents.MapDisplay.updateLayerTime(layer.Id, Utils.processStringWithDatePattern(layer.Params.Time));
+      }
 
-        if(layer.Params !== undefined && layer.Params.Time !== undefined && layer.Params.TimeYear !== undefined && layer.Params.TimeMonth !== undefined && layer.Params.TimeDay !== undefined) {
-          var sourceParams = {};
+      if(layer.Params !== undefined && layer.Params.Time !== undefined && layer.Params.TimeYear !== undefined && layer.Params.TimeMonth !== undefined && layer.Params.TimeDay !== undefined) {
+        var sourceParams = {};
 
-          var layerTimeDate = Utils.stringToDate(Utils.processStringWithDatePattern(layer.Params.Time), 'YYYY-MM-DD');
+        var layerTimeDate = Utils.stringToDate(Utils.processStringWithDatePattern(layer.Params.Time), 'YYYY-MM-DD');
 
-          sourceParams[layer.Params.TimeYear] = layerTimeDate.getFullYear().toString();
-          sourceParams[layer.Params.TimeMonth] = ('0' + (layerTimeDate.getMonth() + 1)).slice(-2);
-          sourceParams[layer.Params.TimeDay] = ('0' + layerTimeDate.getDate()).slice(-2);
+        sourceParams[layer.Params.TimeYear] = layerTimeDate.getFullYear().toString();
+        sourceParams[layer.Params.TimeMonth] = ('0' + (layerTimeDate.getMonth() + 1)).slice(-2);
+        sourceParams[layer.Params.TimeDay] = ('0' + layerTimeDate.getDate()).slice(-2);
 
-          TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, sourceParams, true);
-        }
+        TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, sourceParams, true);
+      }
 
-        $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
-        TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
-      //}
+      $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
+      TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
     };
 
     /**
