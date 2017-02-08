@@ -776,9 +776,10 @@ define(
       $('#pas').on('change', function() {
         if($('#pas').val().length === 0) {
           $('#pas').val('');
-          $('#pas-attributes-table').val('');
-
           Filter.setProtectedArea(null);
+
+          $('#pas-attributes-table').val('');
+          $('#pas-attributes-table').data('value', '');
 
           $('#filter-button').click();
         }
@@ -1695,16 +1696,22 @@ define(
         success: function(data) {
           if(data.length > 0) {
             $('#pas').val(data[0].label);
-            $('#pas-attributes-table').val(data[0].label);
-
             Filter.setProtectedArea({
               id: data[0].value.id,
               type: data[0].value.type
             });
 
+            $('#pas-attributes-table').val(data[0].label);
+            $('#pas-attributes-table').data('value', JSON.stringify({
+              id: data[0].value.id,
+              type: data[0].value.type
+            }));
+
             Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
           } else {
             Filter.setProtectedArea(null);
+
+            $('#pas-attributes-table').data('value', '');
 
             if(showAlerts) {
               vex.dialog.alert({
@@ -2003,12 +2010,16 @@ define(
           event.preventDefault();
 
           $('#pas').val(ui.item.label);
-          $('#pas-attributes-table').val(ui.item.label);
-
           Filter.setProtectedArea({
             id: ui.item.value.id,
             type: ui.item.value.type
           });
+
+          $('#pas-attributes-table').val(ui.item.label);
+          $('#pas-attributes-table').data('value', JSON.stringify({
+            id: ui.item.value.id,
+            type: ui.item.value.type
+          }));
 
           Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
         }
