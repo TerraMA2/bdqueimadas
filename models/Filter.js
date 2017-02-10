@@ -690,13 +690,13 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getProtectedAreaExtent = function(pgPool, id, type, callback) {
-    if(memberFilterConfig.Extents.ProtectedAreas[type][id] !== undefined) {
-      var confExtent = memberFilterConfig.Extents.ProtectedAreas[type][id].split(',');
+  this.getProtectedAreaExtent = function(pgPool, id, ngo, type, callback) {
+    if(memberFilterConfig.Extents.ProtectedAreas[type][id.toString() + ngo] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.ProtectedAreas[type][id.toString() + ngo].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
     }
 
-    var parameters = [parseInt(id)];
+    var parameters = [id.toString() + ngo];
 
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
@@ -704,19 +704,22 @@ var Filter = function() {
         if(type === 'UCE') {
           var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
           var geom = memberTablesConfig.UCE.GeometryFieldName;
-          var id = memberTablesConfig.UCE.IdFieldName;
+          var idField = memberTablesConfig.UCE.IdFieldName;
+          var ngoField = memberTablesConfig.UCE.NGOFieldName;
         } else if(type === 'UCF') {
           var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
           var geom = memberTablesConfig.UCF.GeometryFieldName;
-          var id = memberTablesConfig.UCF.IdFieldName;
+          var idField = memberTablesConfig.UCF.IdFieldName;
+          var ngoField = memberTablesConfig.UCF.NGOFieldName;
         } else {
           var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
           var geom = memberTablesConfig.TI.GeometryFieldName;
-          var id = memberTablesConfig.TI.IdFieldName;
+          var idField = memberTablesConfig.TI.IdFieldName;
+          var ngoField = memberTablesConfig.TI.NGOFieldName;
         }
 
         // Creation of the query
-        var query = "select ST_Expand(ST_Extent(" + geom + "), 0.5) as extent from " + schemaAndTable + " where " + id + " = $1;";
+        var query = "select ST_Expand(ST_Extent(" + geom + "), 0.5) as extent from " + schemaAndTable + " where concat(" + idField + ", " + ngoField + ") = $1;";
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
@@ -1033,15 +1036,15 @@ var Filter = function() {
       if(!err) {
         var parameters = [];
 
-        var tiQuery = "select " + memberTablesConfig.TI.IdFieldName + " as id, upper(" + memberTablesConfig.TI.NameFieldName + ") as name, 'TI' as type " +
+        var tiQuery = "select " + memberTablesConfig.TI.IdFieldName + " as id, " + memberTablesConfig.TI.NGOFieldName + " as ngo, upper(" + memberTablesConfig.TI.NameFieldName + ") as name, 'TI' as type " +
         "from " + memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName +
         " where unaccent(upper(" + memberTablesConfig.TI.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
 
-        var uceQuery = "select " + memberTablesConfig.UCE.IdFieldName + " as id, upper(" + memberTablesConfig.UCE.NameFieldName + ") as name, 'UCE' as type " +
+        var uceQuery = "select " + memberTablesConfig.UCE.IdFieldName + " as id, " + memberTablesConfig.UCE.NGOFieldName + " as ngo, upper(" + memberTablesConfig.UCE.NameFieldName + ") as name, 'UCE' as type " +
         "from " + memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName +
         " where unaccent(upper(" + memberTablesConfig.UCE.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
 
-        var ucfQuery = "select " + memberTablesConfig.UCF.IdFieldName + " as id, upper(" + memberTablesConfig.UCF.NameFieldName + ") as name, 'UCF' as type " +
+        var ucfQuery = "select " + memberTablesConfig.UCF.IdFieldName + " as id, " + memberTablesConfig.UCF.NGOFieldName + " as ngo, upper(" + memberTablesConfig.UCF.NameFieldName + ") as name, 'UCF' as type " +
         "from " + memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName +
         " where unaccent(upper(" + memberTablesConfig.UCF.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
 

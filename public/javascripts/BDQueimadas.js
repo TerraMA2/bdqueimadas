@@ -181,7 +181,8 @@ define(
         $('.component-filter-content').css('max-height', ($(window).outerHeight() - 212) + 'px');
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
-
+/*'<input style="float: left;" type="checkbox" id="industrial-fires-export">' +
+              '<label for="industrial-fires-export" style="float: left; margin: 0.5px 0 0 2px !important">Focos Industriais</label>' +*/
       // Export click event
       $('#export').on('click', function() {
         vex.dialog.alert({
@@ -292,6 +293,7 @@ define(
                 '</div>' +
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-biome"></span>' +
+
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
@@ -551,6 +553,7 @@ define(
 
             $('#pas-export').data('value', JSON.stringify({
               id: ui.item.value.id,
+              ngo: ui.item.value.ngo,
               type: ui.item.value.type
             }));
           }
@@ -799,6 +802,7 @@ define(
 
               $('#pas-attributes-table').data('value', JSON.stringify({
                 id: data[0].value.id,
+                ngo: data[0].value.ngo,
                 type: data[0].value.type
               }));
 
@@ -846,6 +850,7 @@ define(
 
               $('#pas-export').data('value', JSON.stringify({
                 id: data[0].value.id,
+                ngo: data[0].value.ngo,
                 type: data[0].value.type
               }));
             } else {
@@ -1698,16 +1703,18 @@ define(
             $('#pas').val(data[0].label);
             Filter.setProtectedArea({
               id: data[0].value.id,
+              ngo: data[0].value.ngo,
               type: data[0].value.type
             });
 
             $('#pas-attributes-table').val(data[0].label);
             $('#pas-attributes-table').data('value', JSON.stringify({
               id: data[0].value.id,
+              ngo: data[0].value.ngo,
               type: data[0].value.type
             }));
 
-            Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
+            Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, ngo: data[0].value.ngo, type: data[0].value.type });
           } else {
             Filter.setProtectedArea(null);
 
@@ -2012,16 +2019,18 @@ define(
           $('#pas').val(ui.item.label);
           Filter.setProtectedArea({
             id: ui.item.value.id,
+            ngo: ui.item.value.ngo,
             type: ui.item.value.type
           });
 
           $('#pas-attributes-table').val(ui.item.label);
           $('#pas-attributes-table').data('value', JSON.stringify({
             id: ui.item.value.id,
+            ngo: ui.item.value.ngo,
             type: ui.item.value.type
           }));
 
-          Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
+          Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, ngo: ui.item.value.ngo, type: ui.item.value.type });
         }
       });
 
@@ -2042,6 +2051,7 @@ define(
 
           $('#pas-attributes-table').data('value', JSON.stringify({
             id: ui.item.value.id,
+            ngo: ui.item.value.ngo,
             type: ui.item.value.type
           }));
 

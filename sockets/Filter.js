@@ -55,7 +55,7 @@ var Filter = function(io) {
           client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
         });
       } else if(json.key === 'ProtectedArea') {
-        memberFilter.getProtectedAreaExtent(client.pgPool, json.id, json.type, function(err, extent) {
+        memberFilter.getProtectedAreaExtent(client.pgPool, json.id, json.ngo, json.type, function(err, extent) {
           if(err) return console.error(err);
 
           client.emit('spatialFilterResponse', { key: json.key, id: json.id, type: json.type, extent: extent });
