@@ -9,10 +9,10 @@
  *
  * @property {object} memberFiresCountGraphics - Graphics of fires count.
  * @property {integer} memberContinent - Current continent filter.
- * @property {string} memberAllCountries - Current countries filter, considering the countries of the initial continent, in case there is no country filtered.
- * @property {string} memberCountries - Current countries filter, not considering the countries of the initial continent.
+ * @property {string} memberCountries - Current countries filter.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
+ * @property {array} memberSpecialRegions - Current special regions.
  * @property {integer} memberLoadingCounter - Counter that indicates how many graphics are loading.
  * @property {boolean} memberUseGraphicsFilter - Flag that indicates if the last filter used was the one present in the graphics page.
  */
@@ -24,14 +24,14 @@ define(
     var memberFiresCountGraphics = {};
     // Current continent filter
     var memberContinent = null;
-    // Current countries filter, considering the countries of the initial continent, in case there is no country filtered
-    var memberAllCountries = null;
-    // Current countries filter, not considering the countries of the initial continent
+    // Current countries filter
     var memberCountries = null;
     // Current states filter
     var memberStates = null;
     // Current cities filter
     var memberCities = null;
+    // Current special regions
+    var memberSpecialRegions = null;
     // Counter that indicates how many graphics are loading
     var memberLoadingCounter = 0;
     // Flag that indicates if the last filter used was the one present in the graphics page
@@ -120,7 +120,7 @@ define(
     };
 
     /**
-     * Returns the countries, states and cities to be filtered.
+     * Returns the countries, states, cities and special regions to be filtered.
      * @param {function} callback - Callback function
      * @returns {function} callback - Execution of the callback function, which will process the received data
      *
@@ -145,41 +145,9 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+      var city = Filter.getCity() !== null ? Filter.getCity() : "";
 
-      countries = countries.toString();
-
-      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
-
-      if(countries.length > 0) {
-        var arrayOne = JSON.parse(JSON.stringify(countries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        var arrayCountries = $.merge(arrayOne, arrayTwo);
-
-        states = JSON.parse(JSON.stringify(filterStates));
-        states = states.toString();
-
-        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
-
-        var cities = Filter.getCity() !== null ? $.merge(specialRegionsData.specialRegionsCities, [Filter.getCity()]) : specialRegionsData.specialRegionsCities;
-        var citiesString = cities.toString();
-
-        if(states.length > 0) {
-          var arrayOne = JSON.parse(JSON.stringify(states));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
-
-          var arrayStates = $.merge(arrayOne, arrayTwo);
-
-          callback(continent.toString(), arrayCountries.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
-        } else {
-          callback(continent.toString(), arrayCountries.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
-        }
-      } else {
-        var city = Filter.getCity() !== null ? Filter.getCity() : "";
-
-        callback(continent.toString(), specialRegionsCountriesJson.toString(), "", "", city);
-      }
+      callback(continent.toString(), countries.toString(), filterStates.toString(), city, specialRegions.toString());
     };
 
     /**
@@ -231,11 +199,11 @@ define(
 
           Filter.updateSatellitesSelect(2, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
 
-          getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
+          getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
             memberContinent = continent;
-            memberAllCountries = allCountries;
             memberCountries = countries;
             memberStates = states;
+            memberSpecialRegions = specialRegions;
             memberCities = cities;
 
             var firesCountGraphicsConfig = Utils.getConfigurations().graphicsConfigurations.FiresCount;
@@ -290,9 +258,7 @@ define(
                     if(firesCountGraphicsConfig[i].PAGraphic)
                       htmlElements += "<a href=\"https://dev-queimadas.dgi.inpe.br/estatisticas/ucs_tis/repositorio_relat/relatorio.html\" target=\"_blank\" class=\"btn btn-app graphic-button\"><i class=\"fa fa-plus\"></i>Mais Detalhes</a>";
 
-                    htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id +
-                                    "-graphic-message-container\" class=\"text-center\">" +
-                                    "</div></div></div></div>";
+                    htmlElements += "<div id=\"fires-count-" + firesCountGraphicsConfig[i].Id + "-graphic-message-container\" class=\"text-center\"></div></div></div></div>";
                   }
 
                   insertGraphicAtPosition(htmlElements);
@@ -317,9 +283,10 @@ define(
                     biomes: biomes,
                     risk: risk,
                     continent: memberContinent,
-                    countries: memberAllCountries,
+                    countries: memberCountries,
                     states: memberStates,
                     cities: memberCities,
+                    specialRegions: memberSpecialRegions,
                     protectedArea: protectedArea,
                     filterRules: {
                       ignoreCountryFilter: firesCountGraphicsConfig[i].IgnoreCountryFilter,
@@ -548,8 +515,8 @@ define(
           var risk = $('#risk-graphics').val();
           var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
 
-          getSpatialFilterData(function(continent, allCountries, countries, states, cities) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&risk=" + risk + "&continent=" + continent + "&countries=" + allCountries + "&states=" + states + "&cities=" + cities + "&id=" + id + "&protectedArea=" + protectedArea;
+          getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&risk=" + risk + "&continent=" + continent + "&countries=" + countries + "&states=" + states + "&cities=" + cities + "&specialRegions=" + specialRegions + "&id=" + id + "&protectedArea=" + protectedArea;
             location.href = exportLink;
           });
         }

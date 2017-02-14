@@ -111,6 +111,30 @@ var Utils = function() {
       query = query.substring(0, (query.length - 1)) + ")";
     }
 
+    // If the 'options.specialRegions' parameter exists, a specialRegions 'where' clause is created
+    if(options.specialRegions !== undefined) {
+      var specialRegionsArray = options.specialRegions.split(',');
+      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.SpecialRegionsFieldName + " @> ARRAY[";
+
+      for(var i = 0, specialRegionsArrayLength = specialRegionsArray.length; i < specialRegionsArrayLength; i++) {
+        if(options.pgFormatQuery !== undefined) query += "%L,";
+        else query += "$" + (parameter++) + ",";
+        params.push(specialRegionsArray[i]);
+      }
+
+      query = query.substring(0, (query.length - 1)) + "]::integer[]";
+
+      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.CountryFieldName + " in (select unnest(" + memberTablesConfig.SpecialRegions.CountriesFieldName + ") from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+      for(var i = 0, specialRegionsArrayLength = specialRegionsArray.length; i < specialRegionsArrayLength; i++) {
+        if(options.pgFormatQuery !== undefined) query += "%L,";
+        else query += "$" + (parameter++) + ",";
+        params.push(specialRegionsArray[i]);
+      }
+
+      query = query.substring(0, (query.length - 1)) + "))";
+    }
+
     // If the 'options.extent' parameter exists, a extent 'where' clause is created
     if(options.extent !== undefined) {
       if(options.pgFormatQuery !== undefined) query += " and ST_Intersects(" + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope(%L, %L, %L, %L, 4326))";

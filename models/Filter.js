@@ -981,35 +981,26 @@ var Filter = function() {
    * @inner
    */
   this.getSpecialRegions = function(pgPool, countries, callback) {
+    // Counter of the query parameters
+    var parameter = 1;
+    // Query parameters
+    var params = [];
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
-        var specialRegions = "";
+        // Creation of the query
+        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " @> ARRAY[";
 
-        for(var i = 0, specialRegionsLength = memberFilterConfig.SpecialRegions.length; i < specialRegionsLength; i++) {
-          var inArray = false;
-
-          for(var j = 0, countriesLength = countries.length; j < countriesLength; j++) {
-            for(var x = 0, specialRegionsCountriesLength = memberFilterConfig.SpecialRegions[i].Countries.length; x < specialRegionsCountriesLength; x++) {
-              if(countries[j] == memberFilterConfig.SpecialRegions[i].Countries[x]) {
-                inArray = true;
-                break;
-              }
-            }
-
-            if(inArray) break;
-          }
-
-          if(inArray) specialRegions += memberFilterConfig.SpecialRegions[i].Id + ",";
+        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(countries[i]);
         }
 
-        specialRegions = specialRegions != "" ? specialRegions.substring(0, specialRegions.length - 1) : "0";
-
-        // Creation of the query
-        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where gid in (" + specialRegions + ") order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+        query = query.substring(0, (query.length - 1)) + "]::integer[] order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
 
         // Execution of the query
-        client.query(query, function(err, result) {
+        client.query(query, params, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);

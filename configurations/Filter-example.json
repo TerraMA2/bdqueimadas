@@ -17,34 +17,12 @@
     "NumberOfDaysWithoutPrecipitationFieldName": "numero_dias_sem_chuva",
     "RiskFieldName": "risco_fogo",
     "BiomeFieldName": "bioma",
+    "SpecialRegionsFieldName": "regioes_especiais",
     "DateFormat": "YYYY-MM-DD",
     "DateTimeFormat": "YYYY-MM-DD HH:MM:SS",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
     "FinalDate": "{{0=YYYY-MM-DD}}"
   },
-  "SpecialRegions": [
-    {
-      "Id": 2,
-      "Name": "MAP",
-      "Countries": [33, 178, 28],
-      "States": ["0330001", "1780018", "0280006"],
-      "Cities": []
-    },
-    {
-      "Id": 3,
-      "Name": "Amazônia Legal",
-      "Countries": [33],
-      "States": ["0330001", "0330003", "0330004", "0330010", "0330012", "0330014", "0330022", "0330023", "0330027"],
-      "Cities": []
-    },
-    {
-      "Id": 4,
-      "Name": "Vale Paraíba - SP",
-      "Countries": [33],
-      "States": ["0330024"],
-      "Cities": ["03300244741", "03300244749", "03300244754", "03300244769", "03300244810", "03300244811", "03300244824", "03300244827", "03300244862", "03300244864", "03300244922", "03300244944", "03300244991", "03300244996", "03300245011", "03300245014", "03300245020", "03300245068", "03300245076", "03300245114", "03300245141", "03300245145", "03300245169", "03300245184", "03300245188", "03300245211", "03300245253", "03300245228", "03300245257", "03300245268", "03300245271", "03300245273", "03300245293", "03300245318", "03300245327"]
-    }
-  ],
   "CurrentSituationLayers": {
     "Layers": [
       "bdqueimadas:situacao_atual_paises",

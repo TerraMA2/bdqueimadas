@@ -40,6 +40,7 @@
     "TableName": "special_regions",
     "IdFieldName": "id",
     "NameFieldName": "name",
+    "CountriesFieldName": "countries",
     "GeometryFieldName": "geometry"
   },
   "Fires": {
@@ -58,6 +59,8 @@
     "PrecipitationFieldName": "precipitation",
     "RiskFieldName": "risk",
     "DaysWithoutRainFieldName": "days_without_rain",
+    "SpecialRegionsFieldName": "special_regions",
+    "SpecialRegionsTextFieldName": "special_regions_text",
     "LatitudeFieldName": "latitude",
     "LongitudeFieldName": "longitude",
     "GeometryFieldName": "geometry",

@@ -95,63 +95,69 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="filter-satellite-attributes-table"><%= __('Focos dos Satélites') %></label>
-                <select multiple class="form-control" id="filter-satellite-attributes-table">
-                  <%
-                  var satelliteOptions = "";
-                  var referenceSatellite = "";
-                  var isSatelliteSelected = false;
+            <div class="col-md-4" style="padding: 0;">
+              <div class="col-md-4" style="padding: 0;">
+                <div class="form-group">
+                  <label for="filter-satellite-attributes-table"><%= __('Focos dos Satélites') %></label>
+                  <select multiple class="form-control" id="filter-satellite-attributes-table">
+                    <%
+                    var satelliteOptions = "";
+                    var referenceSatellite = "";
+                    var isSatelliteSelected = false;
 
-                  configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
-                    if(satellite.Current) {
-                      if(satellite.ReferenceCurrent) {
-                        referenceSatellite += "<option value=\"" + satellite.Id + "\"";
+                    configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+                      if(satellite.Current) {
+                        if(satellite.ReferenceCurrent) {
+                          referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
-                        if(satellite.Selected) {
-                          referenceSatellite += " selected>";
+                          if(satellite.Selected) {
+                            referenceSatellite += " selected>";
 
-                          if(!isSatelliteSelected) isSatelliteSelected = true;
+                            if(!isSatelliteSelected) isSatelliteSelected = true;
+                          } else {
+                            referenceSatellite += ">";
+                          }
+
+                          referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
                         } else {
-                          referenceSatellite += ">";
+                          satelliteOptions += "<option value=\"" + satellite.Id + "\"";
+
+                          if(satellite.Selected) {
+                            satelliteOptions += " selected>";
+
+                            if(!isSatelliteSelected) isSatelliteSelected = true;
+                          } else {
+                            satelliteOptions += ">";
+                          }
+
+                          satelliteOptions += satellite.Name + "</option>";
                         }
-
-                        referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
-                      } else {
-                        satelliteOptions += "<option value=\"" + satellite.Id + "\"";
-
-                        if(satellite.Selected) {
-                          satelliteOptions += " selected>";
-
-                          if(!isSatelliteSelected) isSatelliteSelected = true;
-                        } else {
-                          satelliteOptions += ">";
-                        }
-
-                        satelliteOptions += satellite.Name + "</option>";
                       }
-                    }
-                  })
-                  %>
+                    })
+                    %>
 
-                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
-                  <%- referenceSatellite + satelliteOptions %>
-                </select>
+                    <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
+                    <%- referenceSatellite + satelliteOptions %>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="filter-biome-attributes-table"><%= __('Focos dos Biomas') %></label>
-                <select multiple class="form-control" id="filter-biome-attributes-table">
-                  <option value="all" selected><%= __('TODOS') %></option>
-                  <option value="Amazonia">Amaz&ocirc;nia</option>
-                  <option value="Caatinga">Caatinga</option>
-                  <option value="Cerrado">Cerrado</option>
-                  <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
-                  <option value="Pampa">Pampa</option>
-                  <option value="Pantanal">Pantanal</option>
-                </select>
+              <div class="col-md-4" style="padding: 0 10px 0 10px;">
+                <div class="form-group">
+                  <label for="filter-biome-attributes-table"><%= __('Focos dos Biomas') %></label>
+                  <select multiple class="form-control" id="filter-biome-attributes-table">
+                    <option value="all" selected><%= __('TODOS') %></option>
+                    <option value="Amazonia">Amaz&ocirc;nia</option>
+                    <option value="Caatinga">Caatinga</option>
+                    <option value="Cerrado">Cerrado</option>
+                    <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+                    <option value="Pampa">Pampa</option>
+                    <option value="Pantanal">Pantanal</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4" style="padding: 0;">
+                <input style="float: left;" type="checkbox" id="industrial-fires-attributes-table">
+                <label for="industrial-fires-attributes-table" style="float: left; margin: 0.5px 0 0 2px !important"><%= __('Focos Industriais') %></label>
               </div>
             </div>
             <div class="col-md-1">

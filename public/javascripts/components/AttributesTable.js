@@ -16,6 +16,7 @@
  * @property {string} memberCountries - Current countries filter.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
+ * @property {array} memberSpecialRegions - Current special regions.
  * @property {object} memberProtectedArea - Current protected area filter.
  */
 define(
@@ -40,6 +41,8 @@ define(
     var memberStates = null;
     // Current cities filter
     var memberCities = null;
+    // Current special regions
+    var memberSpecialRegions = null;
     // Current protected area
     var memberProtectedArea = null;
 
@@ -85,7 +88,7 @@ define(
     };
 
     /**
-     * Returns the countries, states and cities to be filtered.
+     * Returns the countries, states, cities and special regions to be filtered.
      * @param {function} callback - Callback function
      * @returns {function} callback - Execution of the callback function, which will process the received data
      *
@@ -110,43 +113,10 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+      var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
+      filterCity = filterCity !== null ? filterCity : "";
 
-      countries = countries.toString();
-
-      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
-
-      if(countries.length > 0) {
-        var arrayOne = JSON.parse(JSON.stringify(countries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        var arrayCountries = $.merge(arrayOne, arrayTwo);
-
-        states = JSON.parse(JSON.stringify(filterStates));
-        states = states.toString();
-
-        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
-
-        var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
-        var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
-        var citiesString = cities.toString();
-
-        if(states.length > 0) {
-          var arrayOne = JSON.parse(JSON.stringify(states));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
-
-          var arrayStates = $.merge(arrayOne, arrayTwo);
-
-          callback(continent.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
-        } else {
-          callback(continent.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
-        }
-      } else {
-        var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
-        filterCity = filterCity !== null ? filterCity : "";
-
-        callback(continent.toString(), specialRegionsCountriesJson.toString(), "", filterCity);
-      }
+      callback(continent.toString(), countries.toString(), filterStates.toString(), filterCity, specialRegions.toString());
     };
 
     /**
@@ -179,11 +149,12 @@ define(
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
       memberProtectedArea = Filter.getProtectedArea();
 
-      getSpatialFilterData(function(continent, countries, states, cities) {
+      getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
         memberContinent = continent;
         memberCountries = countries;
         memberStates = states;
         memberCities = cities;
+        memberSpecialRegions = specialRegions;
 
         memberAttributesTable = $('#attributes-table').DataTable(
           {
@@ -202,6 +173,7 @@ define(
                 data.countries = memberCountries;
                 data.states = memberStates;
                 data.cities = memberCities;
+                data.specialRegions = memberSpecialRegions;
                 data.protectedArea = memberProtectedArea;
               }
             },
@@ -274,11 +246,12 @@ define(
 
             Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
 
-            getSpatialFilterData(function(continent, countries, states, cities) {
+            getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
               memberContinent = continent;
               memberCountries = countries;
               memberStates = states;
               memberCities = cities;
+              memberSpecialRegions = specialRegions;
 
               memberAttributesTable.ajax.reload();
             });

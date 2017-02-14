@@ -43,6 +43,7 @@ var ExportController = function(app) {
       if(request.query.countries !== '') options.countries = request.query.countries;
       if(request.query.states !== '') options.states = request.query.states;
       if(request.query.cities !== '') options.cities = request.query.cities;
+      if(request.query.specialRegions !== '') options.specialRegions = request.query.specialRegions;
       if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
       if(request.query.decimalSeparator !== undefined && request.query.decimalSeparator !== null && request.query.decimalSeparator !== '') options.decimalSeparator = request.query.decimalSeparator;
       if(request.query.fieldSeparator !== undefined && request.query.fieldSeparator !== null && request.query.fieldSeparator !== '') options.fieldSeparator = request.query.fieldSeparator;

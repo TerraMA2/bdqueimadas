@@ -32,6 +32,9 @@ var Filter = function(io) {
       if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
+      if(json.cities !== undefined && json.cities !== null && json.cities !== '') options.cities = json.cities;
+      if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
+      if(json.protectedArea !== undefined && json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = JSON.parse(json.protectedArea);
 
       memberFilter.getFiresCount(client.pgPool, json.dateTimeFrom, json.dateTimeTo, options, function(err, firesCount) {
         if(err) return console.error(err);
@@ -163,6 +166,9 @@ var Filter = function(io) {
       if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
+      if(json.cities !== undefined && json.cities !== null && json.cities !== '') options.cities = json.cities;
+      if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
+      if(json.protectedArea !== undefined && json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = JSON.parse(json.protectedArea);
 
       memberFilter.getSatellites(client.pgPool, json.dateTimeFrom, json.dateTimeTo, options, function(err, satellitesList) {
         if(err) return console.error(err);

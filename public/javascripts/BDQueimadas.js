@@ -47,6 +47,34 @@ define(
       Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountries(), Filter.getStates());
     };
 
+    // new
+
+    var getStatesFromFilter = function() {
+      var states = $('#states').val();
+      var filterStates = [];
+
+      $('#states > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region')))
+          filterStates.push($(this).val());
+      });
+
+      return filterStates;
+    };
+
+    var getSpecialRegionsFromFilter = function() {
+      var states = $('#states').val();
+      var specialRegions = [];
+
+      $('#states > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region'))
+          specialRegions.push($(this).val());
+      });
+
+      return specialRegions;
+    };
+
+    // new
+
     /**
      * Loads the DOM events.
      *
@@ -423,9 +451,10 @@ define(
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
                       continent: exportationSpatialFilterData.continent,
-                      countries: exportationSpatialFilterData.allCountries,
+                      countries: exportationSpatialFilterData.countries,
                       states: exportationSpatialFilterData.states,
                       cities: exportationSpatialFilterData.cities,
+                      specialRegions: exportationSpatialFilterData.specialRegions,
                       protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
                       bufferInternal: $('#buffer-internal').is(':checked'),
                       bufferFive: $('#buffer-five').is(':checked'),
@@ -441,6 +470,7 @@ define(
                                          "&countries=" + exportationSpatialFilterData.allCountries +
                                          "&states=" + exportationSpatialFilterData.states +
                                          "&cities=" + exportationSpatialFilterData.cities +
+                                         "&specialRegions=" + exportationSpatialFilterData.specialRegions +
                                          "&format=" + $("#exportation-type").val() +
                                          "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
                                          "&bufferInternal=" + $('#buffer-internal').is(':checked') +
@@ -570,7 +600,7 @@ define(
               data: {
                 minLength: 4,
                 value: request.term,
-                countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+                countries: countriesAndStates.countries,
                 states: countriesAndStates.states
               },
               success: function(data) {
@@ -602,8 +632,10 @@ define(
 
         if(dates !== null) {
           var countriesField = $('#countries').val();
-          var statesField = $('#states').val();
           var cityField = $('#city').data('value');
+
+          var filterStates = getStatesFromFilter();
+          var filterSpecialRegions = getSpecialRegionsFromFilter();
 
           if(dates.length === 0) Filter.updateDatesToCurrent();
 
@@ -615,7 +647,7 @@ define(
             Filter.setCity(cityField);
 
             Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: cityField });
-          } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && (statesField[0] == "" || statesField[0] == "0")) ? [] : statesField), false) || Filter.getSpecialRegions().length > 0) {
+          } else if(!Utils.areArraysEqual(Filter.getStates(), (filterStates == null || (filterStates.length == 1 && (filterStates[0] == "" || filterStates[0] == "0")) ? [] : filterStates), false) || !Utils.areArraysEqual(Filter.getSpecialRegions(), filterSpecialRegions, true)) {
             Filter.setCity(null);
 
             $('#city').val("");
@@ -631,18 +663,7 @@ define(
             }
 
             if(!Utils.stringInArray(states, "") && states.length > 0) {
-              var filterStates = [],
-                  specialRegions = [];
-
-              $('#states > option').each(function() {
-                if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
-                  specialRegions.push($(this).val());
-                } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
-                  filterStates.push($(this).val());
-                }
-              });
-
-              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: specialRegions, key: 'States', filterForm: true });
+              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: filterSpecialRegions, key: 'States', filterForm: true });
             } else {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -900,7 +921,7 @@ define(
           type: "GET",
           data: {
             value: $('#city-attributes-table').val(),
-            countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+            countries: countriesAndStates.countries,
             states: countriesAndStates.states,
             minLength: 1
           },
@@ -941,7 +962,7 @@ define(
           type: "GET",
           data: {
             value: $('#city-export').val(),
-            countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+            countries: countriesAndStates.countries,
             states: countriesAndStates.states,
             minLength: 1
           },
@@ -1754,7 +1775,7 @@ define(
         async: async,
         data: {
           value: $('#city').val(),
-          countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+          countries: countriesAndStates.countries,
           states: countriesAndStates.states,
           minLength: 1
         },
@@ -1786,9 +1807,9 @@ define(
     };
 
     /**
-     * Returns the countries, states and cities to be filtered.
+     * Returns the countries, states, cities and special regions to be filtered.
      * @param {integer} filter - Parameter that indicates witch filter should be used
-     * @returns {object} return - Countries, states and cities data
+     * @returns {object} return - Countries, states, cities and special regions
      *
      * @private
      * @function getSpatialData
@@ -1828,60 +1849,15 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+      var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : (Filter.getCity() !== null ? Filter.getCity() : '');
 
-      countries = countries.toString();
-
-      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
-
-      if(countries.length > 0) {
-        var arrayOne = JSON.parse(JSON.stringify(countries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        var arrayCountries = $.merge(arrayOne, arrayTwo);
-
-        states = JSON.parse(JSON.stringify(filterStates));
-        states = states.toString();
-
-        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
-
-        var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
-        var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
-        var citiesString = cities !== null ? cities.toString() : '';
-
-        if(states.length > 0) {
-          var arrayOne = JSON.parse(JSON.stringify(states));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
-
-          var arrayStates = $.merge(arrayOne, arrayTwo);
-
-          return {
-            continent: continent,
-            allCountries: arrayCountries.toString(),
-            countries: arrayCountries.toString(),
-            states: arrayStates.toString(),
-            cities: citiesString
-          };
-        } else {
-          return {
-            continent: continent,
-            allCountries: arrayCountries.toString(),
-            countries: arrayCountries.toString(),
-            states: specialRegionsStatesJson.toString(),
-            cities: citiesString
-          };
-        }
-      } else {
-        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : (Filter.getCity() !== null ? Filter.getCity() : '');
-
-        return {
-          continent: continent,
-          allCountries: specialRegionsCountriesJson.toString(),
-          countries: "",
-          states: "",
-          cities: city
-        };
-      }
+      return {
+        continent: continent,
+        countries: countries.toString(),
+        states: filterStates.toString(),
+        cities: filterCity,
+        specialRegions: specialRegions.toString()
+      };
     };
 
     /**
@@ -2070,7 +2046,7 @@ define(
             data: {
               minLength: 4,
               value: request.term,
-              countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+              countries: countriesAndStates.countries,
               states: countriesAndStates.states
             },
             success: function(data) {
@@ -2101,7 +2077,7 @@ define(
             data: {
               minLength: 4,
               value: request.term,
-              countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+              countries: countriesAndStates.countries,
               states: countriesAndStates.states
             },
             success: function(data) {
