@@ -1265,6 +1265,25 @@
   "EnableAddAndRemoveLayers": false,
   "Layers": [
     {
+      "Id": "bdqueimadas:regioes_especiais",
+      "Name": "Regiões Especiais",
+      "Title": "Regiões Especiais",
+      "LayerGroup": false,
+      "Background": false,
+      "Wmts": false,
+      "Visible": true,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "AppendAtTheEnd": true,
+      "DontAddToLayerExplorer": true,
+      "Params": {
+        "Url": "https://devwww-queimadas.dgi.inpe.br/geoserver/ows",
+        "ServerType": "geoserver",
+        "MinResolution": 0,
+        "MaxResolution": "Infinity"
+      }
+    },
+    {
       "Id": "bdqueimadas:focos",
       "Name": "Focos",
       "Title": "Focos",
@@ -1535,6 +1554,26 @@
         "ServerType": "mapserver",
         "MinResolution": 0,
         "MaxResolution": "Infinity"
+      }
+    },
+    {
+      "Id": "Prodes:prodes_desflorestamento",
+      "Name": "Desflorestamento (1997 - 2012)",
+      "Title": "Desflorestamento (1997 - 2012)",
+      "LayerGroup": false,
+      "Background": false,
+      "Wmts": false,
+      "Visible": false,
+      "Disabled": false,
+      "AddsInTheStart": true,
+      "AppendAtTheEnd": false,
+      "Params": {
+        "Url": "http://terrabrasilis.info/geoserver/ows",
+        "ServerType": "geoserver",
+        "MinResolution": 0,
+        "Time": "1997-01-01/2012-12-31",
+        "MaxResolution": "Infinity",
+        "Styles": "desflorestamento_without_scale"
       }
     },
     {

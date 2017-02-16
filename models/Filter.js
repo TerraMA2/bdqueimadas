@@ -236,36 +236,6 @@ var Filter = function() {
   };
 
   /**
-   * Returns a list of states filtered by the received country id.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {number} country - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getStatesByCountry
-   * @memberof Filter
-   * @inner
-   */
-  this.getStatesByCountry = function(pgPool, country, callback) {
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 order by " + memberTablesConfig.States.NameFieldName + " asc;",
-            params = [country];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
    * Returns the continent extent correspondent to the received id.
    * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} continent - Continent id
@@ -990,7 +960,7 @@ var Filter = function() {
     pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
-        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " @> ARRAY[";
+        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " && ARRAY[";
 
         for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
           query += "$" + (parameter++) + ",";

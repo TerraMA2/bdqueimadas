@@ -57,12 +57,43 @@ module.exports = function(grunt) {
           destination: 'public/docs'
         }
       }
+    },
+    watch: {
+      css: {
+        files: ["public/stylesheets/*.css"],
+        tasks: ["cssmin", "usebanner"],
+        options: {
+          // It allows to compile only when needed
+          spawn: false
+        }
+      },
+      gruntfile: {
+        files: ["gruntfile.js"],
+        tasks: ["default"],
+        options: {
+          spawn: false
+        }
+      },
+      js: {
+        files: ["public/javascripts/*.js", "public/javascripts/components/*.js"],
+        tasks: ["requirejs", "usebanner"],
+        options: {
+          // It allows to compile only when needed
+          spawn: false
+        }
+      }
     }
+  });
+
+  // Print helper to detect which file has beed changed
+  grunt.event.on('watch', function(action, filepath, target) {
+    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
   // Load the plugins.
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-banner');
   grunt.loadNpmTasks('grunt-jsdoc');
 

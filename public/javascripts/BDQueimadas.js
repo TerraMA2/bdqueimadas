@@ -47,8 +47,15 @@ define(
       Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountries(), Filter.getStates());
     };
 
-    // new
-
+    /**
+     * Returns from the filter window the filtered states.
+     * @returns {array} filterStates - Array of states
+     *
+     * @private
+     * @function getStatesFromFilter
+     * @memberof BDQueimadas
+     * @inner
+     */
     var getStatesFromFilter = function() {
       var states = $('#states').val();
       var filterStates = [];
@@ -61,19 +68,36 @@ define(
       return filterStates;
     };
 
+    /**
+     * Returns from the filter window the filtered special regions and its countries.
+     * @returns {object} object - Object with the special regions and its countries
+     *
+     * @private
+     * @function getSpecialRegionsFromFilter
+     * @memberof BDQueimadas
+     * @inner
+     */
     var getSpecialRegionsFromFilter = function() {
       var states = $('#states').val();
       var specialRegions = [];
+      var specialRegionsCountries = [];
 
       $('#states > option').each(function() {
-        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region'))
+        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
           specialRegions.push($(this).val());
+
+          if(!isNaN($(this).data('special-region-countries')))
+            specialRegionsCountries.push($(this).data('special-region-countries'));
+          else
+            specialRegionsCountries = specialRegionsCountries.concat($(this).data('special-region-countries').split(','));
+        }
       });
 
-      return specialRegions;
+      return {
+        specialRegions: specialRegions,
+        specialRegionsCountries: specialRegionsCountries
+      };
     };
-
-    // new
 
     /**
      * Loads the DOM events.
@@ -467,7 +491,7 @@ define(
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
                                          "&continent=" + exportationSpatialFilterData.continent +
-                                         "&countries=" + exportationSpatialFilterData.allCountries +
+                                         "&countries=" + exportationSpatialFilterData.countries +
                                          "&states=" + exportationSpatialFilterData.states +
                                          "&cities=" + exportationSpatialFilterData.cities +
                                          "&specialRegions=" + exportationSpatialFilterData.specialRegions +
@@ -636,6 +660,8 @@ define(
 
           var filterStates = getStatesFromFilter();
           var filterSpecialRegions = getSpecialRegionsFromFilter();
+          var filterSpecialRegionsCountries = filterSpecialRegions.specialRegionsCountries;
+          filterSpecialRegions = filterSpecialRegions.specialRegions;
 
           if(dates.length === 0) Filter.updateDatesToCurrent();
 
@@ -663,7 +689,7 @@ define(
             }
 
             if(!Utils.stringInArray(states, "") && states.length > 0) {
-              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: filterSpecialRegions, key: 'States', filterForm: true });
+              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: filterSpecialRegions, specialRegionsCountries: filterSpecialRegionsCountries, key: 'States', filterForm: true });
             } else {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -1358,6 +1384,7 @@ define(
             Filter.clearCountries();
             Filter.clearStates();
             Filter.clearSpecialRegions();
+            Filter.clearSpecialRegionsCountries();
 
             Utils.getSocket().emit('countriesByContinentRequest', { continent: result.ids });
 
@@ -1368,6 +1395,7 @@ define(
             Filter.setCountries(result.ids);
             Filter.clearStates();
             Filter.clearSpecialRegions();
+            Filter.clearSpecialRegionsCountries();
 
             Utils.getSocket().emit('statesByCountriesRequest', { countries: result.ids });
 
@@ -1383,6 +1411,7 @@ define(
           } else if(result.key === 'States') {
             Filter.setStates(result.ids);
             Filter.setSpecialRegions(result.specialRegions);
+            Filter.setSpecialRegionsCountries(result.specialRegionsCountries);
 
             var statesArray = JSON.parse(JSON.stringify(result.ids));
 
@@ -1530,48 +1559,6 @@ define(
         }
       });
 
-      Utils.getSocket().on('statesByCountryResponse', function(result) {
-        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
-          var statesId = '#states-attributes-table';
-          var html = "<option value=\"\" selected>Todos os estados</option>";
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
-          var statesId = '#states-graphics';
-          var html = "<option value=\"\" selected>Todos os estados</option>";
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
-          var statesId = '#states-export';
-          var html = "<option value=\"\" selected>Todos os estados</option>";
-        } else {
-          var statesId = '#states';
-          var html = "<option value=\"\" selected>Todos os estados</option><option value=\"0\" selected>Todos municípios</option>";
-        }
-
-        var initialValue = $(statesId).val();
-
-        var statesCount = result.states.rowCount;
-
-        for(var i = 0; i < statesCount; i++) {
-          html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
-        }
-
-        $(statesId).empty().html(html);
-        if($(statesId).attr('data-value') === undefined || $(statesId).attr('data-value') === "") {
-          $(statesId).val(initialValue);
-        } else {
-          var states = $(statesId).attr('data-value').split(',');
-          $(statesId).val(states);
-        }
-
-        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
-          $('#states-attributes-table').removeAttr('disabled');
-          $('#filter-button-attributes-table').click();
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
-          $('#states-graphics').removeAttr('disabled');
-          $('#filter-button-graphics').click();
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
-          $('#states-export').removeAttr('disabled');
-        }
-      });
-
       Utils.getSocket().on('statesByCountriesResponse', function(result) {
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           var statesId = '#states-attributes-table';
@@ -1599,7 +1586,7 @@ define(
           var specialRegionsCount = result.specialRegions.rowCount;
 
           for(var i = 0; i < specialRegionsCount; i++) {
-            html += "<option value='" + result.specialRegions.rows[i].id + "' data-special-region='true'>" + result.specialRegions.rows[i].name + "</option>";
+            html += "<option value='" + result.specialRegions.rows[i].id + "' data-special-region='true' data-special-region-countries='" + result.specialRegions.rows[i].countries + "'>" + result.specialRegions.rows[i].name + "</option>";
           }
         }
 

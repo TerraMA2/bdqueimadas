@@ -49,13 +49,13 @@ var Filter = function(io) {
         memberFilter.getStatesAndSpecialRegionsExtent(client.pgPool, json.ids, json.specialRegions, function(err, extent) {
           if(err) return console.error(err);
 
-          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, specialRegionsCountries: json.specialRegionsCountries, extent: extent });
         });
       } else if(json.key === 'States' && json.specialRegions.length > 0 && json.ids.length === 0) {
         memberFilter.getSpecialRegionsExtent(client.pgPool, json.specialRegions, function(err, extent) {
           if(err) return console.error(err);
 
-          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, extent: extent });
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, specialRegionsCountries: json.specialRegionsCountries, extent: extent });
         });
       } else if(json.key === 'ProtectedArea') {
         memberFilter.getProtectedAreaExtent(client.pgPool, json.id, json.ngo, json.type, function(err, extent) {
@@ -74,7 +74,7 @@ var Filter = function(io) {
         memberFilter[functionName](client.pgPool, json.ids, function(err, extent) {
           if(err) return console.error(err);
 
-          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: [], extent: extent });
+          client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: [], specialRegionsCountries: [], extent: extent });
         });
       }
     });
@@ -125,19 +125,6 @@ var Filter = function(io) {
         if(err) return console.error(err);
 
         client.emit('countriesByContinentResponse', { countries: countries, filter: json.filter });
-      });
-    });
-
-    // States by country request event
-    client.on('statesByCountryRequest', function(json) {
-      memberFilter.getStatesByCountry(client.pgPool, json.country, function(err, states) {
-        if(err) return console.error(err);
-
-        memberFilter.getSpecialRegions(client.pgPool, [json.country], function(err, specialRegions) {
-          if(err) return console.error(err);
-
-          client.emit('statesByCountryResponse', { states: states, specialRegions: specialRegions, filter: json.filter });
-        });
       });
     });
 
