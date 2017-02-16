@@ -61,23 +61,10 @@ var Proxy = function(io) {
             }
           }
 
-          if(json.requestId == 'GetFeatureInfoTool') {
-            /*var citiesIds = [];
-
-            for(var i = 0, featuresLength = body.features.length; i < featuresLength; i++) {
-              citiesIds.push(body.features[i].properties.municipio_complete_id);
-            }
-
-            memberFilter.getCountryStateAndCityNamesByCities(client.pgPool, citiesIds, function(err, result) {
-              body['spatialData'] = result.rows;*/
-
-              // Socket response
-              client.emit('proxyResponse', { msg: body, requestId: json.requestId });
-            //});
-          } else {
-            // Socket response
+          if(json.requestId == 'GetFeatureInfoTool')
             client.emit('proxyResponse', { msg: body, requestId: json.requestId });
-          }
+          else
+            client.emit('proxyResponse', { msg: body, requestId: json.requestId });
         });
 
       }).on("error", function(e) {
