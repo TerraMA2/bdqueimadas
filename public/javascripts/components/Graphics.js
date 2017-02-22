@@ -192,6 +192,8 @@ define(
 
           var protectedArea = Filter.getProtectedArea();
 
+          var industrialFires = Filter.getIndustrialFires();
+
           if(!useGraphicsFilter) {
             $('#filter-date-from-graphics').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
             $('#filter-date-to-graphics').val(Filter.getFormattedDateTo('YYYY/MM/DD'));
@@ -287,6 +289,7 @@ define(
                     states: memberStates,
                     cities: memberCities,
                     specialRegions: memberSpecialRegions,
+                    industrialFires: industrialFires,
                     protectedArea: protectedArea,
                     filterRules: {
                       ignoreCountryFilter: firesCountGraphicsConfig[i].IgnoreCountryFilter,
@@ -514,9 +517,10 @@ define(
 
           var risk = $('#risk-graphics').val();
           var protectedArea = Filter.getProtectedArea() !== null ? Filter.getProtectedArea() : '';
+          var industrialFires = Filter.getIndustrialFires();
 
           getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
-            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&risk=" + risk + "&continent=" + continent + "&countries=" + countries + "&states=" + states + "&cities=" + cities + "&specialRegions=" + specialRegions + "&id=" + id + "&protectedArea=" + protectedArea;
+            var exportLink = Utils.getBaseUrl() + "export-graphic-data?dateTimeFrom=" + dateTimeFrom + "&dateTimeTo=" + dateTimeTo + "&satellites=" + satellites + "&biomes=" + biomes + "&risk=" + risk + "&continent=" + continent + "&countries=" + countries + "&states=" + states + "&cities=" + cities + "&specialRegions=" + specialRegions + "&id=" + id + "&protectedArea=" + protectedArea + "&industrialFires=" + industrialFires;
             location.href = exportLink;
           });
         }

@@ -233,8 +233,7 @@ define(
         $('.component-filter-content').css('max-height', ($(window).outerHeight() - 212) + 'px');
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
-/*'<input style="float: left;" type="checkbox" id="industrial-fires-export">' +
-              '<label for="industrial-fires-export" style="float: left; margin: 0.5px 0 0 2px !important">Focos Industriais</label>' +*/
+
       // Export click event
       $('#export').on('click', function() {
         vex.dialog.alert({
@@ -345,7 +344,6 @@ define(
                 '</div>' +
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-biome"></span>' +
-
               '<div class="form-horizontal">' +
                 '<div class="form-group bdqueimadas-form">' +
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
@@ -480,6 +478,7 @@ define(
                       cities: exportationSpatialFilterData.cities,
                       specialRegions: exportationSpatialFilterData.specialRegions,
                       protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
+                      industrialFires: Filter.getIndustrialFires(),
                       bufferInternal: $('#buffer-internal').is(':checked'),
                       bufferFive: $('#buffer-five').is(':checked'),
                       bufferTen: $('#buffer-ten').is(':checked')
@@ -497,6 +496,7 @@ define(
                                          "&specialRegions=" + exportationSpatialFilterData.specialRegions +
                                          "&format=" + $("#exportation-type").val() +
                                          "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
+                                         "&industrialFires=" + Filter.getIndustrialFires() +
                                          "&bufferInternal=" + $('#buffer-internal').is(':checked') +
                                          "&bufferFive=" + $('#buffer-five').is(':checked') +
                                          "&bufferTen=" + $('#buffer-ten').is(':checked') +
@@ -644,6 +644,10 @@ define(
       $(document).on('change', '#exportation-type', function() {
         if($('#exportation-type').val() === 'csv') $('#csvFields').css('display', '');
         else $('#csvFields').css('display', 'none');
+      });
+
+      $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#filter-button').click();
       });
 
       // Filter Events

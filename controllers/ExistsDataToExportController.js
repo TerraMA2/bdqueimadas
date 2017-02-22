@@ -35,6 +35,7 @@ var ExistsDataToExportController = function(app) {
     if(request.body.cities !== '') options.cities = request.body.cities;
     if(request.body.specialRegions !== '') options.specialRegions = request.body.specialRegions;
     if(request.body.protectedArea !== null && request.body.protectedArea !== '') options.protectedArea = request.body.protectedArea;
+    if(request.body.industrialFires !== null && request.body.industrialFires !== '') options.industrialFires = request.body.industrialFires;
     options.limit = 1;
     options.bufferInternal = (request.body.bufferInternal == "true");
     options.bufferFive = (request.body.bufferFive == "true");

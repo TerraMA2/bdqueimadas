@@ -248,6 +248,10 @@ var Utils = function() {
       }
     }
 
+    // If the 'options.industrialFires' parameter exists, a industrial fires 'where' clause is created
+    if(options.industrialFires !== undefined && (options.industrialFires == "false" || !options.industrialFires))
+      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresFieldName + " is null";
+
     return {
       query: query,
       params: params,

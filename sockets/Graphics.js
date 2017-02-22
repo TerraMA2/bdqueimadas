@@ -35,6 +35,7 @@ var Graphics = function(io) {
       if(json.cities !== null && json.cities !== '') options.cities = json.cities;
       if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
       if(json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = json.protectedArea;
+      if(json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
       if(json.limit !== null) options.limit = json.limit;
       if(json.y !== null) options.y = json.y;
 

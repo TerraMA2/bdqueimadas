@@ -289,7 +289,7 @@ var Graphics = function() {
         params = getFiltersResult.params;
         parameter = getFiltersResult.parameter;
 
-        query += "group by 1, 2 order by 1, 2";
+        query += " group by 1, 2 order by 1, 2";
 
         // If the 'options.limit' parameter exists, a limit clause is created
         if(options.limit !== undefined) {

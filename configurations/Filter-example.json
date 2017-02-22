@@ -18,6 +18,7 @@
     "RiskFieldName": "risco_fogo",
     "BiomeFieldName": "bioma",
     "SpecialRegionsFieldName": "regioes_especiais",
+    "IndustrialFiresFieldName": "area_industrial",
     "DateFormat": "YYYY-MM-DD",
     "DateTimeFormat": "YYYY-MM-DD HH:MM:SS",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
@@ -64,6 +65,9 @@
   },
   "SpecialRegionsLayer": {
     "Id": "bdqueimadas:regioes_especiais"
+  },
+  "IndustrialAreasLayer": {
+    "Id": "bdqueimadas:areas_industriais"
   },
   "SpatialFilter": {
     "Continents": {

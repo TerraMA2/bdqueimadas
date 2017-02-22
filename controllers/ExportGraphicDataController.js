@@ -46,6 +46,7 @@ var ExportGraphicDataController = function(app) {
     if(request.query.cities !== '') options.cities = request.query.cities;
     if(request.query.specialRegions !== '') options.specialRegions = request.query.specialRegions;
     if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
+    if(request.query.industrialFires !== null && request.query.industrialFires !== '') options.industrialFires = request.query.industrialFires;
 
     var graphicConfigurations = getGraphicConfigurations(request.query.id);
 

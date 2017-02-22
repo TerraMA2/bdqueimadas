@@ -20,6 +20,7 @@
  * @property {array} memberSpecialRegions - Current special regions.
  * @property {array} memberSpecialRegionsCountries - Current special regions countries.
  * @property {object} memberProtectedArea - Current protected area.
+ * @property {boolean} memberIndustrialFires - Current industrial fires filter.
  * @property {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one.
  * @property {array} memberInitialSatellites - Initial satellites.
  */
@@ -53,6 +54,8 @@ define(
     var memberSpecialRegionsCountries = [];
     // Current protected area
     var memberProtectedArea = null;
+    // Current industrial fires filter
+    var memberIndustrialFires = false;
     // Flag that indicates if the current filter is the initial one
     var memberInitialFilter = true;
     // Initial satellites
@@ -371,6 +374,30 @@ define(
     };
 
     /**
+     * Sets the current industrial fires filter.
+     * @param {boolean} industrialFires - Industrial fires filter
+     *
+     * @function setIndustrialFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setIndustrialFires = function(industrialFires) {
+      memberIndustrialFires = industrialFires;
+    };
+
+    /**
+     * Returns the current industrial fires filter.
+     * @returns {boolean} memberIndustrialFires - Current industrial fires filter
+     *
+     * @function getIndustrialFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getIndustrialFires = function() {
+      return memberIndustrialFires;
+    };
+
+    /**
      * Returns the initial filter flag.
      * @returns {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one
      *
@@ -651,6 +678,21 @@ define(
     };
 
     /**
+     * Creates the industrial fires filter.
+     * @returns {string} cql - Industrial fires cql filter
+     *
+     * @private
+     * @function createIndustrialFiresFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createIndustrialFiresFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresFieldName + " IS NULL";
+
+      return cql;
+    };
+
+    /**
      * Applies the dates, the satellites and the biomes filters.
      *
      * @function applyFilter
@@ -702,6 +744,8 @@ define(
         $('#filter-biome-attributes-table').val($('#filter-biome').val());
         $('#filter-biome-graphics').val($('#filter-biome').val());
 
+        setIndustrialFires($('#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+
         var cql = "";
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
@@ -740,6 +784,10 @@ define(
 
         if(memberCity !== null) {
           cql += createCitiesFilter() + " AND ";
+        }
+
+        if(!memberIndustrialFires) {
+          cql += createIndustrialFiresFilter() + " AND ";
         }
 
         if(cql.length > 5) {
@@ -1187,6 +1235,8 @@ define(
       getSpecialRegionsCountries: getSpecialRegionsCountries,
       setProtectedArea: setProtectedArea,
       getProtectedArea: getProtectedArea,
+      setIndustrialFires: setIndustrialFires,
+      getIndustrialFires: getIndustrialFires,
       isInitialFilter: isInitialFilter,
       setInitialFilterToFalse: setInitialFilterToFalse,
       getInitialSatellites: getInitialSatellites,

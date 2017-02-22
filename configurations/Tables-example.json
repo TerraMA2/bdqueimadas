@@ -61,6 +61,7 @@
     "DaysWithoutRainFieldName": "days_without_rain",
     "SpecialRegionsFieldName": "special_regions",
     "SpecialRegionsTextFieldName": "special_regions_text",
+    "IndustrialFiresFieldName": "industrial_area",
     "LatitudeFieldName": "latitude",
     "LongitudeFieldName": "longitude",
     "GeometryFieldName": "geometry",

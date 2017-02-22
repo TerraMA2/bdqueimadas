@@ -18,6 +18,7 @@
  * @property {string} memberCities - Current cities filter.
  * @property {array} memberSpecialRegions - Current special regions.
  * @property {object} memberProtectedArea - Current protected area filter.
+ * @property {boolean} memberIndustrialFires - Current industrial fires filter.
  */
 define(
   ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
@@ -45,6 +46,8 @@ define(
     var memberSpecialRegions = null;
     // Current protected area
     var memberProtectedArea = null;
+    // Current industrial fires filter
+    var memberIndustrialFires = false;
 
     /**
      * Creates and returns an array with the attributes table columns names.
@@ -149,6 +152,8 @@ define(
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
       memberProtectedArea = Filter.getProtectedArea();
 
+      memberIndustrialFires = Filter.getIndustrialFires();
+
       getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
         memberContinent = continent;
         memberCountries = countries;
@@ -175,6 +180,7 @@ define(
                 data.cities = memberCities;
                 data.specialRegions = memberSpecialRegions;
                 data.protectedArea = memberProtectedArea;
+                data.industrialFires = memberIndustrialFires;
               }
             },
             "columns": getAttributesTableColumnNamesArray(),
@@ -243,6 +249,8 @@ define(
             memberProtectedArea = useAttributesTableFilter ?
                                   ($('#pas-attributes-table').data('value') !== undefined && $('#pas-attributes-table').data('value') !== '' ? JSON.parse($('#pas-attributes-table').data('value')) : null) :
                                   Filter.getProtectedArea();
+
+            memberIndustrialFires = Filter.getIndustrialFires();
 
             Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
 
