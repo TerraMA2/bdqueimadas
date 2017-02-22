@@ -23,6 +23,7 @@
  * @property {boolean} memberIndustrialFires - Current industrial fires filter.
  * @property {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one.
  * @property {array} memberInitialSatellites - Initial satellites.
+ * @property {object} memberLastFilters - Last filters used in the layers.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -60,6 +61,8 @@ define(
     var memberInitialFilter = true;
     // Initial satellites
     var memberInitialSatellites = null;
+    // Last filters used in the layers
+    var memberLastFilters = {};
 
     /**
      * Returns the initial date formatted with the received format.
@@ -749,17 +752,14 @@ define(
         var cql = "";
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
-          //var updateLayersTime = ((getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom) || (getFormattedDateTo("YYYY/MM/DD") != filterDateTo));
-
-          //if(Map.getLayers().length > 0 && (getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom || getFormattedDateTo("YYYY/MM/DD") != filterDateTo))
+          var updateLayersTime = ((getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom) || (getFormattedDateTo("YYYY/MM/DD") != filterDateTo));
 
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
           updateTimes(filterTimeFrom, filterTimeTo);
 
           cql += createDateTimeFilter() + " AND ";
 
-          //if(Map.getLayers().length > 0) processLayers(Map.getLayers(), updateLayersTime);
-          if(Map.getLayers().length > 0) processLayers(Map.getLayers());
+          if(Map.getLayers().length > 0) processLayers(Map.getLayers(), updateLayersTime);
         }
 
         if(!Utils.stringInArray(memberSatellites, "all") || memberInitialFilter) {
@@ -837,31 +837,26 @@ define(
     /**
      * Processes a list of layers and applies filters to the layers that should be filtered.
      * @param {array} layers - Layers array
+     * @param {boolean} updateLayersTime - Flag that indicates if the time of the layers should be updated
      *
      * @private
      * @function processLayers
      * @memberof Filter(2)
      * @inner
      */
-    //var processLayers = function(layers, updateLayersTime) {
-    var processLayers = function(layers) {
+    var processLayers = function(layers, updateLayersTime) {
       for(var i = 0, layersLength = layers.length; i < layersLength; i++) {
-        //if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
-        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && layers[i].Params.Time.match("{{(.*)}}") !== null) Map.updateLayerTime(layers[i]);
-
-
-        //if(Map.getLayers().length > 0 && (getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom || getFormattedDateTo("YYYY/MM/DD") != filterDateTo))
-
-        //console.log(Utils.getFilterDates(true, 0));
-        //console.log(getFormattedDateFrom("YYYY/MM/DD"));
-        //console.log(getFormattedDateTo("YYYY/MM/DD"));
-
+        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && layers[i].Params.Time.match("{{(.*)}}") !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
 
         if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
           if(memberContinent !== null) {
             var field = layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id ? Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField : Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.ContinentField;
             var cqlFilter = field + "=" + memberContinent;
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+
+            if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+              memberLastFilters[layers[i].Id] = cqlFilter;
+            }
           }
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.Id) {
           var cqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id ? Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField : Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.CountryField) + " in (";
@@ -876,7 +871,10 @@ define(
             cqlFilter += "0)";
           }
 
-          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+          if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+            memberLastFilters[layers[i].Id] = cqlFilter;
+          }
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id) {
           var cqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CountryField) + " in (";
 
@@ -915,7 +913,10 @@ define(
             }
           }
 
-          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+          if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+            memberLastFilters[layers[i].Id] = cqlFilter;
+          }
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.SpecialRegionsLayer.Id) {
           var featuresIds = "";
           var layerIdArray = layers[i].Id.split(':');
@@ -929,20 +930,36 @@ define(
             featuresIds = layerIdArray[1] + '.0';
           }
 
-          TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layers[i].Id, { 'featureId': featuresIds }, true);
+          if(memberInitialFilter || featuresIds != memberLastFilters[layers[i].Id]) {
+            TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layers[i].Id, { 'featureId': featuresIds }, true);
+            memberLastFilters[layers[i].Id] = featuresIds;
+          }
         } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layers[i].Id)) {
           var countries = $('#countries').val();
+          var currentSituationFilterString = JSON.stringify({
+            dateFrom: Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+            dateTo: Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
+            continent: memberContinent,
+            countries: countries,
+            states: memberStates,
+            satellites: memberSatellites,
+            biomes: memberBiomes
+          });
 
-          applyCurrentSituationFilter(
-            Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
-            Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
-            memberContinent,
-            countries,
-            memberStates,
-            memberSatellites,
-            memberBiomes,
-            layers[i].Id
-          );
+          if(memberInitialFilter || currentSituationFilterString != memberLastFilters[layers[i].Id]) {
+            applyCurrentSituationFilter(
+              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
+              memberContinent,
+              countries,
+              memberStates,
+              memberSatellites,
+              memberBiomes,
+              layers[i].Id
+            );
+
+            memberLastFilters[layers[i].Id] = currentSituationFilterString;
+          }
         }
       }
     };
