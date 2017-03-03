@@ -20,6 +20,11 @@ var Exportation = function() {
   var memberPath = require('path');
   // 'pg-format' module
   var memberPgFormat = require('pg-format');
+
+
+  var memberRemoveDiacritics = require('diacritics').remove;
+
+
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // Attributes table configuration
@@ -86,8 +91,10 @@ var Exportation = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
+      var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+
       if(memberAttributesTableConfig.Columns[i].Name !== "geom")
-        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
+        columns += columnName + (memberAttributesTableConfig.Columns[i].Alias !== null && memberAttributesTableConfig.Columns[i].Alias !== "" ? " as \"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].Alias) + "\", " : ", ");
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -98,11 +105,14 @@ var Exportation = function() {
         // Creation of the query
         var query = "select ST_AsGeoJSON(" + memberTablesConfig.Fires.GeometryFieldName + ")::json as geometry, row_to_json((select columns from (select " +
                     columns + ") as columns)) as properties from " + memberTablesConfig.Fires.Schema + "." +
-                    memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName +
+                    memberTablesConfig.Fires.TableName + " FiresTable left outer join " + memberTablesConfig.IndustrialAreas.Schema + "." + memberTablesConfig.IndustrialAreas.TableName + " IndustrialAreasTable " +
+                    "on (FiresTable." + memberTablesConfig.Fires.IndustrialFiresFieldName + " = IndustrialAreasTable." + memberTablesConfig.IndustrialAreas.IdFieldName + ") " +
+                    "where (FiresTable." + memberTablesConfig.Fires.DateTimeFieldName +
                     " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
 
         options.exportFilter = true;
+        options.tableAlias = "FiresTable";
 
         var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
@@ -142,35 +152,40 @@ var Exportation = function() {
     var columns = "";
 
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
+      var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+      var alias = (memberAttributesTableConfig.Columns[i].Alias !== null && memberAttributesTableConfig.Columns[i].Alias !== "" ? " as \\\"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].Alias) + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
+
+
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
-          columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
+          columns += "TO_CHAR(" + columnName + ", 'YYYY/MM/DD HH24:MI:SS')" + alias + ", ";
         else if(options.decimalSeparator !== undefined && options.decimalSeparator == "comma" && 
         (memberTablesConfig.Fires.LatitudeFieldName == memberAttributesTableConfig.Columns[i].Name || 
         memberTablesConfig.Fires.LongitudeFieldName == memberAttributesTableConfig.Columns[i].Name ||
         memberTablesConfig.Fires.PrecipitationFieldName == memberAttributesTableConfig.Columns[i].Name ||
         memberTablesConfig.Fires.RiskFieldName == memberAttributesTableConfig.Columns[i].Name ||
         memberTablesConfig.Fires.DaysWithoutRainFieldName == memberAttributesTableConfig.Columns[i].Name))
-          columns += "replace(" + memberAttributesTableConfig.Columns[i].Name + "::text, '.', ',') as " + memberAttributesTableConfig.Columns[i].Name + ", ";
+          columns += "replace(" + columnName + "::text, '.', ',')" + alias + ", ";
         else
-          columns += memberAttributesTableConfig.Columns[i].Name + ", ";
+          columns += columnName + alias + ", ";
       }
     }
 
     columns = columns.substring(0, (columns.length - 2));
 
     if(selectGeometry)
-      columns += ", " + memberTablesConfig.Fires.GeometryFieldName;
+      columns += ", FiresTable." + memberTablesConfig.Fires.GeometryFieldName;
 
     var encoding = (options.encoding.toLowerCase() == "windows" ? "LATIN1" : "UTF-8");
 
     // Creation of the query
     //var query = "SET CLIENT_ENCODING TO '" + encoding + "'; select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
-    var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
+    var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable left outer join " + memberTablesConfig.IndustrialAreas.Schema + "." + memberTablesConfig.IndustrialAreas.TableName + " IndustrialAreasTable on (FiresTable." + memberTablesConfig.Fires.IndustrialFiresFieldName + " = IndustrialAreasTable." + memberTablesConfig.IndustrialAreas.IdFieldName + ") where (FiresTable." + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
         params = [dateTimeFrom, dateTimeTo];
 
     options.exportFilter = true;
     options.pgFormatQuery = true;
+    options.tableAlias = "FiresTable";
 
     var getFiltersResult = memberUtils.getFilters(options, query, params);
 
