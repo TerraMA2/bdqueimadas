@@ -46,11 +46,12 @@ var AttributesTable = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
-      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateTimeFieldName) {
-        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS'), ";
-      } else {
-        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
-      }
+      var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+
+      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateTimeFieldName)
+        columns += "TO_CHAR(" + columnName + ", 'YYYY/MM/DD HH24:MI:SS'), ";
+      else
+        columns += columnName + ", ";
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -63,7 +64,7 @@ var AttributesTable = function() {
       var column = memberAttributesTableConfig.Columns[0].Name;
       for(var j = 0, columnsLength = memberAttributesTableConfig.Columns.length; j < columnsLength; j++) {
         if(memberAttributesTableConfig.Columns[j].Name === order[i].column) {
-          column = memberAttributesTableConfig.Columns[j].Name;
+          column = (memberAttributesTableConfig.Columns[j].TableAlias !== null ? memberAttributesTableConfig.Columns[j].TableAlias + "." + memberAttributesTableConfig.Columns[j].Name : memberAttributesTableConfig.Columns[j].Name);
           break;
         }
       }
@@ -77,8 +78,10 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable left outer join " + memberTablesConfig.IndustrialAreas.Schema + "." + memberTablesConfig.IndustrialAreas.TableName + " IndustrialAreasTable on (FiresTable." + memberTablesConfig.Fires.IndustrialFiresFieldName + " = IndustrialAreasTable." + memberTablesConfig.IndustrialAreas.IdFieldName + ") where (FiresTable." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
+
+        options.tableAlias = "FiresTable";
 
         var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
@@ -88,7 +91,7 @@ var AttributesTable = function() {
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
-          var searchResult = createSearch(search, parameter);
+          var searchResult = createSearch(search, parameter, "FiresTable");
           query += searchResult.search;
           parameter = searchResult.parameter;
           params = params.concat(searchResult.params);
@@ -130,7 +133,7 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateTimeFrom, dateTimeTo];
 
         var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
@@ -172,7 +175,7 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateTimeFrom, dateTimeTo];
 
         var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
@@ -203,6 +206,7 @@ var AttributesTable = function() {
    * Creates and returns the search 'where' clauses.
    * @param {string} search - Search text
    * @param {int} parameter - Parater counter
+   * @param {string} tableAlias - Table alias
    * @returns {json} {} - JSON object with the search text, the parameter counter and the parameters array
    *
    * @private
@@ -210,18 +214,20 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  var createSearch = function(search, parameter) {
+  var createSearch = function(search, parameter, tableAlias) {
     var searchText = " and (";
     var params = [];
 
     // Loop through the columns configuration
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
+      var columnName = (tableAlias !== undefined && tableAlias !== null ? tableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+
       // Verification of the type of the column (numeric or not numeric)
       if(memberAttributesTableConfig.Columns[i].String) {
-        searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
+        searchText += columnName + " like $" + (parameter++) + " or ";
         params.push('%' + search + '%');
       } else if(!memberAttributesTableConfig.Columns[i].String && !isNaN(search)) {
-        searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
+        searchText += columnName + " = $" + (parameter++) + " or ";
         params.push(Number(search));
       }
     }

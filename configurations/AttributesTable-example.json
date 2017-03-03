@@ -1,50 +1,65 @@
 {
   "Columns": [
     {
+      "TableAlias": "focos",
       "Name": "data_hora",
       "Alias": "Data / Hora",
       "Order": "desc",
       "String": false
     },
     {
+      "TableAlias": "focos",
       "Name": "satelite",
       "Alias": "Satélite",
       "Order": null,
       "String": true
     },
     {
+      "TableAlias": "focos",
       "Name": "pais",
       "Alias": "País",
       "Order": null,
       "String": true
     },
     {
+      "TableAlias": "focos",
       "Name": "estado",
       "Alias": "Estado",
       "Order": null,
       "String": true
     },
     {
+      "TableAlias": "focos",
       "Name": "municipio",
       "Alias": "Município",
       "Order": null,
       "String": true
     },
     {
+      "TableAlias": "focos",
       "Name": "bioma",
       "Alias": "Bioma",
       "Order": null,
       "String": true
     },
     {
+      "TableAlias": "focos",
       "Name": "latitude",
       "Alias": "Latitude",
       "Order": null,
       "String": false
     },
     {
+      "TableAlias": "focos",
       "Name": "longitude",
       "Alias": "Longitude",
+      "Order": null,
+      "String": false
+    },
+    {
+      "TableAlias": "areas_ind",
+      "Name": "nome",
+      "Alias": "Área Industrial",
       "Order": null,
       "String": false
     }
