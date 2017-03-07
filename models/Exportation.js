@@ -94,7 +94,7 @@ var Exportation = function() {
       var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
 
       if(memberAttributesTableConfig.Columns[i].Name !== "geom")
-        columns += columnName + (memberAttributesTableConfig.Columns[i].Alias !== null && memberAttributesTableConfig.Columns[i].Alias !== "" ? " as \"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].Alias) + "\", " : ", ");
+        columns += columnName + (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].ExportAlias) + "\", " : ", ");
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -153,7 +153,7 @@ var Exportation = function() {
 
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
-      var alias = (memberAttributesTableConfig.Columns[i].Alias !== null && memberAttributesTableConfig.Columns[i].Alias !== "" ? " as \\\"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].Alias) + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
+      var alias = (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \\\"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].ExportAlias) + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
 
 
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
