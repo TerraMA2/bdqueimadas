@@ -4,6 +4,7 @@
       "TableAlias": "focos",
       "Name": "data_hora",
       "Alias": "Data / Hora",
+      "ExportAlias": "DataHora",
       "Order": "desc",
       "String": false
     },
@@ -11,6 +12,7 @@
       "TableAlias": "focos",
       "Name": "satelite",
       "Alias": "Satélite",
+      "ExportAlias": "Satelite",
       "Order": null,
       "String": true
     },
@@ -18,6 +20,7 @@
       "TableAlias": "focos",
       "Name": "pais",
       "Alias": "País",
+      "ExportAlias": "Pais",
       "Order": null,
       "String": true
     },
@@ -25,6 +28,7 @@
       "TableAlias": "focos",
       "Name": "estado",
       "Alias": "Estado",
+      "ExportAlias": "Estado",
       "Order": null,
       "String": true
     },
@@ -32,6 +36,7 @@
       "TableAlias": "focos",
       "Name": "municipio",
       "Alias": "Município",
+      "ExportAlias": "Municipi",
       "Order": null,
       "String": true
     },
@@ -39,6 +44,7 @@
       "TableAlias": "focos",
       "Name": "bioma",
       "Alias": "Bioma",
+      "ExportAlias": "Bioma",
       "Order": null,
       "String": true
     },
@@ -46,6 +52,7 @@
       "TableAlias": "focos",
       "Name": "latitude",
       "Alias": "Latitude",
+      "ExportAlias": "Latitude",
       "Order": null,
       "String": false
     },
@@ -53,6 +60,7 @@
       "TableAlias": "focos",
       "Name": "longitude",
       "Alias": "Longitude",
+      "ExportAlias": "Longitud",
       "Order": null,
       "String": false
     },
@@ -60,6 +68,7 @@
       "TableAlias": "areas_ind",
       "Name": "nome",
       "Alias": "Área Industrial",
+      "ExportAlias": "AreaIndu",
       "Order": null,
       "String": false
     }
