@@ -106,7 +106,7 @@ var ExportController = function(app) {
                 memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
                   if(err) return console.error(err);
 
-                  response.download(zipPath, 'Focos.' + request.query.dateTimeFrom.split(' ').join('_').split(':').join('') + '.' + request.query.dateTimeTo.split(' ').join('_').split(':').join('-') + '.zip', function(err) {
+                  response.download(zipPath, fileName + '.zip', function(err) {
                     if(err) return console.error(err);
 
                     deleteFolderRecursively(shapefileFolderPath);
