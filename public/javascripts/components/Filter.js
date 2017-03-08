@@ -943,7 +943,8 @@ define(
             countries: countries,
             states: memberStates,
             satellites: memberSatellites,
-            biomes: memberBiomes
+            biomes: memberBiomes,
+            industrialFires: memberIndustrialFires
           });
 
           if(memberInitialFilter || currentSituationFilterString != memberLastFilters[layers[i].Id]) {
@@ -955,6 +956,7 @@ define(
               memberStates,
               memberSatellites,
               memberBiomes,
+              memberIndustrialFires,
               layers[i].Id
             );
 
@@ -973,13 +975,14 @@ define(
      * @param {array} states - States ids
      * @param {array} satellites - Satellites
      * @param {array} biomes - Biomes
+     * @param {boolean} industrialFires - Industrial fires flag
      * @param {string} layer - Layer id
      *
      * @function applyCurrentSituationFilter
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, layer) {
+    var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, industrialFires, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(continent !== undefined && continent !== null && continent !== "" && continent !== '') {
@@ -1000,6 +1003,10 @@ define(
 
       if(biomes !== undefined && biomes !== null && biomes !== "" && biomes !== '' && biomes !== [] && !Utils.stringInArray(biomes, "all")) {
         currentSituationFilter += ";biomes:'" + Utils.replaceAll(biomes.toString(), ',', '\'\\,\'') + "'";
+      }
+
+      if(!industrialFires) {
+        currentSituationFilter += ";industrialFires: and id_area_industrial is null";
       }
 
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
