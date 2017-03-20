@@ -258,6 +258,28 @@ var Utils = function() {
       parameter: parameter
     };
   };
+
+  
+  /**
+   * Verifies if a string exists in an array.
+   * @param {array} array - Array where the search will be performed
+   * @param {string} string - String to be searched
+   * @returns {boolean} boolean - Flag that indicates if the string exists in the array
+   *
+   * @function stringInArray
+   * @memberof Utils
+   * @inner
+   */
+  this.stringInArray = function(array, string) {
+    if(array !== null) {
+      for(var i = 0, arrayLength = array.length; i < arrayLength; i++) {
+        if(array[i].toString() === string.toString())
+          return true;
+      }
+    }
+
+    return false;
+  };
 };
 
 module.exports = Utils;

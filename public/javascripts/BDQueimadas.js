@@ -348,8 +348,9 @@ define(
                 '<div class="form-group bdqueimadas-form">' +
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
                 '<div class="col-sm-6" style="float: right; width: 240px;">' +
-                  '<select id="exportation-type" class="form-control">' +
-                    '<option value="csv">CSV</option>' +
+                  '<select multiple id="exportation-type" class="form-control">' +
+                    '<option value="all">Todos os Formatos</option>' +
+                    '<option selected value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
                     '<option value="kml">KML</option>' +
                     '<option value="shapefile">Shapefile</option>' +
@@ -456,7 +457,7 @@ define(
                   $("#filter-error-export-satellite").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
                   $("#filter-error-export-biome").text('Selecione algum bioma!');
-                } else if($("#exportation-type").val() === "") {
+                } else if($("#exportation-type").val() === null) {
                   $("#filter-error-export-type").text('Formato da exportação inválido!');
                 } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
                   $("#filter-error-export-aps").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
@@ -494,7 +495,7 @@ define(
                                          "&states=" + exportationSpatialFilterData.states +
                                          "&cities=" + exportationSpatialFilterData.cities +
                                          "&specialRegions=" + exportationSpatialFilterData.specialRegions +
-                                         "&format=" + $("#exportation-type").val() +
+                                         "&format=" + $("#exportation-type").val().toString() +
                                          "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
                                          "&industrialFires=" + Filter.getIndustrialFires() +
                                          "&bufferInternal=" + $('#buffer-internal').is(':checked') +
@@ -502,7 +503,7 @@ define(
                                          "&bufferTen=" + $('#buffer-ten').is(':checked') +
                                          "&encoding=" + $('input[name=encoding]:checked').val();
 
-                        if($('#exportation-type').val() === 'csv') {
+                        if(Utils.stringInArray($('#exportation-type').val(), 'csv')) {
                           exportLink += "&decimalSeparator=" + $('input[name=decimalSeparator]:checked').val() +
                           "&fieldSeparator=" + $('input[name=fieldSeparator]:checked').val();
                         }
@@ -510,8 +511,6 @@ define(
                         exportLink += "&t=" + existsDataToExport.token;
 
                         window.open(exportLink, '_blank');
-
-                        vex.close();
                       } else {
                         vex.dialog.alert({
                           message: '<p class="text-center">Não existem dados para exportar!</p>',
@@ -642,7 +641,7 @@ define(
       });
 
       $(document).on('change', '#exportation-type', function() {
-        if($('#exportation-type').val() === 'csv') $('#csvFields').css('display', '');
+        if(Utils.stringInArray($('#exportation-type').val(), 'csv')) $('#csvFields').css('display', '');
         else $('#csvFields').css('display', 'none');
       });
 

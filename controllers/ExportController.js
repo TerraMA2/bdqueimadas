@@ -7,6 +7,7 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberExportation - 'Exportation' model.
+ * @property {object} memberUtils - 'Utils' model.
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberPath - 'path' module.
  * @property {function} memberExec - Exec function.
@@ -15,12 +16,14 @@ var ExportController = function(app) {
 
   // 'Exportation' model
   var memberExportation = new (require('../models/Exportation.js'))();
+  // 'Utils' model
+  var memberUtils = new (require('../models/Utils.js'))();
   // 'fs' module
   var memberFs = require('fs');
   // 'path' module
   var memberPath = require('path');
   // Exec function
-  var memberExec = require('child_process').exec;
+  var memberExec = require('child_process').execSync;
 
   /**
    * Processes the request and returns a response.
@@ -52,7 +55,13 @@ var ExportController = function(app) {
       options.bufferFive = (request.query.bufferFive == "true");
       options.bufferTen = (request.query.bufferTen == "true");
       options.encoding = request.query.encoding;
-      options.format = request.query.format;
+
+      var requestFormats = request.query.format.split(',');
+
+      if(memberUtils.stringInArray(requestFormats, 'all'))
+        requestFormats = ['csv', 'geojson', 'kml', 'shapefile'];
+
+      options.format = requestFormats;
 
       var userIp = (request.headers['x-forwarded-for'] || '').split(',')[0] || request.connection.remoteAddress;
 
@@ -61,213 +70,91 @@ var ExportController = function(app) {
       var fileName = 'Focos.' + dataTimeFrom[0] + '.' + dataTimeTo[0];
 
       // Call of the method 'registerDownload', responsible for registering the download in the database
-      memberExportation.registerDownload(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, request.query.format, userIp, options, function(err, registerDownloadResult) {
+      memberExportation.registerDownload(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, requestFormats.toString(), userIp, options, function(err, registerDownloadResult) {
         if(err) return console.error(err);
 
         require('crypto').randomBytes(24, function(err, buffer) {
+          var connectionString = memberExportation.getPgConnectionString();
+          var separator = (options.fieldSeparator !== undefined && options.fieldSeparator == "semicolon" ? "SEMICOLON" : "COMMA");
+          var folderPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex'));
 
-          if(true) {
-            var connectionString = memberExportation.getPgConnectionString();
+          try {
+            memberFs.mkdirSync(folderPath);
+          } catch(e) {
+            if(e.code != 'EEXIST') throw e;
+          }
 
-            if(request.query.format === 'csv') {
-              var separator = (options.fieldSeparator !== undefined && options.fieldSeparator == "semicolon" ? "SEMICOLON" : "COMMA");
+          for(var i = 0, formatsLength = requestFormats.length; i < formatsLength; i++) {
+            switch(requestFormats[i]) {
+              case 'csv':
+                var fileExtention = '.csv';
+                var ogr2ogrFormat = 'CSV';
+                break;
+              case 'shapefile':
+                var fileExtention = '.shp';
+                var ogr2ogrFormat = 'ESRI Shapefile';
+                break;
+              case 'kml':
+                var fileExtention = '.kml';
+                var ogr2ogrFormat = 'KML';
+                break;
+              default:
+                var fileExtention = '.json';
+                var ogr2ogrFormat = 'GeoJSON';
+            }
 
-              var csvPath = memberPath.join(__dirname, '../tmp/csv-' + buffer.toString('hex') + '.csv');
-              var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(false, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures -lco SEPARATOR=" + separator;
-
-              memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
-                if(err) return console.error(err);
-
-                response.download(csvPath, fileName + '.csv', function(err) {
-                if(err) return console.error(err);
-
-                memberFs.unlink(csvPath);
-                });
-              });
-            } else if(request.query.format === 'shapefile') {
-              var shapefileFolderName = 'Shapefile-' + buffer.toString('hex');
-              var shapefileFolderPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName);
-              var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/' + fileName + '.shp');
-
-              var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/" + fileName + ".zip";
-
-              var shapefileGenerationCommand = memberExportation.ogr2ogr() + " -F \"ESRI Shapefile\" " + shapefilePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
-              var zipGenerationCommand = "zip -r -j " + zipPath + " " + shapefileFolderPath;
+            if(requestFormats[i] == 'shapefile') {
+              var zipPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".shp.zip";
+              var zipGenerationCommand = "zip -r -j " + zipPath + " " + folderPath + "/shapefile";
 
               try {
-                memberFs.mkdirSync(shapefileFolderPath);
+                memberFs.mkdirSync(folderPath + "/shapefile");
               } catch(e) {
                 if(e.code != 'EEXIST') throw e;
               }
-
-              memberExec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
-                if(err) return console.error(err);
-
-                memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
-                  if(err) return console.error(err);
-
-                  response.download(zipPath, fileName + '.zip', function(err) {
-                    if(err) return console.error(err);
-
-                    deleteFolderRecursively(shapefileFolderPath);
-                  });
-                });
-              });
-            } else if(request.query.format === 'kml') {
-              var kmlPath = memberPath.join(__dirname, '../tmp/' + fileName + '.kml');
-              var kmlGenerationCommand = memberExportation.ogr2ogr() + " -F \"KML\" " + kmlPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
-
-              memberExec(kmlGenerationCommand, function(err, kmlGenerationCommandResult, kmlGenerationCommandError) {
-                if(err) return console.error(err);
-
-                response.download(kmlPath, fileName + '.kml', function(err) {
-                  if(err) return console.error(err);
-
-                  memberFs.unlink(kmlPath);
-                });
-              });
-            } else {
-              var geoJsonPath = memberPath.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
-              var geoJsonGenerationCommand = memberExportation.ogr2ogr() + " -F \"GeoJSON\" " + geoJsonPath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery(true, request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures";
-
-              memberExec(geoJsonGenerationCommand, function(err, geoJsonGenerationCommandResult, geoJsonGenerationCommandError) {
-                if(err) return console.error(err);
-
-                response.download(geoJsonPath, fileName + '.json', function(err) {
-                  if(err) return console.error(err);
-
-                  memberFs.unlink(geoJsonPath);
-                });
-              });
-            /*} else if() {
-              satelites = []
-              satelites.append({'nome':'GOES-13'})
-              satelites.append({'nome':'AQUA_M'})
-              satelites.append({'nome':'TERRA_M'})
-              satelites.append({'nome':'TERRA_M-T'})
-              satelites.append({'nome':'MSG-02'})
-              satelites.append({'nome':'NPP'})
-              satelites.append({'nome':'NOAA-15'})
-              satelites.append({'nome':'NOAA-18'})
-              satelites.append({'nome':'NOAA-19'})
-              satelites.append({'nome':'MSG-02'})
-              satelites.append({'nome':'NPP'})
-              satelites.append({'nome':'NPP_375'})
-
-              arq_fonte = open("/tmp/" + arquivo, "r")
-              arq_template = open(settings.MEDIA_ROOT + "/templates/template_kml.kml", "r")
-
-              items = json.loads(arq_fonte.read())
-
-              for stl in satelites:
-                  dados_str += '<Folder>'
-                  dados_str += '<name>%s</name>' %(stl.get('nome'))
-
-                  items_focos = items.get('features')
-
-                  for it in items_focos:
-                      propriedades = it.get('properties')
-                      if propriedades.get('satelite') == stl.get('nome'):
-                          dados_str += '<Placemark>'
-                          dados_str += '<name>%s</name>' %(stl.get('nome'))
-                          dados_str += '<description><![CDATA[<br>LAT =  %s<br>LONG =  %s<br>DATA = %s<br>SATELITE = %s<br>ESTADO =%s<br>VERSION = 1.0NRT<br><br>]]></description>' %(propriedades.get('latitude'),propriedades.get('longitude'),propriedades.get('data_hora_gmt'),propriedades.get('satelite').decode('utf-8').strip(),propriedades.get('estado').decode('utf-8').strip())
-                          dados_str += '<styleUrl>#%s</styleUrl>' %(stl.get('nome'))
-                          dados_str += '<Point>'
-                          dados_str += '<coordinates>%s,%s</coordinates>' %(propriedades.get('longitude'),propriedades.get('latitude'))
-                          dados_str += '</Point>'
-                          dados_str += '<LookAt>'
-                          dados_str += '<longitude>%s</longitude>'%(propriedades.get('longitude'))
-                          dados_str += '<latitude>%s</latitude>'%(propriedades.get('latitude'))
-                          dados_str += '<range>5000</range>'
-                          dados_str += '</LookAt>'
-                          dados_str += '</Placemark>'
-                  dados_str += '</Folder>'
-
-              dados = str(arq_template.read()).replace('||MIOLO||',dados_str).decode('utf-8').strip()
-
-              with codecs.open("/tmp/" + filename + ".kml",'w',encoding='utf-8') as f:
-                  f.write(dados.decode('utf-8')) ''*/
             }
-          } else {
-            // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-            memberExportation.getGeoJSONData(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, options, function(err, geoJsonData) {
-              if(err) return console.error(err);
 
-              var geoJson = createFeatureCollection(geoJsonData);
+            var filePath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex') + (requestFormats[i] == 'shapefile' ? '/shapefile/' : '/') + fileName + fileExtention);
+            var generationCommand = memberExportation.ogr2ogr() + " -F \"" + ogr2ogrFormat + "\" " + filePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery((requestFormats[i] != 'csv'), request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures" + (requestFormats[i] == "csv" ? " -lco SEPARATOR=" + separator : "");
 
-              var jsonfile = require('jsonfile');
+            var generationCommandResult = memberExec(generationCommand);
 
-              var geoJsonPath = memberPath.join(__dirname, '../tmp/geojson-' + buffer.toString('hex') + '.json');
-
-              jsonfile.writeFileSync(geoJsonPath, geoJson);
-
-              if(request.query.format === 'shapefile') {
-                var shapefileFolderName = 'Shapefile-' + buffer.toString('hex');
-                var shapefileFolderPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName);
-                var shapefilePath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName + '/' + fileName + '.shp');
-
-                var zipPath = memberPath.join(__dirname, '../tmp/' + shapefileFolderName) + "/" + fileName + ".zip";
-
-                var shapefileGenerationCommand = memberExportation.ogr2ogr() + " -F \"ESRI Shapefile\" " + shapefilePath + " " + geoJsonPath + " OGRGeoJSON";
-                var zipGenerationCommand = "zip -r -j " + zipPath + " " + shapefileFolderPath;
-
-                try {
-                  memberFs.mkdirSync(shapefileFolderPath);
-                } catch(e) {
-                  if(e.code != 'EEXIST') throw e;
-                }
-
-                memberExec(shapefileGenerationCommand, function(err, shapefileGenerationCommandResult, shapefileGenerationCommandError) {
-                  if(err) return console.error(err);
-
-                  memberExec(zipGenerationCommand, function(err, zipGenerationCommandResult, zipGenerationCommandError) {
-                    if(err) return console.error(err);
-
-                    response.download(zipPath, fileName + '.zip', function(err) {
-                      if(err) return console.error(err);
-
-                      memberFs.unlink(geoJsonPath);
-                      deleteFolderRecursively(shapefileFolderPath);
-                    });
-                  });
-                });
-              } else if(request.query.format === 'csv') {
-                var csvPath = memberPath.join(__dirname, '../tmp/' + fileName + '.csv');
-                var csvGenerationCommand = memberExportation.ogr2ogr() + " -F \"CSV\" " + csvPath + " " + geoJsonPath;
-
-                memberExec(csvGenerationCommand, function(err, csvGenerationCommandResult, csvGenerationCommandError) {
-                  if(err) return console.error(err);
-
-                  response.download(csvPath, fileName + '.csv', function(err) {
-                    if(err) return console.error(err);
-
-                    memberFs.unlink(geoJsonPath);
-                    memberFs.unlink(csvPath);
-                  });
-                });
-              } else if(request.query.format === 'kml') {
-                var kmlPath = memberPath.join(__dirname, '../tmp/' + fileName + '.kml');
-                var kmlGenerationCommand = memberExportation.ogr2ogr() + " -F \"KML\" " + kmlPath + " " + geoJsonPath;
-
-                memberExec(kmlGenerationCommand, function(err, kmlGenerationCommandResult, kmlGenerationCommandError) {
-                  if(err) return console.error(err);
-
-                  response.download(kmlPath, fileName + '.kml', function(err) {
-                    if(err) return console.error(err);
-
-                    memberFs.unlink(geoJsonPath);
-                    memberFs.unlink(kmlPath);
-                  });
-                });
-              } else {
-                response.download(geoJsonPath, fileName + '.json', function(err) {
-                  if(err) return console.error(err);
-
-                  memberFs.unlink(geoJsonPath);
-                });
-              }
-            });
+            if(requestFormats[i] == 'shapefile') {
+              var zipGenerationCommandResult = memberExec(zipGenerationCommand);
+              deleteFolderRecursively(folderPath + "/shapefile");
+            }
           }
+
+          if(requestFormats.length == 1) {
+            switch(requestFormats[0]) {
+              case 'csv':
+                var fileExtention = '.csv';
+                break;
+              case 'shapefile':
+                var fileExtention = '.shp';
+                break;
+              case 'kml':
+                var fileExtention = '.kml';
+                break;
+              default:
+                var fileExtention = '.json';
+            }
+
+            var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
+            var finalFileName = fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
+          } else {
+            var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".zip";
+            var finalFileName = fileName + ".zip";
+
+            var zipGenerationCommand = "zip -r -j " + finalPath + " " + folderPath;
+            var zipGenerationCommandResult = memberExec(zipGenerationCommand);
+          }
+
+          response.download(finalPath, finalFileName, function(err) {
+            if(err) return console.error(err);
+
+            deleteFolderRecursively(folderPath);
+          });
         });
       });
     } else {
@@ -275,33 +162,6 @@ var ExportController = function(app) {
     }
 
     deleteInvalidTokens(request.session.tokens);
-  };
-
-  /**
-   * Processes the data returned from the database and creates a Feature Collection (GeoJSON).
-   * @param {json} geoJsonData - JSON containing the data returned from the database
-   * @returns {geojson} geoJson - Feature Collection (GeoJSON)
-   *
-   * @private
-   * @function createFeatureCollection
-   * @memberof ExportController
-   * @inner
-   */
-  var createFeatureCollection = function(geoJsonData) {
-    var geoJson = {
-      "type": "FeatureCollection",
-      "features": []
-    };
-
-    geoJsonData.rows.forEach(function(feature) {
-      geoJson.features.push({
-        "type": "Feature",
-        "geometry": feature.geometry,
-        "properties": feature.properties
-      });
-    });
-
-    return geoJson;
   };
 
   /**

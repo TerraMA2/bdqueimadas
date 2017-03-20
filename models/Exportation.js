@@ -20,11 +20,6 @@ var Exportation = function() {
   var memberPath = require('path');
   // 'pg-format' module
   var memberPgFormat = require('pg-format');
-
-
-  var memberRemoveDiacritics = require('diacritics').remove;
-
-
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // Attributes table configuration
@@ -94,7 +89,7 @@ var Exportation = function() {
       var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
 
       if(memberAttributesTableConfig.Columns[i].Name !== "geom")
-        columns += columnName + (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].ExportAlias) + "\", " : ", ");
+        columns += columnName + (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \"" + memberAttributesTableConfig.Columns[i].ExportAlias + "\", " : ", ");
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -153,7 +148,7 @@ var Exportation = function() {
 
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
-      var alias = (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \\\"" + memberRemoveDiacritics(memberAttributesTableConfig.Columns[i].ExportAlias) + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
+      var alias = (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \\\"" + memberAttributesTableConfig.Columns[i].ExportAlias + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
 
 
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
@@ -202,6 +197,76 @@ var Exportation = function() {
     var finalQuery = memberPgFormat.apply(null, params);
 
     return finalQuery + ";";
+  };
+
+  /**
+   * Returns the fires data in KML format.
+   * @param {object} pgPool - PostgreSQL connection pool
+   * @param {string} dateTimeFrom - Initial date / time
+   * @param {string} dateTimeTo - Final date / time
+   * @param {json} options - Filtering options
+   * @param {databaseOperationCallback} callback - Callback function
+   * @returns {databaseOperationCallback} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getKMLContent
+   * @memberof Exportation
+   * @inner
+   */
+  this.getKMLContent = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
+    // Counter of the query parameters
+    var parameter = 1;
+
+    // Setting of the query columns string
+    var columns = "";
+    for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
+      var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+
+      if(memberAttributesTableConfig.Columns[i].Name !== "geom") {
+        columns += memberAttributesTableConfig.Columns[i].ExportAlias + " = ' || ";
+
+        if(memberAttributesTableConfig.Columns[i].TableAlias !== null && memberAttributesTableConfig.Columns[i].TableAlias !== "FiresTable")
+          columns += "CASE WHEN " + columnName + " is null THEN '' END"
+        else
+          columns += columnName;
+
+        columns += " || '<br>";
+      }
+    }
+
+    // Connection with the PostgreSQL database
+    pgPool.connect(function(err, client, done) {
+      if(!err) {
+        // Creation of the query
+        var query = "select '<Folder><name>' || FiresTable." + memberTablesConfig.Fires.SatelliteFieldName + " || '</name>' || " +
+                    "string_agg('', '<Placemark><name>' || FiresTable." + memberTablesConfig.Fires.SatelliteFieldName + " || '</name>' || '<description><![CDATA[<br>" + columns + "Version = 1.0NRT<br>" +
+                    "<br>]]></description><styleUrl>#' || FiresTable." + memberTablesConfig.Fires.SatelliteFieldName + " || '</styleUrl>" +
+                    "<Point><coordinates>' || FiresTable." + memberTablesConfig.Fires.LongitudeFieldName + " || ',' || FiresTable." + memberTablesConfig.Fires.LatitudeFieldName + " || '</coordinates></Point>" +
+                    "<LookAt><longitude>' || FiresTable." + memberTablesConfig.Fires.LongitudeFieldName + " || '</longitude><latitude>' || FiresTable." + memberTablesConfig.Fires.LatitudeFieldName + " || '</latitude><range>5000</range></LookAt></Placemark>') || " +
+                    "'</Folder>' as kml from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable left outer join " + 
+                    memberTablesConfig.IndustrialAreas.Schema + "." + memberTablesConfig.IndustrialAreas.TableName + " IndustrialAreasTable " +
+                    "on (FiresTable." + memberTablesConfig.Fires.IndustrialFiresFieldName + " = IndustrialAreasTable." + memberTablesConfig.IndustrialAreas.IdFieldName + ") " +
+                    "where (FiresTable." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+            params = [dateTimeFrom, dateTimeTo];
+
+        options.exportFilter = true;
+        options.tableAlias = "FiresTable";
+
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
+
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
+
+        query += " group by " + memberTablesConfig.Fires.SatelliteFieldName;
+
+        // Execution of the query
+        client.query(query, params, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
   };
 
   /**
