@@ -168,6 +168,9 @@ var Exportation = function() {
 
     columns = columns.substring(0, (columns.length - 2));
 
+    if(options.protectedArea !== undefined)
+      columns += ", '" + options.protectedArea.type + " - " + options.protectedArea.name + "' as \\\"AreaProt\\\"";
+
     if(selectGeometry)
       columns += ", FiresTable." + memberTablesConfig.Fires.GeometryFieldName;
 

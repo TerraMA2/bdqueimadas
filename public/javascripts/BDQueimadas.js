@@ -606,6 +606,7 @@ define(
 
             $('#pas-export').data('value', JSON.stringify({
               id: ui.item.value.id,
+              name: ui.item.value.name,
               ngo: ui.item.value.ngo,
               type: ui.item.value.type
             }));
@@ -852,6 +853,7 @@ define(
 
               $('#pas-attributes-table').data('value', JSON.stringify({
                 id: data[0].value.id,
+                name: data[0].value.name,
                 ngo: data[0].value.ngo,
                 type: data[0].value.type
               }));
@@ -900,6 +902,7 @@ define(
 
               $('#pas-export').data('value', JSON.stringify({
                 id: data[0].value.id,
+                name: data[0].value.name,
                 ngo: data[0].value.ngo,
                 type: data[0].value.type
               }));
@@ -1714,6 +1717,7 @@ define(
             $('#pas').val(data[0].label);
             Filter.setProtectedArea({
               id: data[0].value.id,
+              name: data[0].value.name,
               ngo: data[0].value.ngo,
               type: data[0].value.type
             });
@@ -1721,6 +1725,7 @@ define(
             $('#pas-attributes-table').val(data[0].label);
             $('#pas-attributes-table').data('value', JSON.stringify({
               id: data[0].value.id,
+              name: data[0].value.name,
               ngo: data[0].value.ngo,
               type: data[0].value.type
             }));
@@ -1985,6 +1990,7 @@ define(
           $('#pas').val(ui.item.label);
           Filter.setProtectedArea({
             id: ui.item.value.id,
+            name: ui.item.value.name,
             ngo: ui.item.value.ngo,
             type: ui.item.value.type
           });
@@ -1992,6 +1998,7 @@ define(
           $('#pas-attributes-table').val(ui.item.label);
           $('#pas-attributes-table').data('value', JSON.stringify({
             id: ui.item.value.id,
+            name: ui.item.value.name,
             ngo: ui.item.value.ngo,
             type: ui.item.value.type
           }));
@@ -2017,6 +2024,7 @@ define(
 
           $('#pas-attributes-table').data('value', JSON.stringify({
             id: ui.item.value.id,
+            name: ui.item.value.name,
             ngo: ui.item.value.ngo,
             type: ui.item.value.type
           }));
