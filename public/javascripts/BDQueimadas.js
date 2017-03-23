@@ -13,6 +13,7 @@
  * @property {number} memberReducedFooterHeight - Reduced footer height.
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  * @property {number} memberButtonBlinkingInterval - Timer id of the initial blinking interval of the filter button.
+ * @property {object} memberFilterExport - Saves the exportation filter parameters.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
@@ -32,6 +33,8 @@ define(
     var memberMapSubtitleHeight = null;
     // Timer id of the initial blinking interval of the filter button
     var memberButtonBlinkingInterval = null;
+    // Saves the exportation filter parameters
+    var memberFilterExport = null;
 
     /**
      * Updates the necessary components.
@@ -251,18 +254,18 @@ define(
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left" style="width: 200px;">' +
                   '<label for="countries-export">Países</label>' +
-                  '<select multiple id="countries-export" name="countries-export" class="form-control float-left">' + $('#countries').html() + '</select>' +
+                  '<select multiple id="countries-export" name="countries-export" class="form-control float-left">' + (memberFilterExport !== null ? memberFilterExport.countriesHtml : $('#countries').html()) + '</select>' +
                 '</div>' +
                 '<div class="float-right" style="width: 200px;">' +
                   '<label for="states-export">Estados</label>' +
-                  '<select multiple id="states-export" name="states-export" class="form-control float-left">' + $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '') + '</select>' +
+                  '<select multiple id="states-export" name="states-export" class="form-control float-left">' + (memberFilterExport !== null ? memberFilterExport.statesHtml : $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '')) + '</select>' +
                 '</div>' +
               '</div>' +
               '<div class="clear"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<label for="city-export">Municípios</label>' +
                 '<div class="input-group">' +
-                  '<input value="' + $('#city').val() + '" type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
+                  '<input type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
                   '<span class="input-group-btn">' +
                     '<button type="button" id="search-cities-btn-export" class="btn btn-flat">' +
                       '<i class="fa fa-search"></i>' +
@@ -273,7 +276,7 @@ define(
               '<div class="form-group bdqueimadas-form">' +
                 '<label for="pas-export">UCs / TIs (Apenas Brasil)</label>' +
                 '<div class="input-group">' +
-                  '<input value="' + $('#pas').val() + '" type="text" id="pas-export" name="pas-export" class="form-control" placeholder="UCs / TIs">' +
+                  '<input type="text" id="pas-export" name="pas-export" class="form-control" placeholder="UCs / TIs">' +
                   '<span class="input-group-btn">' +
                     '<button type="button" id="search-pas-btn-export" class="btn btn-flat">' +
                       '<i class="fa fa-search"></i>' +
@@ -286,21 +289,21 @@ define(
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-internal" name="buffer-internal"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Interno' +
+                      '<input type="checkbox" id="buffer-internal" name="buffer-internal"> Interno' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-five" name="buffer-five"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Buffer 5Km' +
+                      '<input type="checkbox" id="buffer-five" name="buffer-five"> Buffer 5Km' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-ten" name="buffer-ten"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Buffer 10Km' +
+                      '<input type="checkbox" id="buffer-ten" name="buffer-ten"> Buffer 10Km' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
@@ -311,20 +314,20 @@ define(
                 '<label style="width: 100%; text-align: center; margin-bottom: 4px !important;">Obs: dados após Jun/1998</label>' +
                 '<div class="float-left div-date-filter-export">' +
                   '<label for="filter-date-from-export">Data / Hora Início - TMG (Z)</label>' +
-                  '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
+                  '<input type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="Hora Início">' +
+                  '<input type="text" class="form-control float-left" id="filter-time-from-export" placeholder="Hora Início">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
                   '<label for="filter-date-to-export">Data / Hora Fim - TMG (Z)</label>' +
-                  '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
+                  '<input type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
+                  '<input type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
                 '</div>' +
               '</div>' +
               '<div class="clear"></div>' +
@@ -486,6 +489,29 @@ define(
                     },
                     success: function(existsDataToExport) {
                       if(existsDataToExport.existsDataToExport) {
+                        memberFilterExport = {
+                          dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
+                          dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
+                          satellites: $('#filter-satellite-export').val().toString(),
+                          biomes: $('#filter-biome-export').val().toString(),
+                          continent: exportationSpatialFilterData.continent,
+                          countries: exportationSpatialFilterData.countries,
+                          countriesHtml: $('#countries-export').html(),
+                          states: exportationSpatialFilterData.states.concat(exportationSpatialFilterData.specialRegions),
+                          statesHtml: $('#states-export').html(),
+                          cities: exportationSpatialFilterData.cities,
+                          cityLabel: $('#city-export').val(),
+                          format: $("#exportation-type").val().toString(),
+                          protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
+                          industrialFires: Filter.getIndustrialFires(),
+                          bufferInternal: $('#buffer-internal').is(':checked'),
+                          bufferFive: $('#buffer-five').is(':checked'),
+                          bufferTen: $('#buffer-ten').is(':checked'),
+                          encoding: $('input[name=encoding]:checked').val(),
+                          decimalSeparator: $('input[name=decimalSeparator]:checked').val(),
+                          fieldSeparator: $('input[name=fieldSeparator]:checked').val()
+                        };
+
                         var exportLink = Utils.getBaseUrl() + "export?dateTimeFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00' +
                                          "&dateTimeTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59' +
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
@@ -575,16 +601,6 @@ define(
         $("#filter-date-from-export").datepicker(datePickerOptions);
         $("#filter-date-to-export").datepicker(datePickerOptions);
 
-        $("#filter-satellite-export").val($("#filter-satellite").val());
-        $('#filter-biome-export').val($('#filter-biome').val());
-        $('#continents-export').val($('#continents').val());
-        $('#countries-export').val($('#countries').val());
-        $('#states-export').val($('#states').val());
-
-        if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0) $('#states-export').attr('disabled', 'disabled');
-
-        if(Filter.getProtectedArea() !== null) $('#pas-export').data('value', JSON.stringify(Filter.getProtectedArea()));
-
         $('#pas-export').autocomplete({
           minLength: 4,
           source: function(request, response) {
@@ -598,9 +614,9 @@ define(
           select: function(event, ui) {
             event.preventDefault();
 
-            $('#buffer-internal').removeAttr('disabled');
-            $('#buffer-five').removeAttr('disabled');
-            $('#buffer-ten').removeAttr('disabled');
+            $('#buffer-internal').removeAttr('disabled').attr('checked', false);
+            $('#buffer-five').removeAttr('disabled').attr('checked', false);
+            $('#buffer-ten').removeAttr('disabled').attr('checked', false);
 
             $('#pas-export').val(ui.item.label);
 
@@ -639,6 +655,73 @@ define(
             $('#city-export').data('value', ui.item.value.id);
           }
         });
+
+        if(memberFilterExport !== null) {
+          var dateTimeFromArray = memberFilterExport.dateTimeFrom.split(' ');
+          var dateTimeToArray = memberFilterExport.dateTimeTo.split(' ');
+
+          $('#continents-export').val(memberFilterExport.continent);
+          $('#countries-export').val(memberFilterExport.countries);
+          $('#states-export').val(memberFilterExport.states);
+          $('#city-export').val(memberFilterExport.cityLabel);
+          $('#city-export').data('value', memberFilterExport.cities);
+
+          if(memberFilterExport.protectedArea != "") {
+            var protectedArea = JSON.parse(memberFilterExport.protectedArea);
+
+            $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
+            $('#pas-export').data('value', JSON.stringify(protectedArea));
+          } else {
+            $('#buffer-internal').attr("disabled", true);
+            $('#buffer-five').attr("disabled", true);
+            $('#buffer-ten').attr("disabled", true);
+          }
+
+          $('#buffer-internal').attr('checked', memberFilterExport.bufferInternal);
+          $('#buffer-five').attr('checked', memberFilterExport.bufferFive);
+          $('#buffer-ten').attr('checked', memberFilterExport.bufferTen);
+          $('#filter-date-from-export').val(dateTimeFromArray[0]);
+          $('#filter-time-from-export').val(dateTimeFromArray[1]);
+          $('#filter-date-to-export').val(dateTimeToArray[0]);
+          $('#filter-time-to-export').val(dateTimeToArray[1]);
+          memberFilterExport.satellites = (memberFilterExport.satellites == "" ? "all" : memberFilterExport.satellites);
+          $('#filter-satellite-export').val(memberFilterExport.satellites);
+          memberFilterExport.biomes = (memberFilterExport.biomes == "" ? "all" : memberFilterExport.biomes);
+          $('#filter-biome-export').val(memberFilterExport.biomes);
+          $('#exportation-type').val(memberFilterExport.format);
+          $('input[name=encoding][value=\'' + memberFilterExport.encoding + '\']').prop('checked', true);
+          $('input[name=decimalSeparator][value=\'' + memberFilterExport.decimalSeparator + '\']').prop('checked', true);
+          $('input[name=fieldSeparator][value=\'' + memberFilterExport.fieldSeparator + '\']').prop('checked', true);
+
+          if(Utils.stringInArray(memberFilterExport.countries, "") || memberFilterExport.countries.length === 0)
+            $('#states-export').attr('disabled', 'disabled');
+        } else {
+          $('#continents-export').val($('#continents').val());
+          $('#countries-export').val($('#countries').val());
+          $('#states-export').val($('#states').val());
+          $('#city-export').val($('#city').val());
+
+          if(Filter.getProtectedArea() !== null) {
+            var protectedArea = JSON.stringify(Filter.getProtectedArea());
+
+            $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
+            $('#pas-export').data('value', JSON.stringify(protectedArea));
+          } else {
+            $('#buffer-internal').attr("disabled", true);
+            $('#buffer-five').attr("disabled", true);
+            $('#buffer-ten').attr("disabled", true);
+          }
+
+          $('#filter-date-from-export').val($('#filter-date-from').val());
+          $('#filter-time-from-export').val($('#filter-time-from').val());
+          $('#filter-date-to-export').val($('#filter-date-to').val());
+          $('#filter-time-to-export').val($('#filter-time-to').val());
+          $("#filter-satellite-export").val($("#filter-satellite").val());
+          $('#filter-biome-export').val($('#filter-biome').val());
+
+          if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0)
+            $('#states-export').attr('disabled', 'disabled');
+        }
       });
 
       $(document).on('change', '#exportation-type', function() {
@@ -718,6 +801,13 @@ define(
           } else {
             Filter.checkFiresCount();
           }
+
+          if(memberFilterExport !== null) {
+            memberFilterExport.dateTimeFrom = Utils.dateToString(Utils.stringToDate($('#filter-date-from').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from').val() + ':00';
+            memberFilterExport.dateTimeTo = Utils.dateToString(Utils.stringToDate($('#filter-date-to').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to').val() + ':59';
+            memberFilterExport.satellites = (Utils.stringInArray($('#filter-satellite').val(), "all") ? '' : $('#filter-satellite').val().toString());
+            memberFilterExport.biomes = (Utils.stringInArray($('#filter-biome').val(), "all") ? '' : $('#filter-biome').val().toString());
+          }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
           $('#filter-biome').val(Filter.getBiomes());
@@ -757,6 +847,9 @@ define(
       });
 
       $('#continents').change(function() {
+        if(memberFilterExport !== null && $(this).val() !== "")
+            memberFilterExport.continent = $(this).val();
+
         $('#continents-graphics').val($('#continents').val());
         $('#continents-graphics').change();
 
@@ -768,6 +861,9 @@ define(
       });
 
       $('#countries').change(function() {
+        if(memberFilterExport !== null)
+          memberFilterExport.countries = $('#countries').val();
+
         $('#countries-graphics').val($('#countries').val());
         $('#countries-graphics').change();
 
@@ -778,6 +874,9 @@ define(
       });
 
       $('#states').change(function() {
+        if(memberFilterExport !== null)
+          memberFilterExport.states = $('#states').val();
+
         $('#states-graphics').val($('#states').val());
         $('#states-graphics').change();
 
@@ -829,6 +928,13 @@ define(
 
       $('#pas').on('change', function() {
         if($('#pas').val().length === 0) {
+          if(memberFilterExport !== null) {
+            memberFilterExport.protectedArea = '';
+            memberFilterExport.bufferInternal = false;
+            memberFilterExport.bufferFive = false;
+            memberFilterExport.bufferTen = false;
+          }
+
           $('#pas').val('');
           Filter.setProtectedArea(null);
 
@@ -894,9 +1000,9 @@ define(
           },
           success: function(data) {
             if(data.length > 0) {
-              $('#buffer-internal').removeAttr('disabled');
-              $('#buffer-five').removeAttr('disabled');
-              $('#buffer-ten').removeAttr('disabled');
+              $('#buffer-internal').removeAttr('disabled').attr('checked', false);
+              $('#buffer-five').removeAttr('disabled').attr('checked', false);
+              $('#buffer-ten').removeAttr('disabled').attr('checked', false);
 
               $('#pas-export').val(data[0].label);
 
@@ -908,6 +1014,10 @@ define(
               }));
             } else {
               $('#pas-export').data('value', '');
+
+              $('#buffer-internal').attr('checked', false).attr("disabled", true);
+              $('#buffer-five').attr('checked', false).attr("disabled", true);
+              $('#buffer-ten').attr('checked', false).attr("disabled", true);
 
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
@@ -926,6 +1036,10 @@ define(
         if($('#pas-export').val().length === 0) {
           $('#pas-export').val('');
           $('#pas-export').data('value', '');
+
+          $('#buffer-internal').attr('checked', false).attr("disabled", true);
+          $('#buffer-five').attr('checked', false).attr("disabled", true);
+          $('#buffer-ten').attr('checked', false).attr("disabled", true);
         }
       });
 
@@ -935,6 +1049,11 @@ define(
 
       $('#city').on('change', function() {
         if($('#city').val().length === 0) {
+          if(memberFilterExport !== null) {
+            memberFilterExport.cities = "";
+            memberFilterExport.cityLabel = "";
+          }
+
           $('#city').val("");
           $('#city').data('value', null);
 
@@ -1512,6 +1631,11 @@ define(
 
         Filter.enableDropdown('countries', countriesIds);
 
+        if(memberFilterExport !== null) {
+          memberFilterExport.countriesHtml = $('#countries').html();
+          memberFilterExport.countries = $('#countries').val();
+        }
+
         Filter.checkFiresCount();
       });
 
@@ -1544,11 +1668,17 @@ define(
         }
 
         $(countriesId).empty().html(html);
+
         if($(countriesId).attr('data-value') === undefined || $(countriesId).attr('data-value') === "") {
           $(countriesId).val(initialValue);
         } else {
           var countries = $(countriesId).attr('data-value').split(',');
           $(countriesId).val(countries);
+        }
+
+        if(countriesId == '#countries' && memberFilterExport !== null) {
+          memberFilterExport.countriesHtml = $(countriesId).html();
+          memberFilterExport.countries = $(countriesId).val();
         }
 
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
@@ -1597,11 +1727,17 @@ define(
         }
 
         $(statesId).empty().html(html);
+
         if($(statesId).attr('data-value') === undefined || $(statesId).attr('data-value') === "") {
           $(statesId).val(initialValue);
         } else {
           var states = $(statesId).attr('data-value').split(',');
           $(statesId).val(states);
+        }
+
+        if(statesId == '#states' && memberFilterExport !== null) {
+          memberFilterExport.statesHtml = $(statesId).html().replace('<option value="0" selected="">Todos municípios</option>', '');
+          memberFilterExport.states = $(statesId).val();
         }
 
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
@@ -1714,6 +1850,19 @@ define(
         },
         success: function(data) {
           if(data.length > 0) {
+            if(memberFilterExport !== null) {
+              memberFilterExport.protectedArea = JSON.stringify({
+                id: data[0].value.id,
+                name: data[0].value.name,
+                ngo: data[0].value.ngo,
+                type: data[0].value.type
+              });
+
+              memberFilterExport.bufferInternal = false;
+              memberFilterExport.bufferFive = false;
+              memberFilterExport.bufferTen = false;
+            }
+
             $('#pas').val(data[0].label);
             Filter.setProtectedArea({
               id: data[0].value.id,
@@ -1732,6 +1881,13 @@ define(
 
             Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, ngo: data[0].value.ngo, type: data[0].value.type });
           } else {
+            if(memberFilterExport !== null) {
+              memberFilterExport.protectedArea = '';
+              memberFilterExport.bufferInternal = false;
+              memberFilterExport.bufferFive = false;
+              memberFilterExport.bufferTen = false;
+            }
+
             Filter.setProtectedArea(null);
 
             $('#pas-attributes-table').data('value', '');
@@ -1776,6 +1932,11 @@ define(
         },
         success: function(data) {
           if(data.length > 0) {
+            if(memberFilterExport !== null) {
+              memberFilterExport.cities = data[0].value.id;
+              memberFilterExport.cityLabel = data[0].label;
+            }
+
             $('#city').val(data[0].label);
             $('#city-attributes-table').val(data[0].label);
 
@@ -1783,6 +1944,11 @@ define(
 
             $('#filter-button').click();
           } else {
+            if(memberFilterExport !== null) {
+              memberFilterExport.cities = "";
+              memberFilterExport.cityLabel = "";
+            }
+
             Filter.setCity(null);
             $('#city').data('value', null);
 
@@ -1987,6 +2153,19 @@ define(
         select: function(event, ui) {
           event.preventDefault();
 
+          if(memberFilterExport !== null) {
+            memberFilterExport.protectedArea = JSON.stringify({
+              id: ui.item.value.id,
+              name: ui.item.value.name,
+              ngo: ui.item.value.ngo,
+              type: ui.item.value.type
+            });
+
+            memberFilterExport.bufferInternal = false;
+            memberFilterExport.bufferFive = false;
+            memberFilterExport.bufferTen = false;
+          }
+
           $('#pas').val(ui.item.label);
           Filter.setProtectedArea({
             id: ui.item.value.id,
@@ -2054,6 +2233,11 @@ define(
         },
         select: function(event, ui) {
           event.preventDefault();
+
+          if(memberFilterExport !== null) {
+            memberFilterExport.cities = ui.item.value.id;
+            memberFilterExport.cityLabel = ui.item.label;
+          }
 
           $('#city').val(ui.item.label);
           $('#city-attributes-table').val(ui.item.label);

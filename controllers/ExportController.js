@@ -81,7 +81,8 @@ var ExportController = function(app) {
           try {
             memberFs.mkdirSync(folderPath);
           } catch(e) {
-            if(e.code != 'EEXIST') throw e;
+            if(e.code != 'EEXIST')
+              console.error(e);
           }
 
           for(var i = 0, formatsLength = requestFormats.length; i < formatsLength; i++) {
@@ -110,14 +111,19 @@ var ExportController = function(app) {
               try {
                 memberFs.mkdirSync(folderPath + "/shapefile");
               } catch(e) {
-                if(e.code != 'EEXIST') throw e;
+                if(e.code != 'EEXIST')
+                  console.error(e);
               }
             }
 
             var filePath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex') + (requestFormats[i] == 'shapefile' ? '/shapefile/' : '/') + fileName + fileExtention);
             var generationCommand = memberExportation.ogr2ogr() + " -F \"" + ogr2ogrFormat + "\" " + filePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery((requestFormats[i] != 'csv'), request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures" + (requestFormats[i] == "csv" ? " -lco SEPARATOR=" + separator : "");
 
-            var generationCommandResult = memberExec(generationCommand);
+            try {
+              var generationCommandResult = memberExec(generationCommand);
+            } catch(e) {
+              console.error(e);
+            }
 
             if(requestFormats[i] == 'shapefile') {
               var zipGenerationCommandResult = memberExec(zipGenerationCommand);
