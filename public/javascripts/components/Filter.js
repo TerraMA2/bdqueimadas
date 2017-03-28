@@ -846,7 +846,7 @@ define(
      */
     var processLayers = function(layers, updateLayersTime) {
       for(var i = 0, layersLength = layers.length; i < layersLength; i++) {
-        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && layers[i].Params.Time.match("{{(.*)}}") !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
+        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
 
         if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
           if(memberContinent !== null) {

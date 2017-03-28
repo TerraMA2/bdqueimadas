@@ -715,8 +715,12 @@ define(
         TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, sourceParams, true);
       }
 
-      $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
-      TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+      if($('#' + layer.Id.replace(':', '') + ' > span.terrama2-layerexplorer-checkbox-span').children('.layer-time-update-years').length === 0) {
+        $('#' + layer.Id.replace(':', '') + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
+        TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+      }
+
+      $('#slider-' + layer.Id.replace(':', '')).bootstrapSlider();
     };
 
     /**

@@ -1396,6 +1396,45 @@ define(
         $("#hidden-layer-time-update-" + $(this).data("id")).datepicker("show");
       });
 
+      $(document).on('click', '.layer-time-update-years', function() {
+        if($("#slider-div-" + $(this).data("id")).hasClass("hidden")) {
+          var values = $("#slider-" + $(this).data("id")).data("last-value");
+
+          $("#slider-" + $(this).data("id")).bootstrapSlider('setValue', [parseInt(values[0]), parseInt(values[1])]);
+          $("#slider-div-" + $(this).data("id")).removeClass("hidden");
+        } else
+          $("#slider-div-" + $(this).data("id")).addClass("hidden");
+      });
+
+      $(document).on('click', '.close-slider-div', function() {
+        $(this).parent().addClass("hidden");
+      });
+
+      $(document).on('click', '.update-slider-time', function() {
+        var self = $(this);
+
+        self.parent().addClass("hidden");
+
+        var values = $("#slider-" + self.data("layer-id")).bootstrapSlider('getValue');
+
+        $("#slider-" + self.data("layer-id")).data('last-value', values);
+        $("#years-span-" + self.data("layer-id") + " > a").text(values[0].toString() + " - " + values[1].toString());
+
+        var layers = Map.getLayers();
+
+        for(var i = 0, count = layers.length; i < count; i++) {
+          if(layers[i].Id.replace(':', '') === self.data("layer-id")) {
+            layers[i].Params.Time = values[0].toString() + "-01-01/" + values[1].toString() + "-12-31";
+
+            Map.updateLayerTime(layers[i]);
+
+            return false;
+          }
+        }
+
+        $.event.trigger({type: "updateMapInformationsBox"});
+      });
+
       $(document).on('change', '.hidden-layer-time-update', function() {
         var self = $(this);
         var layers = Map.getLayers();
@@ -2452,8 +2491,19 @@ define(
 
       if(visibleLayersLength > 0) {
         for(var i = 0; i < visibleLayersLength; i++) {
-          if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
-          html += $('#' + visibleLayers[i].elementId + ' > span').text() + '<br/>';
+          if($('#' + visibleLayers[i].elementId + ' > span').length > 0) {
+            if($('#' + visibleLayers[i].elementId + ' > span').children('.layer-time-update-years').length === 0) {
+              if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
+              html += $('#' + visibleLayers[i].elementId + ' > span').text() + '<br/>';
+            } else {
+              if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
+
+              var htmlElements = $('#' + visibleLayers[i].elementId + ' > span').prop('outerHTML');
+              var $htmlElements = $(htmlElements);
+              $htmlElements.find('.slider-div').remove();
+              html += $htmlElements.text(); + '<br/>';
+            }
+          }
         }
       } else {
         html = '<strong>Nenhuma camada a ser exibida.</strong>';

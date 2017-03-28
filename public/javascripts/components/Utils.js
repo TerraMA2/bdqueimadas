@@ -203,7 +203,12 @@ define(function() {
         var format = patternFormat[1];
         var currentDate = getCurrentDate(true);
 
-        if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
+        if(patternFormat[0] === "YEAR_SLIDER") {
+          var patternYears = patternFormat[2].split('-');
+
+          finalString = patternYears[0] + " - " + patternYears[1];
+          finalString = string.replace(datePattern[0], finalString);
+        } else if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
           var patterns = patternFormat[0].split(',');
 
           for(var i = 0, patternsLength = patterns.length; i < patternsLength; i++) {
@@ -240,8 +245,10 @@ define(function() {
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'YYYY/MM/DD');
         }
 
-        finalString = dateToString(currentDate, format);
-        finalString = string.replace(datePattern[0], finalString);
+        if(patternFormat[0] !== "YEAR_SLIDER") {
+          finalString = dateToString(currentDate, format);
+          finalString = string.replace(datePattern[0], finalString);
+        }
       }
     }
 
@@ -312,10 +319,27 @@ define(function() {
       var datePattern = string.match("{{(.*)}}");
 
       if(datePattern !== null) {
-        var span = "<span class=\"layer-time-update\" data-id=\"" + layerId + "\"><a href=\"#\">" + datePattern[0] + "</a></span>";
-        var input = "<input type=\"text\" style=\"width: 0; height: 0; opacity: 0;\" class=\"hidden-layer-time-update\" data-id=\"" + layerId + "\" id=\"hidden-layer-time-update-" + layerId + "\"/>";
+        var patternFormat = datePattern[1].split('=');
 
-        finalString = string.replace(datePattern[0], span) + input;
+        if(patternFormat[0] === "YEAR_SLIDER") {
+          var patternValidYears = patternFormat[1].split('-');
+          var patternCurrentYears = patternFormat[2].split('-');
+
+          var input = "<div class=\"slider-div hidden\" id=\"slider-div-" + layerId.replace(':', '') + "\">" +
+                        "<input style=\"width: 80%;\" type=\"text\" value=\"\" id=\"slider-" + layerId.replace(':', '') + "\" data-last-value=\"[" + patternCurrentYears[0] + "," + patternCurrentYears[1] + "]\" class=\"slider form-control\" data-slider-min=\"" + patternValidYears[0] + "\" data-slider-max=\"" + patternValidYears[1] + "\" data-slider-step=\"1\" data-slider-value=\"[" + patternCurrentYears[0] + "," + patternCurrentYears[1] + "]\" data-slider-tooltip-position=\"bottom\" data-slider-orientation=\"horizontal\" data-slider-selection=\"before\" data-slider-tooltip=\"show\" data-slider-id=\"yellow\">" +
+                        "<i class=\"fa fa-check update-slider-time\" data-layer-id=\"" + layerId.replace(':', '') + "\"></i>" +
+                        "<i class=\"fa fa-close close-slider-div\" data-layer-id=\"" + layerId.replace(':', '') + "\"></i>" +
+                      "</div>";
+
+          var years = "<span class=\"layer-time-update-years\" id=\"years-span-" + layerId.replace(':', '') + "\" data-id=\"" + layerId.replace(':', '') + "\"><a href=\"#\">" + patternCurrentYears[0] + " - " + patternCurrentYears[1] + "</a></span>";
+
+          finalString = string.replace(datePattern[0], years) + input;
+        } else {
+          var span = "<span class=\"layer-time-update\" data-id=\"" + layerId.replace(':', '') + "\"><a href=\"#\">" + datePattern[0] + "</a></span>";
+          var input = "<input type=\"text\" style=\"width: 0; height: 0; opacity: 0;\" class=\"hidden-layer-time-update\" data-id=\"" + layerId.replace(':', '') + "\" id=\"hidden-layer-time-update-" + layerId.replace(':', '') + "\"/>";
+
+          finalString = string.replace(datePattern[0], span) + input;
+        }
       }
     }
 
