@@ -148,8 +148,8 @@ var Exportation = function() {
 
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+      columnName = (memberAttributesTableConfig.Columns[i].UnaccentAtExportation ? "unaccent(" + columnName + ")" : columnName);
       var alias = (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \\\"" + memberAttributesTableConfig.Columns[i].ExportAlias + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
-
 
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
@@ -174,10 +174,7 @@ var Exportation = function() {
     if(selectGeometry)
       columns += ", FiresTable." + memberTablesConfig.Fires.GeometryFieldName;
 
-    var encoding = (options.encoding.toLowerCase() == "windows" ? "LATIN1" : "UTF-8");
-
     // Creation of the query
-    //var query = "SET CLIENT_ENCODING TO '" + encoding + "'; select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
     var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable left outer join " + memberTablesConfig.IndustrialAreas.Schema + "." + memberTablesConfig.IndustrialAreas.TableName + " IndustrialAreasTable on (FiresTable." + memberTablesConfig.Fires.IndustrialFiresFieldName + " = IndustrialAreasTable." + memberTablesConfig.IndustrialAreas.IdFieldName + ") where (FiresTable." + memberTablesConfig.Fires.DateTimeFieldName + " between %L and %L)",
         params = [dateTimeFrom, dateTimeTo];
 

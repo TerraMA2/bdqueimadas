@@ -54,7 +54,6 @@ var ExportController = function(app) {
       options.bufferInternal = (request.query.bufferInternal == "true");
       options.bufferFive = (request.query.bufferFive == "true");
       options.bufferTen = (request.query.bufferTen == "true");
-      options.encoding = request.query.encoding;
 
       var requestFormats = request.query.format.split(',');
 
@@ -117,7 +116,7 @@ var ExportController = function(app) {
             }
 
             var filePath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex') + (requestFormats[i] == 'shapefile' ? '/shapefile/' : '/') + fileName + fileExtention);
-            var generationCommand = memberExportation.ogr2ogr() + " -F \"" + ogr2ogrFormat + "\" " + filePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery((requestFormats[i] != 'csv'), request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures" + (requestFormats[i] == "csv" ? " -lco SEPARATOR=" + separator : "");
+            var generationCommand = memberExportation.ogr2ogr() + " -F \"" + ogr2ogrFormat + "\" " + filePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery((requestFormats[i] != 'csv'), request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures" + (requestFormats[i] == "csv" ? " -lco LINEFORMAT=CRLF -lco SEPARATOR=" + separator : "");
 
             try {
               var generationCommandResult = memberExec(generationCommand);
