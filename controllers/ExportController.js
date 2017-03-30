@@ -11,6 +11,7 @@
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberPath - 'path' module.
  * @property {function} memberExec - Exec function.
+ * @property {function} memberExecSync - Exec function sync.
  */
 var ExportController = function(app) {
 
@@ -23,7 +24,9 @@ var ExportController = function(app) {
   // 'path' module
   var memberPath = require('path');
   // Exec function
-  var memberExec = require('child_process').execSync;
+  var memberExec = require('child_process').exec;
+  // Exec function sync
+  var memberExecSync = require('child_process').execSync;
 
   /**
    * Processes the request and returns a response.
@@ -84,6 +87,8 @@ var ExportController = function(app) {
               console.error(e);
           }
 
+          var processedFormats = 0;
+
           for(var i = 0, formatsLength = requestFormats.length; i < formatsLength; i++) {
             switch(requestFormats[i]) {
               case 'csv':
@@ -104,9 +109,6 @@ var ExportController = function(app) {
             }
 
             if(requestFormats[i] == 'shapefile') {
-              var zipPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".shp.zip";
-              var zipGenerationCommand = "zip -r -j " + zipPath + " " + folderPath + "/shapefile";
-
               try {
                 memberFs.mkdirSync(folderPath + "/shapefile");
               } catch(e) {
@@ -118,48 +120,66 @@ var ExportController = function(app) {
             var filePath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex') + (requestFormats[i] == 'shapefile' ? '/shapefile/' : '/') + fileName + fileExtention);
             var generationCommand = memberExportation.ogr2ogr() + " -F \"" + ogr2ogrFormat + "\" " + filePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery((requestFormats[i] != 'csv'), request.query.dateTimeFrom, request.query.dateTimeTo, options) + "\" -skipfailures" + (requestFormats[i] == "csv" ? " -lco LINEFORMAT=CRLF -lco SEPARATOR=" + separator : "");
 
-            try {
-              var generationCommandResult = memberExec(generationCommand);
-            } catch(e) {
-              console.error(e);
-            }
+            memberExec(generationCommand, function(generationCommandErr, generationCommandOut, generationCommandCode) {
+              if(generationCommandErr) return console.error(generationCommandErr);
 
-            if(requestFormats[i] == 'shapefile') {
-              var zipGenerationCommandResult = memberExec(zipGenerationCommand);
-              deleteFolderRecursively(folderPath + "/shapefile");
-            }
+              if(requestFormats[processedFormats] == 'shapefile') {
+                var zipPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".shp.zip";
+                var zipGenerationCommand = "zip -r -j " + zipPath + " " + folderPath + "/shapefile";
+
+                try {
+                  var zipGenerationCommandResult = memberExecSync(zipGenerationCommand);
+                  deleteFolderRecursively(folderPath + "/shapefile");
+                } catch(e) {
+                  console.error(e);
+                }
+              }
+
+              processedFormats++;
+
+              if(processedFormats == formatsLength) {
+                if(requestFormats.length == 1) {
+                  switch(requestFormats[0]) {
+                    case 'csv':
+                      var fileExtention = '.csv';
+                      break;
+                    case 'shapefile':
+                      var fileExtention = '.shp';
+                      break;
+                    case 'kml':
+                      var fileExtention = '.kml';
+                      break;
+                    default:
+                      var fileExtention = '.json';
+                  }
+
+                  var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
+                  var finalFileName = fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
+
+                  response.download(finalPath, finalFileName, function(err) {
+                    if(err) return console.error(err);
+
+                    deleteFolderRecursively(folderPath);
+                  });
+                } else {
+                  var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".zip";
+                  var finalFileName = fileName + ".zip";
+
+                  var zipGenerationCommand = "zip -r -j " + finalPath + " " + folderPath;
+
+                  memberExec(zipGenerationCommand, function(zipGenerationCommandErr, zipGenerationCommandOut, zipGenerationCommandCode) {
+                    if(zipGenerationCommandErr) return console.error(zipGenerationCommandErr);
+
+                    response.download(finalPath, finalFileName, function(err) {
+                      if(err) return console.error(err);
+
+                      deleteFolderRecursively(folderPath);
+                    });
+                  });
+                }
+              }
+            });
           }
-
-          if(requestFormats.length == 1) {
-            switch(requestFormats[0]) {
-              case 'csv':
-                var fileExtention = '.csv';
-                break;
-              case 'shapefile':
-                var fileExtention = '.shp';
-                break;
-              case 'kml':
-                var fileExtention = '.kml';
-                break;
-              default:
-                var fileExtention = '.json';
-            }
-
-            var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
-            var finalFileName = fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
-          } else {
-            var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".zip";
-            var finalFileName = fileName + ".zip";
-
-            var zipGenerationCommand = "zip -r -j " + finalPath + " " + folderPath;
-            var zipGenerationCommandResult = memberExec(zipGenerationCommand);
-          }
-
-          response.download(finalPath, finalFileName, function(err) {
-            if(err) return console.error(err);
-
-            deleteFolderRecursively(folderPath);
-          });
         });
       });
     } else {
