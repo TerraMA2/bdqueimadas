@@ -236,11 +236,11 @@ define(function() {
             }
           }
         } else if(patternFormat[0] === "INITIAL_DATE") {
-          var dates = getFilterDates(false, 0);
+          var dates = getFilterDates(false, true, true, 0);
 
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[0], 'YYYY/MM/DD');
         } else if(patternFormat[0] === "FINAL_DATE") {
-          var dates = getFilterDates(false, 0);
+          var dates = getFilterDates(false, true, true, 0);
 
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'YYYY/MM/DD');
         }
@@ -349,6 +349,8 @@ define(function() {
   /**
    * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
    * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
+   * @param {boolean} emptyFields - Flag that indicates if the fields should be emptied
+   * @param {boolean} validadeNumberOfDays - Flag that indicates if the number of days (max of 365) should be validated
    * @param {integer} filter - Number that indicates which filter fields should be used: 0 - main filter, 1 - attributes table filter, 2 - graphics filter
    * @returns {array} returnValue - Empy array, or an array with the dates, or a null value
    *
@@ -356,66 +358,65 @@ define(function() {
    * @memberof Utils
    * @inner
    */
-  var getFilterDates = function(showAlerts, filter) {
+  var getFilterDates = function(showAlerts, emptyFields, validadeNumberOfDays, filter) {
     showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
 
     var filterFieldsExtention = '';
 
-    if(filter === 1) {
+    if(filter === 1)
       filterFieldsExtention = '-attributes-table';
-    } else if(filter === 2) {
+    else if(filter === 2)
       filterFieldsExtention = '-graphics';
-    }
+    else if(filter === 3)
+      filterFieldsExtention = '-export';
 
     var filterDateFrom = $('#filter-date-from' + filterFieldsExtention);
     var filterDateTo = $('#filter-date-to' + filterFieldsExtention);
 
     var returnValue = null;
 
-    if((filterDateFrom.val().length > 0 && filterDateTo.val().length > 0) || (filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)) {
-      if(filterDateFrom.val().length === 0 && filterDateTo.val().length === 0) {
+    if(((filterDateFrom.val().length > 0 && filterDateTo.val().length > 0) || (filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)) && filterDateFrom.val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length === 10 && filterDateTo.val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length === 10) {
+      if(filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)
         returnValue = [];
-      } else {
+      else {
         var timeDiffBetweenDates = Math.abs(filterDateTo.datepicker('getDate').getTime() - filterDateFrom.datepicker('getDate').getTime());
         var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
 
         if(filterDateFrom.datepicker('getDate') > filterDateTo.datepicker('getDate')) {
-          if(showAlerts) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('Data final anterior à inicial - corrigir!');
-          }
 
-          filterDateTo.val('');
+          if(emptyFields)
+            filterDateTo.val('');
         } else if(filterDateFrom.datepicker('getDate') > getCurrentDate(true)) {
-          if(showAlerts) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('Data inicial posterior à atual - corrigir!');
-          }
 
-          filterDateFrom.val('');
+          if(emptyFields)
+            filterDateFrom.val('');
         } else if(filterDateTo.datepicker('getDate') > getCurrentDate(true)) {
-          if(showAlerts) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('Data final posterior à atual - corrigir!');
-          }
 
-          filterDateTo.val('');
-        } else if(diffDaysBetweenDates > 366) {
-          if(showAlerts) {
+          if(emptyFields)
+            filterDateTo.val('');
+        } else if(diffDaysBetweenDates > 366 && validadeNumberOfDays) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
-          }
 
-          filterDateFrom.val('');
-          filterDateTo.val('');
-        } else {
+          if(emptyFields) {
+            filterDateFrom.val('');
+            filterDateTo.val('');
+          }
+        } else
           returnValue = [filterDateFrom.val(), filterDateTo.val()];
-        }
       }
     } else {
-      if(filterDateFrom.val().length === 0) {
+      if(filterDateFrom.val().length === 0 && showAlerts)
         $('#filter-error-dates' + filterFieldsExtention).text('Data inicial inválida!');
-      }
 
-      if(filterDateTo.val().length === 0) {
+      if(filterDateTo.val().length === 0 && showAlerts)
         $('#filter-error-dates' + filterFieldsExtention).text('Data final inválida!');
-      }
     }
 
     return returnValue;

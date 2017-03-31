@@ -218,7 +218,7 @@ define(
       $('#filter-error-dates-attributes-table').text('');
 
       if(memberAttributesTable !== null) {
-        var dates = Utils.getFilterDates(true, (useAttributesTableFilter ? 1 : 0));
+        var dates = Utils.getFilterDates(true, true, true, (useAttributesTableFilter ? 1 : 0));
         var times = Utils.getFilterTimes(true, (useAttributesTableFilter ? 1 : 0));
 
         if(dates !== null && times !== null) {

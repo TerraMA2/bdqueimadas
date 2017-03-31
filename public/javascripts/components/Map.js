@@ -515,7 +515,7 @@ define(
      * @inner
      */
     var getSubtitlesSatellites = function(satellites, biomes, countriesIds, statesIds) {
-      var dates = Utils.getFilterDates(true, 0);
+      var dates = Utils.getFilterDates(true, true, true, 0);
       var times = Utils.getFilterTimes(true, 0);
 
       if(dates !== null) {

@@ -163,7 +163,7 @@ define(
 
       $('#filter-error-dates-graphics').text('');
 
-      var dates = Utils.getFilterDates(true, (useGraphicsFilter ? 2 : 0));
+      var dates = Utils.getFilterDates(true, true, true, (useGraphicsFilter ? 2 : 0));
       var times = Utils.getFilterTimes(true, (useGraphicsFilter ? 2 : 0));
 
       if(dates !== null && times !== null) {
@@ -490,7 +490,7 @@ define(
     var exportGraphicData = function(id) {
       $('#filter-error-dates-graphics').text('');
 
-      var dates = Utils.getFilterDates(true, (memberUseGraphicsFilter ? 2 : 0));
+      var dates = Utils.getFilterDates(true, true, true, (memberUseGraphicsFilter ? 2 : 0));
       var times = Utils.getFilterTimes(true, (memberUseGraphicsFilter ? 2 : 0));
 
       if(dates !== null && times !== null) {

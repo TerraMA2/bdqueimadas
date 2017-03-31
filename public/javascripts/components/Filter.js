@@ -703,7 +703,7 @@ define(
      * @inner
      */
     var applyFilter = function() {
-      var dates = Utils.getFilterDates(true, 0);
+      var dates = Utils.getFilterDates(true, true, true, 0);
       var times = Utils.getFilterTimes(true, 0);
 
       if(dates !== null && times !== null) {
@@ -811,7 +811,7 @@ define(
     var checkFiresCount = function() {
       if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
 
-      var dates = Utils.getFilterDates(true, 0);
+      var dates = Utils.getFilterDates(true, true, true, 0);
 
       var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
       var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
@@ -1029,12 +1029,14 @@ define(
         filterFieldsExtention = '-attributes-table';
       } else if(filter === 2) {
         filterFieldsExtention = '-graphics';
+      } else if(filter === 3) {
+        filterFieldsExtention = '-export';
       }
 
       var dateFrom = memberDateFrom;
       var dateTo = memberDateTo;
 
-      if(filterFieldsExtention !== '') {
+      if(filterDateFrom !== undefined && filterDateTo !== undefined) {
         dateFrom = filterDateFrom;
         dateTo = filterDateTo;
       }
@@ -1103,8 +1105,11 @@ define(
         $('#filter-satellite' + filterFieldsExtention).empty().html(allOption + referenceSatellite + elem);
       else {
         $('#filter-satellite').empty().html(allOption + referenceSatellite + elem);
-        $('#filter-satellite-attributes-table').empty().html(allOption + referenceSatellite + elem);
-        $('#filter-satellite-graphics').empty().html(allOption + referenceSatellite + elem);
+
+        if(filter === 0) {
+          $('#filter-satellite-attributes-table').empty().html(allOption + referenceSatellite + elem);
+          $('#filter-satellite-graphics').empty().html(allOption + referenceSatellite + elem);
+        }
       }
     };
 

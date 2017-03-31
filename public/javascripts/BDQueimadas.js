@@ -579,6 +579,9 @@ define(
               $("#filter-error-export-satellite").text('');
               $("#filter-error-export-biome").text('');
               $("#filter-error-export-type").text('');
+
+              if(dateFrom !== null && dateTo !== null)
+                Filter.updateSatellitesSelect(3, dateFrom, dateTo);
             }
           }
         };
@@ -639,6 +642,30 @@ define(
             $('#city-export').val(ui.item.label);
             $('#city-export').data('value', ui.item.value.id);
           }
+        });
+
+        $('#filter-date-from-export').on('change', function() {
+          if($('#filter-date-from-export').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+            $('#filter-date-from-export').val('');
+        });
+
+        $('#filter-date-from-export').keyup(function() {
+          var dates = Utils.getFilterDates(false, false, false, 3);
+
+          if(dates !== null)
+            Filter.updateSatellitesSelect(3, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+        });
+
+        $('#filter-date-to-export').on('change', function() {
+          if($('#filter-date-to-export').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+            $('#filter-date-to-export').val('');
+        });
+
+        $('#filter-date-to-export').keyup(function() {
+          var dates = Utils.getFilterDates(false, false, false, 3);
+
+          if(dates !== null)
+            Filter.updateSatellitesSelect(3, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
         });
 
         if(memberFilterExport !== null) {
@@ -723,7 +750,7 @@ define(
         if(Filter.isInitialFilter())
           Filter.setInitialFilterToFalse();
 
-        var dates = Utils.getFilterDates(true, 0);
+        var dates = Utils.getFilterDates(true, true, true, 0);
 
         if(dates !== null) {
           var countriesField = $('#countries').val();
@@ -1154,6 +1181,78 @@ define(
 
       $(document).on("applyFilter", function() {
         Filter.checkFiresCount();
+      });
+
+      $('#filter-date-from').on('change', function() {
+        if($('#filter-date-from').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-from').val('');
+      });
+
+      $('#filter-date-from').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 0);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(-1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-to').on('change', function() {
+        if($('#filter-date-to').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-to').val('');
+      });
+
+      $('#filter-date-to').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 0);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(-1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-from-graphics').on('change', function() {
+        if($('#filter-date-from-graphics').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-from-graphics').val('');
+      });
+
+      $('#filter-date-from-graphics').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 2);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(2, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-to-graphics').on('change', function() {
+        if($('#filter-date-to-graphics').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-to-graphics').val('');
+      });
+
+      $('#filter-date-to-graphics').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 2);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(2, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-from-attributes-table').on('change', function() {
+        if($('#filter-date-from-attributes-table').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-from-attributes-table').val('');
+      });
+
+      $('#filter-date-from-attributes-table').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 1);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-to-attributes-table').on('change', function() {
+        if($('#filter-date-to-attributes-table').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-to-attributes-table').val('');
+      });
+
+      $('#filter-date-to-attributes-table').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 1);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
       });
 
       // Graphics Events
@@ -2083,6 +2182,9 @@ define(
             $('#filter-error-dates').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from").val('');
             $("#filter-date-to").val('');
+          } else {
+            if(dateFrom !== null && dateTo !== null)
+              Filter.updateSatellitesSelect(-1, dateFrom, dateTo);
           }
         }
       };
@@ -2115,6 +2217,9 @@ define(
             $('#filter-error-dates-attributes-table').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from-attributes-table").val('');
             $("#filter-date-to-attributes-table").val('');
+          } else {
+            if(dateFrom !== null && dateTo !== null)
+              Filter.updateSatellitesSelect(1, dateFrom, dateTo);
           }
         }
       };
@@ -2147,6 +2252,9 @@ define(
             $('#filter-error-dates-graphics').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from-graphics").val('');
             $("#filter-date-to-graphics").val('');
+          } else {
+            if(dateFrom !== null && dateTo !== null)
+              Filter.updateSatellitesSelect(2, dateFrom, dateTo);
           }
         }
       };
