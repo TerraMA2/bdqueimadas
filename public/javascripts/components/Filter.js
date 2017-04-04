@@ -802,39 +802,6 @@ define(
     };
 
     /**
-     * Checks the number of fires for the current filters.
-     *
-     * @function checkFiresCount
-     * @memberof Filter(2)
-     * @inner
-     */
-    var checkFiresCount = function() {
-      if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
-
-      var dates = Utils.getFilterDates(true, true, true, 0);
-
-      var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-      var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-      var satellites = Utils.stringInArray(getSatellites(), "all") ? '' : getSatellites().toString();
-      var biomes = Utils.stringInArray(getBiomes(), "all") ? '' : getBiomes().toString();
-      var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-      var continent = memberContinent === null ? '' : memberContinent.toString();
-      var countries = (Utils.stringInArray(getCountries(), "") || getCountries().length === 0 ? '' : getCountries().toString());
-      var states = (Utils.stringInArray(getStates(), "") || getStates().length === 0 ? '' : getStates().toString());
-
-      Utils.getSocket().emit('checkFiresCountRequest', {
-        dateFrom: dateFrom,
-        dateTo: dateTo,
-        satellites: satellites,
-        biomes: biomes,
-        extent: extent,
-        continent: continent,
-        countries: countries,
-        states: states
-      });
-    };
-
-    /**
      * Processes a list of layers and applies filters to the layers that should be filtered.
      * @param {array} layers - Layers array
      * @param {boolean} updateLayersTime - Flag that indicates if the time of the layers should be updated
@@ -1274,7 +1241,6 @@ define(
       updateDatesToCurrent: updateDatesToCurrent,
       updateTimesToDefault: updateTimesToDefault,
       applyFilter: applyFilter,
-      checkFiresCount: checkFiresCount,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       updateSatellitesSelect: updateSatellitesSelect,
       selectContinentItem: selectContinentItem,

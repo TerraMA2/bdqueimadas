@@ -19,31 +19,6 @@ var Filter = function(io) {
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
-
-    // Fires count request event
-    client.on('checkFiresCountRequest', function(json) {
-      // Object responsible for keep several information to be used in the database query
-      var options = {};
-
-      // Verifications of the 'options' object items
-      if(json.satellites !== '') options.satellites = json.satellites;
-      if(json.biomes !== '') options.biomes = json.biomes;
-      if(json.extent !== '') options.extent = json.extent;
-      if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
-      if(json.countries !== null && json.countries !== '') options.countries = json.countries;
-      if(json.states !== null && json.states !== '') options.states = json.states;
-      if(json.cities !== undefined && json.cities !== null && json.cities !== '') options.cities = json.cities;
-      if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
-      if(json.protectedArea !== undefined && json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = JSON.parse(json.protectedArea);
-      if(json.industrialFires !== undefined && json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
-
-      memberFilter.getFiresCount(client.pgPool, json.dateTimeFrom, json.dateTimeTo, options, function(err, firesCount) {
-        if(err) return console.error(err);
-
-        client.emit('checkFiresCountResponse', { firesCount: firesCount });
-      });
-    });
-
     // Spatial filter request event
     client.on('spatialFilterRequest', function(json) {
       if(json.key === 'States' && json.specialRegions.length > 0 && json.ids.length > 0) {

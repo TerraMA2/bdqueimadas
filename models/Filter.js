@@ -23,48 +23,6 @@ var Filter = function() {
   var memberUtils = new (require('./Utils.js'))();
 
   /**
-   * Returns the count of the fires.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {string} dateTimeFrom - Initial date / time
-   * @param {string} dateTimeTo - Final date / time
-   * @param {json} options - Filtering options
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getFiresCount
-   * @memberof Filter
-   * @inner
-   */
-  this.getFiresCount = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
-    // Counter of the query parameters
-    var parameter = 1;
-
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateTimeFrom, dateTimeTo];
-
-        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
-
-        query = getFiltersResult.query;
-        params = getFiltersResult.params;
-        parameter = getFiltersResult.parameter;
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
    * Returns a list of continents.
    * @param {object} pgPool - PostgreSQL connection pool
    * @param {function} callback - Callback function
@@ -728,36 +686,6 @@ var Filter = function() {
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
-   * Returns the number of the fires located in the country correspondent to the received id.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {number} country - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getFiresCountByCountry
-   * @memberof Filter
-   * @inner
-   */
-  this.getFiresCountByCountry = function(pgPool, country, callback) {
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select count(*) as firescount from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.CountryFieldName + " = $1;",
-            params = [country];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);

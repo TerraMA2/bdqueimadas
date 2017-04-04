@@ -753,6 +753,14 @@ define(
         var dates = Utils.getFilterDates(true, true, true, 0);
 
         if(dates !== null) {
+          var timeDiffBetweenDates = Math.abs($('#filter-date-to').datepicker('getDate').getTime() - $('#filter-date-from').datepicker('getDate').getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+
+          if(diffDaysBetweenDates >= 30)
+            $('#filter-error-main').text('Atenção! O número de focos para esse filtro é alto, esse procedimento vai demorar.');
+          else
+            $('#filter-error-main').text('');
+
           var countriesField = $('#countries').val();
           var cityField = $('#city').data('value');
 
@@ -766,7 +774,8 @@ define(
           if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField === null) {
             Filter.setCity(null);
 
-            Filter.checkFiresCount();
+            Filter.applyFilter();
+            updateComponents();
           } else if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField !== null) {
             Filter.setCity(cityField);
 
@@ -810,7 +819,8 @@ define(
               Filter.clearStates();
             }
           } else {
-            Filter.checkFiresCount();
+            Filter.applyFilter();
+            updateComponents();
           }
 
           if(memberFilterExport !== null) {
@@ -1180,7 +1190,8 @@ define(
       });
 
       $(document).on("applyFilter", function() {
-        Filter.checkFiresCount();
+        Filter.applyFilter();
+        updateComponents();
       });
 
       $('#filter-date-from').on('change', function() {
@@ -1676,7 +1687,8 @@ define(
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
         }
 
-        Filter.checkFiresCount();
+        Filter.applyFilter();
+        updateComponents();
       });
 
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
@@ -1758,7 +1770,8 @@ define(
           memberFilterExport.countries = $('#countries').val();
         }
 
-        Filter.checkFiresCount();
+        Filter.applyFilter();
+        updateComponents();
       });
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
@@ -1932,22 +1945,6 @@ define(
           $('#number-of-accesses > span').text(result.piwikData[0].nb_visits);
           $('#number-of-accesses').show();
         }
-      });
-
-      Utils.getSocket().on('checkFiresCountResponse', function(result) {
-        if(result.firesCount.rows[0].count >= 200000) {
-          vex.dialog.alert({
-            message: '<p class="text-center">Atenção! O número de focos para esse filtro passou de 200.000, esse procedimento vai demorar.</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-        }
-
-        Filter.applyFilter();
-        updateComponents();
       });
     };
 
