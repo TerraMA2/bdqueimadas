@@ -140,7 +140,7 @@ define(
 
       if(layer.LayerGroup) {
         if(configuration.UseLayerGroupsInTheLayerExplorer) {
-          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name, parentId))
+          if(TerraMA2WebComponents.MapDisplay.addLayerGroup(layer.Id, layer.Name, parentId) && !layer.DontAddToLayerExplorer)
             TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parentId, null, (layer.Params !== undefined ? layer.Params.Classes : null), (layer.Params !== undefined ? layer.Params.Style : null));
         }
 
@@ -189,10 +189,10 @@ define(
             maxResolution: layer.Params.MaxResolution
           };
 
-          if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, layer.Disabled, layer.Params.ImagerySet, layer.Params.BingMapsKey, parent, layer.AppendAtTheEnd, params))
+          if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, layer.Disabled, layer.Params.ImagerySet, layer.Params.BingMapsKey, parent, layer.AppendAtTheEnd, params) && !layer.DontAddToLayerExplorer)
             TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, classes, style);
         } else {
-          if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd))
+          if(TerraMA2WebComponents.MapDisplay[layer.Params.TerraMA2WebComponentsFunction](layer.Id, layerName, layerTitle, layer.Visible, parent, layer.AppendAtTheEnd) && !layer.DontAddToLayerExplorer)
             TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, layer.AppendAtTheEnd, classes, style);
         }
       } else if(layer.Wmts) {
@@ -201,7 +201,7 @@ define(
           maxResolution: layer.Params.MaxResolution
         };
 
-        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Visible, layer.Disabled, layerTime, layer.Params.Format, layer.Params.MatrixSet, layer.Params.TileGrid, parent, params))
+        if(TerraMA2WebComponents.MapDisplay.addWMTSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Visible, layer.Disabled, layerTime, layer.Params.Format, layer.Params.MatrixSet, layer.Params.TileGrid, parent, params) && !layer.DontAddToLayerExplorer)
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, classes, style);
       } else {
         var sourceParams = {};
@@ -214,6 +214,9 @@ define(
           sourceParams[layer.Params.TimeDay] = ('0' + layerTimeDate.getDate()).slice(-2);
         }
 
+        if(layer.Params !== undefined && layer.Params.Styles !== undefined)
+          sourceParams['STYLES'] = layer.Params.Styles;
+
         var params = {
           minResolution: layer.Params.MinResolution,
           maxResolution: layer.Params.MaxResolution,
@@ -225,7 +228,7 @@ define(
           sourceParams: sourceParams
         };
 
-        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Params.ServerType, layer.Visible, layer.Disabled, parent, params))
+        if(TerraMA2WebComponents.MapDisplay.addTileWMSLayer(layer.Id, layerName, layerTitle, layer.Params.Url, layer.Params.ServerType, layer.Visible, layer.Disabled, parent, params) && !layer.DontAddToLayerExplorer)
           TerraMA2WebComponents.LayerExplorer.addLayersFromMap(layer.Id, parent, null, classes, style);
       }
 
@@ -512,7 +515,7 @@ define(
      * @inner
      */
     var getSubtitlesSatellites = function(satellites, biomes, countriesIds, statesIds) {
-      var dates = Utils.getFilterDates(true, 0);
+      var dates = Utils.getFilterDates(true, true, true, 0);
       var times = Utils.getFilterTimes(true, 0);
 
       if(dates !== null) {
@@ -712,8 +715,12 @@ define(
         TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer.Id, sourceParams, true);
       }
 
-      $('#' + layer.Id + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
-      TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+      if($('#' + layer.Id.replace(':', '') + ' > span.terrama2-layerexplorer-checkbox-span').children('.layer-time-update-years').length === 0) {
+        $('#' + layer.Id.replace(':', '') + ' > span.terrama2-layerexplorer-checkbox-span').html(layerName);
+        TerraMA2WebComponents.MapDisplay.updateLayerAttribute(layer.Id, 'name', layerName);
+      }
+
+      $('#slider-' + layer.Id.replace(':', '')).bootstrapSlider();
     };
 
     /**

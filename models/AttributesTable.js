@@ -7,20 +7,20 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
  * @property {json} memberAttributesTableConfig - Attributes table configuration.
  * @property {json} memberTablesConfig - Tables configuration.
+ * @property {object} memberUtils - 'Utils' model.
  */
 var AttributesTable = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // 'PgConnectionPool' module
-  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Attributes table configuration
   var memberAttributesTableConfig = require(memberPath.join(__dirname, '../configurations/AttributesTable.json'));
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
+  // 'Utils' model
+  var memberUtils = new (require('./Utils.js'))();
 
   /**
    * Returns data of the attributes table accordingly with the received parameters.
@@ -46,11 +46,12 @@ var AttributesTable = function() {
     // Setting of the query columns string
     var columns = "";
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
-      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateTimeFieldName) {
-        columns += "TO_CHAR(" + memberAttributesTableConfig.Columns[i].Name + ", 'YYYY/MM/DD HH24:MI:SS'), ";
-      } else {
-        columns += memberAttributesTableConfig.Columns[i].Name + ", ";
-      }
+      var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+
+      if(memberAttributesTableConfig.Columns[i].Name == memberTablesConfig.Fires.DateTimeFieldName)
+        columns += "TO_CHAR(" + columnName + ", 'YYYY/MM/DD HH24:MI:SS'), ";
+      else
+        columns += columnName + ", ";
     }
     columns = columns.substring(0, (columns.length - 2));
 
@@ -63,7 +64,7 @@ var AttributesTable = function() {
       var column = memberAttributesTableConfig.Columns[0].Name;
       for(var j = 0, columnsLength = memberAttributesTableConfig.Columns.length; j < columnsLength; j++) {
         if(memberAttributesTableConfig.Columns[j].Name === order[i].column) {
-          column = memberAttributesTableConfig.Columns[j].Name;
+          column = (memberAttributesTableConfig.Columns[j].TableAlias !== null ? memberAttributesTableConfig.Columns[j].TableAlias + "." + memberAttributesTableConfig.Columns[j].Name : memberAttributesTableConfig.Columns[j].Name);
           break;
         }
       }
@@ -77,104 +78,20 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        var query = "select " + columns + " from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable left outer join " + memberTablesConfig.IndustrialAreas.Schema + "." + memberTablesConfig.IndustrialAreas.TableName + " IndustrialAreasTable on (FiresTable." + memberTablesConfig.Fires.IndustrialFiresFieldName + " = IndustrialAreasTable." + memberTablesConfig.IndustrialAreas.IdFieldName + ") where (FiresTable." + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+        options.tableAlias = "FiresTable";
 
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.cities' parameter exists, a cities 'where' clause is created
-        if(options.cities !== undefined) {
-          var citiesArray = options.cities.split(',');
-          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
-
-          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(citiesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
-        if(options.protectedArea !== undefined) {
-
-          if(options.protectedArea.type === 'UCE') {
-            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
-            var geom = memberTablesConfig.UCE.GeometryFieldName;
-            var id = memberTablesConfig.UCE.IdFieldName;
-          } else if(options.protectedArea.type === 'UCF') {
-            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
-            var geom = memberTablesConfig.UCF.GeometryFieldName;
-            var id = memberTablesConfig.UCF.IdFieldName;
-          } else {
-            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
-            var geom = memberTablesConfig.TI.GeometryFieldName;
-            var id = memberTablesConfig.TI.IdFieldName;
-          }
-
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
-          params.push(options.protectedArea.id);
-        }
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
-          var searchResult = createSearch(search, parameter);
+          var searchResult = createSearch(search, parameter, "FiresTable");
           query += searchResult.search;
           parameter = searchResult.parameter;
           params = params.concat(searchResult.params);
@@ -216,100 +133,14 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateTimeFrom, dateTimeTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.cities' parameter exists, a cities 'where' clause is created
-        if(options.cities !== undefined) {
-          var citiesArray = options.cities.split(',');
-          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
-
-          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(citiesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
-        if(options.protectedArea !== undefined) {
-
-          if(options.protectedArea.type === 'UCE') {
-            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
-            var geom = memberTablesConfig.UCE.GeometryFieldName;
-            var id = memberTablesConfig.UCE.IdFieldName;
-          } else if(options.protectedArea.type === 'UCF') {
-            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
-            var geom = memberTablesConfig.UCF.GeometryFieldName;
-            var id = memberTablesConfig.UCF.IdFieldName;
-          } else {
-            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
-            var geom = memberTablesConfig.TI.GeometryFieldName;
-            var id = memberTablesConfig.TI.IdFieldName;
-          }
-
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
-          params.push(options.protectedArea.id);
-        }
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -344,100 +175,14 @@ var AttributesTable = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " FiresTable where " + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
             params = [dateTimeFrom, dateTimeTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.cities' parameter exists, a cities 'where' clause is created
-        if(options.cities !== undefined) {
-          var citiesArray = options.cities.split(',');
-          query += " and " + memberTablesConfig.Fires.CityFieldName + " in (";
-
-          for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(citiesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.protectedArea' parameter exists, a protected area 'where' clause is created
-        if(options.protectedArea !== undefined) {
-
-          if(options.protectedArea.type === 'UCE') {
-            var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
-            var geom = memberTablesConfig.UCE.GeometryFieldName;
-            var id = memberTablesConfig.UCE.IdFieldName;
-          } else if(options.protectedArea.type === 'UCF') {
-            var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
-            var geom = memberTablesConfig.UCF.GeometryFieldName;
-            var id = memberTablesConfig.UCF.IdFieldName;
-          } else {
-            var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
-            var geom = memberTablesConfig.TI.GeometryFieldName;
-            var id = memberTablesConfig.TI.IdFieldName;
-          }
-
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", (select " + geom + " from " + schemaAndTable + " where " + id + " = $" + (parameter++) + "))";
-          params.push(options.protectedArea.id);
-        }
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
 
         // If the the user executed a search in the table, a 'where' clause is created for it
         if(search !== '') {
@@ -461,6 +206,7 @@ var AttributesTable = function() {
    * Creates and returns the search 'where' clauses.
    * @param {string} search - Search text
    * @param {int} parameter - Parater counter
+   * @param {string} tableAlias - Table alias
    * @returns {json} {} - JSON object with the search text, the parameter counter and the parameters array
    *
    * @private
@@ -468,18 +214,20 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  var createSearch = function(search, parameter) {
+  var createSearch = function(search, parameter, tableAlias) {
     var searchText = " and (";
     var params = [];
 
     // Loop through the columns configuration
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
+      var columnName = (tableAlias !== undefined && tableAlias !== null ? tableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
+
       // Verification of the type of the column (numeric or not numeric)
       if(memberAttributesTableConfig.Columns[i].String) {
-        searchText += memberAttributesTableConfig.Columns[i].Name + " like $" + (parameter++) + " or ";
+        searchText += columnName + " like $" + (parameter++) + " or ";
         params.push('%' + search + '%');
       } else if(!memberAttributesTableConfig.Columns[i].String && !isNaN(search)) {
-        searchText += memberAttributesTableConfig.Columns[i].Name + " = $" + (parameter++) + " or ";
+        searchText += columnName + " = $" + (parameter++) + " or ";
         params.push(Number(search));
       }
     }

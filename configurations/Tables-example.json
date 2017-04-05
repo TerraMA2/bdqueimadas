@@ -40,6 +40,7 @@
     "TableName": "special_regions",
     "IdFieldName": "id",
     "NameFieldName": "name",
+    "CountriesFieldName": "countries",
     "GeometryFieldName": "geometry"
   },
   "Fires": {
@@ -55,6 +56,14 @@
     "StateFieldName": "state",
     "CityFieldName": "city",
     "BiomeFieldName": "biome",
+    "PrecipitationFieldName": "precipitation",
+    "RiskFieldName": "risk",
+    "DaysWithoutRainFieldName": "days_without_rain",
+    "SpecialRegionsFieldName": "special_regions",
+    "SpecialRegionsTextFieldName": "special_regions_text",
+    "IndustrialFiresFieldName": "industrial_area",
+    "LatitudeFieldName": "latitude",
+    "LongitudeFieldName": "longitude",
     "GeometryFieldName": "geometry",
     "DateFormat": "YYYY-MM-DD"
   },

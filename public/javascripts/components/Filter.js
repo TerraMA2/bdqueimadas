@@ -19,9 +19,11 @@
  * @property {string} memberCity - Current city.
  * @property {array} memberSpecialRegions - Current special regions.
  * @property {array} memberSpecialRegionsCountries - Current special regions countries.
- * @property {array} memberSpecialRegionsStates - Current special regions states.
- * @property {array} memberSpecialRegionsCities - Current special regions cities.
  * @property {object} memberProtectedArea - Current protected area.
+ * @property {boolean} memberIndustrialFires - Current industrial fires filter.
+ * @property {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one.
+ * @property {array} memberInitialSatellites - Initial satellites.
+ * @property {object} memberLastFilters - Last filters used in the layers.
  */
 define(
   ['components/Utils', 'components/Map', 'TerraMA2WebComponents'],
@@ -51,12 +53,16 @@ define(
     var memberSpecialRegions = [];
     // Current special regions countries
     var memberSpecialRegionsCountries = [];
-    // Current special regions states
-    var memberSpecialRegionsStates = [];
-    // Current special regions cities
-    var memberSpecialRegionsCities = [];
     // Current protected area
     var memberProtectedArea = null;
+    // Current industrial fires filter
+    var memberIndustrialFires = false;
+    // Flag that indicates if the current filter is the initial one
+    var memberInitialFilter = true;
+    // Initial satellites
+    var memberInitialSatellites = null;
+    // Last filters used in the layers
+    var memberLastFilters = {};
 
     /**
      * Returns the initial date formatted with the received format.
@@ -288,6 +294,17 @@ define(
     };
 
     /**
+     * Clears the list of selected special regions countries.
+     *
+     * @function clearSpecialRegionsCountries
+     * @memberof Filter(2)
+     * @inner
+     */
+    var clearSpecialRegionsCountries = function() {
+      setSpecialRegionsCountries([]);
+    };
+
+    /**
      * Sets the special regions array.
      * @param {array} specialRegions - Special regions array
      *
@@ -312,8 +329,20 @@ define(
     };
 
     /**
+     * Sets the special regions countries array.
+     * @param {array} specialRegionsCountries - Special regions countries array
+     *
+     * @function setSpecialRegionsCountries
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setSpecialRegionsCountries = function(specialRegionsCountries) {
+      memberSpecialRegionsCountries = specialRegionsCountries;
+    };
+
+    /**
      * Returns the special regions countries array.
-     * @returns {array} memberSpecialRegionsCountries - Special regions countries
+     * @returns {array} memberSpecialRegionsCountries - Special regions countries array
      *
      * @function getSpecialRegionsCountries
      * @memberof Filter(2)
@@ -321,30 +350,6 @@ define(
      */
     var getSpecialRegionsCountries = function() {
       return memberSpecialRegionsCountries;
-    };
-
-    /**
-     * Returns the special regions states array.
-     * @returns {array} memberSpecialRegionsStates - Special regions states
-     *
-     * @function getSpecialRegionsStates
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getSpecialRegionsStates = function() {
-      return memberSpecialRegionsStates;
-    };
-
-    /**
-     * Returns the special regions cities array.
-     * @returns {array} memberSpecialRegionsCities - Special regions cities
-     *
-     * @function getSpecialRegionsCities
-     * @memberof Filter(2)
-     * @inner
-     */
-    var getSpecialRegionsCities = function() {
-      return memberSpecialRegionsCities;
     };
 
     /**
@@ -369,6 +374,65 @@ define(
      */
     var getProtectedArea = function() {
       return memberProtectedArea;
+    };
+
+    /**
+     * Sets the current industrial fires filter.
+     * @param {boolean} industrialFires - Industrial fires filter
+     *
+     * @function setIndustrialFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setIndustrialFires = function(industrialFires) {
+      memberIndustrialFires = industrialFires;
+    };
+
+    /**
+     * Returns the current industrial fires filter.
+     * @returns {boolean} memberIndustrialFires - Current industrial fires filter
+     *
+     * @function getIndustrialFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getIndustrialFires = function() {
+      return memberIndustrialFires;
+    };
+
+    /**
+     * Returns the initial filter flag.
+     * @returns {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one
+     *
+     * @function isInitialFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var isInitialFilter = function() {
+      return memberInitialFilter;
+    };
+
+    /**
+     * Sets the initial filter flag to false.
+     *
+     * @function setInitialFilterToFalse
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setInitialFilterToFalse = function() {
+      memberInitialFilter = false;
+    };
+
+    /**
+     * Returns the array of initial satellites.
+     * @returns {array} memberInitialSatellites - Initial satellites
+     *
+     * @function getInitialSatellites
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getInitialSatellites = function() {
+      return memberInitialSatellites;
     };
 
     /**
@@ -484,10 +548,18 @@ define(
     var createSatellitesFilter = function() {
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName + " in (";
 
-      var memberSatellitesLength = memberSatellites.length;
+      if(memberInitialFilter) {
+        var memberSatellitesLength = memberInitialSatellites.length;
 
-      for(var i = 0; i < memberSatellitesLength; i++) {
-        cql += "'" + memberSatellites[i] + "',";
+        for(var i = 0; i < memberSatellitesLength; i++) {
+          cql += "'" + memberInitialSatellites[i] + "',";
+        }
+      } else {
+        var memberSatellitesLength = memberSatellites.length;
+
+        for(var i = 0; i < memberSatellitesLength; i++) {
+          cql += "'" + memberSatellites[i] + "',";
+        }
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
@@ -530,17 +602,11 @@ define(
     var createCountriesFilter = function() {
       var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
-      if(!Utils.stringInArray(memberCountries, "")) {
-        var memberCountriesLength = memberCountries.length;
-
-        for(var i = 0; i < memberCountriesLength; i++) {
-          cql += memberCountries[i] + ",";
-        }
+      for(var i = 0, memberCountriesLength = memberCountries.length; i < memberCountriesLength; i++) {
+        cql += memberCountries[i] + ",";
       }
 
-      var memberSpecialRegionsCountriesLength = memberSpecialRegionsCountries.length;
-
-      for(var i = 0; i < memberSpecialRegionsCountriesLength; i++) {
+      for(var i = 0, memberSpecialRegionsCountriesLength = memberSpecialRegionsCountries.length; i < memberSpecialRegionsCountriesLength; i++) {
         cql += memberSpecialRegionsCountries[i] + ",";
       }
 
@@ -565,32 +631,36 @@ define(
     };
 
     /**
-     * Creates the states filter.
-     * @returns {string} cql - States cql filter
+     * Creates the states and special regions filter.
+     * @returns {string} cql - States and special regions cql filter
      *
      * @private
-     * @function createStatesFilter
+     * @function createStatesAndSpecialRegionsFilter
      * @memberof Filter(2)
      * @inner
      */
-    var createStatesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
+    var createStatesAndSpecialRegionsFilter = function() {
+      var cql = "";
 
-      if(!Utils.stringInArray(memberStates, "")) {
-        var memberStatesLength = memberStates.length;
+      if(memberStates.length > 0) {
+        cql += (memberSpecialRegions.length > 0 ? "(" : "") + Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
 
-        for(var i = 0; i < memberStatesLength; i++) {
+        for(var i = 0, memberStatesLength = memberStates.length; i < memberStatesLength; i++) {
           cql += "'" + memberStates[i] + "',";
         }
+
+        cql = cql.substring(0, cql.length - 1) + ")";
       }
 
-      var memberSpecialRegionsStatesLength = memberSpecialRegionsStates.length;
+      if(memberSpecialRegions.length > 0) {
+        cql += (memberStates.length > 0 ? " or (" : "(");
 
-      for(var i = 0; i < memberSpecialRegionsStatesLength; i++) {
-        cql += "'" + memberSpecialRegionsStates[i] + "',";
+        for(var i = 0, memberSpecialRegionsLength = memberSpecialRegions.length; i < memberSpecialRegionsLength; i++) {
+          cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.SpecialRegionsFieldName + " like '%|" + memberSpecialRegions[i] + "|%' or ";
+        }
+
+        cql = cql.substring(0, cql.length - 4) + (memberStates.length > 0 ? "))" : ")");
       }
-
-      cql = cql.substring(0, cql.length - 1) + ")";
 
       return cql;
     };
@@ -605,19 +675,22 @@ define(
      * @inner
      */
     var createCitiesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + " in (";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
 
-      var memberSpecialRegionsCitiesLength = memberSpecialRegionsCities.length;
+      return cql;
+    };
 
-      for(var i = 0; i < memberSpecialRegionsCitiesLength; i++) {
-        cql += "'" + memberSpecialRegionsCities[i] + "',";
-      }
-
-      if(memberCity !== null) {
-        cql += "'" + memberCity + "')";
-      } else {
-        cql = cql.substring(0, cql.length - 1) + ")";
-      }
+    /**
+     * Creates the industrial fires filter.
+     * @returns {string} cql - Industrial fires cql filter
+     *
+     * @private
+     * @function createIndustrialFiresFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createIndustrialFiresFilter = function() {
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresFieldName + " IS NULL";
 
       return cql;
     };
@@ -630,7 +703,7 @@ define(
      * @inner
      */
     var applyFilter = function() {
-      var dates = Utils.getFilterDates(true, 0);
+      var dates = Utils.getFilterDates(true, true, true, 0);
       var times = Utils.getFilterTimes(true, 0);
 
       if(dates !== null && times !== null) {
@@ -674,24 +747,22 @@ define(
         $('#filter-biome-attributes-table').val($('#filter-biome').val());
         $('#filter-biome-graphics').val($('#filter-biome').val());
 
+        setIndustrialFires($('#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+
         var cql = "";
 
-        var specialRegionsData = createSpecialRegionsArrays(memberSpecialRegions);
-
-        memberSpecialRegionsCountries = specialRegionsData.specialRegionsCountries;
-        memberSpecialRegionsStates = specialRegionsData.specialRegionsStates;
-        memberSpecialRegionsCities = specialRegionsData.specialRegionsCities;
-
         if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
+          var updateLayersTime = ((getFormattedDateFrom("YYYY/MM/DD") != filterDateFrom) || (getFormattedDateTo("YYYY/MM/DD") != filterDateTo));
+
           updateDates(filterDateFrom, filterDateTo, 'YYYY/MM/DD');
           updateTimes(filterTimeFrom, filterTimeTo);
 
           cql += createDateTimeFilter() + " AND ";
 
-          if(Map.getLayers().length > 0) processLayers(Map.getLayers());
+          if(Map.getLayers().length > 0) processLayers(Map.getLayers(), updateLayersTime);
         }
 
-        if(!Utils.stringInArray(memberSatellites, "all")) {
+        if(!Utils.stringInArray(memberSatellites, "all") || memberInitialFilter) {
           cql += createSatellitesFilter() + " AND ";
         }
 
@@ -703,23 +774,27 @@ define(
           cql += createContinentFilter() + " AND ";
         }
 
-        if((!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) || memberSpecialRegionsCountries.length > 0) {
+        if(!Utils.stringInArray(memberCountries, "") && memberCountries.length > 0) {
           cql += createCountriesFilter() + " AND ";
         }
 
-        if((!Utils.stringInArray(memberStates, "") && memberStates.length > 0) || memberSpecialRegionsStates.length > 0) {
-          cql += createStatesFilter() + " AND ";
+        if((!Utils.stringInArray(memberStates, "") && memberStates.length > 0) || (memberSpecialRegions.length > 0)) {
+          cql += createStatesAndSpecialRegionsFilter() + " AND ";
         }
 
-        if(memberSpecialRegionsCities.length > 0 || memberCity !== null) {
+        if(memberCity !== null) {
           cql += createCitiesFilter() + " AND ";
+        }
+
+        if(!memberIndustrialFires) {
+          cql += createIndustrialFiresFilter() + " AND ";
         }
 
         if(cql.length > 5) {
           cql = cql.substring(0, cql.length - 5);
         }
 
-        updateSatellitesSelect();
+        updateSatellitesSelect(0);
         TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
       }
 
@@ -727,119 +802,46 @@ define(
     };
 
     /**
-     * Processes an array of special regions and returns an object of arrays of countries, states and cities.
-     * @param {array} specialRegions - Special regions array
-     *
-     * @function createSpecialRegionsArrays
-     * @memberof Filter(2)
-     * @inner
-     */
-    var createSpecialRegionsArrays = function(specialRegions) {
-      var specialRegionsData = {
-        specialRegionsCountries: [],
-        specialRegionsStates: [],
-        specialRegionsCities: []
-      };
-
-      var specialRegionsLength = specialRegions.length;
-
-      if(specialRegionsLength > 0) {
-        for(var i = 0; i < specialRegionsLength; i++) {
-          var confSpecialRegionsLength = Utils.getConfigurations().filterConfigurations.SpecialRegions.length;
-
-          for(var j = 0; j < confSpecialRegionsLength; j++) {
-            if(specialRegions[i] == Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Id) {
-
-              var specialRegionsCountriesLength = Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries.length;
-              var specialRegionsStatesLength = Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States.length;
-              var specialRegionsCitiesLength = Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities.length;
-
-              for(var x = 0; x < specialRegionsCountriesLength; x++)
-                specialRegionsData.specialRegionsCountries.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Countries[x]);
-
-              for(var x = 0; x < specialRegionsStatesLength; x++)
-                specialRegionsData.specialRegionsStates.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].States[x]);
-
-              for(var x = 0; x < specialRegionsCitiesLength; x++)
-                specialRegionsData.specialRegionsCities.push(Utils.getConfigurations().filterConfigurations.SpecialRegions[j].Cities[x]);
-
-              break;
-            }
-          }
-        }
-      }
-
-      return specialRegionsData;
-    };
-
-    /**
-     * Checks the number of fires for the current filters.
-     *
-     * @function checkFiresCount
-     * @memberof Filter(2)
-     * @inner
-     */
-    var checkFiresCount = function() {
-      if($('#loading-span').hasClass('hide')) $('#loading-span').removeClass('hide');
-
-      var dates = Utils.getFilterDates(true, 0);
-
-      var dateFrom = Utils.dateToString(Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-      var dateTo = Utils.dateToString(Utils.stringToDate(dates[1], 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat);
-      var satellites = Utils.stringInArray(getSatellites(), "all") ? '' : getSatellites().toString();
-      var biomes = Utils.stringInArray(getBiomes(), "all") ? '' : getBiomes().toString();
-      var extent = TerraMA2WebComponents.MapDisplay.getCurrentExtent();
-      var continent = memberContinent === null ? '' : memberContinent.toString();
-      var countries = (Utils.stringInArray(getCountries(), "") || getCountries().length === 0 ? '' : getCountries().toString());
-      var states = (Utils.stringInArray(getStates(), "") || getStates().length === 0 ? '' : getStates().toString());
-
-      Utils.getSocket().emit('checkFiresCountRequest', {
-        dateFrom: dateFrom,
-        dateTo: dateTo,
-        satellites: satellites,
-        biomes: biomes,
-        extent: extent,
-        continent: continent,
-        countries: countries,
-        states: states
-      });
-    };
-
-    /**
      * Processes a list of layers and applies filters to the layers that should be filtered.
      * @param {array} layers - Layers array
+     * @param {boolean} updateLayersTime - Flag that indicates if the time of the layers should be updated
      *
      * @private
      * @function processLayers
      * @memberof Filter(2)
      * @inner
      */
-    var processLayers = function(layers) {
+    var processLayers = function(layers, updateLayersTime) {
       for(var i = 0, layersLength = layers.length; i < layersLength; i++) {
-        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null) Map.updateLayerTime(layers[i]);
+        if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
 
         if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
           if(memberContinent !== null) {
             var field = layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id ? Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField : Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.ContinentField;
             var cqlFilter = field + "=" + memberContinent;
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+
+            if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+              memberLastFilters[layers[i].Id] = cqlFilter;
+            }
           }
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.Id) {
           var cqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id ? Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField : Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.CountryField) + " in (";
 
           var memberCountriesLength = memberCountries.length;
-          var memberSpecialRegionsCountriesLength = memberSpecialRegionsCountries.length;
 
-          if(memberCountriesLength > 0 || memberSpecialRegionsCountriesLength > 0) {
+          if(memberCountriesLength > 0) {
             for(var count = 0; count < memberCountriesLength; count++) cqlFilter += memberCountries[count] + ",";
-            for(var count = 0; count < memberSpecialRegionsCountriesLength; count++) cqlFilter += memberSpecialRegionsCountries[count] + ",";
 
             cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
           } else {
             cqlFilter += "0)";
           }
 
-          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+          if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+            memberLastFilters[layers[i].Id] = cqlFilter;
+          }
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id) {
           var cqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CountryField) + " in (";
 
@@ -861,9 +863,8 @@ define(
             }
           } else {
             var memberStatesLength = memberStates.length;
-            var memberSpecialRegionsStatesLength = memberSpecialRegionsStates.length;
 
-            if(memberStatesLength > 0 || memberSpecialRegionsStatesLength > 0) {
+            if(memberStatesLength > 0) {
               var statesCqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField) + " in (";
               var citiesCqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField) + " in (";
 
@@ -873,34 +874,61 @@ define(
                 statesCqlFilter += "'" + memberStates[count] + "',";
               }
 
-              var memberSpecialRegionsCitiesLength = memberSpecialRegionsCities.length;
-
-              for(var count = 0, memberSpecialRegionsCountriesLength = memberSpecialRegionsCountries.length; count < memberSpecialRegionsCountriesLength; count++) cqlFilter += memberSpecialRegionsCountries[count] + ",";
-              for(var count = 0; count < memberSpecialRegionsStatesLength; count++) statesCqlFilter += "'" + memberSpecialRegionsStates[count] + "',";
-              for(var count = 0; count < memberSpecialRegionsCitiesLength; count++) citiesCqlFilter += "'" + memberSpecialRegionsCities[count] + "',";
-
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
-
-              if(memberSpecialRegionsCitiesLength > 0) cqlFilter += " AND " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
             } else {
               cqlFilter += "0)";
             }
           }
 
-          TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+          if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+            memberLastFilters[layers[i].Id] = cqlFilter;
+          }
+        } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.SpecialRegionsLayer.Id) {
+          var featuresIds = "";
+          var layerIdArray = layers[i].Id.split(':');
+
+          if(memberSpecialRegions.length > 0) {
+            for(var j = 0, memberSpecialRegionsLength = memberSpecialRegions.length; j < memberSpecialRegionsLength; j++)
+              featuresIds += layerIdArray[1] + '.' + memberSpecialRegions[j] + ',';
+
+            featuresIds = featuresIds.substring(0, (featuresIds.length - 1));
+          } else {
+            featuresIds = layerIdArray[1] + '.0';
+          }
+
+          if(memberInitialFilter || featuresIds != memberLastFilters[layers[i].Id]) {
+            TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layers[i].Id, { 'featureId': featuresIds }, true);
+            memberLastFilters[layers[i].Id] = featuresIds;
+          }
         } else if(Utils.stringInArray(Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.Layers, layers[i].Id)) {
           var countries = $('#countries').val();
+          var currentSituationFilterString = JSON.stringify({
+            dateFrom: Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+            dateTo: Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
+            continent: memberContinent,
+            countries: countries,
+            states: memberStates,
+            satellites: memberSatellites,
+            biomes: memberBiomes,
+            industrialFires: memberIndustrialFires
+          });
 
-          applyCurrentSituationFilter(
-            Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
-            Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
-            memberContinent,
-            countries,
-            memberStates,
-            memberSatellites,
-            memberBiomes,
-            layers[i].Id
-          );
+          if(memberInitialFilter || currentSituationFilterString != memberLastFilters[layers[i].Id]) {
+            applyCurrentSituationFilter(
+              Utils.dateToString(memberDateFrom, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeFrom,
+              Utils.dateToString(memberDateTo, Utils.getConfigurations().filterConfigurations.CurrentSituationLayers.DateFormat) + ' ' + memberTimeTo,
+              memberContinent,
+              countries,
+              memberStates,
+              memberSatellites,
+              memberBiomes,
+              memberIndustrialFires,
+              layers[i].Id
+            );
+
+            memberLastFilters[layers[i].Id] = currentSituationFilterString;
+          }
         }
       }
     };
@@ -914,13 +942,14 @@ define(
      * @param {array} states - States ids
      * @param {array} satellites - Satellites
      * @param {array} biomes - Biomes
+     * @param {boolean} industrialFires - Industrial fires flag
      * @param {string} layer - Layer id
      *
      * @function applyCurrentSituationFilter
      * @memberof Filter(2)
      * @inner
      */
-    var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, layer) {
+    var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, industrialFires, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
       if(continent !== undefined && continent !== null && continent !== "" && continent !== '') {
@@ -943,19 +972,43 @@ define(
         currentSituationFilter += ";biomes:'" + Utils.replaceAll(biomes.toString(), ',', '\'\\,\'') + "'";
       }
 
+      if(!industrialFires) {
+        currentSituationFilter += ";industrialFires: and id_area_industrial is null";
+      }
+
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
     };
 
     /**
      * Updates the satellites HTML select.
+     * @param {integer} filter - Number that indicates which filter fields should be used: 0 - main filter, 1 - attributes table filter, 2 - graphics filter
+     * @param {date} filterDateFrom - Filter date from
+     * @param {date} filterDateTo - Filter date to
      *
-     * @private
      * @function updateSatellitesSelect
      * @memberof Filter(2)
      * @inner
      */
-    var updateSatellitesSelect = function() {
-      var selectedOptions = $('#filter-satellite').val();
+    var updateSatellitesSelect = function(filter, filterDateFrom, filterDateTo) {
+      var filterFieldsExtention = '';
+
+      if(filter === 1) {
+        filterFieldsExtention = '-attributes-table';
+      } else if(filter === 2) {
+        filterFieldsExtention = '-graphics';
+      } else if(filter === 3) {
+        filterFieldsExtention = '-export';
+      }
+
+      var dateFrom = memberDateFrom;
+      var dateTo = memberDateTo;
+
+      if(filterDateFrom !== undefined && filterDateTo !== undefined) {
+        dateFrom = filterDateFrom;
+        dateTo = filterDateTo;
+      }
+
+      var selectedOptions = (filterFieldsExtention !== '' ? $('#filter-satellite' + filterFieldsExtention).val() : $('#filter-satellite').val());
 
       var allOption = Utils.stringInArray(selectedOptions, "all") ? "<option value=\"all\" selected>TODOS</option>" : "<option value=\"all\">TODOS</option>";
       var referenceSatellite = "";
@@ -989,8 +1042,15 @@ define(
           satelliteReferenceEnd = new Date(parseInt(satelliteReferenceEndArray[0]), parseInt(satelliteReferenceEndArray[1]) - 1, parseInt(satelliteReferenceEndArray[2]), 0, 0, 0);
         }
 
-        if((satelliteBegin <= memberDateFrom && satelliteEnd >= memberDateTo) || (satelliteBegin <= memberDateFrom && satellitesList[i].Current)) {
-          if((satelliteReferenceBegin <= memberDateFrom && satelliteReferenceEnd >= memberDateTo) || (satelliteReferenceBegin <= memberDateFrom && satellitesList[i].ReferenceCurrent)) {
+        if((dateFrom <= satelliteBegin && dateTo >= satelliteEnd) || 
+          (dateFrom >= satelliteBegin && dateTo <= satelliteEnd) || 
+          (dateFrom <= satelliteBegin && dateTo >= satelliteBegin) || 
+          (dateFrom <= satelliteEnd && dateTo >= satelliteEnd)) {
+
+          if((dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceEnd) || 
+            (dateFrom >= satelliteReferenceBegin && dateTo <= satelliteReferenceEnd) || 
+            (dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceBegin) || 
+            (dateFrom <= satelliteReferenceEnd && dateTo >= satelliteReferenceEnd)) {
             if(Utils.stringInArray(selectedOptions, satellitesList[i].Id)) {
               referenceSatellite += "<option value=\"" + satellitesList[i].Id + "\" selected>Refer. (" + satellitesList[i].Name + ")</option>";
             } else {
@@ -1008,7 +1068,16 @@ define(
         }
       }
 
-      $('#filter-satellite').empty().html(allOption + referenceSatellite + elem);
+      if(filterFieldsExtention !== '')
+        $('#filter-satellite' + filterFieldsExtention).empty().html(allOption + referenceSatellite + elem);
+      else {
+        $('#filter-satellite').empty().html(allOption + referenceSatellite + elem);
+
+        if(filter === 0) {
+          $('#filter-satellite-attributes-table').empty().html(allOption + referenceSatellite + elem);
+          $('#filter-satellite-graphics').empty().html(allOption + referenceSatellite + elem);
+        }
+      }
     };
 
     /**
@@ -1048,7 +1117,7 @@ define(
     var selectStates = function(ids) {
       Utils.getSocket().emit('continentByStateRequest', { state: ids[0] });
       Utils.getSocket().emit('countriesByStatesRequest', { states: ids });
-      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, specialRegions: [], key: 'States', filterForm: false });
+      Utils.getSocket().emit('spatialFilterRequest', { ids: ids, specialRegions: [], specialRegionsCountries: [], key: 'States', filterForm: false });
     };
 
     /**
@@ -1127,11 +1196,11 @@ define(
         updateTimesToDefault();
         Utils.getSocket().emit('spatialFilterRequest', { ids: Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter, key: 'Continent', filterForm: false });
 
-        setTimeout(function() {
-          $('#filter-satellite').val('all');
-          $('#filter-satellite-graphics').val('all');
-          $('#filter-satellite-attributes-table').val('all');
-        }, 4000);
+        memberInitialSatellites = initialSatellites;
+
+        $('#filter-satellite').val('all');
+        $('#filter-satellite-graphics').val('all');
+        $('#filter-satellite-attributes-table').val('all');
       });
     };
 
@@ -1155,21 +1224,25 @@ define(
       getCity: getCity,
       clearStates: clearStates,
       clearSpecialRegions: clearSpecialRegions,
+      clearSpecialRegionsCountries: clearSpecialRegionsCountries,
       setSpecialRegions: setSpecialRegions,
       getSpecialRegions: getSpecialRegions,
+      setSpecialRegionsCountries: setSpecialRegionsCountries,
       getSpecialRegionsCountries: getSpecialRegionsCountries,
-      getSpecialRegionsStates: getSpecialRegionsStates,
-      getSpecialRegionsCities: getSpecialRegionsCities,
       setProtectedArea: setProtectedArea,
       getProtectedArea: getProtectedArea,
+      setIndustrialFires: setIndustrialFires,
+      getIndustrialFires: getIndustrialFires,
+      isInitialFilter: isInitialFilter,
+      setInitialFilterToFalse: setInitialFilterToFalse,
+      getInitialSatellites: getInitialSatellites,
       updateDates: updateDates,
       updateTimes: updateTimes,
       updateDatesToCurrent: updateDatesToCurrent,
       updateTimesToDefault: updateTimesToDefault,
       applyFilter: applyFilter,
-      createSpecialRegionsArrays: createSpecialRegionsArrays,
-      checkFiresCount: checkFiresCount,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
+      updateSatellitesSelect: updateSatellitesSelect,
       selectContinentItem: selectContinentItem,
       selectCountries: selectCountries,
       selectStates: selectStates,

@@ -80,6 +80,8 @@ var SearchForPAsController = function(app) {
             label: val.type + ' - ' + val.name,
             value: {
               id: val.id,
+              name: val.name,
+              ngo: val.ngo,
               type: val.type
             }
           });

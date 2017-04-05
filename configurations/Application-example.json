@@ -2,7 +2,6 @@
   "Port": "38000",
   "BaseUrl": "/",
   "InitialContinentToFilter": 8,
-  "InitialContinentCountries": [33, 75, 53, 68, 98, 48, 177, 245, 219, 249, 178, 28, 80, 12],
   "DatePickerDefaultOptions": {
     "maxDate": 0,
     "markerClassName": "hasDatepicker",

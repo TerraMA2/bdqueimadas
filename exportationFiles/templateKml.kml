@@ -13,7 +13,9 @@
 		<Style id="NPP_375"><IconStyle><color>FFda01C1</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
 		<Style id="NOAA-18"><IconStyle><color>ff0099ff</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
 		<Style id="NOAA-19"><IconStyle><color>ff003399</color><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href></Icon></IconStyle><LabelStyle><scale>0.6</scale></LabelStyle><ListStyle></ListStyle></Style>
-		||MIOLO||
+
+		||CONTENT||
+
 		<ScreenOverlay>
 			<name>Logo</name>
 			<Icon>
@@ -49,6 +51,5 @@
 			<size x="0" y="0" xunits="fraction" yunits="fraction"/>
 			<rotation>0</rotation>
 		</ScreenOverlay>
-
 	</Document>
 </kml>

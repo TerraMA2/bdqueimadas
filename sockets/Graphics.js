@@ -28,11 +28,14 @@ var Graphics = function(io) {
       // Verifications of the 'options' object items
       if(json.satellites !== '') options.satellites = json.satellites;
       if(json.biomes !== '') options.biomes = json.biomes;
+      if(json.risk !== '') options.risk = json.risk;
       if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
       if(json.countries !== null && json.countries !== '') options.countries = json.countries;
       if(json.states !== null && json.states !== '') options.states = json.states;
       if(json.cities !== null && json.cities !== '') options.cities = json.cities;
+      if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
       if(json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = json.protectedArea;
+      if(json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
       if(json.limit !== null) options.limit = json.limit;
       if(json.y !== null) options.y = json.y;
 

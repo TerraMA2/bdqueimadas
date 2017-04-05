@@ -36,7 +36,9 @@ var GetAttributesTableController = function(app) {
     if(request.body.countries !== null && request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== null && request.body.states !== '') options.states = request.body.states;
     if(request.body.cities !== null && request.body.cities !== '') options.cities = request.body.cities;
+    if(request.body.specialRegions !== null && request.body.specialRegions !== '') options.specialRegions = request.body.specialRegions;
     if(request.body.protectedArea !== null && request.body.protectedArea !== '') options.protectedArea = request.body.protectedArea;
+    if(request.body.industrialFires !== null && request.body.industrialFires !== '') options.industrialFires = request.body.industrialFires;
 
     // Setting of the 'order' array, the fields names are obtained by the columns numbers
     var arrayFound = request.body.columns.filter(function(item) {

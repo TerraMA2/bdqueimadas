@@ -56,5 +56,38 @@
 	"Informações da Tela": "Informações da Tela",
 	"Legendas": "Legendas",
 	"PROJETO INPE": "PROJETO INPE",
-	"REALIZAÇÃO": "REALIZAÇÃO"
+	"REALIZAÇÃO": "REALIZAÇÃO",
+	"UCs / TIs (Apenas Brasil)": "UCs / TIs (Apenas Brasil)",
+	"Data / Hora Início - TMG (Z)": "Data / Hora Início - TMG (Z)",
+	"Data Início": "Data Início",
+	"Hora Início": "Hora Início",
+	"Data / Hora Fim - TMG (Z)": "Data / Hora Fim - TMG (Z)",
+	"Data Fim": "Data Fim",
+	"Hora Fim": "Hora Fim",
+	"Data Início - Z": "Data Início - Z",
+	"Data Fim - Z": "Data Fim - Z",
+	"Hora Início - Z": "Hora Início - Z",
+	"Hora Fim - Z": "Hora Fim - Z",
+	"Todos os Níveis": "Todos os Níveis",
+	"Mínimo (0 a 0": {
+		"15)": "Mínimo (0 a 0.15)"
+	},
+	"Baixo (0": {
+		"15 a 0": {
+			"4)": "Baixo (0.15 a 0.4)"
+		}
+	},
+	"Médio (0": {
+		"4 a 0": {
+			"7)": "Médio (0.4 a 0.7)"
+		}
+	},
+	"Alto (0": {
+		"7 a 0": {
+			"95)": "Alto (0.7 a 0.95)"
+		}
+	},
+	"Crítico (> 0": {
+		"95)": "Crítico (> 0.95)"
+	}
 }

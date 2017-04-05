@@ -7,120 +7,20 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberPath - 'path' module.
- * @property {object} memberPgConnectionPool - 'PgConnectionPool' module.
  * @property {json} memberFilterConfig - Filter configuration.
  * @property {json} memberTablesConfig - Tables configuration.
+ * @property {object} memberUtils - 'Utils' model.
  */
 var Filter = function() {
 
   // 'path' module
   var memberPath = require('path');
-  // 'PgConnectionPool' module
-  //var memberPgConnectionPool = new (require(memberPath.join(__dirname, '../modules/PgConnectionPool.js')))();
   // Filter configuration
   var memberFilterConfig = require(memberPath.join(__dirname, '../configurations/Filter.json'));
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
-
-  /**
-   * Returns the count of the fires.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {string} dateTimeFrom - Initial date / time
-   * @param {string} dateTimeTo - Final date / time
-   * @param {json} options - Filtering options
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getFiresCount
-   * @memberof Filter
-   * @inner
-   */
-  this.getFiresCount = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
-    // Counter of the query parameters
-    var parameter = 1;
-
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select count(*) as count from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName +
-        " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
-            params = [dateTimeFrom, dateTimeTo];
-
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
-
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
+  // 'Utils' model
+  var memberUtils = new (require('./Utils.js'))();
 
   /**
    * Returns a list of continents.
@@ -280,38 +180,8 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
+        var query = "select distinct " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
             params = [continent];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
-   * Returns a list of states filtered by the received country id.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {number} country - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getStatesByCountry
-   * @memberof Filter
-   * @inner
-   */
-  this.getStatesByCountry = function(pgPool, country, callback) {
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select " + memberTablesConfig.States.IdFieldName + " as id, " + memberTablesConfig.States.NameFieldName + " as name from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " = $1 order by " + memberTablesConfig.States.NameFieldName + " asc;",
-            params = [country];
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -335,12 +205,17 @@ var Filter = function() {
    * @inner
    */
   this.getContinentExtent = function(pgPool, continent, callback) {
+    if(memberFilterConfig.Extents.Continents[continent] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.Continents[continent].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + ") as extent from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Continents.GeometryFieldName + "), 2) as extent from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " where " + memberTablesConfig.Continents.IdFieldName + " = $1;",
             params = [continent];
 
         // Execution of the query
@@ -405,6 +280,30 @@ var Filter = function() {
    * @inner
    */
   this.getCountriesExtent = function(pgPool, countries, callback) {
+    if(countries.length === 1 && memberFilterConfig.Extents.Countries[countries[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.Countries[countries[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var countriesWithExtent = [];
+    var countriesWithoutExtent = [];
+
+    for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
+      if(memberFilterConfig.Extents.Countries[countries[i]] !== undefined)
+        countriesWithExtent.push(countries[i]);
+      else
+        countriesWithoutExtent.push(countries[i]);
+    }
+
+    var unionGeoms = "";
+
+    if(countriesWithExtent.length > 0) {
+      for(var i = 0, countriesWithExtentLength = countriesWithExtent.length; i < countriesWithExtentLength; i++)
+        unionGeoms += "ST_MakeEnvelope(" + memberFilterConfig.Extents.Countries[countriesWithExtent[i]] + ", 4326), ";
+
+      unionGeoms = unionGeoms.substring(0, (unionGeoms.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -412,15 +311,24 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Countries.GeometryFieldName + ") as extent from " + memberTablesConfig.Countries.Schema + "." +
-        memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
+        if(countriesWithoutExtent.length > 0) {
+          var query = "select ST_Expand(ST_Extent(";
 
-        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(countries[i]);
-        }
+          if(unionGeoms !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.Countries.GeometryFieldName + ", " + unionGeoms + "])";
+          else
+            query += memberTablesConfig.Countries.GeometryFieldName;
 
-        query = query.substring(0, (query.length - 1)) + ")";
+          query += "), 2) as extent from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.IdFieldName + " in (";
+
+          for(var i = 0, countriesWithoutExtentLength = countriesWithoutExtent.length; i < countriesWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countriesWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeoms + "])), 2) as extent";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -444,6 +352,30 @@ var Filter = function() {
    * @inner
    */
   this.getStatesExtent = function(pgPool, states, callback) {
+    if(states.length === 1 && memberFilterConfig.Extents.States[states[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.States[states[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var statesWithExtent = [];
+    var statesWithoutExtent = [];
+
+    for(var i = 0, statesLength = states.length; i < statesLength; i++) {
+      if(memberFilterConfig.Extents.States[states[i]] !== undefined)
+        statesWithExtent.push(states[i]);
+      else
+        statesWithoutExtent.push(states[i]);
+    }
+
+    var unionGeoms = "";
+
+    if(statesWithExtent.length > 0) {
+      for(var i = 0, statesWithExtentLength = statesWithExtent.length; i < statesWithExtentLength; i++)
+        unionGeoms += "ST_MakeEnvelope(" + memberFilterConfig.Extents.States[statesWithExtent[i]] + ", 4326), ";
+
+      unionGeoms = unionGeoms.substring(0, (unionGeoms.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -451,15 +383,24 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent from " + memberTablesConfig.States.Schema + "." +
-        memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+        if(statesWithoutExtent.length > 0) {
+          var query = "select ST_Expand(ST_Extent(";
 
-        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(states[i]);
-        }
+          if(unionGeoms !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.States.GeometryFieldName + ", " + unionGeoms + "])";
+          else
+            query += memberTablesConfig.States.GeometryFieldName;
 
-        query = query.substring(0, (query.length - 1)) + ")";
+          query += "), 0.5) as extent from " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+
+          for(var i = 0, statesWithoutExtentLength = statesWithoutExtent.length; i < statesWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeoms + "])), 2) as extent";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -483,6 +424,30 @@ var Filter = function() {
    * @inner
    */
   this.getSpecialRegionsExtent = function(pgPool, specialRegions, callback) {
+    if(specialRegions.length === 1 && memberFilterConfig.Extents.SpecialRegions[specialRegions[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.SpecialRegions[specialRegions[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var specialRegionsWithExtent = [];
+    var specialRegionsWithoutExtent = [];
+
+    for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
+      if(memberFilterConfig.Extents.SpecialRegions[specialRegions[i]] !== undefined)
+        specialRegionsWithExtent.push(specialRegions[i]);
+      else
+        specialRegionsWithoutExtent.push(specialRegions[i]);
+    }
+
+    var unionGeoms = "";
+
+    if(specialRegionsWithExtent.length > 0) {
+      for(var i = 0, specialRegionsWithExtentLength = specialRegionsWithExtent.length; i < specialRegionsWithExtentLength; i++)
+        unionGeoms += "ST_MakeEnvelope(" + memberFilterConfig.Extents.SpecialRegions[specialRegionsWithExtent[i]] + ", 4326), ";
+
+      unionGeoms = unionGeoms.substring(0, (unionGeoms.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -490,15 +455,24 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent from " + memberTablesConfig.SpecialRegions.Schema + "." +
-        memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+        if(specialRegionsWithoutExtent.length > 0) {
+          var query = "select ST_Expand(ST_Extent(";
 
-        for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(specialRegions[i]);
-        }
+          if(unionGeoms !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.SpecialRegions.GeometryFieldName + ", " + unionGeoms + "])";
+          else
+            query += memberTablesConfig.SpecialRegions.GeometryFieldName;
 
-        query = query.substring(0, (query.length - 1)) + ")";
+          query += "), 0.5) as extent from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+          for(var i = 0, specialRegionsWithoutExtentLength = specialRegionsWithoutExtent.length; i < specialRegionsWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(specialRegionsWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeoms + "])), 2) as extent";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -523,6 +497,54 @@ var Filter = function() {
    * @inner
    */
   this.getStatesAndSpecialRegionsExtent = function(pgPool, states, specialRegions, callback) {
+    if(states.length === 1 && memberFilterConfig.Extents.States[states[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.States[states[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    if(specialRegions.length === 1 && memberFilterConfig.Extents.SpecialRegions[specialRegions[0]] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.SpecialRegions[specialRegions[0]].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var statesWithExtent = [];
+    var statesWithoutExtent = [];
+
+    for(var i = 0, statesLength = states.length; i < statesLength; i++) {
+      if(memberFilterConfig.Extents.States[states[i]] !== undefined)
+        statesWithExtent.push(states[i]);
+      else
+        statesWithoutExtent.push(states[i]);
+    }
+
+    var unionGeomsStates = "";
+
+    if(statesWithExtent.length > 0) {
+      for(var i = 0, statesWithExtentLength = statesWithExtent.length; i < statesWithExtentLength; i++)
+        unionGeomsStates += "ST_MakeEnvelope(" + memberFilterConfig.Extents.States[statesWithExtent[i]] + ", 4326), ";
+
+      unionGeomsStates = unionGeomsStates.substring(0, (unionGeomsStates.length - 2));
+    }
+
+    var specialRegionsWithExtent = [];
+    var specialRegionsWithoutExtent = [];
+
+    for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
+      if(memberFilterConfig.Extents.SpecialRegions[specialRegions[i]] !== undefined)
+        specialRegionsWithExtent.push(specialRegions[i]);
+      else
+        specialRegionsWithoutExtent.push(specialRegions[i]);
+    }
+
+    var unionGeomsSpecialRegions = "";
+
+    if(specialRegionsWithExtent.length > 0) {
+      for(var i = 0, specialRegionsWithExtentLength = specialRegionsWithExtent.length; i < specialRegionsWithExtentLength; i++)
+        unionGeomsSpecialRegions += "ST_MakeEnvelope(" + memberFilterConfig.Extents.SpecialRegions[specialRegionsWithExtent[i]] + ", 4326), ";
+
+      unionGeomsSpecialRegions = unionGeomsSpecialRegions.substring(0, (unionGeomsSpecialRegions.length - 2));
+    }
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
@@ -530,25 +552,49 @@ var Filter = function() {
         var params = [];
 
         // Creation of the query
-        var query = "WITH all_geoms AS(" +
-        "SELECT ST_Extent(" + memberTablesConfig.States.GeometryFieldName + ") as extent FROM " + memberTablesConfig.States.Schema + "." +
-        memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
+        var query = "WITH all_geoms AS(";
 
-        for(var i = 0, statesLength = states.length; i < statesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(states[i]);
-        }
+        if(statesWithoutExtent.length > 0) {
+          query += "SELECT ST_Expand(ST_Extent(";
 
-        query = query.substring(0, (query.length - 1)) + ") UNION ALL " +
-        "SELECT ST_Extent(" + memberTablesConfig.SpecialRegions.GeometryFieldName + ") as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." +
-        memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+          if(unionGeomsStates !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.States.GeometryFieldName + ", " + unionGeomsStates + "])";
+          else
+            query += memberTablesConfig.States.GeometryFieldName;
 
-        for(var i = 0, specialRegionsLength = specialRegions.length; i < specialRegionsLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(specialRegions[i]);
-        }
+          query += "), 0.5) as extent FROM " + memberTablesConfig.States.Schema + "." + memberTablesConfig.States.TableName + " where " + memberTablesConfig.States.IdFieldName + " in (";
 
-        query = query.substring(0, (query.length - 1)) + ")) SELECT ST_Extent(extent) as extent FROM all_geoms";
+          for(var i = 0, statesWithoutExtentLength = statesWithoutExtent.length; i < statesWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(statesWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeomsStates + "])), 2) as extent";
+
+        query += " UNION ALL ";
+
+        if(specialRegionsWithoutExtent.length > 0) {
+          query += "SELECT ST_Expand(ST_Extent(";
+
+          if(unionGeomsSpecialRegions !== "")
+            query += "ST_Collect(ARRAY[" + memberTablesConfig.SpecialRegions.GeometryFieldName + ", " + unionGeomsSpecialRegions + "])";
+          else
+            query += memberTablesConfig.SpecialRegions.GeometryFieldName;
+
+          query += "), 0.5) as extent FROM " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.IdFieldName + " in (";
+
+          for(var i = 0, specialRegionsWithoutExtentLength = specialRegionsWithoutExtent.length; i < specialRegionsWithoutExtentLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(specialRegionsWithoutExtent[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + ")";
+        } else
+          var query = "select ST_Expand(ST_Extent(ST_Collect(ARRAY[" + unionGeomsSpecialRegions + "])), 2) as extent";
+
+        query += ") SELECT ST_Expand(ST_Extent(extent), 0.5) as extent FROM all_geoms";
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -572,8 +618,13 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getProtectedAreaExtent = function(pgPool, id, type, callback) {
-    var parameters = [parseInt(id)];
+  this.getProtectedAreaExtent = function(pgPool, id, ngo, type, callback) {
+    if(memberFilterConfig.Extents.ProtectedAreas[type][id.toString() + ngo] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.ProtectedAreas[type][id.toString() + ngo].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
+    var parameters = [id.toString() + ngo];
 
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
@@ -581,19 +632,22 @@ var Filter = function() {
         if(type === 'UCE') {
           var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
           var geom = memberTablesConfig.UCE.GeometryFieldName;
-          var id = memberTablesConfig.UCE.IdFieldName;
+          var idField = memberTablesConfig.UCE.IdFieldName;
+          var ngoField = memberTablesConfig.UCE.NGOFieldName;
         } else if(type === 'UCF') {
           var schemaAndTable = memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName;
           var geom = memberTablesConfig.UCF.GeometryFieldName;
-          var id = memberTablesConfig.UCF.IdFieldName;
+          var idField = memberTablesConfig.UCF.IdFieldName;
+          var ngoField = memberTablesConfig.UCF.NGOFieldName;
         } else {
           var schemaAndTable = memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName;
           var geom = memberTablesConfig.TI.GeometryFieldName;
-          var id = memberTablesConfig.TI.IdFieldName;
+          var idField = memberTablesConfig.TI.IdFieldName;
+          var ngoField = memberTablesConfig.TI.NGOFieldName;
         }
 
         // Creation of the query
-        var query = "select ST_Extent(" + geom + ") as extent from " + schemaAndTable + " where " + id + " = $1;";
+        var query = "select ST_Expand(ST_Extent(" + geom + "), 0.5) as extent from " + schemaAndTable + " where concat(" + idField + ", " + ngoField + ") = $1;";
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
@@ -617,46 +671,21 @@ var Filter = function() {
    * @inner
    */
   this.getCityExtent = function(pgPool, id, callback) {
+    if(memberFilterConfig.Extents.Cities[id] !== undefined) {
+      var confExtent = memberFilterConfig.Extents.Cities[id].split(',');
+      return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
+    }
+
     var parameters = [id];
 
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
-        var query = "select ST_Extent(" + memberTablesConfig.Cities.GeometryFieldName + ") as extent from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " = $1;";
+        var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Cities.GeometryFieldName + "), 0.1) as extent from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " = $1;";
 
         // Execution of the query
         client.query(query, parameters, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
-      } else return callback(err);
-    });
-  };
-
-  /**
-   * Returns the number of the fires located in the country correspondent to the received id.
-   * @param {object} pgPool - PostgreSQL connection pool
-   * @param {number} country - Country id
-   * @param {function} callback - Callback function
-   * @returns {function} callback - Execution of the callback function, which will process the received data
-   *
-   * @function getFiresCountByCountry
-   * @memberof Filter
-   * @inner
-   */
-  this.getFiresCountByCountry = function(pgPool, country, callback) {
-    // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
-      if(!err) {
-
-        // Creation of the query
-        var query = "select count(*) as firescount from " + memberTablesConfig.Fires.Schema + "." + memberTablesConfig.Fires.TableName + " where " + memberTablesConfig.Fires.CountryFieldName + " = $1;",
-            params = [country];
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);
@@ -822,69 +851,11 @@ var Filter = function() {
             " where (" + memberTablesConfig.Fires.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
 
-        // If the 'options.satellites' parameter exists, a satellites 'where' clause is created
-        if(options.satellites !== undefined) {
-          var satellitesArray = options.satellites.split(',');
-          query += " and " + memberTablesConfig.Fires.SatelliteFieldName + " in (";
+        var getFiltersResult = memberUtils.getFilters(options, query, params, parameter);
 
-          for(var i = 0, satellitesArrayLength = satellitesArray.length; i < satellitesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(satellitesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
-        if(options.biomes !== undefined) {
-          var biomesArray = options.biomes.split(',');
-          query += " and " + memberTablesConfig.Fires.BiomeFieldName + " in (";
-
-          for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(biomesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.extent' parameter exists, a extent 'where' clause is created
-        if(options.extent !== undefined) {
-          query += " and ST_Intersects(" + memberTablesConfig.Fires.GeometryFieldName + ", ST_MakeEnvelope($" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", $" + (parameter++) + ", 4326))";
-          params.push(options.extent[0], options.extent[1], options.extent[2], options.extent[3]);
-        }
-
-        // If the 'options.continent' parameter exists, a continent 'where' clause is created
-        if(options.continent !== undefined) {
-          query += " and " + memberTablesConfig.Fires.ContinentFieldName + " = $" + (parameter++);
-          params.push(options.continent);
-        }
-
-        // If the 'options.countries' parameter exists, a countries 'where' clause is created
-        if(options.countries !== undefined) {
-          var countriesArray = options.countries.split(',');
-          query += " and " + memberTablesConfig.Fires.CountryFieldName + " in (";
-
-          for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(countriesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
-
-        // If the 'options.states' parameter exists, a states 'where' clause is created
-        if(options.states !== undefined) {
-          var statesArray = options.states.split(',');
-          query += " and " + memberTablesConfig.Fires.StateFieldName + " in (";
-
-          for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
-            query += "$" + (parameter++) + ",";
-            params.push(statesArray[i]);
-          }
-
-          query = query.substring(0, (query.length - 1)) + ")";
-        }
+        query = getFiltersResult.query;
+        params = getFiltersResult.params;
+        parameter = getFiltersResult.parameter;
 
         // Execution of the query
         client.query(query, params, function(err, result) {
@@ -908,35 +879,26 @@ var Filter = function() {
    * @inner
    */
   this.getSpecialRegions = function(pgPool, countries, callback) {
+    // Counter of the query parameters
+    var parameter = 1;
+    // Query parameters
+    var params = [];
+
     // Connection with the PostgreSQL database
     pgPool.connect(function(err, client, done) {
       if(!err) {
-        var specialRegions = "";
+        // Creation of the query
+        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " && ARRAY[";
 
-        for(var i = 0, specialRegionsLength = memberFilterConfig.SpecialRegions.length; i < specialRegionsLength; i++) {
-          var inArray = false;
-
-          for(var j = 0, countriesLength = countries.length; j < countriesLength; j++) {
-            for(var x = 0, specialRegionsCountriesLength = memberFilterConfig.SpecialRegions[i].Countries.length; x < specialRegionsCountriesLength; x++) {
-              if(countries[j] == memberFilterConfig.SpecialRegions[i].Countries[x]) {
-                inArray = true;
-                break;
-              }
-            }
-
-            if(inArray) break;
-          }
-
-          if(inArray) specialRegions += memberFilterConfig.SpecialRegions[i].Id + ",";
+        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
+          query += "$" + (parameter++) + ",";
+          params.push(countries[i]);
         }
 
-        specialRegions = specialRegions != "" ? specialRegions.substring(0, specialRegions.length - 1) : "0";
-
-        // Creation of the query
-        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where gid in (" + specialRegions + ") order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+        query = query.substring(0, (query.length - 1)) + "]::integer[] order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
 
         // Execution of the query
-        client.query(query, function(err, result) {
+        client.query(query, params, function(err, result) {
           done();
           if(!err) return callback(null, result);
           else return callback(err);
@@ -963,15 +925,15 @@ var Filter = function() {
       if(!err) {
         var parameters = [];
 
-        var tiQuery = "select " + memberTablesConfig.TI.IdFieldName + " as id, upper(" + memberTablesConfig.TI.NameFieldName + ") as name, 'TI' as type " +
+        var tiQuery = "select " + memberTablesConfig.TI.IdFieldName + " as id, " + memberTablesConfig.TI.NGOFieldName + " as ngo, upper(" + memberTablesConfig.TI.NameFieldName + ") as name, 'TI' as type " +
         "from " + memberTablesConfig.TI.Schema + "." + memberTablesConfig.TI.TableName +
         " where unaccent(upper(" + memberTablesConfig.TI.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
 
-        var uceQuery = "select " + memberTablesConfig.UCE.IdFieldName + " as id, upper(" + memberTablesConfig.UCE.NameFieldName + ") as name, 'UCE' as type " +
+        var uceQuery = "select " + memberTablesConfig.UCE.IdFieldName + " as id, " + memberTablesConfig.UCE.NGOFieldName + " as ngo, upper(" + memberTablesConfig.UCE.NameFieldName + ") as name, 'UCE' as type " +
         "from " + memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName +
         " where unaccent(upper(" + memberTablesConfig.UCE.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
 
-        var ucfQuery = "select " + memberTablesConfig.UCF.IdFieldName + " as id, upper(" + memberTablesConfig.UCF.NameFieldName + ") as name, 'UCF' as type " +
+        var ucfQuery = "select " + memberTablesConfig.UCF.IdFieldName + " as id, " + memberTablesConfig.UCF.NGOFieldName + " as ngo, upper(" + memberTablesConfig.UCF.NameFieldName + ") as name, 'UCF' as type " +
         "from " + memberTablesConfig.UCF.Schema + "." + memberTablesConfig.UCF.TableName +
         " where unaccent(upper(" + memberTablesConfig.UCF.NameFieldName + ")) like unaccent(upper(_SEARCH_))";
 

@@ -39,10 +39,14 @@ var ExportGraphicDataController = function(app) {
     // Verifications of the 'options' object items
     if(request.query.satellites !== '') options.satellites = request.query.satellites;
     if(request.query.biomes !== '') options.biomes = request.query.biomes;
+    if(request.query.risk !== '') options.risk = request.query.risk;
+    if(request.query.continent !== '') options.continent = request.query.continent;
     if(request.query.countries !== '') options.countries = request.query.countries;
     if(request.query.states !== '') options.states = request.query.states;
     if(request.query.cities !== '') options.cities = request.query.cities;
+    if(request.query.specialRegions !== '') options.specialRegions = request.query.specialRegions;
     if(request.query.protectedArea !== null && request.query.protectedArea !== '') options.protectedArea = JSON.parse(request.query.protectedArea);
+    if(request.query.industrialFires !== null && request.query.industrialFires !== '') options.industrialFires = request.query.industrialFires;
 
     var graphicConfigurations = getGraphicConfigurations(request.query.id);
 

@@ -16,7 +16,9 @@
  * @property {string} memberCountries - Current countries filter.
  * @property {string} memberStates - Current states filter.
  * @property {string} memberCities - Current cities filter.
+ * @property {array} memberSpecialRegions - Current special regions.
  * @property {object} memberProtectedArea - Current protected area filter.
+ * @property {boolean} memberIndustrialFires - Current industrial fires filter.
  */
 define(
   ['components/Utils', 'components/Filter', 'TerraMA2WebComponents'],
@@ -40,8 +42,12 @@ define(
     var memberStates = null;
     // Current cities filter
     var memberCities = null;
+    // Current special regions
+    var memberSpecialRegions = null;
     // Current protected area
     var memberProtectedArea = null;
+    // Current industrial fires filter
+    var memberIndustrialFires = false;
 
     /**
      * Creates and returns an array with the attributes table columns names.
@@ -85,7 +91,7 @@ define(
     };
 
     /**
-     * Returns the countries, states and cities to be filtered.
+     * Returns the countries, states, cities and special regions to be filtered.
      * @param {function} callback - Callback function
      * @returns {function} callback - Execution of the callback function, which will process the received data
      *
@@ -110,43 +116,10 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+      var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
+      filterCity = filterCity !== null ? filterCity : "";
 
-      countries = countries.toString();
-
-      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
-
-      if(countries.length > 0) {
-        var arrayOne = JSON.parse(JSON.stringify(countries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        var arrayCountries = $.merge(arrayOne, arrayTwo);
-
-        states = JSON.parse(JSON.stringify(filterStates));
-        states = states.toString();
-
-        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
-
-        var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
-        var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
-        var citiesString = cities.toString();
-
-        if(states.length > 0) {
-          var arrayOne = JSON.parse(JSON.stringify(states));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
-
-          var arrayStates = $.merge(arrayOne, arrayTwo);
-
-          callback(continent.toString(), arrayCountries.toString(), arrayStates.toString(), citiesString);
-        } else {
-          callback(continent.toString(), arrayCountries.toString(), specialRegionsStatesJson.toString(), citiesString);
-        }
-      } else {
-        var filterCity = $('#city-attributes-table').data('value') !== undefined && $('#city-attributes-table').data('value') !== null && $('#city-attributes-table').data('value') !== '' ? $('#city-attributes-table').data('value') : Filter.getCity();
-        filterCity = filterCity !== null ? filterCity : "";
-
-        callback(continent.toString(), specialRegionsCountriesJson.toString(), "", filterCity);
-      }
+      callback(continent.toString(), countries.toString(), filterStates.toString(), filterCity, specialRegions.toString());
     };
 
     /**
@@ -169,15 +142,24 @@ define(
 
       memberDateTimeFrom = Filter.getFormattedDateFrom(Utils.getConfigurations().firesDateFormat) + ' ' + Filter.getTimeFrom();
       memberDateTimeTo = Filter.getFormattedDateTo(Utils.getConfigurations().firesDateFormat) + ' ' + Filter.getTimeTo();
-      memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+
+      if(Filter.isInitialFilter()) {
+        memberSatellites = Filter.getInitialSatellites().toString();
+      } else {
+        memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+      }
+
       memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
       memberProtectedArea = Filter.getProtectedArea();
 
-      getSpatialFilterData(function(continent, countries, states, cities) {
+      memberIndustrialFires = Filter.getIndustrialFires();
+
+      getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
         memberContinent = continent;
         memberCountries = countries;
         memberStates = states;
         memberCities = cities;
+        memberSpecialRegions = specialRegions;
 
         memberAttributesTable = $('#attributes-table').DataTable(
           {
@@ -196,7 +178,9 @@ define(
                 data.countries = memberCountries;
                 data.states = memberStates;
                 data.cities = memberCities;
+                data.specialRegions = memberSpecialRegions;
                 data.protectedArea = memberProtectedArea;
+                data.industrialFires = memberIndustrialFires;
               }
             },
             "columns": getAttributesTableColumnNamesArray(),
@@ -234,7 +218,7 @@ define(
       $('#filter-error-dates-attributes-table').text('');
 
       if(memberAttributesTable !== null) {
-        var dates = Utils.getFilterDates(true, (useAttributesTableFilter ? 1 : 0));
+        var dates = Utils.getFilterDates(true, true, true, (useAttributesTableFilter ? 1 : 0));
         var times = Utils.getFilterTimes(true, (useAttributesTableFilter ? 1 : 0));
 
         if(dates !== null && times !== null) {
@@ -250,7 +234,12 @@ define(
               memberSatellites = (Utils.stringInArray($('#filter-satellite-attributes-table').val(), "all") ? '' : $('#filter-satellite-attributes-table').val().toString());
               memberBiomes = (Utils.stringInArray($('#filter-biome-attributes-table').val(), "all") ? '' : $('#filter-biome-attributes-table').val().toString());
             } else {
-              memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+              if(Filter.isInitialFilter()) {
+                memberSatellites = Filter.getInitialSatellites().toString();
+              } else {
+                memberSatellites = (Utils.stringInArray(Filter.getSatellites(), "all") ? '' : Filter.getSatellites().toString());
+              }
+
               memberBiomes = (Utils.stringInArray(Filter.getBiomes(), "all") ? '' : Filter.getBiomes().toString());
 
               $('#filter-date-from-attributes-table').val(Filter.getFormattedDateFrom('YYYY/MM/DD'));
@@ -261,11 +250,16 @@ define(
                                   ($('#pas-attributes-table').data('value') !== undefined && $('#pas-attributes-table').data('value') !== '' ? JSON.parse($('#pas-attributes-table').data('value')) : null) :
                                   Filter.getProtectedArea();
 
-            getSpatialFilterData(function(continent, countries, states, cities) {
+            memberIndustrialFires = Filter.getIndustrialFires();
+
+            Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+
+            getSpatialFilterData(function(continent, countries, states, cities, specialRegions) {
               memberContinent = continent;
               memberCountries = countries;
               memberStates = states;
               memberCities = cities;
+              memberSpecialRegions = specialRegions;
 
               memberAttributesTable.ajax.reload();
             });

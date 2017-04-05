@@ -57,6 +57,7 @@
   <hr/>
   <div style="clear: both; height: 5px;"></div>
   <div class="form-group bdqueimadas-form">
+    <label style="width: 100%; text-align: center; margin-bottom: 4px !important;">Obs: dados após Jun/1998</label>
     <div style="float: left;">
       <label for="filter-date-from" style="float: left; margin-right: 4px; margin-top: 5px;"><%= __('Data / Hora Início - TMG (Z)') %></label>
       <input type="text" style="width: 90px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="<%= __('Data Início') %>">
@@ -124,14 +125,16 @@
     <label for="filter-biome"><%= __('Focos nos Biomas') %></label>
     <select multiple class="form-control" id="filter-biome" style="width: 148px;">
       <option value="all" selected><%= __('TODOS') %></option>
-      <option value="Amazonia">Amaz&ocirc;nia</option>
+      <option value="Amaz&ocirc;nia">Amaz&ocirc;nia</option>
       <option value="Caatinga">Caatinga</option>
       <option value="Cerrado">Cerrado</option>
-      <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
+      <option value="Mata Atl&acirc;ntica">Mata Atl&acirc;ntica</option>
       <option value="Pampa">Pampa</option>
       <option value="Pantanal">Pantanal</option>
     </select>
   </div>
+  <div style="clear: both; height: 5px;"></div>
+  <span class="help-block component-filter-error-main" id="filter-error-main"></span>
   <div style="clear: both; height: 5px;"></div>
   <button class="btn btn-primary" id="filter-button"><%= __('Aplicar') %></button>
   <button class="btn btn-primary" id="initial-filter-button"><%= __('Mapa Inicial') %></button>

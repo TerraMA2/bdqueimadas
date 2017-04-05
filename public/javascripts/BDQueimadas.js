@@ -13,6 +13,7 @@
  * @property {number} memberReducedFooterHeight - Reduced footer height.
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  * @property {number} memberButtonBlinkingInterval - Timer id of the initial blinking interval of the filter button.
+ * @property {object} memberFilterExport - Saves the exportation filter parameters.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
@@ -32,6 +33,8 @@ define(
     var memberMapSubtitleHeight = null;
     // Timer id of the initial blinking interval of the filter button
     var memberButtonBlinkingInterval = null;
+    // Saves the exportation filter parameters
+    var memberFilterExport = null;
 
     /**
      * Updates the necessary components.
@@ -45,6 +48,58 @@ define(
       AttributesTable.updateAttributesTable(false);
       Graphics.updateGraphics(false);
       Map.getSubtitlesSatellites(Filter.getSatellites(), Filter.getBiomes(), Filter.getCountries(), Filter.getStates());
+    };
+
+    /**
+     * Returns from the filter window the filtered states.
+     * @returns {array} filterStates - Array of states
+     *
+     * @private
+     * @function getStatesFromFilter
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var getStatesFromFilter = function() {
+      var states = $('#states').val();
+      var filterStates = [];
+
+      $('#states > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region')))
+          filterStates.push($(this).val());
+      });
+
+      return filterStates;
+    };
+
+    /**
+     * Returns from the filter window the filtered special regions and its countries.
+     * @returns {object} object - Object with the special regions and its countries
+     *
+     * @private
+     * @function getSpecialRegionsFromFilter
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var getSpecialRegionsFromFilter = function() {
+      var states = $('#states').val();
+      var specialRegions = [];
+      var specialRegionsCountries = [];
+
+      $('#states > option').each(function() {
+        if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
+          specialRegions.push($(this).val());
+
+          if(!isNaN($(this).data('special-region-countries')))
+            specialRegionsCountries.push($(this).data('special-region-countries'));
+          else
+            specialRegionsCountries = specialRegionsCountries.concat($(this).data('special-region-countries').split(','));
+        }
+      });
+
+      return {
+        specialRegions: specialRegions,
+        specialRegionsCountries: specialRegionsCountries
+      };
     };
 
     /**
@@ -169,74 +224,16 @@ define(
         }
       });
 
-      // Sidebar toggle click event
-      /*$('.sidebar-toggle').on('click', function() {
-        // Updates the variables that keep DOM elements sizes
-        updateSizeVars();
-
-        // Block valid only for the toggle in the initial screen
-        if($(this).hasClass("begin")) {
-          $('#welcome').animate({ 'opacity': '0' }, { duration: 300, queue: false });
-          $('#welcome-image').animate({ 'opacity': '0' }, { duration: 300, queue: false });
-          window.setTimeout(function() {
-            $('#welcome').css('display', 'none');
-            $('#welcome-image').css('display', 'none');
-          }, 300);
-          $('#main-sidebar-toggle').css("display", "");
-        }
-
-        // If a left content box is open, the size of it is adjusted
-        if($(".left-content-box").hasClass('active')) {
-          var activeLeftContentBox = $("#" + $("#left-content-box-background").attr('leftContentBoxButton')).attr('box');
-          adjustLeftContentBoxSize(activeLeftContentBox);
-        }
-
-        // If the left content box background is open, the size of it is adjusted
-        if($("#left-content-box-background").hasClass('active')) {
-          adjustLeftContentBoxSize("left-content-box-background");
-        }
-
-        // Elements sizes adjustments, accordingly with the sidebar width
-        if($("body").hasClass('sidebar-collapse')) {
-          $("#terrama2-map").removeClass('fullmenu');
-          $(this).attr('title', 'Diminuir Mapa');
-          $(this).find('> span').text('Diminuir Mapa');
-          $('#page-second-title').css('display', '');
-          $('#languages-main').css('display', 'none');
-          $('#languages-secondary').css('display', '');
-          setReducedContentSize(300);
-        } else {
-          $("#terrama2-map").addClass('fullmenu');
-          $(this).attr('title', 'Expandir Mapa');
-          $(this).find('> span').text('Expandir Mapa');
-          $('#page-second-title').css('display', 'none');
-          $('#languages-main').css('display', '');
-          $('#languages-secondary').css('display', 'none');
-          setFullContentSize(300);
-        }
-
-        // Updates the map size
-        TerraMA2WebComponents.MapDisplay.updateMapSize();
-      });*/
-
       // Window resize event
       $(window).resize(function() {
         // Updates the variables that keep DOM elements sizes
         updateSizeVars();
 
-        // Elements sizes adjustments, accordingly with the sidebar width
-        //if($("body").hasClass('sidebar-collapse')) {
-          setReducedContentSize(0);
-        //} else {
-          //setFullContentSize(0);
-        //}
+        // Elements sizes adjustments
+        setReducedContentSize(0);
 
         // Setting the max height of the exportation window
         $('.component-filter-content').css('max-height', ($(window).outerHeight() - 212) + 'px');
-
-        // Updates the padding top of the sidebar
-        //$('.main-sidebar').attr("style", "padding-top: " + $('.main-header').outerHeight() + "px");
-
         TerraMA2WebComponents.MapDisplay.updateMapSize();
       });
 
@@ -257,18 +254,18 @@ define(
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left" style="width: 200px;">' +
                   '<label for="countries-export">Países</label>' +
-                  '<select multiple id="countries-export" name="countries-export" class="form-control float-left">' + $('#countries').html() + '</select>' +
+                  '<select multiple id="countries-export" name="countries-export" class="form-control float-left">' + (memberFilterExport !== null ? memberFilterExport.countriesHtml : $('#countries').html()) + '</select>' +
                 '</div>' +
                 '<div class="float-right" style="width: 200px;">' +
                   '<label for="states-export">Estados</label>' +
-                  '<select multiple id="states-export" name="states-export" class="form-control float-left">' + $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '') + '</select>' +
+                  '<select multiple id="states-export" name="states-export" class="form-control float-left">' + (memberFilterExport !== null ? memberFilterExport.statesHtml : $('#states').html().replace('<option value="0" selected="">Todos municípios</option>', '')) + '</select>' +
                 '</div>' +
               '</div>' +
               '<div class="clear"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<label for="city-export">Municípios</label>' +
                 '<div class="input-group">' +
-                  '<input value="' + $('#city').val() + '" type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
+                  '<input type="text" id="city-export" name="city-export" class="form-control" placeholder="Municípios">' +
                   '<span class="input-group-btn">' +
                     '<button type="button" id="search-cities-btn-export" class="btn btn-flat">' +
                       '<i class="fa fa-search"></i>' +
@@ -279,7 +276,7 @@ define(
               '<div class="form-group bdqueimadas-form">' +
                 '<label for="pas-export">UCs / TIs (Apenas Brasil)</label>' +
                 '<div class="input-group">' +
-                  '<input value="' + $('#pas').val() + '" type="text" id="pas-export" name="pas-export" class="form-control" placeholder="UCs / TIs">' +
+                  '<input type="text" id="pas-export" name="pas-export" class="form-control" placeholder="UCs / TIs">' +
                   '<span class="input-group-btn">' +
                     '<button type="button" id="search-pas-btn-export" class="btn btn-flat">' +
                       '<i class="fa fa-search"></i>' +
@@ -292,21 +289,21 @@ define(
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-internal" name="buffer-internal"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Interno' +
+                      '<input type="checkbox" id="buffer-internal" name="buffer-internal"> Interno' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-five" name="buffer-five"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Buffer 5Km' +
+                      '<input type="checkbox" id="buffer-five" name="buffer-five"> Buffer 5Km' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
                 '<div class="col-md-4">' +
                   '<div class="checkbox">' +
                     '<label>' +
-                      '<input type="checkbox" id="buffer-ten" name="buffer-ten"' + ($('#pas').val() == '' ? ' disabled' : '') + '> Buffer 10Km' +
+                      '<input type="checkbox" id="buffer-ten" name="buffer-ten"> Buffer 10Km' +
                     '</label>' +
                   '</div>' +
                 '</div>' +
@@ -314,22 +311,23 @@ define(
               '<span class="help-block component-filter-error" id="filter-error-export-aps"></span>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
+                '<label style="width: 100%; text-align: center; margin-bottom: 4px !important;">Obs: dados após Jun/1998</label>' +
                 '<div class="float-left div-date-filter-export">' +
                   '<label for="filter-date-from-export">Data / Hora Início - TMG (Z)</label>' +
-                  '<input value="' + $('#filter-date-from').val() + '" type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
+                  '<input type="text" class="form-control float-left" id="filter-date-from-export" placeholder="Data Início">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<input value="' + $('#filter-time-from').val() + '" type="text" class="form-control float-left" id="filter-time-from-export" placeholder="Hora Início">' +
+                  '<input type="text" class="form-control float-left" id="filter-time-from-export" placeholder="Hora Início">' +
                 '</div>' +
               '</div>' +
               '<div class="clear" style="height: 5px;"></div>' +
               '<div class="form-group bdqueimadas-form">' +
                 '<div class="float-left div-date-filter-export">' +
                   '<label for="filter-date-to-export">Data / Hora Fim - TMG (Z)</label>' +
-                  '<input value="' + $('#filter-date-to').val() + '" type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
+                  '<input type="text" class="form-control float-left" id="filter-date-to-export" placeholder="Data Fim">' +
                 '</div>' +
                 '<div class="float-right div-date-filter-export">' +
-                  '<input value="' + $('#filter-time-to').val() + '" type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
+                  '<input type="text" class="form-control float-left" id="filter-time-to-export" placeholder="Hora Fim">' +
                 '</div>' +
               '</div>' +
               '<div class="clear"></div>' +
@@ -353,8 +351,9 @@ define(
                 '<div class="form-group bdqueimadas-form">' +
                 '<label for="exportation-type" class="col-sm-6 control-label" style="text-align: left; padding-right: 0; width: 188px;">Formato da exportação</label>' +
                 '<div class="col-sm-6" style="float: right; width: 240px;">' +
-                  '<select id="exportation-type" class="form-control">' +
-                    '<option value="csv">CSV</option>' +
+                  '<select multiple id="exportation-type" class="form-control">' +
+                    '<option value="all">Todos os Formatos</option>' +
+                    '<option selected value="csv">CSV</option>' +
                     '<option value="geojson">GeoJSON</option>' +
                     '<option value="kml">KML</option>' +
                     '<option value="shapefile">Shapefile</option>' +
@@ -363,6 +362,34 @@ define(
                 '</div>' +
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-type"></span>' +
+              '<span id="csvFields">' +
+                '<div class="form-group bdqueimadas-form">' +
+                  '<label>Separador Decimal</label>' +
+                  '<div class="input-group" style="width: 100%;">' +
+                    '<div class="row">' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="decimalSeparator" value="comma" checked> Vírgula (,)' +
+                      '</div>' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="decimalSeparator" value="point"> Ponto (.)' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="form-group bdqueimadas-form">' +
+                  '<label>Caractere Separador de Campos</label>' +
+                  '<div class="input-group" style="width: 100%;">' +
+                    '<div class="row">' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="fieldSeparator" value="semicolon" checked> Ponto e Vírgula (;)' +
+                      '</div>' +
+                      '<div class="col-sm-6">' +
+                        '<input type="radio" name="fieldSeparator" value="comma"> Vírgula (,)' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</span>' +
             '</div>' +
           '</div>',
           buttons: [
@@ -420,7 +447,7 @@ define(
                   $("#filter-error-export-satellite").text('Selecione algum satélite!');
                 } else if($('#filter-biome-export').val() === null) {
                   $("#filter-error-export-biome").text('Selecione algum bioma!');
-                } else if($("#exportation-type").val() === "") {
+                } else if($("#exportation-type").val() === null) {
                   $("#filter-error-export-type").text('Formato da exportação inválido!');
                 } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
                   $("#filter-error-export-aps").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
@@ -436,33 +463,65 @@ define(
                       dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
                       biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
-                      countries: exportationSpatialFilterData.allCountries,
+                      continent: exportationSpatialFilterData.continent,
+                      countries: exportationSpatialFilterData.countries,
                       states: exportationSpatialFilterData.states,
                       cities: exportationSpatialFilterData.cities,
+                      specialRegions: exportationSpatialFilterData.specialRegions,
                       protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
+                      industrialFires: Filter.getIndustrialFires(),
                       bufferInternal: $('#buffer-internal').is(':checked'),
                       bufferFive: $('#buffer-five').is(':checked'),
                       bufferTen: $('#buffer-ten').is(':checked')
                     },
                     success: function(existsDataToExport) {
                       if(existsDataToExport.existsDataToExport) {
+                        memberFilterExport = {
+                          dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
+                          dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
+                          satellites: $('#filter-satellite-export').val().toString(),
+                          biomes: $('#filter-biome-export').val().toString(),
+                          continent: exportationSpatialFilterData.continent,
+                          countries: exportationSpatialFilterData.countries,
+                          countriesHtml: $('#countries-export').html(),
+                          states: exportationSpatialFilterData.states.concat(exportationSpatialFilterData.specialRegions),
+                          statesHtml: $('#states-export').html(),
+                          cities: exportationSpatialFilterData.cities,
+                          cityLabel: $('#city-export').val(),
+                          format: $("#exportation-type").val().toString(),
+                          protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
+                          industrialFires: Filter.getIndustrialFires(),
+                          bufferInternal: $('#buffer-internal').is(':checked'),
+                          bufferFive: $('#buffer-five').is(':checked'),
+                          bufferTen: $('#buffer-ten').is(':checked'),
+                          decimalSeparator: $('input[name=decimalSeparator]:checked').val(),
+                          fieldSeparator: $('input[name=fieldSeparator]:checked').val()
+                        };
+
                         var exportLink = Utils.getBaseUrl() + "export?dateTimeFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00' +
                                          "&dateTimeTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59' +
                                          "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
                                          "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
-                                         "&countries=" + exportationSpatialFilterData.allCountries +
+                                         "&continent=" + exportationSpatialFilterData.continent +
+                                         "&countries=" + exportationSpatialFilterData.countries +
                                          "&states=" + exportationSpatialFilterData.states +
                                          "&cities=" + exportationSpatialFilterData.cities +
-                                         "&format=" + $("#exportation-type").val() +
+                                         "&specialRegions=" + exportationSpatialFilterData.specialRegions +
+                                         "&format=" + $("#exportation-type").val().toString() +
                                          "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
+                                         "&industrialFires=" + Filter.getIndustrialFires() +
                                          "&bufferInternal=" + $('#buffer-internal').is(':checked') +
                                          "&bufferFive=" + $('#buffer-five').is(':checked') +
-                                         "&bufferTen=" + $('#buffer-ten').is(':checked') +
-                                         "&t=" + existsDataToExport.token;
+                                         "&bufferTen=" + $('#buffer-ten').is(':checked');
+
+                        if(Utils.stringInArray($('#exportation-type').val(), 'csv')) {
+                          exportLink += "&decimalSeparator=" + $('input[name=decimalSeparator]:checked').val() +
+                          "&fieldSeparator=" + $('input[name=fieldSeparator]:checked').val();
+                        }
+
+                        exportLink += "&t=" + existsDataToExport.token;
 
                         window.open(exportLink, '_blank');
-
-                        vex.close();
                       } else {
                         vex.dialog.alert({
                           message: '<p class="text-center">Não existem dados para exportar!</p>',
@@ -520,22 +579,15 @@ define(
               $("#filter-error-export-satellite").text('');
               $("#filter-error-export-biome").text('');
               $("#filter-error-export-type").text('');
+
+              if(dateFrom !== null && dateTo !== null)
+                Filter.updateSatellitesSelect(3, dateFrom, dateTo);
             }
           }
         };
 
         $("#filter-date-from-export").datepicker(datePickerOptions);
         $("#filter-date-to-export").datepicker(datePickerOptions);
-
-        $("#filter-satellite-export").val($("#filter-satellite").val());
-        $('#filter-biome-export').val($('#filter-biome').val());
-        $('#continents-export').val($('#continents').val());
-        $('#countries-export').val($('#countries').val());
-        $('#states-export').val($('#states').val());
-
-        if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0) $('#states-export').attr('disabled', 'disabled');
-
-        if(Filter.getProtectedArea() !== null) $('#pas-export').data('value', JSON.stringify(Filter.getProtectedArea()));
 
         $('#pas-export').autocomplete({
           minLength: 4,
@@ -550,14 +602,16 @@ define(
           select: function(event, ui) {
             event.preventDefault();
 
-            $('#buffer-internal').removeAttr('disabled');
-            $('#buffer-five').removeAttr('disabled');
-            $('#buffer-ten').removeAttr('disabled');
+            $('#buffer-internal').removeAttr('disabled').attr('checked', false);
+            $('#buffer-five').removeAttr('disabled').attr('checked', false);
+            $('#buffer-ten').removeAttr('disabled').attr('checked', false);
 
             $('#pas-export').val(ui.item.label);
 
             $('#pas-export').data('value', JSON.stringify({
               id: ui.item.value.id,
+              name: ui.item.value.name,
+              ngo: ui.item.value.ngo,
               type: ui.item.value.type
             }));
           }
@@ -574,7 +628,7 @@ define(
               data: {
                 minLength: 4,
                 value: request.term,
-                countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+                countries: countriesAndStates.countries,
                 states: countriesAndStates.states
               },
               success: function(data) {
@@ -589,29 +643,144 @@ define(
             $('#city-export').data('value', ui.item.value.id);
           }
         });
+
+        $('#filter-date-from-export').on('change', function() {
+          if($('#filter-date-from-export').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+            $('#filter-date-from-export').val('');
+        });
+
+        $('#filter-date-from-export').keyup(function() {
+          var dates = Utils.getFilterDates(false, false, false, 3);
+
+          if(dates !== null)
+            Filter.updateSatellitesSelect(3, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+        });
+
+        $('#filter-date-to-export').on('change', function() {
+          if($('#filter-date-to-export').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+            $('#filter-date-to-export').val('');
+        });
+
+        $('#filter-date-to-export').keyup(function() {
+          var dates = Utils.getFilterDates(false, false, false, 3);
+
+          if(dates !== null)
+            Filter.updateSatellitesSelect(3, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+        });
+
+        if(memberFilterExport !== null) {
+          var dateTimeFromArray = memberFilterExport.dateTimeFrom.split(' ');
+          var dateTimeToArray = memberFilterExport.dateTimeTo.split(' ');
+
+          $('#continents-export').val(memberFilterExport.continent);
+          $('#countries-export').val(memberFilterExport.countries);
+          $('#states-export').val(memberFilterExport.states);
+          $('#city-export').val(memberFilterExport.cityLabel);
+          $('#city-export').data('value', memberFilterExport.cities);
+
+          if(memberFilterExport.protectedArea != "") {
+            var protectedArea = JSON.parse(memberFilterExport.protectedArea);
+
+            $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
+            $('#pas-export').data('value', JSON.stringify(protectedArea));
+          } else {
+            $('#buffer-internal').attr("disabled", true);
+            $('#buffer-five').attr("disabled", true);
+            $('#buffer-ten').attr("disabled", true);
+          }
+
+          $('#buffer-internal').attr('checked', memberFilterExport.bufferInternal);
+          $('#buffer-five').attr('checked', memberFilterExport.bufferFive);
+          $('#buffer-ten').attr('checked', memberFilterExport.bufferTen);
+          $('#filter-date-from-export').val(dateTimeFromArray[0]);
+          $('#filter-time-from-export').val(dateTimeFromArray[1]);
+          $('#filter-date-to-export').val(dateTimeToArray[0]);
+          $('#filter-time-to-export').val(dateTimeToArray[1]);
+          memberFilterExport.satellites = (memberFilterExport.satellites == "" ? "all" : memberFilterExport.satellites);
+          $('#filter-satellite-export').val(memberFilterExport.satellites);
+          memberFilterExport.biomes = (memberFilterExport.biomes == "" ? "all" : memberFilterExport.biomes);
+          $('#filter-biome-export').val(memberFilterExport.biomes);
+          $('#exportation-type').val(memberFilterExport.format);
+          $('input[name=decimalSeparator][value=\'' + memberFilterExport.decimalSeparator + '\']').prop('checked', true);
+          $('input[name=fieldSeparator][value=\'' + memberFilterExport.fieldSeparator + '\']').prop('checked', true);
+
+          if(Utils.stringInArray(memberFilterExport.countries, "") || memberFilterExport.countries.length === 0)
+            $('#states-export').attr('disabled', 'disabled');
+        } else {
+          $('#continents-export').val($('#continents').val());
+          $('#countries-export').val($('#countries').val());
+          $('#states-export').val($('#states').val());
+          $('#city-export').val($('#city').val());
+
+          if(Filter.getProtectedArea() !== null) {
+            var protectedArea = JSON.stringify(Filter.getProtectedArea());
+
+            $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
+            $('#pas-export').data('value', JSON.stringify(protectedArea));
+          } else {
+            $('#buffer-internal').attr("disabled", true);
+            $('#buffer-five').attr("disabled", true);
+            $('#buffer-ten').attr("disabled", true);
+          }
+
+          $('#filter-date-from-export').val($('#filter-date-from').val());
+          $('#filter-time-from-export').val($('#filter-time-from').val());
+          $('#filter-date-to-export').val($('#filter-date-to').val());
+          $('#filter-time-to-export').val($('#filter-time-to').val());
+          $("#filter-satellite-export").val($("#filter-satellite").val());
+          $('#filter-biome-export').val($('#filter-biome').val());
+
+          if(Utils.stringInArray($('#countries').val(), "") || $('#countries').val().length === 0)
+            $('#states-export').attr('disabled', 'disabled');
+        }
+      });
+
+      $(document).on('change', '#exportation-type', function() {
+        if(Utils.stringInArray($('#exportation-type').val(), 'csv')) $('#csvFields').css('display', '');
+        else $('#csvFields').css('display', 'none');
+      });
+
+      $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#filter-button').click();
       });
 
       // Filter Events
 
       $('#filter-button').on('click', function() {
-        var dates = Utils.getFilterDates(true, 0);
+        if(Filter.isInitialFilter())
+          Filter.setInitialFilterToFalse();
+
+        var dates = Utils.getFilterDates(true, true, true, 0);
 
         if(dates !== null) {
+          var timeDiffBetweenDates = Math.abs($('#filter-date-to').datepicker('getDate').getTime() - $('#filter-date-from').datepicker('getDate').getTime());
+          var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+
+          if(diffDaysBetweenDates >= 30)
+            $('#filter-error-main').text('Atenção! O número de focos para esse filtro é alto, esse procedimento vai demorar.');
+          else
+            $('#filter-error-main').text('');
+
           var countriesField = $('#countries').val();
-          var statesField = $('#states').val();
           var cityField = $('#city').data('value');
+
+          var filterStates = getStatesFromFilter();
+          var filterSpecialRegions = getSpecialRegionsFromFilter();
+          var filterSpecialRegionsCountries = filterSpecialRegions.specialRegionsCountries;
+          filterSpecialRegions = filterSpecialRegions.specialRegions;
 
           if(dates.length === 0) Filter.updateDatesToCurrent();
 
           if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField === null) {
             Filter.setCity(null);
 
-            Filter.checkFiresCount();
+            Filter.applyFilter();
+            updateComponents();
           } else if(cityField !== undefined && (Filter.getCity() !== cityField) && cityField !== null) {
             Filter.setCity(cityField);
 
             Utils.getSocket().emit('spatialFilterRequest', { key: 'City', id: cityField });
-          } else if(!Utils.areArraysEqual(Filter.getStates(), (statesField == null || (statesField.length == 1 && (statesField[0] == "" || statesField[0] == "0")) ? [] : statesField), false) || Filter.getSpecialRegions().length > 0) {
+          } else if(!Utils.areArraysEqual(Filter.getStates(), (filterStates == null || (filterStates.length == 1 && (filterStates[0] == "" || filterStates[0] == "0")) ? [] : filterStates), false) || !Utils.areArraysEqual(Filter.getSpecialRegions(), filterSpecialRegions, true)) {
             Filter.setCity(null);
 
             $('#city').val("");
@@ -627,18 +796,7 @@ define(
             }
 
             if(!Utils.stringInArray(states, "") && states.length > 0) {
-              var filterStates = [],
-                  specialRegions = [];
-
-              $('#states > option').each(function() {
-                if(Utils.stringInArray(states, $(this).val()) && $(this).data('special-region') !== undefined && $(this).data('special-region')) {
-                  specialRegions.push($(this).val());
-                } else if(Utils.stringInArray(states, $(this).val()) && ($(this).data('special-region') === undefined || !$(this).data('special-region'))) {
-                  filterStates.push($(this).val());
-                }
-              });
-
-              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: specialRegions, key: 'States', filterForm: true });
+              Utils.getSocket().emit('spatialFilterRequest', { ids: filterStates, specialRegions: filterSpecialRegions, specialRegionsCountries: filterSpecialRegionsCountries, key: 'States', filterForm: true });
             } else {
               Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
               Filter.clearStates();
@@ -661,7 +819,15 @@ define(
               Filter.clearStates();
             }
           } else {
-            Filter.checkFiresCount();
+            Filter.applyFilter();
+            updateComponents();
+          }
+
+          if(memberFilterExport !== null) {
+            memberFilterExport.dateTimeFrom = Utils.dateToString(Utils.stringToDate($('#filter-date-from').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from').val() + ':00';
+            memberFilterExport.dateTimeTo = Utils.dateToString(Utils.stringToDate($('#filter-date-to').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to').val() + ':59';
+            memberFilterExport.satellites = (Utils.stringInArray($('#filter-satellite').val(), "all") ? '' : $('#filter-satellite').val().toString());
+            memberFilterExport.biomes = (Utils.stringInArray($('#filter-biome').val(), "all") ? '' : $('#filter-biome').val().toString());
           }
         } else {
           $('#filter-satellite').val(Filter.getSatellites());
@@ -702,6 +868,9 @@ define(
       });
 
       $('#continents').change(function() {
+        if(memberFilterExport !== null && $(this).val() !== "")
+            memberFilterExport.continent = $(this).val();
+
         $('#continents-graphics').val($('#continents').val());
         $('#continents-graphics').change();
 
@@ -713,6 +882,9 @@ define(
       });
 
       $('#countries').change(function() {
+        if(memberFilterExport !== null)
+          memberFilterExport.countries = $('#countries').val();
+
         $('#countries-graphics').val($('#countries').val());
         $('#countries-graphics').change();
 
@@ -723,6 +895,9 @@ define(
       });
 
       $('#states').change(function() {
+        if(memberFilterExport !== null)
+          memberFilterExport.states = $('#states').val();
+
         $('#states-graphics').val($('#states').val());
         $('#states-graphics').change();
 
@@ -774,10 +949,18 @@ define(
 
       $('#pas').on('change', function() {
         if($('#pas').val().length === 0) {
-          $('#pas').val('');
-          $('#pas-attributes-table').val('');
+          if(memberFilterExport !== null) {
+            memberFilterExport.protectedArea = '';
+            memberFilterExport.bufferInternal = false;
+            memberFilterExport.bufferFive = false;
+            memberFilterExport.bufferTen = false;
+          }
 
+          $('#pas').val('');
           Filter.setProtectedArea(null);
+
+          $('#pas-attributes-table').val('');
+          $('#pas-attributes-table').data('value', '');
 
           $('#filter-button').click();
         }
@@ -797,6 +980,8 @@ define(
 
               $('#pas-attributes-table').data('value', JSON.stringify({
                 id: data[0].value.id,
+                name: data[0].value.name,
+                ngo: data[0].value.ngo,
                 type: data[0].value.type
               }));
 
@@ -836,18 +1021,24 @@ define(
           },
           success: function(data) {
             if(data.length > 0) {
-              $('#buffer-internal').removeAttr('disabled');
-              $('#buffer-five').removeAttr('disabled');
-              $('#buffer-ten').removeAttr('disabled');
+              $('#buffer-internal').removeAttr('disabled').attr('checked', false);
+              $('#buffer-five').removeAttr('disabled').attr('checked', false);
+              $('#buffer-ten').removeAttr('disabled').attr('checked', false);
 
               $('#pas-export').val(data[0].label);
 
               $('#pas-export').data('value', JSON.stringify({
                 id: data[0].value.id,
+                name: data[0].value.name,
+                ngo: data[0].value.ngo,
                 type: data[0].value.type
               }));
             } else {
               $('#pas-export').data('value', '');
+
+              $('#buffer-internal').attr('checked', false).attr("disabled", true);
+              $('#buffer-five').attr('checked', false).attr("disabled", true);
+              $('#buffer-ten').attr('checked', false).attr("disabled", true);
 
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhuma unidade de conservação / terra indígena corresponde à pesquisa!</p>',
@@ -866,6 +1057,10 @@ define(
         if($('#pas-export').val().length === 0) {
           $('#pas-export').val('');
           $('#pas-export').data('value', '');
+
+          $('#buffer-internal').attr('checked', false).attr("disabled", true);
+          $('#buffer-five').attr('checked', false).attr("disabled", true);
+          $('#buffer-ten').attr('checked', false).attr("disabled", true);
         }
       });
 
@@ -875,6 +1070,11 @@ define(
 
       $('#city').on('change', function() {
         if($('#city').val().length === 0) {
+          if(memberFilterExport !== null) {
+            memberFilterExport.cities = "";
+            memberFilterExport.cityLabel = "";
+          }
+
           $('#city').val("");
           $('#city').data('value', null);
 
@@ -893,7 +1093,7 @@ define(
           type: "GET",
           data: {
             value: $('#city-attributes-table').val(),
-            countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+            countries: countriesAndStates.countries,
             states: countriesAndStates.states,
             minLength: 1
           },
@@ -934,7 +1134,7 @@ define(
           type: "GET",
           data: {
             value: $('#city-export').val(),
-            countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+            countries: countriesAndStates.countries,
             states: countriesAndStates.states,
             minLength: 1
           },
@@ -990,7 +1190,80 @@ define(
       });
 
       $(document).on("applyFilter", function() {
-        Filter.checkFiresCount();
+        Filter.applyFilter();
+        updateComponents();
+      });
+
+      $('#filter-date-from').on('change', function() {
+        if($('#filter-date-from').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-from').val('');
+      });
+
+      $('#filter-date-from').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 0);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(-1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-to').on('change', function() {
+        if($('#filter-date-to').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-to').val('');
+      });
+
+      $('#filter-date-to').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 0);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(-1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-from-graphics').on('change', function() {
+        if($('#filter-date-from-graphics').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-from-graphics').val('');
+      });
+
+      $('#filter-date-from-graphics').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 2);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(2, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-to-graphics').on('change', function() {
+        if($('#filter-date-to-graphics').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-to-graphics').val('');
+      });
+
+      $('#filter-date-to-graphics').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 2);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(2, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-from-attributes-table').on('change', function() {
+        if($('#filter-date-from-attributes-table').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-from-attributes-table').val('');
+      });
+
+      $('#filter-date-from-attributes-table').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 1);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
+      });
+
+      $('#filter-date-to-attributes-table').on('change', function() {
+        if($('#filter-date-to-attributes-table').val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length < 10)
+          $('#filter-date-to-attributes-table').val('');
+      });
+
+      $('#filter-date-to-attributes-table').keyup(function() {
+        var dates = Utils.getFilterDates(false, false, false, 1);
+
+        if(dates !== null)
+          Filter.updateSatellitesSelect(1, Utils.stringToDate(dates[0], 'YYYY/MM/DD'), Utils.stringToDate(dates[1], 'YYYY/MM/DD'));
       });
 
       // Graphics Events
@@ -1217,6 +1490,45 @@ define(
         $("#hidden-layer-time-update-" + $(this).data("id")).datepicker("show");
       });
 
+      $(document).on('click', '.layer-time-update-years', function() {
+        if($("#slider-div-" + $(this).data("id")).hasClass("hidden")) {
+          var values = $("#slider-" + $(this).data("id")).data("last-value");
+
+          $("#slider-" + $(this).data("id")).bootstrapSlider('setValue', [parseInt(values[0]), parseInt(values[1])]);
+          $("#slider-div-" + $(this).data("id")).removeClass("hidden");
+        } else
+          $("#slider-div-" + $(this).data("id")).addClass("hidden");
+      });
+
+      $(document).on('click', '.close-slider-div', function() {
+        $(this).parent().addClass("hidden");
+      });
+
+      $(document).on('click', '.update-slider-time', function() {
+        var self = $(this);
+
+        self.parent().addClass("hidden");
+
+        var values = $("#slider-" + self.data("layer-id")).bootstrapSlider('getValue');
+
+        $("#slider-" + self.data("layer-id")).data('last-value', values);
+        $("#years-span-" + self.data("layer-id") + " > a").text(values[0].toString() + " - " + values[1].toString());
+
+        var layers = Map.getLayers();
+
+        for(var i = 0, count = layers.length; i < count; i++) {
+          if(layers[i].Id.replace(':', '') === self.data("layer-id")) {
+            layers[i].Params.Time = values[0].toString() + "-01-01/" + values[1].toString() + "-12-31";
+
+            Map.updateLayerTime(layers[i]);
+
+            return false;
+          }
+        }
+
+        $.event.trigger({type: "updateMapInformationsBox"});
+      });
+
       $(document).on('change', '.hidden-layer-time-update', function() {
         var self = $(this);
         var layers = Map.getLayers();
@@ -1291,6 +1603,9 @@ define(
       });
 
       TerraMA2WebComponents.MapDisplay.setMapDoubleClickEvent(function(longitude, latitude) {
+        if(Filter.isInitialFilter())
+          Filter.setInitialFilterToFalse();
+
         Utils.getSocket().emit('dataByIntersectionRequest', {
           longitude: longitude,
           latitude: latitude,
@@ -1327,6 +1642,7 @@ define(
             Filter.clearCountries();
             Filter.clearStates();
             Filter.clearSpecialRegions();
+            Filter.clearSpecialRegionsCountries();
 
             Utils.getSocket().emit('countriesByContinentRequest', { continent: result.ids });
 
@@ -1337,6 +1653,7 @@ define(
             Filter.setCountries(result.ids);
             Filter.clearStates();
             Filter.clearSpecialRegions();
+            Filter.clearSpecialRegionsCountries();
 
             Utils.getSocket().emit('statesByCountriesRequest', { countries: result.ids });
 
@@ -1352,6 +1669,7 @@ define(
           } else if(result.key === 'States') {
             Filter.setStates(result.ids);
             Filter.setSpecialRegions(result.specialRegions);
+            Filter.setSpecialRegionsCountries(result.specialRegionsCountries);
 
             var statesArray = JSON.parse(JSON.stringify(result.ids));
 
@@ -1369,7 +1687,8 @@ define(
           TerraMA2WebComponents.MapDisplay.zoomToInitialExtent();
         }
 
-        Filter.checkFiresCount();
+        Filter.applyFilter();
+        updateComponents();
       });
 
       Utils.getSocket().on('dataByIntersectionResponse', function(result) {
@@ -1446,7 +1765,13 @@ define(
 
         Filter.enableDropdown('countries', countriesIds);
 
-        Filter.checkFiresCount();
+        if(memberFilterExport !== null) {
+          memberFilterExport.countriesHtml = $('#countries').html();
+          memberFilterExport.countries = $('#countries').val();
+        }
+
+        Filter.applyFilter();
+        updateComponents();
       });
 
       Utils.getSocket().on('countriesByContinentResponse', function(result) {
@@ -1478,11 +1803,17 @@ define(
         }
 
         $(countriesId).empty().html(html);
+
         if($(countriesId).attr('data-value') === undefined || $(countriesId).attr('data-value') === "") {
           $(countriesId).val(initialValue);
         } else {
           var countries = $(countriesId).attr('data-value').split(',');
           $(countriesId).val(countries);
+        }
+
+        if(countriesId == '#countries' && memberFilterExport !== null) {
+          memberFilterExport.countriesHtml = $(countriesId).html();
+          memberFilterExport.countries = $(countriesId).val();
         }
 
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
@@ -1496,48 +1827,6 @@ define(
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
           $('#states-export').html('');
           $('#states-export').attr('disabled', '');
-        }
-      });
-
-      Utils.getSocket().on('statesByCountryResponse', function(result) {
-        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
-          var statesId = '#states-attributes-table';
-          var html = "<option value=\"\" selected>Todos os estados</option>";
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
-          var statesId = '#states-graphics';
-          var html = "<option value=\"\" selected>Todos os estados</option>";
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
-          var statesId = '#states-export';
-          var html = "<option value=\"\" selected>Todos os estados</option>";
-        } else {
-          var statesId = '#states';
-          var html = "<option value=\"\" selected>Todos os estados</option><option value=\"0\" selected>Todos municípios</option>";
-        }
-
-        var initialValue = $(statesId).val();
-
-        var statesCount = result.states.rowCount;
-
-        for(var i = 0; i < statesCount; i++) {
-          html += "<option value='" + result.states.rows[i].id + "'>" + result.states.rows[i].name + "</option>";
-        }
-
-        $(statesId).empty().html(html);
-        if($(statesId).attr('data-value') === undefined || $(statesId).attr('data-value') === "") {
-          $(statesId).val(initialValue);
-        } else {
-          var states = $(statesId).attr('data-value').split(',');
-          $(statesId).val(states);
-        }
-
-        if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
-          $('#states-attributes-table').removeAttr('disabled');
-          $('#filter-button-attributes-table').click();
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
-          $('#states-graphics').removeAttr('disabled');
-          $('#filter-button-graphics').click();
-        } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
-          $('#states-export').removeAttr('disabled');
         }
       });
 
@@ -1568,16 +1857,22 @@ define(
           var specialRegionsCount = result.specialRegions.rowCount;
 
           for(var i = 0; i < specialRegionsCount; i++) {
-            html += "<option value='" + result.specialRegions.rows[i].id + "' data-special-region='true'>" + result.specialRegions.rows[i].name + "</option>";
+            html += "<option value='" + result.specialRegions.rows[i].id + "' data-special-region='true' data-special-region-countries='" + result.specialRegions.rows[i].countries + "'>" + result.specialRegions.rows[i].name + "</option>";
           }
         }
 
         $(statesId).empty().html(html);
+
         if($(statesId).attr('data-value') === undefined || $(statesId).attr('data-value') === "") {
           $(statesId).val(initialValue);
         } else {
           var states = $(statesId).attr('data-value').split(',');
           $(statesId).val(states);
+        }
+
+        if(statesId == '#states' && memberFilterExport !== null) {
+          memberFilterExport.statesHtml = $(statesId).html().replace('<option value="0" selected="">Todos municípios</option>', '');
+          memberFilterExport.states = $(statesId).val();
         }
 
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
@@ -1618,13 +1913,8 @@ define(
               firesAttributes += "<br/><strong>Longitude:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + ' - ' + Utils.convertLongitudeToDMS(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName]);
               firesAttributes += "<br/><strong>Data / Hora:</strong> " + Utils.dateTimeToString(Utils.stringToDateTime(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFieldName].toString().replace('T', ' ').replace('Z', ''), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFormat), "YYYY/MM/DD HH:II:SS");
               firesAttributes += "<br/><strong>Satélite:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
-
               firesAttributes += "<br/><strong>Município:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CityNameFieldName];
               firesAttributes += "<br/><strong>Estado / País:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.StateNameFieldName] + ' / ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryNameFieldName];
-
-              //firesAttributes += "<br/><strong>Município:</strong> " + featureInfo.spatialData[i].city;
-              //firesAttributes += "<br/><strong>Estado / País:</strong> " + featureInfo.spatialData[i].state + ' / ' + featureInfo.spatialData[i].country;
-
               firesAttributes += "<br/><strong>Precipitação 24h:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.PrecipitationFieldName];
               firesAttributes += "<br/><strong>Nº dias sem precipitação:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
               firesAttributes += "<br/><strong>Risco Fogo / Bioma:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName] + ' / ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
@@ -1656,27 +1946,6 @@ define(
           $('#number-of-accesses').show();
         }
       });
-
-      Utils.getSocket().on('checkFiresCountResponse', function(result) {
-        if(result.firesCount.rows[0].count >= 200000) {
-          //$('#filter-satellite').val(Filter.getSatellites());
-          //$('#filter-biome').val(Filter.getBiomes());
-
-          //Filter.updateDatesToCurrent();
-
-          vex.dialog.alert({
-            message: '<p class="text-center">Atenção! O número de focos para esse filtro passou de 200.000, esse procedimento vai demorar.</p>',
-            buttons: [{
-              type: 'submit',
-              text: 'Ok',
-              className: 'bdqueimadas-btn'
-            }]
-          });
-        }
-
-        Filter.applyFilter();
-        updateComponents();
-      });
     };
 
     /**
@@ -1700,17 +1969,47 @@ define(
         },
         success: function(data) {
           if(data.length > 0) {
-            $('#pas').val(data[0].label);
-            $('#pas-attributes-table').val(data[0].label);
+            if(memberFilterExport !== null) {
+              memberFilterExport.protectedArea = JSON.stringify({
+                id: data[0].value.id,
+                name: data[0].value.name,
+                ngo: data[0].value.ngo,
+                type: data[0].value.type
+              });
 
+              memberFilterExport.bufferInternal = false;
+              memberFilterExport.bufferFive = false;
+              memberFilterExport.bufferTen = false;
+            }
+
+            $('#pas').val(data[0].label);
             Filter.setProtectedArea({
               id: data[0].value.id,
+              name: data[0].value.name,
+              ngo: data[0].value.ngo,
               type: data[0].value.type
             });
 
-            Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, type: data[0].value.type });
+            $('#pas-attributes-table').val(data[0].label);
+            $('#pas-attributes-table').data('value', JSON.stringify({
+              id: data[0].value.id,
+              name: data[0].value.name,
+              ngo: data[0].value.ngo,
+              type: data[0].value.type
+            }));
+
+            Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: data[0].value.id, ngo: data[0].value.ngo, type: data[0].value.type });
           } else {
+            if(memberFilterExport !== null) {
+              memberFilterExport.protectedArea = '';
+              memberFilterExport.bufferInternal = false;
+              memberFilterExport.bufferFive = false;
+              memberFilterExport.bufferTen = false;
+            }
+
             Filter.setProtectedArea(null);
+
+            $('#pas-attributes-table').data('value', '');
 
             if(showAlerts) {
               vex.dialog.alert({
@@ -1746,12 +2045,17 @@ define(
         async: async,
         data: {
           value: $('#city').val(),
-          countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+          countries: countriesAndStates.countries,
           states: countriesAndStates.states,
           minLength: 1
         },
         success: function(data) {
           if(data.length > 0) {
+            if(memberFilterExport !== null) {
+              memberFilterExport.cities = data[0].value.id;
+              memberFilterExport.cityLabel = data[0].label;
+            }
+
             $('#city').val(data[0].label);
             $('#city-attributes-table').val(data[0].label);
 
@@ -1759,6 +2063,11 @@ define(
 
             $('#filter-button').click();
           } else {
+            if(memberFilterExport !== null) {
+              memberFilterExport.cities = "";
+              memberFilterExport.cityLabel = "";
+            }
+
             Filter.setCity(null);
             $('#city').data('value', null);
 
@@ -1778,9 +2087,9 @@ define(
     };
 
     /**
-     * Returns the countries, states and cities to be filtered.
+     * Returns the countries, states, cities and special regions to be filtered.
      * @param {integer} filter - Parameter that indicates witch filter should be used
-     * @returns {object} return - Countries, states and cities data
+     * @returns {object} return - Countries, states, cities and special regions
      *
      * @private
      * @function getSpatialData
@@ -1805,18 +2114,8 @@ define(
         citiesId += '-export';
       }
 
+      var continent = $(continentsId).val();
       var countries = $(countriesId).val() === null || (Utils.stringInArray($(countriesId).val(), "") || $(countriesId).val().length === 0) ? [] : $(countriesId).val();
-      var initialContinentCountriesArray = [];
-
-      if(($(continentsId).val() !== null && $(continentsId).val() == Utils.getConfigurations().applicationConfigurations.InitialContinentToFilter) && countries.length == 0) {
-        var initialContinentCountries = Utils.getConfigurations().applicationConfigurations.InitialContinentCountries;
-        var initialContinentCountriesLength = initialContinentCountries.length;
-
-        for(var i = 0; i < initialContinentCountriesLength; i++) {
-          initialContinentCountriesArray.push(initialContinentCountries[i]);
-        }
-      }
-
       var states = $(statesId).val() === null || Utils.stringInArray($(statesId).val(), "") || $(statesId).val().length === 0 ? [] : $(statesId).val();
 
       var filterStates = [];
@@ -1830,62 +2129,15 @@ define(
         }
       });
 
-      var specialRegionsData = Filter.createSpecialRegionsArrays(specialRegions);
+      var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : (Filter.getCity() !== null ? Filter.getCity() : '');
 
-      countries = countries.toString();
-
-      var specialRegionsCountriesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsCountries));
-
-      if(countries.length > 0) {
-        var arrayOne = JSON.parse(JSON.stringify(countries));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        var arrayCountries = $.merge(arrayOne, arrayTwo);
-
-        states = JSON.parse(JSON.stringify(filterStates));
-        states = states.toString();
-
-        var specialRegionsStatesJson = JSON.parse(JSON.stringify(specialRegionsData.specialRegionsStates));
-
-        var filterCity = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : Filter.getCity();
-        var cities = filterCity !== null ? $.merge(specialRegionsData.specialRegionsCities, [filterCity]) : specialRegionsData.specialRegionsCities;
-        var citiesString = cities !== null ? cities.toString() : '';
-
-        if(states.length > 0) {
-          var arrayOne = JSON.parse(JSON.stringify(states));
-          var arrayTwo = JSON.parse(JSON.stringify(specialRegionsStatesJson));
-
-          var arrayStates = $.merge(arrayOne, arrayTwo);
-
-          return {
-            allCountries: arrayCountries.toString(),
-            countries: arrayCountries.toString(),
-            states: arrayStates.toString(),
-            cities: citiesString
-          };
-        } else {
-          return {
-            allCountries: arrayCountries.toString(),
-            countries: arrayCountries.toString(),
-            states: specialRegionsStatesJson.toString(),
-            cities: citiesString
-          };
-        }
-      } else {
-        var arrayOne = JSON.parse(JSON.stringify(initialContinentCountriesArray));
-        var arrayTwo = JSON.parse(JSON.stringify(specialRegionsCountriesJson));
-
-        initialContinentCountriesArray = $.merge(arrayOne, arrayTwo);
-
-        var city = $(citiesId).data('value') !== undefined && $(citiesId).data('value') !== null && $(citiesId).data('value') !== '' ? $(citiesId).data('value') : (Filter.getCity() !== null ? Filter.getCity() : '');
-
-        return {
-          allCountries: initialContinentCountriesArray.toString(),
-          countries: "",
-          states: "",
-          cities: city
-        };
-      }
+      return {
+        continent: continent,
+        countries: countries.toString(),
+        states: filterStates.toString(),
+        cities: filterCity,
+        specialRegions: specialRegions.toString()
+      };
     };
 
     /**
@@ -1927,6 +2179,9 @@ define(
             $('#filter-error-dates').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from").val('');
             $("#filter-date-to").val('');
+          } else {
+            if(dateFrom !== null && dateTo !== null)
+              Filter.updateSatellitesSelect(-1, dateFrom, dateTo);
           }
         }
       };
@@ -1959,6 +2214,9 @@ define(
             $('#filter-error-dates-attributes-table').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from-attributes-table").val('');
             $("#filter-date-to-attributes-table").val('');
+          } else {
+            if(dateFrom !== null && dateTo !== null)
+              Filter.updateSatellitesSelect(1, dateFrom, dateTo);
           }
         }
       };
@@ -1991,6 +2249,9 @@ define(
             $('#filter-error-dates-graphics').text('Data final anterior à inicial - corrigir!');
             $("#filter-date-from-graphics").val('');
             $("#filter-date-to-graphics").val('');
+          } else {
+            if(dateFrom !== null && dateTo !== null)
+              Filter.updateSatellitesSelect(2, dateFrom, dateTo);
           }
         }
       };
@@ -2020,15 +2281,36 @@ define(
         select: function(event, ui) {
           event.preventDefault();
 
-          $('#pas').val(ui.item.label);
-          $('#pas-attributes-table').val(ui.item.label);
+          if(memberFilterExport !== null) {
+            memberFilterExport.protectedArea = JSON.stringify({
+              id: ui.item.value.id,
+              name: ui.item.value.name,
+              ngo: ui.item.value.ngo,
+              type: ui.item.value.type
+            });
 
+            memberFilterExport.bufferInternal = false;
+            memberFilterExport.bufferFive = false;
+            memberFilterExport.bufferTen = false;
+          }
+
+          $('#pas').val(ui.item.label);
           Filter.setProtectedArea({
             id: ui.item.value.id,
+            name: ui.item.value.name,
+            ngo: ui.item.value.ngo,
             type: ui.item.value.type
           });
 
-          Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, type: ui.item.value.type });
+          $('#pas-attributes-table').val(ui.item.label);
+          $('#pas-attributes-table').data('value', JSON.stringify({
+            id: ui.item.value.id,
+            name: ui.item.value.name,
+            ngo: ui.item.value.ngo,
+            type: ui.item.value.type
+          }));
+
+          Utils.getSocket().emit('spatialFilterRequest', { key: 'ProtectedArea', id: ui.item.value.id, ngo: ui.item.value.ngo, type: ui.item.value.type });
         }
       });
 
@@ -2049,6 +2331,8 @@ define(
 
           $('#pas-attributes-table').data('value', JSON.stringify({
             id: ui.item.value.id,
+            name: ui.item.value.name,
+            ngo: ui.item.value.ngo,
             type: ui.item.value.type
           }));
 
@@ -2067,7 +2351,7 @@ define(
             data: {
               minLength: 4,
               value: request.term,
-              countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+              countries: countriesAndStates.countries,
               states: countriesAndStates.states
             },
             success: function(data) {
@@ -2077,6 +2361,11 @@ define(
         },
         select: function(event, ui) {
           event.preventDefault();
+
+          if(memberFilterExport !== null) {
+            memberFilterExport.cities = ui.item.value.id;
+            memberFilterExport.cityLabel = ui.item.label;
+          }
 
           $('#city').val(ui.item.label);
           $('#city-attributes-table').val(ui.item.label);
@@ -2098,7 +2387,7 @@ define(
             data: {
               minLength: 4,
               value: request.term,
-              countries: (countriesAndStates.countries !== "" ? countriesAndStates.countries : countriesAndStates.allCountries),
+              countries: countriesAndStates.countries,
               states: countriesAndStates.states
             },
             success: function(data) {
@@ -2129,19 +2418,13 @@ define(
      */
     var openLeftContentBoxBackground = function(leftContentBoxButton, leftContentBox) {
       var width = '';
-      var left = '';
+      var left = '30px';
 
       if(leftContentBox !== '' && $("#" + leftContentBox).hasClass('fullscreen')) {
         width = '100%';
       } else {
         width = '370px';
       }
-
-      //if($("body").hasClass('sidebar-collapse')) {
-        left = '30px';
-      //} else {
-        //left = '210px';
-      //}
 
       $("#left-content-box-background").addClass('active');
       $("#left-content-box-background").attr('leftContentBoxButton', leftContentBoxButton);
@@ -2174,21 +2457,9 @@ define(
      */
     var openLeftContentBox = function(leftContentBox, headerText) {
       $("#" + leftContentBox).addClass('active');
-
-      //if($("body").hasClass('sidebar-collapse')) {
-        $("#" + leftContentBox).animate({ left: '50px' }, { duration: 300, queue: false });
-      //} else {
-        //if($("#" + leftContentBox).hasClass('fullscreen')) $("#" + leftContentBox).addClass('fullmenu');
-        //$("#" + leftContentBox).animate({ left: '230px' }, { duration: 300, queue: false });
-      //}
-
+      $("#" + leftContentBox).animate({ left: '50px' }, { duration: 300, queue: false });
       $("#page-title > .dynamic-text").html(headerText);
-
-      //if($("body").hasClass('sidebar-collapse')) {
-        $("#page-second-title").show();
-      //} else {
-        //$("#page-second-title").hide();
-      //}
+      $("#page-second-title").show();
     };
 
     /**
@@ -2226,13 +2497,7 @@ define(
      */
     var closeAllLeftContentBoxes = function() {
       $("#page-title > .dynamic-text").html("Banco de Dados de Queimadas");
-
-      //if($("body").hasClass('sidebar-collapse')) {
-        $("#page-second-title").show();
-      //} else {
-        //$("#page-second-title").hide();
-      //}
-
+      $("#page-second-title").show();
       $(".left-content-box").removeClass('active');
       $(".left-content-box").removeClass('fullmenu');
       $(".left-content-box").animate({ left: '-100%' }, { duration: 300, queue: false });
@@ -2315,8 +2580,19 @@ define(
 
       if(visibleLayersLength > 0) {
         for(var i = 0; i < visibleLayersLength; i++) {
-          if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
-          html += $('#' + visibleLayers[i].elementId + ' > span').text() + '<br/>';
+          if($('#' + visibleLayers[i].elementId + ' > span').length > 0) {
+            if($('#' + visibleLayers[i].elementId + ' > span').children('.layer-time-update-years').length === 0) {
+              if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
+              html += $('#' + visibleLayers[i].elementId + ' > span').text() + '<br/>';
+            } else {
+              if(visibleLayers[i].parentName !== null) html += visibleLayers[i].parentName;
+
+              var htmlElements = $('#' + visibleLayers[i].elementId + ' > span').prop('outerHTML');
+              var $htmlElements = $(htmlElements);
+              $htmlElements.find('.slider-div').remove();
+              html += $htmlElements.text(); + '<br/>';
+            }
+          }
         }
       } else {
         html = '<strong>Nenhuma camada a ser exibida.</strong>';
@@ -2380,23 +2656,6 @@ define(
         setTimeout(function() {
           $('.bdqueimadas-initial-alert').click();
         }, 15000);
-
-        /*window.setInterval(function() {
-          updateSizeVars();
-          updateComponents();
-        }, 60000);*/
-
-        /*setTimeout(function() {
-          if($('#states').val() !== null && !Utils.stringInArray($('#states').val(), "")) {
-            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#states').val(), key: 'States', filterForm: true });
-          } else if($('#countries').val() !== null && !Utils.stringInArray($('#countries').val(), "")) {
-            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#countries').val(), key: 'Countries', filterForm: true });
-          } else {
-            Utils.getSocket().emit('spatialFilterRequest', { ids: $('#continents').val(), key: 'Continent', filterForm: true });
-          }
-
-          Filter.checkFiresCount();
-        }, 16000);*/
       });
     };
 

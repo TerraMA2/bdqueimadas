@@ -1038,3 +1038,33 @@ span.terrama2-layerexplorer-checkbox-span { margin-left: 14px!important; }
 .main-header > .logo:hover { background-color: #f49d1e !important; }
 
 label { margin-bottom: 0px !important; }
+
+.slider .slider-handle {
+  margin-top: -2px !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.slider-div {
+  background-color: white;
+  padding: 5px 15px 5px 15px;
+  margin-right: 30px;
+  box-shadow: 1px 1px 5px #888888;
+  border-radius: 5px;
+}
+
+.update-slider-time {
+  float: right;
+  margin-top: -17px;
+  margin-right: -4px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.close-slider-div {
+  float: right;
+  margin-top: -17px;
+  margin-right: 16px;
+  font-size: 15px;
+  cursor: pointer;
+}

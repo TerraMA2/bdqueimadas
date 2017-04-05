@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Utilities class of the BDQueimadas.
+ * Utilities class of the BDQueimadas (client side).
  * @class Utils
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
@@ -203,7 +203,12 @@ define(function() {
         var format = patternFormat[1];
         var currentDate = getCurrentDate(true);
 
-        if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
+        if(patternFormat[0] === "YEAR_SLIDER") {
+          var patternYears = patternFormat[2].split('-');
+
+          finalString = patternYears[0] + " - " + patternYears[1];
+          finalString = string.replace(datePattern[0], finalString);
+        } else if(patternFormat[0] !== "0" && patternFormat[0] !== "INITIAL_DATE" && patternFormat[0] !== "FINAL_DATE") {
           var patterns = patternFormat[0].split(',');
 
           for(var i = 0, patternsLength = patterns.length; i < patternsLength; i++) {
@@ -231,17 +236,19 @@ define(function() {
             }
           }
         } else if(patternFormat[0] === "INITIAL_DATE") {
-          var dates = getFilterDates(false, 0);
+          var dates = getFilterDates(false, true, true, 0);
 
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[0], 'YYYY/MM/DD');
         } else if(patternFormat[0] === "FINAL_DATE") {
-          var dates = getFilterDates(false, 0);
+          var dates = getFilterDates(false, true, true, 0);
 
           if(dates !== null && dates.length !== 0) currentDate = stringToDate(dates[1], 'YYYY/MM/DD');
         }
 
-        finalString = dateToString(currentDate, format);
-        finalString = string.replace(datePattern[0], finalString);
+        if(patternFormat[0] !== "YEAR_SLIDER") {
+          finalString = dateToString(currentDate, format);
+          finalString = string.replace(datePattern[0], finalString);
+        }
       }
     }
 
@@ -312,10 +319,27 @@ define(function() {
       var datePattern = string.match("{{(.*)}}");
 
       if(datePattern !== null) {
-        var span = "<span class=\"layer-time-update\" data-id=\"" + layerId + "\"><a href=\"#\">" + datePattern[0] + "</a></span>";
-        var input = "<input type=\"text\" style=\"width: 0; height: 0; opacity: 0;\" class=\"hidden-layer-time-update\" data-id=\"" + layerId + "\" id=\"hidden-layer-time-update-" + layerId + "\"/>";
+        var patternFormat = datePattern[1].split('=');
 
-        finalString = string.replace(datePattern[0], span) + input;
+        if(patternFormat[0] === "YEAR_SLIDER") {
+          var patternValidYears = patternFormat[1].split('-');
+          var patternCurrentYears = patternFormat[2].split('-');
+
+          var input = "<div class=\"slider-div hidden\" id=\"slider-div-" + layerId.replace(':', '') + "\">" +
+                        "<input style=\"width: 80%;\" type=\"text\" value=\"\" id=\"slider-" + layerId.replace(':', '') + "\" data-last-value=\"[" + patternCurrentYears[0] + "," + patternCurrentYears[1] + "]\" class=\"slider form-control\" data-slider-min=\"" + patternValidYears[0] + "\" data-slider-max=\"" + patternValidYears[1] + "\" data-slider-step=\"1\" data-slider-value=\"[" + patternCurrentYears[0] + "," + patternCurrentYears[1] + "]\" data-slider-tooltip-position=\"bottom\" data-slider-orientation=\"horizontal\" data-slider-selection=\"before\" data-slider-tooltip=\"show\" data-slider-id=\"yellow\">" +
+                        "<i class=\"fa fa-check update-slider-time\" data-layer-id=\"" + layerId.replace(':', '') + "\"></i>" +
+                        "<i class=\"fa fa-close close-slider-div\" data-layer-id=\"" + layerId.replace(':', '') + "\"></i>" +
+                      "</div>";
+
+          var years = "<span class=\"layer-time-update-years\" id=\"years-span-" + layerId.replace(':', '') + "\" data-id=\"" + layerId.replace(':', '') + "\"><a href=\"#\">" + patternCurrentYears[0] + " - " + patternCurrentYears[1] + "</a></span>";
+
+          finalString = string.replace(datePattern[0], years) + input;
+        } else {
+          var span = "<span class=\"layer-time-update\" data-id=\"" + layerId.replace(':', '') + "\"><a href=\"#\">" + datePattern[0] + "</a></span>";
+          var input = "<input type=\"text\" style=\"width: 0; height: 0; opacity: 0;\" class=\"hidden-layer-time-update\" data-id=\"" + layerId.replace(':', '') + "\" id=\"hidden-layer-time-update-" + layerId.replace(':', '') + "\"/>";
+
+          finalString = string.replace(datePattern[0], span) + input;
+        }
       }
     }
 
@@ -325,6 +349,8 @@ define(function() {
   /**
    * Returns the filter begin and end dates. If both fields are empty, is returned an empty array, if only one of the fields is empty, is returned a null value, otherwise is returned an array with the dates.
    * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
+   * @param {boolean} emptyFields - Flag that indicates if the fields should be emptied
+   * @param {boolean} validadeNumberOfDays - Flag that indicates if the number of days (max of 365) should be validated
    * @param {integer} filter - Number that indicates which filter fields should be used: 0 - main filter, 1 - attributes table filter, 2 - graphics filter
    * @returns {array} returnValue - Empy array, or an array with the dates, or a null value
    *
@@ -332,66 +358,65 @@ define(function() {
    * @memberof Utils
    * @inner
    */
-  var getFilterDates = function(showAlerts, filter) {
+  var getFilterDates = function(showAlerts, emptyFields, validadeNumberOfDays, filter) {
     showAlerts = (typeof showAlerts === 'undefined') ? false : showAlerts;
 
     var filterFieldsExtention = '';
 
-    if(filter === 1) {
+    if(filter === 1)
       filterFieldsExtention = '-attributes-table';
-    } else if(filter === 2) {
+    else if(filter === 2)
       filterFieldsExtention = '-graphics';
-    }
+    else if(filter === 3)
+      filterFieldsExtention = '-export';
 
     var filterDateFrom = $('#filter-date-from' + filterFieldsExtention);
     var filterDateTo = $('#filter-date-to' + filterFieldsExtention);
 
     var returnValue = null;
 
-    if((filterDateFrom.val().length > 0 && filterDateTo.val().length > 0) || (filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)) {
-      if(filterDateFrom.val().length === 0 && filterDateTo.val().length === 0) {
+    if(((filterDateFrom.val().length > 0 && filterDateTo.val().length > 0) || (filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)) && filterDateFrom.val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length === 10 && filterDateTo.val().replace(new RegExp('a', 'g'), '').replace(new RegExp('m', 'g'), '').replace(new RegExp('d', 'g'), '').length === 10) {
+      if(filterDateFrom.val().length === 0 && filterDateTo.val().length === 0)
         returnValue = [];
-      } else {
+      else {
         var timeDiffBetweenDates = Math.abs(filterDateTo.datepicker('getDate').getTime() - filterDateFrom.datepicker('getDate').getTime());
         var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
 
         if(filterDateFrom.datepicker('getDate') > filterDateTo.datepicker('getDate')) {
-          if(showAlerts) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('Data final anterior à inicial - corrigir!');
-          }
 
-          filterDateTo.val('');
+          if(emptyFields)
+            filterDateTo.val('');
         } else if(filterDateFrom.datepicker('getDate') > getCurrentDate(true)) {
-          if(showAlerts) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('Data inicial posterior à atual - corrigir!');
-          }
 
-          filterDateFrom.val('');
+          if(emptyFields)
+            filterDateFrom.val('');
         } else if(filterDateTo.datepicker('getDate') > getCurrentDate(true)) {
-          if(showAlerts) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('Data final posterior à atual - corrigir!');
-          }
 
-          filterDateTo.val('');
-        } else if(diffDaysBetweenDates > 366) {
-          if(showAlerts) {
+          if(emptyFields)
+            filterDateTo.val('');
+        } else if(diffDaysBetweenDates > 366 && validadeNumberOfDays) {
+          if(showAlerts)
             $('#filter-error-dates' + filterFieldsExtention).text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
-          }
 
-          filterDateFrom.val('');
-          filterDateTo.val('');
-        } else {
+          if(emptyFields) {
+            filterDateFrom.val('');
+            filterDateTo.val('');
+          }
+        } else
           returnValue = [filterDateFrom.val(), filterDateTo.val()];
-        }
       }
     } else {
-      if(filterDateFrom.val().length === 0) {
+      if(filterDateFrom.val().length === 0 && showAlerts)
         $('#filter-error-dates' + filterFieldsExtention).text('Data inicial inválida!');
-      }
 
-      if(filterDateTo.val().length === 0) {
+      if(filterDateTo.val().length === 0 && showAlerts)
         $('#filter-error-dates' + filterFieldsExtention).text('Data final inválida!');
-      }
     }
 
     return returnValue;

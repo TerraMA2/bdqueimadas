@@ -29,10 +29,13 @@ var ExistsDataToExportController = function(app) {
     // Verifications of the 'options' object items
     if(request.body.satellites !== '') options.satellites = request.body.satellites;
     if(request.body.biomes !== '') options.biomes = request.body.biomes;
+    if(request.body.continent !== '') options.continent = request.body.continent;
     if(request.body.countries !== '') options.countries = request.body.countries;
     if(request.body.states !== '') options.states = request.body.states;
     if(request.body.cities !== '') options.cities = request.body.cities;
+    if(request.body.specialRegions !== '') options.specialRegions = request.body.specialRegions;
     if(request.body.protectedArea !== null && request.body.protectedArea !== '') options.protectedArea = request.body.protectedArea;
+    if(request.body.industrialFires !== null && request.body.industrialFires !== '') options.industrialFires = request.body.industrialFires;
     options.limit = 1;
     options.bufferInternal = (request.body.bufferInternal == "true");
     options.bufferFive = (request.body.bufferFive == "true");

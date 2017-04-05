@@ -71,84 +71,89 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-1">
-              <div class="form-group">
-                <label for="filter-date-from-attributes-table"><%= __('Data Início - Z') %></label>
-                <input type="text" class="form-control date filter-date-from" id="filter-date-from-attributes-table" placeholder="<%= __('Data Início') %>">
+            <div class="col-md-2" style="padding: 0;">
+              <label style="width: 100%; text-align: center; margin-bottom: 4px !important;">Obs: dados após Jun/1998</label>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="filter-date-from-attributes-table"><%= __('Data Início - Z') %></label>
+                  <input type="text" class="form-control date filter-date-from" id="filter-date-from-attributes-table" placeholder="<%= __('Data Início') %>">
+                </div>
+                <div class="form-group">
+                  <label for="filter-date-to-attributes-table"><%= __('Data Fim - Z') %></label>
+                  <input type="text" class="form-control date filter-date-to" id="filter-date-to-attributes-table" placeholder="<%= __('Data Fim') %>">
+                </div>
+                <span class="help-block component-filter-error-main" id="filter-error-dates-attributes-table" style="width: 213px;"></span>
               </div>
-              <div class="form-group">
-                <label for="filter-date-to-attributes-table"><%= __('Data Fim - Z') %></label>
-                <input type="text" class="form-control date filter-date-to" id="filter-date-to-attributes-table" placeholder="<%= __('Data Fim') %>">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="filter-time-from-attributes-table"><%= __('Hora Início - Z') %></label>
+                  <input type="text" class="form-control time filter-time-from" id="filter-time-from-attributes-table" placeholder="<%= __('Hora Início') %>" value="00:00">
+                </div>
+                <div class="form-group">
+                  <label for="filter-time-to-attributes-table"><%= __('Hora Fim - Z') %></label>
+                  <input type="text" class="form-control time filter-time-to" id="filter-time-to-attributes-table" placeholder="<%= __('Hora Fim') %>" value="23:59">
+                </div>
               </div>
-              <span class="help-block component-filter-error-main" id="filter-error-dates-attributes-table" style="width: 213px;"></span>
             </div>
-            <div class="col-md-1">
-              <div class="form-group">
-                <label for="filter-time-from-attributes-table"><%= __('Hora Início - Z') %></label>
-                <input type="text" class="form-control time filter-time-from" id="filter-time-from-attributes-table" placeholder="<%= __('Hora Início') %>" value="00:00">
-              </div>
-              <div class="form-group">
-                <label for="filter-time-to-attributes-table"><%= __('Hora Fim - Z') %></label>
-                <input type="text" class="form-control time filter-time-to" id="filter-time-to-attributes-table" placeholder="<%= __('Hora Fim') %>" value="23:59">
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="filter-satellite-attributes-table"><%= __('Focos dos Satélites') %></label>
-                <select multiple class="form-control" id="filter-satellite-attributes-table">
-                  <%
-                  var satelliteOptions = "";
-                  var referenceSatellite = "";
-                  var isSatelliteSelected = false;
+            <div class="col-md-4" style="padding: 0;">
+              <div class="col-md-6" style="padding: 0;">
+                <div class="form-group">
+                  <label for="filter-satellite-attributes-table"><%= __('Focos dos Satélites') %></label>
+                  <select multiple class="form-control" id="filter-satellite-attributes-table">
+                    <%
+                    var satelliteOptions = "";
+                    var referenceSatellite = "";
+                    var isSatelliteSelected = false;
 
-                  configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
-                    if(satellite.Current) {
-                      if(satellite.ReferenceCurrent) {
-                        referenceSatellite += "<option value=\"" + satellite.Id + "\"";
+                    configurations.filterConfigurations.Satellites.forEach(function(satellite, index) {
+                      if(satellite.Current) {
+                        if(satellite.ReferenceCurrent) {
+                          referenceSatellite += "<option value=\"" + satellite.Id + "\"";
 
-                        if(satellite.Selected) {
-                          referenceSatellite += " selected>";
+                          if(satellite.Selected) {
+                            referenceSatellite += " selected>";
 
-                          if(!isSatelliteSelected) isSatelliteSelected = true;
+                            if(!isSatelliteSelected) isSatelliteSelected = true;
+                          } else {
+                            referenceSatellite += ">";
+                          }
+
+                          referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
                         } else {
-                          referenceSatellite += ">";
+                          satelliteOptions += "<option value=\"" + satellite.Id + "\"";
+
+                          if(satellite.Selected) {
+                            satelliteOptions += " selected>";
+
+                            if(!isSatelliteSelected) isSatelliteSelected = true;
+                          } else {
+                            satelliteOptions += ">";
+                          }
+
+                          satelliteOptions += satellite.Name + "</option>";
                         }
-
-                        referenceSatellite += "Refer. (" + satellite.Name + ")</option>";
-                      } else {
-                        satelliteOptions += "<option value=\"" + satellite.Id + "\"";
-
-                        if(satellite.Selected) {
-                          satelliteOptions += " selected>";
-
-                          if(!isSatelliteSelected) isSatelliteSelected = true;
-                        } else {
-                          satelliteOptions += ">";
-                        }
-
-                        satelliteOptions += satellite.Name + "</option>";
                       }
-                    }
-                  })
-                  %>
+                    })
+                    %>
 
-                  <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
-                  <%- referenceSatellite + satelliteOptions %>
-                </select>
+                    <option value="all"<%- (!isSatelliteSelected) ? " selected" : ""%>><%= __('TODOS') %></option>
+                    <%- referenceSatellite + satelliteOptions %>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="filter-biome-attributes-table"><%= __('Focos dos Biomas') %></label>
-                <select multiple class="form-control" id="filter-biome-attributes-table">
-                  <option value="all" selected><%= __('TODOS') %></option>
-                  <option value="Amazonia">Amaz&ocirc;nia</option>
-                  <option value="Caatinga">Caatinga</option>
-                  <option value="Cerrado">Cerrado</option>
-                  <option value="Mata Atlantica">Mata Atl&acirc;ntica</option>
-                  <option value="Pampa">Pampa</option>
-                  <option value="Pantanal">Pantanal</option>
-                </select>
+              <div class="col-md-6" style="padding: 0 10px 0 10px;">
+                <div class="form-group">
+                  <label for="filter-biome-attributes-table"><%= __('Focos dos Biomas') %></label>
+                  <select multiple class="form-control" id="filter-biome-attributes-table">
+                    <option value="all" selected><%= __('TODOS') %></option>
+                    <option value="Amaz&ocirc;nia">Amaz&ocirc;nia</option>
+                    <option value="Caatinga">Caatinga</option>
+                    <option value="Cerrado">Cerrado</option>
+                    <option value="Mata Atl&acirc;ntica">Mata Atl&acirc;ntica</option>
+                    <option value="Pampa">Pampa</option>
+                    <option value="Pantanal">Pantanal</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="col-md-1">
