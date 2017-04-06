@@ -149,7 +149,7 @@ var Exportation = function() {
     for(var i = 0, columnsLength = memberAttributesTableConfig.Columns.length; i < columnsLength; i++) {
       var columnName = (memberAttributesTableConfig.Columns[i].TableAlias !== null ? memberAttributesTableConfig.Columns[i].TableAlias + "." + memberAttributesTableConfig.Columns[i].Name : memberAttributesTableConfig.Columns[i].Name);
       columnName = (memberAttributesTableConfig.Columns[i].UnaccentAtExportation ? "unaccent(" + columnName + ")" : columnName);
-      var alias = (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \\\"" + memberAttributesTableConfig.Columns[i].ExportAlias + "\\\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
+      var alias = (memberAttributesTableConfig.Columns[i].ExportAlias !== null && memberAttributesTableConfig.Columns[i].ExportAlias !== "" ? " as \"" + memberAttributesTableConfig.Columns[i].ExportAlias + "\"" : " as " + memberAttributesTableConfig.Columns[i].Name);
 
       if(memberAttributesTableConfig.Columns[i].Name !== memberTablesConfig.Fires.GeometryFieldName) {
         if(memberTablesConfig.Fires.DateTimeFieldName == memberAttributesTableConfig.Columns[i].Name)
@@ -169,7 +169,7 @@ var Exportation = function() {
     columns = columns.substring(0, (columns.length - 2));
 
     if(options.protectedArea !== undefined)
-      columns += ", '" + options.protectedArea.type + " - " + options.protectedArea.name + "' as \\\"AreaProt\\\"";
+      columns += ", '" + options.protectedArea.type + " - " + options.protectedArea.name + "' as \"AreaProt\"";
 
     if(selectGeometry)
       columns += ", FiresTable." + memberTablesConfig.Fires.GeometryFieldName;
@@ -196,7 +196,7 @@ var Exportation = function() {
 
     var finalQuery = memberPgFormat.apply(null, params);
 
-    return finalQuery + ";";
+    return finalQuery;
   };
 
   /**
