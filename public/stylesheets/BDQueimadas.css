@@ -1090,6 +1090,11 @@ label { margin-bottom: 0px !important; }
   font-weight: 600;
 }
 
+#exportation-status > div > span > span {
+  display: inline-block;
+  width: 15px;
+}
+
 #exportation-status > div > div {
   position: absolute;
   width: 95%;
