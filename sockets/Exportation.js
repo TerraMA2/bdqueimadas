@@ -164,7 +164,7 @@ var Exportation = function(io) {
 
                 try {
                   var zipGenerationCommandResult = memberExecSync(zipGenerationCommand);
-                  deleteFolderRecursively(folderPath + "/shapefile");
+                  memberUtils.deleteFolderRecursively(folderPath + "/shapefile");
                 } catch(e) {
                   console.error(e);
                 }
@@ -245,29 +245,6 @@ var Exportation = function(io) {
       });
     });
   });
-
-  /**
-   * Deletes a folder and all its content.
-   * @param {string} path - Path to the folder
-   *
-   * @private
-   * @function deleteFolderRecursively
-   * @memberof Exportation(2)
-   * @inner
-   */
-  var deleteFolderRecursively = function(path) {
-    if(memberFs.existsSync(path)) {
-      memberFs.readdirSync(path).forEach(function(file, index) {
-        var currentPath = path + "/" + file;
-        if(memberFs.lstatSync(currentPath).isDirectory()) {
-          deleteFolderRecursively(currentPath);
-        } else {
-          memberFs.unlinkSync(currentPath);
-        }
-      });
-      memberFs.rmdirSync(path);
-    }
-  };
 };
 
 module.exports = Exportation;

@@ -8,6 +8,7 @@
  *
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberPath - 'path' module.
+ * @property {object} memberUtils - 'Utils' model.
  */
 var ExportController = function(app) {
 
@@ -15,6 +16,8 @@ var ExportController = function(app) {
   var memberFs = require('fs');
   // 'path' module
   var memberPath = require('path');
+  // 'Utils' model
+  var memberUtils = new (require('../models/Utils.js'))();
 
   /**
    * Processes the request and returns a response.
@@ -31,33 +34,10 @@ var ExportController = function(app) {
     response.download(finalPath, request.query.file, function(err) {
       if(err) return console.error(err);
 
-      deleteFolderRecursively(memberPath.join(__dirname, '../tmp/' + request.query.folder));
+      memberUtils.deleteFolderRecursively(memberPath.join(__dirname, '../tmp/' + request.query.folder));
     });
 
     deleteInvalidFolders();
-  };
-
-  /**
-   * Deletes a folder and all its content.
-   * @param {string} path - Path to the folder
-   *
-   * @private
-   * @function deleteFolderRecursively
-   * @memberof ExportController
-   * @inner
-   */
-  var deleteFolderRecursively = function(path) {
-    if(memberFs.existsSync(path)) {
-      memberFs.readdirSync(path).forEach(function(file, index) {
-        var currentPath = path + "/" + file;
-        if(memberFs.lstatSync(currentPath).isDirectory()) {
-          deleteFolderRecursively(currentPath);
-        } else {
-          memberFs.unlinkSync(currentPath);
-        }
-      });
-      memberFs.rmdirSync(path);
-    }
   };
 
   /**
@@ -99,7 +79,7 @@ var ExportController = function(app) {
       var date = dirs[i].split('_--_');
 
       if(getDateDifferenceInDays(date[1]) > 1)
-        deleteFolderRecursively(dir);
+        memberUtils.deleteFolderRecursively(dir);
     }
   };
 

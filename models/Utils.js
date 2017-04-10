@@ -8,6 +8,7 @@
  *
  * @property {object} memberPath - 'path' module.
  * @property {object} memberPgFormat - 'pg-format' module.
+ * @property {object} memberFs - 'fs' module.
  * @property {json} memberTablesConfig - Tables configuration.
  */
 var Utils = function() {
@@ -16,6 +17,8 @@ var Utils = function() {
   var memberPath = require('path');
   // 'pg-format' module
   var memberPgFormat = require('pg-format');
+  // 'fs' module
+  var memberFs = require('fs');
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
 
@@ -279,6 +282,28 @@ var Utils = function() {
     }
 
     return false;
+  };
+
+  /**
+   * Deletes a folder and all its content.
+   * @param {string} path - Path to the folder
+   *
+   * @function deleteFolderRecursively
+   * @memberof Utils
+   * @inner
+   */
+  this.deleteFolderRecursively = function(path) {
+    if(memberFs.existsSync(path)) {
+      memberFs.readdirSync(path).forEach(function(file, index) {
+        var currentPath = path + "/" + file;
+        if(memberFs.lstatSync(currentPath).isDirectory()) {
+          deleteFolderRecursively(currentPath);
+        } else {
+          memberFs.unlinkSync(currentPath);
+        }
+      });
+      memberFs.rmdirSync(path);
+    }
   };
 };
 
