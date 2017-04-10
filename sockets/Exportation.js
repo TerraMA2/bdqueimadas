@@ -14,6 +14,7 @@
  * @property {object} memberPath - 'path' module.
  * @property {function} memberExec - Exec function.
  * @property {function} memberExecSync - Exec function sync.
+ * @property {function} memberSpawn - Spawn function.
  */
 var Exportation = function(io) {
 
@@ -31,6 +32,8 @@ var Exportation = function(io) {
   var memberExec = require('child_process').exec;
   // Exec function sync
   var memberExecSync = require('child_process').execSync;
+  // Spawn function
+  var memberSpawn = require('child_process').spawn;
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -73,9 +76,21 @@ var Exportation = function(io) {
         if(err) return console.error(err);
 
         require('crypto').randomBytes(24, function(err, buffer) {
+          var today = new Date();
+
+          var dd = today.getDate();
+          var mm = today.getMonth() + 1;
+          var yyyy = today.getFullYear();
+
+          if(dd < 10) dd = '0' + dd;
+          if(mm < 10) mm = '0' + mm;
+
+          var todayString = yyyy + '-' + mm + '-' + dd;
+          var filesFolder = buffer.toString('hex') + '_--_' + todayString;
+
           var connectionString = memberExportation.getPgConnectionString();
           var separator = (options.fieldSeparator !== undefined && options.fieldSeparator == "semicolon" ? "SEMICOLON" : "COMMA");
-          var folderPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex'));
+          var folderPath = memberPath.join(__dirname, '../tmp/' + filesFolder);
 
           try {
             memberFs.mkdirSync(folderPath);
@@ -116,19 +131,16 @@ var Exportation = function(io) {
               }
             }
 
-            var filePath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex') + (requestFormats[i] == 'shapefile' ? '/shapefile/' : '/') + fileName + fileExtention);
-            //var generationCommand = memberExportation.ogr2ogr() + " -progress -F \"" + ogr2ogrFormat + "\" " + filePath + " \"" + connectionString + "\" -sql \"" + memberExportation.getQuery((requestFormats[i] != 'csv'), json.dateTimeFrom, json.dateTimeTo, options) + "\" -skipfailures" + (requestFormats[i] == "csv" ? " -lco LINEFORMAT=CRLF -lco SEPARATOR=" + separator : "");
-
-            var commandString = memberExportation.ogr2ogr();
+            var ogr2ogr = memberExportation.ogr2ogr();
+            var filePath = memberPath.join(__dirname, '../tmp/' + filesFolder + (requestFormats[i] == 'shapefile' ? '/shapefile/' : '/') + fileName + fileExtention);
             var args = ['-progress', '-F', ogr2ogrFormat, filePath, connectionString, '-sql', memberExportation.getQuery((requestFormats[i] != 'csv'), json.dateTimeFrom, json.dateTimeTo, options), '-skipfailures'];
 
             if(requestFormats[i] == "csv")
               args.push('-lco', 'LINEFORMAT=CRLF', '-lco', 'SEPARATOR=' + separator);
 
-            var spawn = require('child_process').spawn;
-            var command = spawn(commandString, args);
+            var spawnCommand = memberSpawn(ogr2ogr, args);
 
-            command.stdout.on('data', function(data) {
+            spawnCommand.stdout.on('data', function(data) {
               if(progress === null)
                 progress = 0;
               else
@@ -137,17 +149,17 @@ var Exportation = function(io) {
               client.emit('generateFileResponse', { progress: progress });
             });
 
-            command.stderr.on('data', function(data) {
-              console.log('stderr: ' + data.toString());
+            spawnCommand.stderr.on('data', function(data) {
+              console.error(err);
             });
 
-            command.on('error', function(err) {
-              console.log(err);
+            spawnCommand.on('error', function(err) {
+              console.error(err);
             });
 
-            command.on('exit', function(code) {
+            spawnCommand.on('exit', function(code) {
               if(requestFormats[processedFormats] == 'shapefile') {
-                var zipPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".shp.zip";
+                var zipPath = memberPath.join(__dirname, '../tmp/' + filesFolder) + "/" + fileName + ".shp.zip";
                 var zipGenerationCommand = "zip -r -j " + zipPath + " " + folderPath + "/shapefile";
 
                 try {
@@ -176,12 +188,15 @@ var Exportation = function(io) {
                       var fileExtention = '.json';
                   }
 
-                  var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
+                  var finalPath = memberPath.join(__dirname, '../tmp/' + filesFolder) + "/" + fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
                   var finalFileName = fileName + fileExtention + (requestFormats[0] == 'shapefile' ? '.zip' : '');
 
-                  client.emit('generateFileResponse', {  });
+                  client.emit('generateFileResponse', { 
+                    folder: filesFolder,
+                    file: finalFileName
+                   });
                 } else {
-                  var finalPath = memberPath.join(__dirname, '../tmp/' + buffer.toString('hex')) + "/" + fileName + ".zip";
+                  var finalPath = memberPath.join(__dirname, '../tmp/' + filesFolder) + "/" + fileName + ".zip";
                   var finalFileName = fileName + ".zip";
 
                   var zipGenerationCommand = "zip -r -j " + finalPath + " " + folderPath;
@@ -189,7 +204,10 @@ var Exportation = function(io) {
                   memberExec(zipGenerationCommand, function(zipGenerationCommandErr, zipGenerationCommandOut, zipGenerationCommandCode) {
                     if(zipGenerationCommandErr) return console.error(zipGenerationCommandErr);
 
-                    client.emit('generateFileResponse', {  });
+                    client.emit('generateFileResponse', { 
+                      folder: filesFolder,
+                      file: finalFileName
+                    });
                   });
                 }
               }
