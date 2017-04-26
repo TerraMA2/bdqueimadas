@@ -1079,15 +1079,18 @@ label { margin-bottom: 0px !important; }
 }
 
 #exportation-status > div {
-  color: white;
+  color: #40130d;
   padding-top: 5px;
-  background: rgba(143, 143, 143, 0.75);
+  background: rgb(255, 255, 255);
   border-radius: 5px 5px 0 0;
   height: 50px;
-  text-align: center;
   position: relative;
   font-size: 16px;
   font-weight: 600;
+  border-top: 1px solid rgb(0, 0, 0);
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  text-align: center;
 }
 
 #exportation-status > div > span > span {
@@ -1100,4 +1103,8 @@ label { margin-bottom: 0px !important; }
   width: 95%;
   bottom: -12px;
   margin-left: 2.5%;
+}
+
+#exportation-status > div > .progress {
+  background-color: #b4b4b4;
 }
