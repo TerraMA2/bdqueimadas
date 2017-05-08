@@ -11,12 +11,14 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     csrf = require('csurf'),
-    i18n = require( "i18n" );
+    i18n = require( "i18n" ),
+    compression = require('compression');
 
 var applicationConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, './configurations/Application.json'), 'utf8'));
 
 BASE_URL = applicationConfigurations.BaseUrl;
 
+app.use(compression());
 app.use(cookieParser());
 app.use(session({
   secret: KEY,

@@ -6,6 +6,7 @@
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
+ * @property {object} self - Object that refers to the 'Utils' instance.
  * @property {object} memberPath - 'path' module.
  * @property {object} memberPgFormat - 'pg-format' module.
  * @property {object} memberFs - 'fs' module.
@@ -13,6 +14,8 @@
  */
 var Utils = function() {
 
+  // Object that refers to the 'Utils' instance
+  var self = this;
   // 'path' module
   var memberPath = require('path');
   // 'pg-format' module
@@ -297,7 +300,7 @@ var Utils = function() {
       memberFs.readdirSync(path).forEach(function(file, index) {
         var currentPath = path + "/" + file;
         if(memberFs.lstatSync(currentPath).isDirectory()) {
-          deleteFolderRecursively(currentPath);
+          self.deleteFolderRecursively(currentPath);
         } else {
           memberFs.unlinkSync(currentPath);
         }
