@@ -10,6 +10,7 @@
  * @property {object} memberPath - 'path' module.
  * @property {object} memberPgFormat - 'pg-format' module.
  * @property {object} memberFs - 'fs' module.
+ * @property {object} memberRimraf - 'rimraf' module.
  * @property {json} memberTablesConfig - Tables configuration.
  */
 var Utils = function() {
@@ -22,6 +23,8 @@ var Utils = function() {
   var memberPgFormat = require('pg-format');
   // 'fs' module
   var memberFs = require('fs');
+  // 'rimraf' module
+  var memberRimraf = require('rimraf');
   // Tables configuration
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
 
@@ -297,15 +300,11 @@ var Utils = function() {
    */
   this.deleteFolderRecursively = function(path) {
     if(memberFs.existsSync(path)) {
-      memberFs.readdirSync(path).forEach(function(file, index) {
-        var currentPath = path + "/" + file;
-        if(memberFs.lstatSync(currentPath).isDirectory()) {
-          self.deleteFolderRecursively(currentPath);
-        } else {
-          memberFs.unlinkSync(currentPath);
-        }
-      });
-      memberFs.rmdirSync(path);
+      try {
+        memberRimraf(path, function() {});
+      } catch(e) {
+        console.log(e);
+      }
     }
   };
 };

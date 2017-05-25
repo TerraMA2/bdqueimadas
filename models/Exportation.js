@@ -187,6 +187,8 @@ var Exportation = function() {
     query = getFiltersResult.query;
     params = getFiltersResult.params;
 
+    query += " order by FiresTable." + memberTablesConfig.Fires.DateTimeFieldName;
+
     // If the 'options.limit' parameter exists, a limit clause is created
     if(options.limit !== undefined) {
       query += " limit " + options.limit;

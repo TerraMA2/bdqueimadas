@@ -2016,10 +2016,13 @@ define(
           window.clearInterval(memberExportationTextTimeout);
           memberExportationTextTimeout = null;
           $('#exportation-status > div > span').html('');
+          $('#exportation-status > div > div').addClass('hidden');
+          $('#exportation-status > div > div > div > span').text('0% Completo');
+          $('#exportation-status > div > div > div').css('width', '0%');
 
           var exportLink = Utils.getBaseUrl() + "export?folder=" + result.folder + "&file=" + result.file;
 
-          window.open(exportLink, '_blank')
+          $('#exportation-iframe').attr('src', exportLink);
         }
       });
     };
