@@ -660,9 +660,9 @@ define(
             $('#buffer-ten').attr("disabled", true);
           }
 
-          $('#buffer-internal').attr('checked', memberFilterExport.bufferInternal);
-          $('#buffer-five').attr('checked', memberFilterExport.bufferFive);
-          $('#buffer-ten').attr('checked', memberFilterExport.bufferTen);
+          $('#buffer-internal').attr('checked', (memberFilterExport.bufferInternal == "true"));
+          $('#buffer-five').attr('checked', (memberFilterExport.bufferFive == "true"));
+          $('#buffer-ten').attr('checked', (memberFilterExport.bufferTen == "true"));
           $('#filter-date-from-export').val(dateTimeFromArray[0]);
           $('#filter-time-from-export').val(dateTimeFromArray[1]);
           $('#filter-date-to-export').val(dateTimeToArray[0]);
@@ -684,7 +684,7 @@ define(
           $('#city-export').val($('#city').val());
 
           if(Filter.getProtectedArea() !== null) {
-            var protectedArea = JSON.stringify(Filter.getProtectedArea());
+            var protectedArea = Filter.getProtectedArea();
 
             $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
             $('#pas-export').data('value', JSON.stringify(protectedArea));
@@ -922,9 +922,9 @@ define(
         if($('#pas').val().length === 0) {
           if(memberFilterExport !== null) {
             memberFilterExport.protectedArea = '';
-            memberFilterExport.bufferInternal = false;
-            memberFilterExport.bufferFive = false;
-            memberFilterExport.bufferTen = false;
+            memberFilterExport.bufferInternal = "false";
+            memberFilterExport.bufferFive = "false";
+            memberFilterExport.bufferTen = "false";
           }
 
           $('#pas').val('');
@@ -2056,9 +2056,9 @@ define(
                 type: data[0].value.type
               });
 
-              memberFilterExport.bufferInternal = false;
-              memberFilterExport.bufferFive = false;
-              memberFilterExport.bufferTen = false;
+              memberFilterExport.bufferInternal = "false";
+              memberFilterExport.bufferFive = "false";
+              memberFilterExport.bufferTen = "false";
             }
 
             $('#pas').val(data[0].label);
@@ -2081,9 +2081,9 @@ define(
           } else {
             if(memberFilterExport !== null) {
               memberFilterExport.protectedArea = '';
-              memberFilterExport.bufferInternal = false;
-              memberFilterExport.bufferFive = false;
-              memberFilterExport.bufferTen = false;
+              memberFilterExport.bufferInternal = "false";
+              memberFilterExport.bufferFive = "false";
+              memberFilterExport.bufferTen = "false";
             }
 
             Filter.setProtectedArea(null);
@@ -2368,9 +2368,9 @@ define(
               type: ui.item.value.type
             });
 
-            memberFilterExport.bufferInternal = false;
-            memberFilterExport.bufferFive = false;
-            memberFilterExport.bufferTen = false;
+            memberFilterExport.bufferInternal = "false";
+            memberFilterExport.bufferFive = "false";
+            memberFilterExport.bufferTen = "false";
           }
 
           $('#pas').val(ui.item.label);
