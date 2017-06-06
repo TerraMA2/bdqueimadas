@@ -483,9 +483,9 @@ define(
                       specialRegions: exportationSpatialFilterData.specialRegions,
                       protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
                       industrialFires: Filter.getIndustrialFires(),
-                      bufferInternal: $('#buffer-internal').is(':checked'),
-                      bufferFive: $('#buffer-five').is(':checked'),
-                      bufferTen: $('#buffer-ten').is(':checked')
+                      bufferInternal: $('#buffer-internal').is(':checked').toString(),
+                      bufferFive: $('#buffer-five').is(':checked').toString(),
+                      bufferTen: $('#buffer-ten').is(':checked').toString()
                     });
 
                     $('#exportation-status > div > span').html('Verificando dados para a exportação<span>...</span>');
@@ -1939,9 +1939,9 @@ define(
             format: $("#exportation-type").val().toString(),
             protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
             industrialFires: Filter.getIndustrialFires(),
-            bufferInternal: $('#buffer-internal').is(':checked'),
-            bufferFive: $('#buffer-five').is(':checked'),
-            bufferTen: $('#buffer-ten').is(':checked'),
+            bufferInternal: $('#buffer-internal').is(':checked').toString(),
+            bufferFive: $('#buffer-five').is(':checked').toString(),
+            bufferTen: $('#buffer-ten').is(':checked').toString(),
             decimalSeparator: $('input[name=decimalSeparator]:checked').val(),
             fieldSeparator: $('input[name=fieldSeparator]:checked').val()
           };
@@ -1959,9 +1959,9 @@ define(
             format: $("#exportation-type").val().toString(),
             protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
             industrialFires: Filter.getIndustrialFires(),
-            bufferInternal: $('#buffer-internal').is(':checked'),
-            bufferFive: $('#buffer-five').is(':checked'),
-            bufferTen: $('#buffer-ten').is(':checked')
+            bufferInternal: $('#buffer-internal').is(':checked').toString(),
+            bufferFive: $('#buffer-five').is(':checked').toString(),
+            bufferTen: $('#buffer-ten').is(':checked').toString()
           };
 
           if(Utils.stringInArray($('#exportation-type').val(), 'csv')) {
