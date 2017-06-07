@@ -1565,8 +1565,42 @@ define(
 
       TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
         var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
-        TerraMA2WebComponents.MapDisplay.zoomToExtent(dragBoxExtent);
-        updateComponents();
+
+        vex.dialog.alert({
+          className: 'vex-theme-default export-dialog',
+          message: 
+          '<div class="component-filter">' +
+            '<div class="component-filter-title">Área de seleção:</div>' +
+            '<div class="component-filter-content" style="max-height: ' + ($(window).outerHeight() - 212) + 'px;">' +
+              '<div class="form-horizontal">' +
+                '<div class="form-group bdqueimadas-form">' +
+                  '<input type="text" id="extent-four" style="margin-left: 28%; margin-bottom: 10px;" value="' + dragBoxExtent[3] + '"/>' +
+                  '<input type="text" id="extent-one" style="margin-left: 16px;" value="' + dragBoxExtent[0] + '"/>' +
+                  '<input type="text" id="extent-three" style="margin-right: 16px; float: right;" value="' + dragBoxExtent[2] + '"/>' +
+                  '<input type="text" id="extent-two" style="margin-left: 28%; margin-top: 10px;" value="' + dragBoxExtent[1] + '"/>' +
+                '</div>' +
+              '</div>' +
+              '<div class="clear" style="height: 5px;"></div>' +
+            '</div>' +
+          '</div>',
+          buttons: [
+            {
+              type: 'submit',
+              text: 'Cancelar',
+              className: 'bdqueimadas-btn'
+            },
+            {
+              type: 'submit',
+              text: 'Filtrar',
+              className: 'bdqueimadas-btn',
+              click: function() {
+                TerraMA2WebComponents.MapDisplay.zoomToExtent([$('#extent-one').val(), $('#extent-two').val(), $('#extent-three').val(), $('#extent-four').val()]);
+                updateComponents();
+                vex.close();
+              }
+            }
+          ]
+        });
       });
 
       TerraMA2WebComponents.MapDisplay.setMapResolutionChangeEvent(function() {

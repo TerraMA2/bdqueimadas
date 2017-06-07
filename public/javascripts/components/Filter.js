@@ -577,7 +577,7 @@ define(
      * @inner
      */
     var createBiomesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + " in (";
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + " in (";
 
       var memberBiomesLength = memberBiomes.length;
 
@@ -586,6 +586,11 @@ define(
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+
+      cql += ")";
 
       return cql;
     };
@@ -600,7 +605,7 @@ define(
      * @inner
      */
     var createCountriesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
       for(var i = 0, memberCountriesLength = memberCountries.length; i < memberCountriesLength; i++) {
         cql += memberCountries[i] + ",";
@@ -611,6 +616,11 @@ define(
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+
+      cql += ")";
 
       return cql;
     };
@@ -625,7 +635,12 @@ define(
      * @inner
      */
     var createContinentFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " = " + memberContinent;
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " = " + memberContinent;
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+
+      cql += ")";
 
       return cql;
     };
@@ -640,10 +655,10 @@ define(
      * @inner
      */
     var createStatesAndSpecialRegionsFilter = function() {
-      var cql = "";
+      var cql = "(";
 
       if(memberStates.length > 0) {
-        cql += (memberSpecialRegions.length > 0 ? "(" : "") + Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
 
         for(var i = 0, memberStatesLength = memberStates.length; i < memberStatesLength; i++) {
           cql += "'" + memberStates[i] + "',";
@@ -659,8 +674,13 @@ define(
           cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.SpecialRegionsFieldName + " like '%|" + memberSpecialRegions[i] + "|%' or ";
         }
 
-        cql = cql.substring(0, cql.length - 4) + (memberStates.length > 0 ? "))" : ")");
+        cql = cql.substring(0, cql.length - 4) + ")";
       }
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+
+      cql += ")";
 
       return cql;
     };
@@ -675,7 +695,12 @@ define(
      * @inner
      */
     var createCitiesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+
+      cql += ")";
 
       return cql;
     };

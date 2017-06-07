@@ -59,7 +59,7 @@ var Utils = function() {
     // If the 'options.biomes' parameter exists, a biomes 'where' clause is created
     if(options.biomes !== undefined) {
       var biomesArray = options.biomes.split(',');
-      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.BiomeFieldName + " in (";
+      query += " and (" + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.BiomeFieldName + " in (";
 
       for(var i = 0, biomesArrayLength = biomesArray.length; i < biomesArrayLength; i++) {
         if(options.pgFormatQuery !== undefined) query += "%L,";
@@ -68,14 +68,24 @@ var Utils = function() {
       }
 
       query = query.substring(0, (query.length - 1)) + ")";
+
+      if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+
+      query += ")";
     }
 
     // If the 'options.continent' parameter exists, a continent 'where' clause is created
     if(options.continent !== undefined) {
-      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " = ";
+      query += " and (" + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " = ";
       if(options.pgFormatQuery !== undefined) query += "%L";
       else query += "$" + (parameter++);
       params.push(options.continent);
+
+      if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+
+      query += ")";
     }
 
     // If the 'options.countries' parameter exists, a countries 'where' clause is created
@@ -95,7 +105,7 @@ var Utils = function() {
         query = query.substring(0, (query.length - 1)) + "))";
       }
 
-      query += (options.specialRegions !== undefined ? " or " : " and ") + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.CountryFieldName + " in (";
+      query += (options.specialRegions !== undefined ? " or " : " and (") + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.CountryFieldName + " in (";
 
       for(var i = 0, countriesArrayLength = countriesArray.length; i < countriesArrayLength; i++) {
         if(options.pgFormatQuery !== undefined) query += "%L,";
@@ -103,7 +113,12 @@ var Utils = function() {
         params.push(countriesArray[i]);
       }
 
-      query = query.substring(0, (query.length - 1)) + (options.specialRegions !== undefined ? "))" : ")");
+      query = query.substring(0, (query.length - 1)) + ")";
+
+      if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+
+      query += ")";
     }
 
     var filterStates = (options.states !== undefined && (filterRules === undefined || filterRules === null || filterRules.ignoreStateFilter === undefined || !filterRules.ignoreStateFilter));
@@ -114,7 +129,7 @@ var Utils = function() {
     if(filterStates || filterSpecialRegions) {
       if(filterStates) {
         var statesArray = options.states.split(',');
-        query += (filterSpecialRegions ? " and (" : " and ") + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.StateFieldName + " in (";
+        query += " and (" + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.StateFieldName + " in (";
 
         for(var i = 0, statesArrayLength = statesArray.length; i < statesArrayLength; i++) {
           if(options.pgFormatQuery !== undefined) query += "%L,";
@@ -127,7 +142,7 @@ var Utils = function() {
 
       if(filterSpecialRegions) {
         var specialRegionsArray = options.specialRegions.split(',');
-        query += (filterStates ? " or " : " and ") + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.SpecialRegionsFieldName + " && ARRAY[";
+        query += (filterStates ? " or " : " and (") + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.SpecialRegionsFieldName + " && ARRAY[";
 
         for(var i = 0, specialRegionsArrayLength = specialRegionsArray.length; i < specialRegionsArrayLength; i++) {
           if(options.pgFormatQuery !== undefined) query += "%L,";
@@ -135,14 +150,19 @@ var Utils = function() {
           params.push(specialRegionsArray[i]);
         }
 
-        query = query.substring(0, (query.length - 1)) + (filterStates ? "]::integer[])" : "]::integer[]");
+        query = query.substring(0, (query.length - 1)) + "]::integer[]";
       }
+
+      if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+
+      query += ")";
     }
 
     // If the 'options.cities' parameter exists, a cities 'where' clause is created
     if(options.cities !== undefined && (filterRules === undefined || filterRules === null || filterRules.ignoreCityFilter === undefined || !filterRules.ignoreCityFilter)) {
       var citiesArray = options.cities.split(',');
-      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.CityFieldName + " in (";
+      query += " and (" + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.CityFieldName + " in (";
 
       for(var i = 0, citiesArrayLength = citiesArray.length; i < citiesArrayLength; i++) {
         if(options.pgFormatQuery !== undefined) query += "%L,";
@@ -151,6 +171,11 @@ var Utils = function() {
       }
 
       query = query.substring(0, (query.length - 1)) + ")";
+
+      if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+
+      query += ")";
     }
 
     // If the 'options.extent' parameter exists, a extent 'where' clause is created
