@@ -712,6 +712,8 @@ define(
       });
 
       $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#' + Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id.replace(':', '') + ' > input').prop('checked', !$('#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+        $('#' + Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id.replace(':', '') + ' > input').trigger("click");
         $('#filter-button').click();
       });
 

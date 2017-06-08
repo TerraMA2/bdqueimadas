@@ -69,6 +69,9 @@
   "IndustrialAreasLayer": {
     "Id": "bdqueimadas:areas_industriais"
   },
+  "OilfieldsLayer": {
+    "Id": "bdqueimadas:areas_petroliferas"
+  },
   "SpatialFilter": {
     "Continents": {
       "MinResolution": 0.35,
