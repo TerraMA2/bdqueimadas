@@ -180,15 +180,29 @@ var Filter = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
-            params = [continent];
+        var query = "select distinct " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName;
+
+        if(continent != '0') {
+          query += " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1";
+          var params = [continent];
+        }
+
+        query += " order by " + memberTablesConfig.Countries.NameFieldName + " asc;";
 
         // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
+        if(params !== undefined) {
+          client.query(query, params, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        } else {
+          client.query(query, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        }
       } else return callback(err);
     });
   };

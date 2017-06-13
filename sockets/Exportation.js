@@ -43,15 +43,15 @@ var Exportation = function(io) {
       var options = {};
 
       // Verifications of the 'options' object items
-      if(json.satellites !== '') options.satellites = json.satellites;
-      if(json.biomes !== '') options.biomes = json.biomes;
-      if(json.continent !== '') options.continent = json.continent;
-      if(json.countries !== '') options.countries = json.countries;
-      if(json.states !== '') options.states = json.states;
-      if(json.cities !== '') options.cities = json.cities;
-      if(json.specialRegions !== '') options.specialRegions = json.specialRegions;
-      if(json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = JSON.parse(json.protectedArea);
-      if(json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
+      if(json.satellites !== undefined && json.satellites !== null && json.satellites !== '') options.satellites = json.satellites;
+      if(json.biomes !== undefined && json.biomes !== null && json.biomes !== '') options.biomes = json.biomes;
+      if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
+      if(json.countries !== undefined && json.countries !== null && json.countries !== '') options.countries = json.countries;
+      if(json.states !== undefined && json.states !== null && json.states !== '') options.states = json.states;
+      if(json.cities !== undefined && json.cities !== null && json.cities !== '') options.cities = json.cities;
+      if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
+      if(json.protectedArea !== undefined && json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = json.protectedArea;
+      if(json.industrialFires !== undefined && json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
       if(json.decimalSeparator !== undefined && json.decimalSeparator !== null && json.decimalSeparator !== '') options.decimalSeparator = json.decimalSeparator;
       if(json.fieldSeparator !== undefined && json.fieldSeparator !== null && json.fieldSeparator !== '') options.fieldSeparator = json.fieldSeparator;
       options.bufferInternal = (json.bufferInternal == "true");
@@ -223,15 +223,15 @@ var Exportation = function(io) {
       var options = {};
 
       // Verifications of the 'options' object items
-      if(json.satellites !== '') options.satellites = json.satellites;
-      if(json.biomes !== '') options.biomes = json.biomes;
-      if(json.continent !== '') options.continent = json.continent;
-      if(json.countries !== '') options.countries = json.countries;
-      if(json.states !== '') options.states = json.states;
-      if(json.cities !== '') options.cities = json.cities;
-      if(json.specialRegions !== '') options.specialRegions = json.specialRegions;
-      if(json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = json.protectedArea;
-      if(json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
+      if(json.satellites !== undefined && json.satellites !== null && json.satellites !== '') options.satellites = json.satellites;
+      if(json.biomes !== undefined && json.biomes !== null && json.biomes !== '') options.biomes = json.biomes;
+      if(json.continent !== undefined && json.continent !== null && json.continent !== '') options.continent = json.continent;
+      if(json.countries !== undefined && json.countries !== null && json.countries !== '') options.countries = json.countries;
+      if(json.states !== undefined && json.states !== null && json.states !== '') options.states = json.states;
+      if(json.cities !== undefined && json.cities !== null && json.cities !== '') options.cities = json.cities;
+      if(json.specialRegions !== undefined && json.specialRegions !== null && json.specialRegions !== '') options.specialRegions = json.specialRegions;
+      if(json.protectedArea !== undefined && json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = json.protectedArea;
+      if(json.industrialFires !== undefined && json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
       options.limit = 1;
       options.bufferInternal = (json.bufferInternal == "true");
       options.bufferFive = (json.bufferFive == "true");

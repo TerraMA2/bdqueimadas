@@ -378,7 +378,7 @@ define(
         var label = y;
 
         for(var j = 0, count = yFields.length; j < count; j++) {
-          var field = (firesCountItems[i][yFields[j]] !== null && firesCountItems[i][yFields[j]] !== undefined && firesCountItems[i][yFields[j]] !== "" ? firesCountItems[i][yFields[j]]: "Não Identificado");
+          var field = (firesCountItems[i][yFields[j]] !== null && firesCountItems[i][yFields[j]] !== undefined && firesCountItems[i][yFields[j]] !== "" ? firesCountItems[i][yFields[j]] : "Não Identificado");
 
           label = label.replace("{" + yFields[j] + "}", field);
         }

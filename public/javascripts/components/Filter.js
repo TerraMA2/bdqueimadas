@@ -588,7 +588,7 @@ define(
       cql = cql.substring(0, cql.length - 1) + ")";
 
       if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
 
       cql += ")";
 
@@ -618,7 +618,7 @@ define(
       cql = cql.substring(0, cql.length - 1) + ")";
 
       if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
 
       cql += ")";
 
@@ -635,12 +635,7 @@ define(
      * @inner
      */
     var createContinentFilter = function() {
-      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " = " + memberContinent;
-
-      if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
-
-      cql += ")";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " = " + memberContinent;
 
       return cql;
     };
@@ -678,7 +673,7 @@ define(
       }
 
       if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
 
       cql += ")";
 
@@ -698,7 +693,7 @@ define(
       var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
 
       if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.ContinentFieldName + " IS NULL";
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
 
       cql += ")";
 
@@ -795,7 +790,7 @@ define(
           cql += createBiomesFilter() + " AND ";
         }
 
-        if(memberContinent !== null) {
+        if(memberContinent !== null && memberContinent != '0') {
           cql += createContinentFilter() + " AND ";
         }
 
@@ -841,7 +836,14 @@ define(
         if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
 
         if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
-          if(memberContinent !== null) {
+          if(memberContinent == '0') {
+            var cqlFilter = "";
+
+            if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+              memberLastFilters[layers[i].Id] = cqlFilter;
+            }
+          } else if(memberContinent !== null) {
             var field = layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id ? Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField : Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.ContinentField;
             var cqlFilter = field + "=" + memberContinent;
 
@@ -954,6 +956,23 @@ define(
 
             memberLastFilters[layers[i].Id] = currentSituationFilterString;
           }
+        } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id) {
+          if(memberContinent == '0') {
+            var cqlFilter = "";
+
+            if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+              memberLastFilters[layers[i].Id] = cqlFilter;
+            }
+          } else if(memberContinent !== null) {
+            var field = layers[i].Id === Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id ? Utils.getConfigurations().filterConfigurations.OilfieldsLayer.ContinentField : Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.ContinentField;
+            var cqlFilter = field + "=" + memberContinent;
+
+            if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
+              memberLastFilters[layers[i].Id] = cqlFilter;
+            }
+          }
         }
       }
     };
@@ -977,7 +996,7 @@ define(
     var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, industrialFires, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
-      if(continent !== undefined && continent !== null && continent !== "" && continent !== '') {
+      if(continent !== undefined && continent !== null && continent !== "" && continent !== '' && continent != '0') {
         currentSituationFilter += ";continent:" + continent;
       }
 

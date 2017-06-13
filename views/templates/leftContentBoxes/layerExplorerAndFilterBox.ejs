@@ -5,6 +5,7 @@
       <div class="col-sm-9" style="float: right; width: 75%;">
         <select id="continents" name="continents" class="form-control">
           <option value=""><%= __('Selecione o continente') %></option>
+          <option value="0"><%= __('Todos os Continentes') %></option>
           <% continents.rows.forEach(function(continent, index) { %>
             <% if(continent.name === "Americas") { %>
               <option value="<%- continent.id %>">Am&eacute;ricas</option>

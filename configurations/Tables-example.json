@@ -62,6 +62,7 @@
     "SpecialRegionsFieldName": "special_regions",
     "SpecialRegionsTextFieldName": "special_regions_text",
     "IndustrialFiresFieldName": "industrial_area",
+    "IndustrialFiresTypeFieldName": "id_tipo_area_industrial",
     "LatitudeFieldName": "latitude",
     "LongitudeFieldName": "longitude",
     "GeometryFieldName": "geometry",

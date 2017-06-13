@@ -840,7 +840,7 @@ define(
         updateComponents();
       });
 
-      $('#continents').change(function() {
+      $('#continents').change(function() { // aqui
         if(memberFilterExport !== null && $(this).val() !== "")
             memberFilterExport.continent = $(this).val();
 
@@ -850,8 +850,10 @@ define(
         $('#continents-attributes-table').val($('#continents').val());
         $('#continents-attributes-table').change();
 
-        if($(this).val() !== "")
+        if($(this).val() !== "") {
+          $('#filter-button').click();
           Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent', filterForm: false });
+        }
       });
 
       $('#countries').change(function() {
@@ -1973,7 +1975,7 @@ define(
             cities: exportationSpatialFilterData.cities,
             cityLabel: $('#city-export').val(),
             format: $("#exportation-type").val().toString(),
-            protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
+            protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
             industrialFires: Filter.getIndustrialFires(),
             bufferInternal: $('#buffer-internal').is(':checked').toString(),
             bufferFive: $('#buffer-five').is(':checked').toString(),
@@ -1993,7 +1995,7 @@ define(
             cities: exportationSpatialFilterData.cities,
             specialRegions: exportationSpatialFilterData.specialRegions,
             format: $("#exportation-type").val().toString(),
-            protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
+            protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
             industrialFires: Filter.getIndustrialFires(),
             bufferInternal: $('#buffer-internal').is(':checked').toString(),
             bufferFive: $('#buffer-five').is(':checked').toString(),

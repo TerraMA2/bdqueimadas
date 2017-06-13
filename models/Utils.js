@@ -70,22 +70,17 @@ var Utils = function() {
       query = query.substring(0, (query.length - 1)) + ")";
 
       if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
-        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresTypeFieldName + " = 2";
 
       query += ")";
     }
 
     // If the 'options.continent' parameter exists, a continent 'where' clause is created
-    if(options.continent !== undefined) {
-      query += " and (" + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " = ";
+    if(options.continent !== undefined && options.continent != '0') {
+      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " = ";
       if(options.pgFormatQuery !== undefined) query += "%L";
       else query += "$" + (parameter++);
       params.push(options.continent);
-
-      if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
-        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
-
-      query += ")";
     }
 
     // If the 'options.countries' parameter exists, a countries 'where' clause is created
@@ -116,7 +111,7 @@ var Utils = function() {
       query = query.substring(0, (query.length - 1)) + ")";
 
       if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
-        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresTypeFieldName + " = 2";
 
       query += ")";
     }
@@ -154,7 +149,7 @@ var Utils = function() {
       }
 
       if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
-        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresTypeFieldName + " = 2";
 
       query += ")";
     }
@@ -173,7 +168,7 @@ var Utils = function() {
       query = query.substring(0, (query.length - 1)) + ")";
 
       if(options.industrialFires !== undefined && (options.industrialFires == "true" || options.industrialFires))
-        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.ContinentFieldName + " is null";
+        query += " or " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresTypeFieldName + " = 2";
 
       query += ")";
     }
@@ -283,8 +278,9 @@ var Utils = function() {
     }
 
     // If the 'options.industrialFires' parameter exists, a industrial fires 'where' clause is created
-    if(options.industrialFires !== undefined && (options.industrialFires == "false" || !options.industrialFires))
+    if(options.industrialFires !== undefined && (options.industrialFires == "false" || !options.industrialFires)) {
       query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresFieldName + " is null";
+    }
 
     return {
       query: query,
