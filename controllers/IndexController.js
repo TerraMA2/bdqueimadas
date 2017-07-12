@@ -50,7 +50,7 @@ var IndexController = function(app) {
       piwikIdsite: piwikConfigurations.IdSite
     };
 
-    memberFilter.getContinents(request.pgPool, function(err, result) {
+    memberFilter.getContinents(function(err, result) {
       if(err) return console.error(err);
 
       // Response parameters

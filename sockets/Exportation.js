@@ -15,6 +15,7 @@
  * @property {function} memberExec - Exec function.
  * @property {function} memberExecSync - Exec function sync.
  * @property {function} memberSpawn - Spawn function.
+ * @property {function} memberGetUserIp - Function responsible for returning the user ip address.
  */
 var Exportation = function(io) {
 
@@ -34,6 +35,33 @@ var Exportation = function(io) {
   var memberExecSync = require('child_process').execSync;
   // Spawn function
   var memberSpawn = require('child_process').spawn;
+  // Function responsible for returning the user ip address
+  var memberGetUserIp = function(handshake) {
+    var ip = null;
+
+    if(handshake.headers !== undefined && handshake.headers['geoip_addr'] !== undefined)
+      ip = handshake.headers.geoip_addr;
+
+    if(ip === null && handshake.headers !== undefined && handshake.headers['x-forwarded-for'] !== undefined) {
+      var ipArray = handshake.headers['x-forwarded-for'].split(', ');
+      ip = ipArray[0];
+    }
+
+    if(ip === null && handshake.headers !== undefined && handshake.headers['x-real-ip'] !== undefined)
+      ip = handshake.headers['x-real-ip'];
+
+    if(ip === null && handshake.address !== undefined) {
+      if(handshake.address.indexOf('::ffff:') !== -1)
+        ip = handshake.address.replace('::ffff:', '');
+      else
+        ip = handshake.address;
+    }
+
+    if(ip === null)
+      ip = "...";
+
+    return ip;
+  };
 
   // Socket connection event
   memberSockets.on('connection', function(client) {
@@ -69,10 +97,10 @@ var Exportation = function(io) {
       var dataTimeTo = json.dateTimeTo.split(' ');
       var fileName = 'Focos.' + dataTimeFrom[0] + '.' + dataTimeTo[0];
 
-      var userIp = client.handshake.address;
+      var userIp = memberGetUserIp(client.handshake);
 
       // Call of the method 'registerDownload', responsible for registering the download in the database
-      memberExportation.registerDownload(client.pgPool, json.dateTimeFrom, json.dateTimeTo, requestFormats.toString(), userIp, options, function(err, registerDownloadResult) {
+      memberExportation.registerDownload(json.dateTimeFrom, json.dateTimeTo, requestFormats.toString(), userIp, options, function(err, registerDownloadResult) {
         if(err) return console.error(err);
 
         require('crypto').randomBytes(24, function(err, buffer) {
@@ -238,7 +266,7 @@ var Exportation = function(io) {
       options.bufferTen = (json.bufferTen == "true");
 
       // Call of the method 'getGeoJSONData', responsible for returning the fires data in GeoJSON format
-      memberExportation.getGeoJSONData(client.pgPool, json.dateTimeFrom, json.dateTimeTo, options, function(err, GeoJSONData) {
+      memberExportation.getGeoJSONData(json.dateTimeFrom, json.dateTimeTo, options, function(err, GeoJSONData) {
         if(err) return console.error(err);
 
         client.emit('existsDataToExportResponse', { existsDataToExport: GeoJSONData.rowCount > 0 });

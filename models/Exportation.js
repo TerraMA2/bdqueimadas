@@ -13,6 +13,7 @@
  * @property {object} memberDatabaseConfigurations - Database configurations.
  * @property {object} memberApplicationConfigurations - Application configurations.
  * @property {object} memberUtils - 'Utils' model.
+ * @property {object} memberPgPool - PostgreSQL connection pool.
  */
 var Exportation = function() {
 
@@ -30,6 +31,8 @@ var Exportation = function() {
   var memberApplicationConfigurations = require(memberPath.join(__dirname, '../configurations/Application.json'));
   // 'Utils' model
   var memberUtils = new (require('./Utils.js'))();
+  // PostgreSQL connection pool
+  var memberPgPool = require('../pg');
 
   /**
    * Callback of the database operations.
@@ -68,7 +71,6 @@ var Exportation = function() {
 
   /**
    * Returns the fires data in GeoJSON format.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -79,7 +81,7 @@ var Exportation = function() {
    * @memberof Exportation
    * @inner
    */
-  this.getGeoJSONData = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
+  this.getGeoJSONData = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -94,7 +96,7 @@ var Exportation = function() {
     columns = columns.substring(0, (columns.length - 2));
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -203,7 +205,6 @@ var Exportation = function() {
 
   /**
    * Returns the fires data in KML format.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -214,7 +215,7 @@ var Exportation = function() {
    * @memberof Exportation
    * @inner
    */
-  this.getKMLContent = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
+  this.getKMLContent = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -236,7 +237,7 @@ var Exportation = function() {
     }
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
         var query = "select '<Folder><name>' || FiresTable." + memberTablesConfig.Fires.SatelliteFieldName + " || '</name>' || " +
@@ -273,7 +274,6 @@ var Exportation = function() {
 
   /**
    * Registers the downloads in the database.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {string} format - Exportation file format
@@ -286,14 +286,14 @@ var Exportation = function() {
    * @memberof Exportation
    * @inner
    */
-  this.registerDownload = function(pgPool, dateTimeFrom, dateTimeTo, format, ip, options, callback) {
+  this.registerDownload = function(dateTimeFrom, dateTimeTo, format, ip, options, callback) {
     var date = new Date();
 
     var dateString = date.getFullYear().toString() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
     var timeString = ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query

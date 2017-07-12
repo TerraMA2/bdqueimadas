@@ -649,7 +649,7 @@ define(
           $('#city-export').val(memberFilterExport.cityLabel);
           $('#city-export').data('value', memberFilterExport.cities);
 
-          if(memberFilterExport.protectedArea != "") {
+          if(memberFilterExport.protectedArea !== undefined && memberFilterExport.protectedArea !== null && memberFilterExport.protectedArea != "") {
             var protectedArea = JSON.parse(memberFilterExport.protectedArea);
 
             $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
