@@ -314,15 +314,16 @@ var Utils = function() {
   /**
    * Deletes a folder and all its content.
    * @param {string} path - Path to the folder
+   * @param {function} callback - Callback function
    *
    * @function deleteFolderRecursively
    * @memberof Utils
    * @inner
    */
-  this.deleteFolderRecursively = function(path) {
+  this.deleteFolderRecursively = function(path, callback) {
     if(memberFs.existsSync(path)) {
       try {
-        memberRimraf(path, function() {});
+        memberRimraf(path, callback);
       } catch(e) {
         console.log(e);
       }

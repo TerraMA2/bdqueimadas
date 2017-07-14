@@ -34,7 +34,7 @@ var ExportController = function(app) {
     response.download(finalPath, request.query.file, function(err) {
       if(err) return console.error(err);
 
-      memberUtils.deleteFolderRecursively(memberPath.join(__dirname, '../tmp/' + request.query.folder));
+      memberUtils.deleteFolderRecursively(memberPath.join(__dirname, '../tmp/' + request.query.folder), function() {});
     });
 
     deleteInvalidFolders();
@@ -79,7 +79,7 @@ var ExportController = function(app) {
       var date = dirs[i].split('_--_');
 
       if(getDateDifferenceInDays(date[1]) > 1)
-        memberUtils.deleteFolderRecursively(dir);
+        memberUtils.deleteFolderRecursively(dir, function() {});
     }
   };
 
