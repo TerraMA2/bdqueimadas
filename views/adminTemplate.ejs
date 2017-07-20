@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AdminLTEQueimadas | Dashboard</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.5 -->
+  <link rel="stylesheet" href="/externals/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/externals/adminlte/css/AdminLTE.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" type="text/css" href="/externals/datatables/dataTables.bootstrap.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/externals/adminlte/css/skin-queimadas.min.css">
+  <link rel="stylesheet" href="/stylesheets/BDQueimadasAdmin.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition skin-queimadas sidebar-mini">
+  <input type="hidden" name="_csrf" id="_csrf" value="<%- csrf %>">
+<div class="wrapper">
+  <header class="main-header">
+    <div id="gov-header">
+      <div id="gov-identity-bar">
+        <div id="barra-identidade">
+          <div id="barra-brasil">
+            <div id="wrapper-barra-brasil">
+              <div class="brasil-flag">
+                <a href="http://brasil.gov.br" class="link-barra">Brasil</a>
+              </div>
+              <span class="acesso-info">
+                <a href="http://brasil.gov.br/barra#acesso-informacao" class="link-barra">Acesso à informação</a>
+              </span>
+              <nav>
+                <ul class="list">
+                  <li><a href="#" id="menu-icon"></a></li>
+                  <li class="list-item first"><a href="http://brasil.gov.br/barra#participe" class="link-barra">Participe</a></li>
+                  <li class="list-item"><a href="http://www.servicos.gov.br/?pk_campaign=barrabrasil" class="link-barra" id="barra-brasil-orgao">Serviços</a></li>
+                  <li class="list-item"><a href="http://www.planalto.gov.br/legislacao" class="link-barra">Legislação</a></li>
+                  <li class="list-item last last-item"><a href="http://brasil.gov.br/barra#orgaos-atuacao-canais" class="link-barra">Canais</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <script defer="defer" src="//barra.brasil.gov.br/barra.js" type="text/javascript"></script>
+      </div>
+      <div id="header" role="banner">
+        <div>
+          <div id="logo">
+            <a href="#" title="#">
+              <span id="portal-title"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="index2.html" class="logo">
+      <span class="logo-mini"></span>
+      <span class="logo-lg">BDQueimadasAdmin</span>
+    </a>
+    <nav class="navbar navbar-static-top" role="navigation">
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="hidden-xs">Alexander Pierce</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="user-header">
+                <p>Alexander Pierce</p>
+              </li>
+              <li class="user-body"></li>
+              <li class="user-footer">
+                <div class="pull-right">
+                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <aside class="main-sidebar">
+    <section class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="header">NAVEGAÇÃO</li>
+        <li><a href="/admin/downloads"><i class="fa fa-download"></i> <span>Registro de Downloads</span></a></li>
+      </ul>
+    </section>
+  </aside>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Dashboard
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
+    <section class="content">
+      <%- include(content) %>
+    </section>
+  </div>
+  <footer>
+    <div id="footer" role="contentinfo">
+      <a name="afooter" id="afooter"></a>
+      <div id="doormat-container" class="columns-6">
+        <div class="doormatColumn column-0">
+          <dl class="doormatSection">
+            <dt class="doormatSectionHeader">Financiadores</dt>
+            <dd class="doormatSectionBody">The World Bank</dd>
+            <dd class="doormatSectionBody"></dd>
+            <dd class="doormatSectionBody"></dd>
+            <dd class="doormatSectionBody">Department for Environment, Food and Rural Affairs of United Kingdom (DEFRA)</dd>
+          </dl>
+        </div>
+        <div class="doormatColumn column-1">
+          <dl class="doormatSection">
+            <dt class="doormatSectionHeader">Projeto</dt>
+            <dd class="doormatSectionBody">Platform of Monitoring and Warning of Forest Fires in the Brazilian Cerrado Project</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <div id="footer-brasil" class="footer-logos">
+        <div>
+          <a href="http://www.acessoainformacao.gov.br/" class="logo-acesso">
+            <img src="/externals/adminlte/img/acesso-a-informacao.png" alt="Acesso a Informação">
+          </a>
+          <a href="http://www.brasil.gov.br/" class="logo-brasil">
+            <img src="/externals/adminlte/img/brasil.png" alt="Brasil - Governo Federal">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="reduced-footer">
+      <div></div>
+      <div></div>
+    </div>
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.0 -->
+<script src="/externals/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.5 -->
+<script src="/externals/bootstrap/js/bootstrap.min.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="/externals/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Slimscroll -->
+<script src="/externals/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/externals/fastclick/fastclick.js"></script>
+<!-- DataTables -->
+<script type="text/javascript" src="/externals/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/externals/datatables/dataTables.bootstrap.min.js"></script>
+<!-- Queimadas -->
+<script type="text/javascript" src="/externals/adminlte/js/queimadas.js"></script>
+<script type="text/javascript" src="/externals/adminlte/js/app.min.js"></script>
+<script data-main="/javascripts/admin/BDQueimadasAdmin.js" src="/externals/require.js/require.js"></script>
+</body>
+</html>
+<script>
+  $('.main-sidebar').resize(function() {
+    $('footer').css('margin-top', $('.main-sidebar').height() + 'px')
+  })
+</script>
