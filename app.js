@@ -12,7 +12,8 @@ var express = require('express'),
     session = require('express-session'),
     csrf = require('csurf'),
     i18n = require( "i18n" ),
-    compression = require('compression');
+    compression = require('compression'),
+    passport = require('./configurations/admin/Passport');
 
 var applicationConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, './configurations/Application.json'), 'utf8'));
 
@@ -22,10 +23,13 @@ app.use(compression());
 app.use(cookieParser());
 app.use(session({
   secret: KEY,
-  resave: true,
+  name: "BDQueimadas",
+  resave: false,
   saveUninitialized: false
 }));
-app.use(csrf());
+
+passport.setupPassport(app);
+
 
 // Setting internationalization
 i18n.configure({
@@ -37,12 +41,21 @@ i18n.configure({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(i18n.init);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(csrf());
+
+var flash = require('connect-flash');
+
+app.use(flash());
 
 app.use(function(req, res, next) {
+  var token = req.csrfToken();
+  res.cookie('XSRF-TOKEN', token);
+  res.locals.csrfToken = token;
+
   var match = req.url.match(/^\/([A-Z]{2})([\/\?].*)?$/i);
   if(match) {
     req.lang = match[1];
