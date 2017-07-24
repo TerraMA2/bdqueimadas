@@ -8,7 +8,7 @@
  */
 var SearchForCitiesRoute = function(app) {
   var controller = app.controllers.SearchForCitiesController;
-  app.get('/search-for-cities', controller);
+  app.get(BASE_URL + 'search-for-cities', controller);
 };
 
 module.exports = SearchForCitiesRoute;

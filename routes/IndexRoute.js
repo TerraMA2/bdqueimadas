@@ -8,7 +8,7 @@
  */
 var IndexRoute = function(app) {
   var controller = app.controllers.IndexController;
-  app.get('/', controller);
+  app.get(BASE_URL, controller);
 };
 
 module.exports = IndexRoute;

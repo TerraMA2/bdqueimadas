@@ -8,7 +8,7 @@
  */
 var GetAttributesTableRoute = function(app) {
   var controller = app.controllers.GetAttributesTableController;
-  app.post('/get-attributes-table', controller);
+  app.post(BASE_URL + 'get-attributes-table', controller);
 };
 
 module.exports = GetAttributesTableRoute;

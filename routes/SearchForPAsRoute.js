@@ -8,7 +8,7 @@
  */
 var SearchForPAsRoute = function(app) {
   var controller = app.controllers.SearchForPAsController;
-  app.get('/search-for-pas', controller);
+  app.get(BASE_URL + 'search-for-pas', controller);
 };
 
 module.exports = SearchForPAsRoute;
