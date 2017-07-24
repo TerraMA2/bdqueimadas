@@ -8,7 +8,7 @@
  */
 var ExportRoute = function(app) {
   var controller = app.controllers.ExportController;
-  app.get(BASE_URL + 'export', controller);
+  app.get('/export', controller);
 };
 
 module.exports = ExportRoute;

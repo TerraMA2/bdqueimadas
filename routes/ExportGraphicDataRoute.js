@@ -8,7 +8,7 @@
  */
 var ExportGraphicDataRoute = function(app) {
   var controller = app.controllers.ExportGraphicDataController;
-  app.get(BASE_URL + 'export-graphic-data', controller);
+  app.get('/export-graphic-data', controller);
 };
 
 module.exports = ExportGraphicDataRoute;
