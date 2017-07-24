@@ -10,7 +10,6 @@ var express = require('express'),
     fs = require('fs'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
-    csrf = require('csurf'),
     i18n = require( "i18n" ),
     compression = require('compression'),
     passport = require('./configurations/admin/Passport');
@@ -44,11 +43,8 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(csrf());
-
-var flash = require('connect-flash');
-
-app.use(flash());
+app.use(require('csurf')());
+app.use(require('connect-flash')());
 
 app.use(function(req, res, next) {
   res.locals.csrfToken = req.csrfToken();

@@ -18,6 +18,24 @@ var AuthorizedUsersController = function(app) {
    * @param {json} request - JSON containing the request data
    * @param {json} response - JSON containing the response data
    *
+   * @function authorizedUsersController
+   * @memberof AuthorizedUsersController
+   * @inner
+   */
+  var authorizedUsersController = function(request, response) {
+    memberAuthorizedUsers.getAuthorizedUsers(function(err, authorizedUsers) {
+      if(err)
+        return console.error(err);
+
+      response.render('adminTemplate', { content: 'adminPages/users', mainTitle: 'Usuário Autorizados', authorizedUsers: authorizedUsers });
+    });
+  };
+
+  /**
+   * Processes the request and returns a response.
+   * @param {json} request - JSON containing the request data
+   * @param {json} response - JSON containing the response data
+   *
    * @function addAuthorizedUser
    * @memberof AuthorizedUsersController
    * @inner
@@ -65,6 +83,7 @@ var AuthorizedUsersController = function(app) {
   };
 
   return {
+    authorizedUsersController: authorizedUsersController,
     addAuthorizedUser: addAuthorizedUser,
     updateAuthorizedUser: updateAuthorizedUser,
     deleteAuthorizedUser: deleteAuthorizedUser
