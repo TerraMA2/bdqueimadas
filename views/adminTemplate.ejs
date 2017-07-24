@@ -28,7 +28,7 @@
   <![endif]-->
 </head>
 <body class="hold-transition skin-queimadas sidebar-mini">
-  <input type="hidden" name="_csrf" id="_csrf" value="<%- csrf %>">
+  <input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
 <div class="wrapper">
   <header class="main-header">
     <div id="gov-header">
@@ -101,6 +101,7 @@
       <ul class="sidebar-menu">
         <li class="header">NAVEGAÇÃO</li>
         <li><a href="/admin/downloads"><i class="fa fa-download"></i> <span>Registro de Downloads</span></a></li>
+        <li><a href="/admin/users"><i class="fa fa-user"></i> <span>Usuários Autorizados</span></a></li>
       </ul>
     </section>
   </aside>

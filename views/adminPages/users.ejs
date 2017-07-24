@@ -1,0 +1,35 @@
+<div class="box box-default color-palette-box">
+  <div class="box-body">
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-default new-button">Autorizar Usuário</button>
+        <hr/>
+        <table class="table table-bordered table-hover" id="users-table">
+          <thead>
+            <th>Email</th>
+            <th></th>
+            <th></th>
+          </thead>
+          <tbody>
+            <% authorizedUsers.rows.forEach(function(authorizedUser, index) { %>
+              <tr>
+                <td class="email-column">
+                  <span><%- authorizedUser.email %></span>
+                  <input type="text" class="form-control hidden" value="<%- authorizedUser.email %>"/>
+                </td>
+                <td class="edit-column">
+                  <button class="btn btn-default save-button hidden" data-id="<%- authorizedUser.id %>"><i class="fa fa-check"></i></button>
+                  <button class="btn btn-default edit-button"><i class="fa fa-pencil"></i></button>
+                </td>
+                <td class="remove-column">
+                  <button class="btn btn-danger remove-button" data-id="<%- authorizedUser.id %>"><i class="fa fa-remove"></i></button>
+                </td>
+              </tr>
+            <% }) %>
+            <tr class="no-data<% if(authorizedUsers.rows.length > 0) { %> hidden<% } %>"><td colspan="3" style="text-align: center;">Nenhum registro a ser exibido.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

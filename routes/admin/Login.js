@@ -15,7 +15,7 @@ var Login = function(app) {
         next(err);
 
       if(!user) {
-        request.flash('message', info.message)
+        request.flash('message', info.message + "<br/><br/>");
         return response.redirect('/admin/login');
       }
 

@@ -30,7 +30,6 @@ app.use(session({
 
 passport.setupPassport(app);
 
-
 // Setting internationalization
 i18n.configure({
   locales       : ["pt", "en", "es"],
@@ -52,9 +51,7 @@ var flash = require('connect-flash');
 app.use(flash());
 
 app.use(function(req, res, next) {
-  var token = req.csrfToken();
-  res.cookie('XSRF-TOKEN', token);
-  res.locals.csrfToken = token;
+  res.locals.csrfToken = req.csrfToken();
 
   var match = req.url.match(/^\/([A-Z]{2})([\/\?].*)?$/i);
   if(match) {

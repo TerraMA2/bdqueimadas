@@ -1,6 +1,7 @@
-var passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
-    memberRequest = require('request');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var memberRequest = require('request');
+var memberAuthorizedUsers = new (require('../../models/admin/AuthorizedUsers.js'))();
 
 /**
  * Middleware to check if current user is authenticated and redirect him to correct path
@@ -44,12 +45,29 @@ var setupPassport = function(app) {
         json: true
       }, function(err, httpResponse, body) {
         if(err)
-          return done(null, false, { message: err });
+          return done(null, false, { message: "Login falhou, tente novamente." });
 
         if(body.users.length !== 1)
           return done(null, false, { message: "Usuário ou senha incorretos!" });
 
-        return done(null, body.users[0]);
+        memberAuthorizedUsers.getAuthorizedUsers(function(err, authorizedUsers) {
+          if(err)
+            return done(null, false, { message: "Login falhou, tente novamente." });
+
+          var authorized = false;
+
+          for(var i = 0, authorizedUsersLength = authorizedUsers.rows.length; i < authorizedUsersLength; i++) {
+            if(email === authorizedUsers.rows[i].email) {
+              authorized = true;
+              break;
+            }
+          }
+
+          if(authorized)
+            return done(null, body.users[0]);
+          else
+            return done(null, false, { message: "Usuário sem permissão de acesso!" });
+        });
       });
     }
   ));
