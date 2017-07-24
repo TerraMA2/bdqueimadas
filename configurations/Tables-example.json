@@ -141,5 +141,11 @@
     "FilterStatesFieldName": "filter_states",
     "FilterCitiesFieldName": "filter_cities",
     "FilterFormatFieldName": "filter_format"
+  },
+  "AuthorizedUsers": {
+    "Schema": "",
+    "TableName": "",
+    "IdFieldName": "",
+    "EmailFieldName": ""
   }
 }

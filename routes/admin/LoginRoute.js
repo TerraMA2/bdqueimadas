@@ -29,7 +29,7 @@ var Login = function(app) {
   });
 
   app.get('/admin/login', function(request, response) {
-    response.render('adminLogin', { message: request.flash('message') });
+    response.render('admin/login', { message: request.flash('message') });
   });
 
   app.get('/admin/logout', function(request, response) {

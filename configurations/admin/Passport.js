@@ -1,14 +1,11 @@
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var memberRequest = require('request');
-var memberAuthorizedUsers = new (require('../../models/admin/AuthorizedUsers.js'))();
+var localStrategy = require('passport-local').Strategy;
+var request = require('request');
+var authorizedUsers = new (require('../../models/admin/AuthorizedUsers.js'))();
+var path = require('path');
+var fs = require('fs');
+var applicationConfigurations = JSON.parse(fs.readFileSync(path.join(__dirname, '../Application.json'), 'utf8'));
 
-/**
- * Middleware to check if current user is authenticated and redirect him to correct path
- * 
- * @param {Request} req - Express request instance
- * @param {Response} res - Express response instance
- */
 var isAuthenticated = function(req, res, next) {
   if(req.isAuthenticated())
     return next();
@@ -30,14 +27,14 @@ var setupPassport = function(app) {
     }
   });
 
-  passport.use(new LocalStrategy(
+  passport.use(new localStrategy(
     {
       usernameField: 'email',
       passwordField: 'password'
     },
     function(email, password, done) {
-      memberRequest.post({
-        url: 'https://devwww-queimadas.dgi.inpe.br/queimadas/extranet/loginUsuario',
+      request.post({
+        url: applicationConfigurations.LoginAction,
         form: {
           email: email,
           password: password
@@ -50,14 +47,14 @@ var setupPassport = function(app) {
         if(body.users.length !== 1)
           return done(null, false, { message: "Usuário ou senha incorretos!" });
 
-        memberAuthorizedUsers.getAuthorizedUsers(function(err, authorizedUsers) {
+        authorizedUsers.getAuthorizedUsers(function(err, authorizedUsersList) {
           if(err)
             return done(null, false, { message: "Login falhou, tente novamente." });
 
           var authorized = false;
 
-          for(var i = 0, authorizedUsersLength = authorizedUsers.rows.length; i < authorizedUsersLength; i++) {
-            if(email === authorizedUsers.rows[i].email) {
+          for(var i = 0, authorizedUsersLength = authorizedUsersList.rows.length; i < authorizedUsersLength; i++) {
+            if(email === authorizedUsersList.rows[i].email) {
               authorized = true;
               break;
             }

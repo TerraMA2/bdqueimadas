@@ -1,14 +1,14 @@
 "use strict";
 
 /**
- * Controller responsible for returning the downloads table data accordingly with the received parameters.
- * @class GetDownloadsTableController
+ * Downloads controller.
+ * @class DownloadsController
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
  * @property {object} memberDownloads - 'Downloads' model.
  */
-var GetDownloadsTableController = function(app) {
+var DownloadsController = function(app) {
 
   // 'Downloads' model
   var memberDownloads = new (require('../../models/admin/Downloads.js'))();
@@ -18,11 +18,24 @@ var GetDownloadsTableController = function(app) {
    * @param {json} request - JSON containing the request data
    * @param {json} response - JSON containing the response data
    *
-   * @function getDownloadsTableController
-   * @memberof GetDownloadsTableController
+   * @function downloadsController
+   * @memberof DownloadsController
    * @inner
    */
-  var getDownloadsTableController = function(request, response) {
+  var downloadsController = function(request, response) {
+    response.render('admin/index', { content: 'pages/downloads', mainTitle: 'Downloads' });
+  };
+
+  /**
+   * Processes the request and returns a response.
+   * @param {json} request - JSON containing the request data
+   * @param {json} response - JSON containing the response data
+   *
+   * @function getDownloadsTable
+   * @memberof DownloadsController
+   * @inner
+   */
+  var getDownloadsTable = function(request, response) {
     // Call of the method 'getDownloadsTableData', responsible for returning data of the attributes table accordingly with the request parameters
     memberDownloads.getDownloadsTableData(request.body.length, request.body.start, request.body.search.value, request.body.initialDate, request.body.finalDate, function(err, result) {
       if(err) return console.error(err);
@@ -57,7 +70,10 @@ var GetDownloadsTableController = function(app) {
     });
   };
 
-  return getDownloadsTableController;
+  return {
+    downloadsController: downloadsController,
+    getDownloadsTable: getDownloadsTable
+  };
 };
 
-module.exports = GetDownloadsTableController;
+module.exports = DownloadsController;

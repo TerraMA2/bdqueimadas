@@ -60,7 +60,7 @@ var AuthorizedUsers = function() {
     memberPgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
-        var query = "insert into " + memberTablesConfig.AuthorizedUsers.Schema + "." + memberTablesConfig.AuthorizedUsers.TableName + " (" + memberTablesConfig.AuthorizedUsers.EmailFieldName + ") values ($1) returning id;";
+        var query = "insert into " + memberTablesConfig.AuthorizedUsers.Schema + "." + memberTablesConfig.AuthorizedUsers.TableName + " (" + memberTablesConfig.AuthorizedUsers.EmailFieldName + ") values ($1) returning " + memberTablesConfig.AuthorizedUsers.IdFieldName + ";";
 
         // Execution of the query
         client.query(query, [email], function(err, result) {

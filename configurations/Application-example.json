@@ -2,6 +2,7 @@
   "Port": "38000",
   "BaseUrl": "/",
   "InitialContinentToFilter": 8,
+  "LoginAction": "",
   "DatePickerDefaultOptions": {
     "maxDate": 0,
     "markerClassName": "hasDatepicker",

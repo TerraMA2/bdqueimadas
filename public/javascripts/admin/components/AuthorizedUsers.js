@@ -1,22 +1,14 @@
 "use strict";
 
 /**
- * Attributes table class of the BDQueimadas.
+ * Authorized users class of the BDQueimadasAdmin.
  * @class AuthorizedUsers
- * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
- *
- * @property {object} memberDownloadsTable - Attributes table object (DataTables).
- * @property {date} memberInitialDate - Current initial date / time filter.
- * @property {date} memberFinalDate - Current final date / time filter.
  */
 define(
   [],
   function() {
-
-    // Attributes table object (DataTables)
-    var memberDownloadsTable = null;
 
     var savedScreen = function(self) {
       var saveButton = self.parent().find('> .save-button');
@@ -37,6 +29,14 @@ define(
         emailSpan.removeClass('hidden');
     };
 
+    /**
+     * Loads the class events.
+     *
+     * @private
+     * @function loadEvents
+     * @memberof AuthorizedUsers
+     * @inner
+     */
     var loadEvents = function() {
       $("#users-table > tbody").on("click", ".edit-button", function() {
         var self = $(this);
@@ -140,7 +140,7 @@ define(
      * Initializes the necessary features.
      *
      * @function init
-     * @memberof Downloads
+     * @memberof AuthorizedUsers
      * @inner
      */
     var init = function() {

@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Downloads model, which contains attributes table related database manipulations.
+ * Downloads model, which contains downloads related database manipulations.
  * @class Downloads
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
@@ -23,7 +23,7 @@ var Downloads = function() {
   var memberPgPool = require('../../pg');
 
   /**
-   * Returns data of the attributes table accordingly with the received parameters.
+   * Returns data of the downloads table accordingly with the received parameters.
    * @param {number} numberOfRegisters - Desired number of records
    * @param {number} initialRegister - Initial record
    * @param {string} search - String of the search
@@ -43,8 +43,16 @@ var Downloads = function() {
     // Connection with the PostgreSQL database
     memberPgPool.connect(function(err, client, done) {
       if(!err) {
-        var columns = "to_char((data_hora at time zone 'UTC') at time zone 'America/Sao_Paulo', 'DD/MM/YYYY HH24:MI:SS') as data_hora_char, ip, " +
-        "to_char(filtro_inicio, 'DD/MM/YYYY HH24:MI:SS') as filtro_inicio, to_char(filtro_fim, 'DD/MM/YYYY HH24:MI:SS') as filtro_fim, filtro_satelites, filtro_biomas, filtro_paises, filtro_estados, filtro_cidades, filtro_formato";
+        var columns = "to_char((" + memberTablesConfig.Downloads.DateTimeFieldName + " at time zone 'UTC') at time zone 'America/Sao_Paulo', 'DD/MM/YYYY HH24:MI:SS') as data_hora_char, " +
+        memberTablesConfig.Downloads.IpFieldName + ", " +
+        "to_char(" + memberTablesConfig.Downloads.FilterBeginFieldName + ", 'DD/MM/YYYY HH24:MI:SS') as " + memberTablesConfig.Downloads.FilterBeginFieldName + ", " +
+        "to_char(" + memberTablesConfig.Downloads.FilterEndFieldName + ", 'DD/MM/YYYY HH24:MI:SS') as " + memberTablesConfig.Downloads.FilterEndFieldName + ", " +
+        memberTablesConfig.Downloads.FilterSatellitesFieldName + ", " +
+        memberTablesConfig.Downloads.FilterBiomesFieldName + ", " +
+        memberTablesConfig.Downloads.FilterCountriesFieldName + ", " +
+        memberTablesConfig.Downloads.FilterStatesFieldName + ", " +
+        memberTablesConfig.Downloads.FilterCitiesFieldName + ", " +
+        memberTablesConfig.Downloads.FilterFormatFieldName;
 
         // Creation of the query
         var query = "select " + columns + " from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where (" + memberTablesConfig.Downloads.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
@@ -73,7 +81,7 @@ var Downloads = function() {
   };
 
   /**
-   * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search.
+   * Returns the number of rows of the downloads table accordingly with the received parameters, not considering the table search.
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {function} callback - Callback function
@@ -106,7 +114,7 @@ var Downloads = function() {
   };
 
   /**
-   * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search.
+   * Returns the number of rows of the downloads table accordingly with the received parameters, considering the table search.
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {string} search - String of the search

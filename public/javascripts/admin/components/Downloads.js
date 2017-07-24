@@ -1,13 +1,12 @@
 "use strict";
 
 /**
- * Attributes table class of the BDQueimadas.
+ * Downloads table class of the BDQueimadasAdmin.
  * @class Downloads
- * @variation 2
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  *
- * @property {object} memberDownloadsTable - Attributes table object (DataTables).
+ * @property {object} memberDownloadsTable - Downloads table object (DataTables).
  * @property {date} memberInitialDate - Current initial date / time filter.
  * @property {date} memberFinalDate - Current final date / time filter.
  */
@@ -15,7 +14,7 @@ define(
   [],
   function() {
 
-    // Attributes table object (DataTables)
+    // Downloads table object (DataTables)
     var memberDownloadsTable = null;
     // Current initial date / time filter
     var memberInitialDate = null;
@@ -23,7 +22,7 @@ define(
     var memberFinalDate = null;
 
     /**
-     * Loads the attributes table.
+     * Loads the downloads table.
      *
      * @private
      * @function loadDownloadsTable
