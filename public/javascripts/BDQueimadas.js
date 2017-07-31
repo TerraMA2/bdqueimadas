@@ -589,7 +589,7 @@ define(
         });
 
         $('#city-export').autocomplete({
-          minLength: 4,
+          minLength: 2,
           source: function(request, response) {
             var countriesAndStates = getSpatialData(2);
 
@@ -597,7 +597,7 @@ define(
               url: Utils.getBaseUrl() + "search-for-cities",
               dataType: "json",
               data: {
-                minLength: 4,
+                minLength: 2,
                 value: request.term,
                 countries: countriesAndStates.countries,
                 states: countriesAndStates.states
@@ -2458,7 +2458,7 @@ define(
       });
 
       $('#city').autocomplete({
-        minLength: 4,
+        minLength: 2,
         source: function(request, response) {
           var countriesAndStates = getSpatialData(0);
 
@@ -2466,7 +2466,7 @@ define(
             url: Utils.getBaseUrl() + "search-for-cities",
             dataType: "json",
             data: {
-              minLength: 4,
+              minLength: 2,
               value: request.term,
               countries: countriesAndStates.countries,
               states: countriesAndStates.states
@@ -2494,7 +2494,7 @@ define(
       });
 
       $('#city-attributes-table').autocomplete({
-        minLength: 4,
+        minLength: 2,
         source: function(request, response) {
           var countriesAndStates = getSpatialData(1);
 
@@ -2502,7 +2502,7 @@ define(
             url: Utils.getBaseUrl() + "search-for-cities",
             dataType: "json",
             data: {
-              minLength: 4,
+              minLength: 2,
               value: request.term,
               countries: countriesAndStates.countries,
               states: countriesAndStates.states
