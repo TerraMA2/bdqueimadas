@@ -36,8 +36,13 @@ var DownloadsController = function(app) {
    * @inner
    */
   var getDownloadsTable = function(request, response) {
+    var order = {
+      column: request.body.columns[request.body.order[0].column].name,
+      dir: request.body.order[0].dir
+    };
+
     // Call of the method 'getDownloadsTableData', responsible for returning data of the attributes table accordingly with the request parameters
-    memberDownloads.getDownloadsTableData(request.body.length, request.body.start, request.body.search.value, request.body.initialDate, request.body.finalDate, function(err, result) {
+    memberDownloads.getDownloadsTableData(request.body.length, request.body.start, request.body.search.value, request.body.initialDate, request.body.finalDate, order, function(err, result) {
       if(err) return console.error(err);
 
       // Call of the method 'getDownloadsTableCount', responsible for returning the number of rows of the attributes table accordingly with the request parameters, not considering the table search

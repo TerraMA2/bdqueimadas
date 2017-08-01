@@ -44,7 +44,7 @@ var setupPassport = function(app) {
         if(err)
           return done(null, false, { message: "Login falhou, tente novamente." });
 
-        if(body.users.length !== 1)
+        if(body.users === undefined || body.users.length !== 1)
           return done(null, false, { message: "Usuário ou senha incorretos!" });
 
         authorizedUsers.getAuthorizedUsers(function(err, authorizedUsersList) {

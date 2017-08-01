@@ -1,19 +1,31 @@
 <div class="box box-default color-palette-box">
   <div class="box-body">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="form-group">
           <label for="initial-date">Data Inicial</label>
-          <input type="text" class="form-control" id="initial-date" placeholder="Data Inicial" value="2017-07-18">
+          <input type="text" class="form-control date" id="initial-date" placeholder="Data Inicial">
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="initial-time">Hora Inicial</label>
+          <input type="text" class="form-control time" id="initial-time" placeholder="Hora Inicial" value="00:00">
+        </div>
+      </div>
+      <div class="col-md-3">
         <div class="form-group">
           <label for="final-date">Data Final</label>
-          <input type="text" class="form-control" id="final-date" placeholder="Data Final" value="2017-07-19">
+          <input type="text" class="form-control date" id="final-date" placeholder="Data Final">
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="final-time">Hora Final</label>
+          <input type="text" class="form-control time" id="final-time" placeholder="Hora Final" value="23:59">
+        </div>
+      </div>
+      <div class="col-md-2">
         <button type="button" class="btn btn-primary" style="margin-top: 24px;" id="filter-downloads">Filtrar</button>
       </div>
     </div>

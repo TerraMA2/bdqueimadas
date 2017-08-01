@@ -29,6 +29,7 @@ var Downloads = function() {
    * @param {string} search - String of the search
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
+   * @param {object} order - Order
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -36,7 +37,7 @@ var Downloads = function() {
    * @memberof Downloads
    * @inner
    */
-  this.getDownloadsTableData = function(numberOfRegisters, initialRegister, search, dateTimeFrom, dateTimeTo, callback) {
+  this.getDownloadsTableData = function(numberOfRegisters, initialRegister, search, dateTimeFrom, dateTimeTo, order, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -55,7 +56,7 @@ var Downloads = function() {
         memberTablesConfig.Downloads.FilterFormatFieldName;
 
         // Creation of the query
-        var query = "select " + columns + " from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where (" + memberTablesConfig.Downloads.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++) + ")",
+        var query = "select " + columns + " from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where (((" + memberTablesConfig.Downloads.DateTimeFieldName + " at time zone 'UTC') at time zone 'America/Sao_Paulo') between $" + (parameter++) + " and $" + (parameter++) + ")",
             params = [dateTimeFrom, dateTimeTo];
 
         // If the the user executed a search in the table, a 'where' clause is created for it
@@ -67,7 +68,7 @@ var Downloads = function() {
         }
 
         // Order and pagination clauses
-        query += " order by " + memberTablesConfig.Downloads.DateTimeFieldName + " desc limit $" + (parameter++) + " offset $" + (parameter++) + ";";
+        query += " order by " + order.column + " " + order.dir + " limit $" + (parameter++) + " offset $" + (parameter++) + ";";
         params.push(numberOfRegisters, initialRegister);
 
         // Execution of the query
@@ -100,7 +101,7 @@ var Downloads = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where " + memberTablesConfig.Downloads.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where ((" + memberTablesConfig.Downloads.DateTimeFieldName + " at time zone 'UTC') at time zone 'America/Sao_Paulo') between $" + (parameter++) + " and $" + (parameter++),
             params = [dateTimeFrom, dateTimeTo];
 
         // Execution of the query
@@ -134,7 +135,7 @@ var Downloads = function() {
       if(!err) {
 
         // Creation of the query
-        var query = "select count(*) from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where " + memberTablesConfig.Downloads.DateTimeFieldName + " between $" + (parameter++) + " and $" + (parameter++),
+        var query = "select count(*) from " + memberTablesConfig.Downloads.Schema + "." + memberTablesConfig.Downloads.TableName + " where ((" + memberTablesConfig.Downloads.DateTimeFieldName + " at time zone 'UTC') at time zone 'America/Sao_Paulo') between $" + (parameter++) + " and $" + (parameter++),
             params = [dateTimeFrom, dateTimeTo];
 
         // If the the user executed a search in the table, a 'where' clause is created for it

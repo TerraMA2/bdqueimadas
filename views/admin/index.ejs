@@ -16,10 +16,12 @@
     <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/adminlte/css/AdminLTE.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/datatables/dataTables.bootstrap.css">
+    <!-- jQuery UI 1.12.0 -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/jQueryUI/jquery-ui.min.css">
     <!-- Template -->
     <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/adminlte/css/skin-queimadas.min.css">
     <!-- BDQueimadasAdmin Styles -->
-    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>stylesheets/BDQueimadasAdmin.css">
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>stylesheets/BDQueimadasAdmin.min.css">
   </head>
   <body class="hold-transition skin-queimadas sidebar-mini">
     <input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
@@ -101,10 +103,6 @@
       <div class="content-wrapper">
         <section class="content-header">
           <h1><% if(typeof mainTitle !== "undefined") { %><%- mainTitle %><% } %> <small><% if(typeof secondaryTitle !== "undefined") { %><%- secondaryTitle %><% } %></small></h1>
-          <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Dashboard</li>
-          </ol>
         </section>
         <section class="content">
 
@@ -172,7 +170,14 @@
     <script type="text/javascript" src="<%- BASE_URL %>externals/adminlte/js/queimadas.js"></script>
     <!-- Template -->
     <script type="text/javascript" src="<%- BASE_URL %>externals/adminlte/js/app.min.js"></script>
-    <!-- BDQueimadasAdmin -->
+    <!-- InputMask -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.js"></script>
+    <script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.extensions.js"></script>
+    <!-- BDQueimadasAdmin / RequireJS 2.2.0 -->
     <script data-main="<%- BASE_URL %>javascripts/admin/BDQueimadasAdmin.js" src="<%- BASE_URL %>externals/require.js/require.js"></script>
+
+    <script type="text/javascript" src="<%- BASE_URL %>dist/BDQueimadasAdmin.min.js"></script>
+
   </body>
 </html>

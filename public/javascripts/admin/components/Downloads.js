@@ -87,8 +87,8 @@ define(
      * @inner
      */
     var updateDownloads = function() {
-      memberInitialDate = $("#initial-date").val() + ' 00:00:00';
-      memberFinalDate = $("#final-date").val() + ' 23:59:59';
+      memberInitialDate = $("#initial-date").val().split('/').join('-') + ' ' + $("#initial-time").val();
+      memberFinalDate = $("#final-date").val().split('/').join('-') + ' ' + $("#final-time").val();
 
       memberDownloadsTable.ajax.reload();
     };
