@@ -34,8 +34,7 @@ module.exports = function(grunt) {
             '../../externals/almond/almond',
             'BDQueimadasAdmin',
             'components/AuthorizedUsers',
-            'components/Downloads',
-            'components/BasicSettings'
+            'components/Downloads'
           ]
         }
       }

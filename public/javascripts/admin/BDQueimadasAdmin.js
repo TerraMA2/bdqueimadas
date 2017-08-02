@@ -3,8 +3,8 @@ requirejs.config({
 });
 
 requirejs(
-  ['components/Downloads', 'components/AuthorizedUsers', 'components/BasicSettings'],
-  function(Downloads, AuthorizedUsers, BasicSettings) {
+  ['components/Downloads', 'components/AuthorizedUsers'],
+  function(Downloads, AuthorizedUsers) {
     // Adding the CSRF token to the ajax requests
     $.ajaxPrefilter(function(options, _, xhr) {
       if(!xhr.crossDomain) xhr.setRequestHeader('X-CSRF-Token', $('#_csrf').val());
@@ -39,6 +39,5 @@ requirejs(
 
     Downloads.init();
     AuthorizedUsers.init();
-    BasicSettings.init();
   }
 );

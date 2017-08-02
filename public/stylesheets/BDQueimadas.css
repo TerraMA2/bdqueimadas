@@ -1069,7 +1069,7 @@ label { margin-bottom: 0px !important; }
   cursor: pointer;
 }
 
-.bottom-message-div {
+#exportation-status {
   z-index: 1;
   position: absolute;
   bottom: 0;
@@ -1078,7 +1078,7 @@ label { margin-bottom: 0px !important; }
   height: 50px;
 }
 
-.bottom-message-div > div {
+#exportation-status > div {
   color: #40130d;
   padding-top: 5px;
   background: rgb(255, 255, 255);
@@ -1093,20 +1093,54 @@ label { margin-bottom: 0px !important; }
   text-align: center;
 }
 
-.bottom-message-div > div > span > span {
+#exportation-status > div > span > span {
   display: inline-block;
   width: 15px;
 }
 
-.bottom-message-div > div > div {
+#exportation-status > div > div {
   position: absolute;
   width: 95%;
   bottom: -12px;
   margin-left: 2.5%;
 }
 
-.bottom-message-div > div > .progress {
+#exportation-status > div > .progress {
   background-color: #b4b4b4;
+}
+
+#message-div {
+  z-index: 1;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0 250px 0 200px;
+  height: auto;
+}
+
+#message-div > div {
+  color: #40130d;
+  padding: 5px 0 10px 0;
+  background: rgb(255, 255, 255);
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  border-top: 1px solid rgb(0, 0, 0);
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  text-align: center;
+}
+
+#message-div > div > .progress {
+  width: 95%;
+  margin-left: 2.5%;
+  background-color: #b4b4b4;
+  margin-bottom: 0;
+}
+
+#message-div > div > .message {
+  padding: 10px 40px 10px 40px;
 }
 
 #close-bottom-message-div {
