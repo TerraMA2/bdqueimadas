@@ -40,7 +40,10 @@ var BasicSettingsController = function(app) {
    * @inner
    */
   var updateBasicSettings = function(request, response) {
-    memberBasicSettings.setInitialMessageData(request.body.initialMessage, request.body.initialMessageTime, function(err, result) {
+    var initialMessage = (request.body.initialMessage != "" ? request.body.initialMessage : null);
+    var initialMessageTime = (request.body.initialMessageTime != "" ? request.body.initialMessageTime : null);
+
+    memberBasicSettings.setInitialMessageData(initialMessage, initialMessageTime, function(err, result) {
       if(err) return console.error(err);
 
       response.redirect(BASE_URL + 'admin/basic-settings');

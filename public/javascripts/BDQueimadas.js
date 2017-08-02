@@ -2766,27 +2766,30 @@ define(
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
 
-        setTimeout(function() {
-          $('#message-div').removeClass('hidden');
-
-          var timeProgress = 90;
-
-          var initialMessageInterval = setInterval(function() {
-            $('#message-div > div > div > div').css('width', timeProgress + '%');
-            $('#message-div > div > div > div').attr('aria-valuenow', timeProgress);
-            timeProgress -= 10;
-          }, 1500);
-
+        if(initialMessage && initialMessageTime) {
           setTimeout(function() {
-            clearInterval(initialMessageInterval);
+            $('#message-div .message').text(initialMessage);
+            $('#message-div').removeClass('hidden');
 
-            if(!$('#message-div').hasClass('hidden'))
-              $('#message-div').addClass('hidden');
+            var timeProgress = 90;
 
-            $('#message-div > div > div > div').css('width', '100%');
-            $('#message-div > div > div > div').attr('aria-valuenow', 100);
-          }, 15000);
-        }, 5000);
+            var initialMessageInterval = setInterval(function() {
+              $('#message-div > div > div > div').css('width', timeProgress + '%');
+              $('#message-div > div > div > div').attr('aria-valuenow', timeProgress);
+              timeProgress -= 10;
+            }, ((initialMessageTime * 1000) / 10));
+
+            setTimeout(function() {
+              clearInterval(initialMessageInterval);
+
+              if(!$('#message-div').hasClass('hidden'))
+                $('#message-div').addClass('hidden');
+
+              $('#message-div > div > div > div').css('width', '100%');
+              $('#message-div > div > div > div').attr('aria-valuenow', 100);
+            }, initialMessageTime * 1000);
+          }, 5000);
+        }
       });
     };
 
