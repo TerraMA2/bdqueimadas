@@ -1069,7 +1069,7 @@ label { margin-bottom: 0px !important; }
   cursor: pointer;
 }
 
-#exportation-status {
+.bottom-message-div {
   z-index: 1;
   position: absolute;
   bottom: 0;
@@ -1078,7 +1078,7 @@ label { margin-bottom: 0px !important; }
   height: 50px;
 }
 
-#exportation-status > div {
+.bottom-message-div > div {
   color: #40130d;
   padding-top: 5px;
   background: rgb(255, 255, 255);
@@ -1093,18 +1093,28 @@ label { margin-bottom: 0px !important; }
   text-align: center;
 }
 
-#exportation-status > div > span > span {
+.bottom-message-div > div > span > span {
   display: inline-block;
   width: 15px;
 }
 
-#exportation-status > div > div {
+.bottom-message-div > div > div {
   position: absolute;
   width: 95%;
   bottom: -12px;
   margin-left: 2.5%;
 }
 
-#exportation-status > div > .progress {
+.bottom-message-div > div > .progress {
   background-color: #b4b4b4;
+}
+
+#close-bottom-message-div {
+  position: absolute;
+  right: 260px;
+  z-index: 999;
+  font-weight: 900;
+  top: 5px;
+  color: red;
+  cursor: pointer;
 }

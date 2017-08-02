@@ -174,6 +174,11 @@ define(
         });
       });
 
+      $("#close-bottom-message-div").on('click', function() {
+        if(!$('#message-div').hasClass('hidden'))
+          $('#message-div').addClass('hidden');
+      });
+
       // Sidebar buttons click event
       $(".sidebar-menu > li.left-box").on('click', function(event) {
         event.preventDefault();
@@ -2761,18 +2766,27 @@ define(
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
 
-        vex.dialog.alert({
-          message: '<p class="text-center"><strong>Atenção!</strong><br/><br/>Esta aplicação está em <strong>fase de desenvolvimento</strong>. Ela está disponível para fins de teste e coleta de sugestões e críticas sobre suas funcionalidades.<br/><br/>No mapa com a última imagem do satélite NPP, cada cruzinha indica uma detecção de fogo na vegetação.</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok, entendi',
-            className: 'bdqueimadas-btn bdqueimadas-initial-alert'
-          }]
-        });
-
         setTimeout(function() {
-          $('.bdqueimadas-initial-alert').click();
-        }, 15000);
+          $('#message-div').removeClass('hidden');
+
+          var timeProgress = 90;
+
+          var initialMessageInterval = setInterval(function() {
+            $('#message-div > div > div > div').css('width', timeProgress + '%');
+            $('#message-div > div > div > div').attr('aria-valuenow', timeProgress);
+            timeProgress -= 10;
+          }, 1500);
+
+          setTimeout(function() {
+            clearInterval(initialMessageInterval);
+
+            if(!$('#message-div').hasClass('hidden'))
+              $('#message-div').addClass('hidden');
+
+            $('#message-div > div > div > div').css('width', '100%');
+            $('#message-div > div > div > div').attr('aria-valuenow', 100);
+          }, 15000);
+        }, 5000);
       });
     };
 
