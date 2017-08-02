@@ -1,0 +1,26 @@
+<div class="box box-default color-palette-box">
+  <form method="post" action="<%- BASE_URL %>admin/update-basic-settings">
+    <input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-9">
+            <div class="form-group">
+              <label>Mensagem Inicial</label>
+              <textarea class="form-control" id="initialMessage" name="initialMessage" style="height: 100px; resize: none;"><%- initialMessage %></textarea>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>Duração da Mensagem Inicial (Segundos)</label>
+              <input type="text" id="initialMessageTime" name="initialMessageTime" class="form-control" value="<%- initialMessageTime %>">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="box-footer">
+      <button type="button" class="btn btn-info pull-right" id="save-basic-settings">Salvar</button>
+    </div>
+  </form>
+</div>
