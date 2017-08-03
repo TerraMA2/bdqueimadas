@@ -87,8 +87,8 @@ define(
      * @inner
      */
     var updateDownloads = function() {
-      memberInitialDate = $("#initial-date").val().split('/').join('-') + ' ' + $("#initial-time").val();
-      memberFinalDate = $("#final-date").val().split('/').join('-') + ' ' + $("#final-time").val();
+      memberInitialDate = $("#initial-date").val().split('/').join('-') + ' ' + $("#initial-time").val() + ':00';
+      memberFinalDate = $("#final-date").val().split('/').join('-') + ' ' + $("#final-time").val() + ':59';
 
       memberDownloadsTable.ajax.reload();
     };
@@ -109,6 +109,31 @@ define(
     var init = function() {
       $(document).ready(function() {
         loadEvents();
+
+        var datePickerOptions = {
+          "maxDate": 0,
+          "markerClassName": "hasDatepicker",
+          "dateFormat": "yy/mm/dd",
+          "dayNames": ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"],
+          "dayNamesMin": ["D","S","T","Q","Q","S","S","D"],
+          "dayNamesShort": ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb","Dom"],
+          "monthNames": ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
+          "monthNamesShort": ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+          "nextText": "Próximo",
+          "prevText": "Anterior"
+        };
+
+        $("#initial-date").datepicker(datePickerOptions);
+        $("#final-date").datepicker(datePickerOptions);
+
+        var date = new Date();
+        var finalDate = date.getFullYear() + "/" + ('0' + (date.getMonth() + 1)).slice(-2) + "/" + ('0' + date.getDate()).slice(-2);
+        date.setDate(date.getDate() - 1);
+        var initialDate = date.getFullYear() + "/" + ('0' + (date.getMonth() + 1)).slice(-2) + "/" + ('0' + date.getDate()).slice(-2);
+
+        $("#initial-date").val(initialDate);
+        $("#final-date").val(finalDate);
+
         loadDownloadsTable();
       });
     };

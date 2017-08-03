@@ -26,7 +26,7 @@ var BasicSettingsController = function(app) {
     memberBasicSettings.getInitialMessageData(function(err, initialMessageData) {
       if(err) return console.error(err);
 
-      response.render('admin/index', { content: 'pages/basicSettings', mainTitle: 'Configurações Básicas', initialMessage: initialMessageData.rows[0].message, initialMessageTime: initialMessageData.rows[0].time });
+      response.render('admin/index', { content: 'pages/basicSettings', currentPage: 'BasicSettings', mainTitle: 'Configurações Básicas', initialMessage: initialMessageData.rows[0].message, initialMessageTime: initialMessageData.rows[0].time });
     });
   };
 

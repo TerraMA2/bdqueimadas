@@ -27,7 +27,7 @@ var AuthorizedUsersController = function(app) {
       if(err)
         return console.error(err);
 
-      response.render('admin/index', { content: 'pages/users', mainTitle: 'Usuário Autorizados', authorizedUsers: authorizedUsers });
+      response.render('admin/index', { content: 'pages/users', currentPage: 'AuthorizedUsers', mainTitle: 'Usuário Autorizados', authorizedUsers: authorizedUsers });
     });
   };
 

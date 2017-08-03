@@ -1,0 +1,64 @@
+<input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
+<div class="box box-default color-palette-box">
+  <div class="box-body">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="initial-date">Data Inicial</label>
+          <input type="text" class="form-control date" id="initial-date" placeholder="Data Inicial">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="final-date">Data Final</label>
+          <input type="text" class="form-control date" id="final-date" placeholder="Data Final">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-primary" style="margin-top: 24px;" id="filter-accesses">Filtrar</button>
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <div id="table-load-div" class="hidden"><div></div></div>
+        <table class="table table-striped" id="accesses-table">
+          <tbody>
+            <tr>
+              <td><strong>Número de visitas (um ou mais acessos dentro de 30 minutos)</strong></td>
+              <td id="nb_visits"></td>
+            </tr>
+            <tr>
+              <td><strong>Número de ações (uma visita pode gerar várias ações)</strong></td>
+              <td id="nb_actions"></td>
+            </tr>
+            <tr>
+              <td><strong>Número de visitas únicas (usuário deixou o site após acessar apenas uma página)</strong></td>
+              <td id="bounce_count"></td>
+            </tr>
+            <tr>
+              <td><strong>Tempo total de visita</strong></td>
+              <td id="sum_visit_length"></td>
+            </tr>
+            <tr>
+              <td><strong>Número máximo de ações em uma só visita</strong></td>
+              <td id="max_actions"></td>
+            </tr>
+            <tr>
+              <td><strong>Taxa de visitas únicas (usuário deixou o site após acessar apenas uma página)</strong></td>
+              <td id="bounce_rate"></td>
+            </tr>
+            <tr>
+              <td><strong>Tempo médio de visita</strong></td>
+              <td id="avg_time_on_site"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</div>

@@ -23,7 +23,7 @@ var DownloadsController = function(app) {
    * @inner
    */
   var downloadsController = function(request, response) {
-    response.render('admin/index', { content: 'pages/downloads', mainTitle: 'Downloads' });
+    response.render('admin/index', { content: 'pages/downloads', currentPage: 'Downloads', mainTitle: 'Downloads' });
   };
 
   /**
