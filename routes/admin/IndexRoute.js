@@ -10,7 +10,7 @@ var passport = require('../../configurations/admin/Passport');
  */
 var IndexRoute = function(app) {
   app.get('/admin', passport.isAuthenticated, function(request, response) {
-    response.redirect('/admin/downloads');
+    response.redirect(BASE_URL + 'admin/access-statistics');
   });
 };
 

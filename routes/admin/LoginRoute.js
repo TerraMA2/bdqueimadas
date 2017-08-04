@@ -16,14 +16,14 @@ var Login = function(app) {
 
       if(!user) {
         request.flash('message', info.message + "<br/><br/>");
-        return response.redirect('/admin/login');
+        return response.redirect(BASE_URL + 'admin/login');
       }
 
       request.logIn(user, function(e) {
         if(e)
           return next(e);
 
-        return response.redirect('/admin');
+        return response.redirect(BASE_URL + 'admin');
       })
     })(request, response, next);
   });
@@ -34,7 +34,7 @@ var Login = function(app) {
 
   app.get('/admin/logout', function(request, response) {
     request.logout();
-    response.redirect('/admin');
+    response.redirect(BASE_URL + 'admin');
   });
 };
 

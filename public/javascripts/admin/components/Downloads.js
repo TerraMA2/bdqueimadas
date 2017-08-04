@@ -39,7 +39,7 @@ define(
           "processing": true,
           "serverSide": true,
           "ajax": {
-            "url": "/admin/get-downloads-table",
+            "url": BASE_URL + "admin/get-downloads-table",
             "type": "POST",
             "data": function(data) {
               data.initialDate = memberInitialDate;

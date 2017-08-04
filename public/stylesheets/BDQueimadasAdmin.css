@@ -3,26 +3,26 @@
 }
 
 .skin-queimadas .main-header #gov-header #header #logo #portal-title {
-  background:url('/externals/adminlte/img/logo_queimadas.png') !important;
+  background:url('../externals/adminlte/img/logo_queimadas.png') !important;
   background-repeat: no-repeat !important;
   background-position: 5px 0 !important;
 }
 
 .skin-queimadas .main-header #gov-header #header #social-icons li a {
-  background:url('/externals/adminlte/img/sprite.png') !important;
+  background:url('../externals/adminlte/img/sprite.png') !important;
   background-repeat: no-repeat !important;
 }
 
 .skin-queimadas .main-header #gov-header #header input.searchButton {
-  background:url("/externals/adminlte/img/sprite.png") 0 2px !important;
+  background:url("../externals/adminlte/img/sprite.png") 0 2px !important;
 }
 
 .skin-queimadas .main-header .logo .logo-mini {
-  background-image:url('/externals/adminlte/img/logo_bd.png') !important;
+  background-image:url('../externals/adminlte/img/logo_bd.png') !important;
 }
 
 .skin-queimadas .main-header .logo .logo-lg {
-  background-image:url('/externals/adminlte/img/logo_bd.png') !important;
+  background-image:url('../externals/adminlte/img/logo_bd.png') !important;
 }
 
 .skin-queimadas .main-header #gov-header #header #social-icons>ul>li>a.facebook {

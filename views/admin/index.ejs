@@ -145,7 +145,11 @@
         </div>
       </footer>
     </div>
-    <!-- ./wrapper -->
+
+    <script type="text/javascript">
+      var BASE_URL = '<%- BASE_URL %>';
+      var currentPage = '<%- currentPage %>';
+    </script>
 
     <!-- jQuery 2.1.4 -->
     <script type="text/javascript" src="<%- BASE_URL %>externals/jQuery/jQuery-2.1.4.min.js"></script>
@@ -178,13 +182,8 @@
     <!-- Socket.IO -->
     <script type="text/javascript" src="<%- BASE_URL %>socket.io/socket.io.js"></script>
     <!-- BDQueimadasAdmin / RequireJS 2.2.0 -->
-    <script data-main="<%- BASE_URL %>javascripts/admin/BDQueimadasAdmin.js" src="<%- BASE_URL %>externals/require.js/require.js"></script>
+    <!--<script data-main="<%- BASE_URL %>javascripts/admin/BDQueimadasAdmin.js" src="<%- BASE_URL %>externals/require.js/require.js"></script>-->
 
-    <!--<script type="text/javascript" src="<%- BASE_URL %>dist/BDQueimadasAdmin.min.js"></script>-->
-
-    <script type="text/javascript">
-      var BASE_URL = '<%- BASE_URL %>';
-      var currentPage = '<%- currentPage %>';
-    </script>
+    <script type="text/javascript" src="<%- BASE_URL %>dist/BDQueimadasAdmin.min.js"></script>
   </body>
 </html>
