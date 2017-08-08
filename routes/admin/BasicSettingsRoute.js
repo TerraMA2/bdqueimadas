@@ -3,7 +3,7 @@
 var passport = require('../../configurations/admin/Passport');
 
 /**
- * Route of the Admin system.
+ * Route of the Admin system basic settings.
  * @class BasicSettingsRoute
  *
  * @author Jean Souza [jean.souza@funcate.org.br]

@@ -11,8 +11,8 @@
  * @property {date} memberFinalDate - Current final date / time filter.
  */
 define(
-  [],
-  function() {
+  ['components/Utils'],
+  function(Utils) {
 
     // Downloads table object (DataTables)
     var memberDownloadsTable = null;
@@ -39,7 +39,7 @@ define(
           "processing": true,
           "serverSide": true,
           "ajax": {
-            "url": BASE_URL + "admin/get-downloads-table",
+            "url": Utils.getBaseUrl() + "admin/get-downloads-table",
             "type": "POST",
             "data": function(data) {
               data.initialDate = memberInitialDate;

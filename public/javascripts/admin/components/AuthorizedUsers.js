@@ -7,8 +7,8 @@
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
 define(
-  [],
-  function() {
+  ['components/Utils'],
+  function(Utils) {
 
     var savedScreen = function(self) {
       var saveButton = self.parent().find('> .save-button');
@@ -60,7 +60,7 @@ define(
         var emailSpan = self.parent().parent().find('> .email-column > span');
 
         if(self.data('id') !== "") {
-          $.post('/users/update', {
+          $.post(Utils.getBaseUrl() + 'admin/users/update', {
             id: self.data('id'),
             email: emailInput.val()
           }, function(data) {
@@ -72,7 +72,7 @@ define(
             savedScreen(self);
           });
         } else {
-          $.post('/users/add', {
+          $.post(Utils.getBaseUrl() + 'admin/users/add', {
             email: emailInput.val()
           }, function(data) {
             if(data.error !== null) {
@@ -101,7 +101,7 @@ define(
         };
 
         if(self.data('id') !== "") {
-          $.post('/users/delete', {
+          $.post(Utils.getBaseUrl() + 'admin/users/delete', {
             id: self.data('id')
           }, function(data) {
             if(data.error === null)

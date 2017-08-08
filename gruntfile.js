@@ -30,12 +30,7 @@ module.exports = function(grunt) {
           baseUrl: "public/javascripts/admin",
           out: "public/dist/BDQueimadasAdmin.min.js",
           preserveLicenseComments: false,
-          include: [
-            '../../externals/almond/almond',
-            'BDQueimadasAdmin',
-            'components/AuthorizedUsers',
-            'components/Downloads'
-          ]
+          include: ['../../externals/almond/almond', 'BDQueimadasAdmin']
         }
       }
     },

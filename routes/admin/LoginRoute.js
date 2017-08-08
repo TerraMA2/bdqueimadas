@@ -4,11 +4,11 @@ var passport = require('passport');
 
 /**
  * Route of the Admin system login.
- * @class Login
+ * @class LoginRoute
  *
  * @author Jean Souza [jean.souza@funcate.org.br]
  */
-var Login = function(app) {
+var LoginRoute = function(app) {
   app.post('/admin/login/process', function(request, response, next) {
     passport.authenticate('local', function(err, user, info) {
       if(err)
@@ -38,4 +38,4 @@ var Login = function(app) {
   });
 };
 
-module.exports = Login;
+module.exports = LoginRoute;
