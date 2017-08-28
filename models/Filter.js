@@ -62,6 +62,41 @@ var Filter = function() {
   };
 
   /**
+   * Returns a list of continents.
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getAllContinents
+   * @memberof Filter
+   * @inner
+   */
+  this.getAllContinents = function(callback) {
+    // Connection with the PostgreSQL database
+    memberPgPool.connect(function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName +
+        " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " order by " +
+        "case " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%south_america%' then 1 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' then 2 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' then 3 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' then 4 " +
+        "else 5 " +
+        "end, " + memberTablesConfig.Continents.NameFieldName + ";";
+
+        // Execution of the query
+        client.query(query, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns a continent filtered by the received country id.
    * @param {string} country - Country id
    * @param {function} callback - Callback function

@@ -1,0 +1,74 @@
+<input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
+<div class="box box-default color-palette-box">
+  <div class="box-body">
+    <div class="row">
+      <div class="col-md-12">
+        <h4><strong>Atenção!</strong></h4>
+        <br/>
+        <p>Você está prestes a excluir 1000 focos de incêndios do banco de dados, e esse processo não pode ser desfeito. A tabela abaixo lista esses focos, confira se essa listagem está correta antes de confirmar a exclusão.</p>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th style="width: 10px">#</th>
+              <th>Task</th>
+              <th>Progress</th>
+              <th style="width: 40px">Label</th>
+            </tr>
+            <tr>
+              <td>1.</td>
+              <td>Update software</td>
+              <td>
+                <div class="progress progress-xs">
+                  <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                </div>
+              </td>
+              <td><span class="badge bg-red">55%</span></td>
+            </tr>
+            <tr>
+              <td>2.</td>
+              <td>Clean database</td>
+              <td>
+                <div class="progress progress-xs">
+                  <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
+                </div>
+              </td>
+              <td><span class="badge bg-yellow">70%</span></td>
+            </tr>
+            <tr>
+              <td>3.</td>
+              <td>Cron job running</td>
+              <td>
+                <div class="progress progress-xs progress-striped active">
+                  <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
+                </div>
+              </td>
+              <td><span class="badge bg-light-blue">30%</span></td>
+            </tr>
+            <tr>
+              <td>4.</td>
+              <td>Fix and squish bugs</td>
+              <td>
+                <div class="progress progress-xs progress-striped active">
+                  <div class="progress-bar progress-bar-success" style="width: 90%"></div>
+                </div>
+              </td>
+              <td><span class="badge bg-green">90%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <button type="cancel" class="btn btn-primary pull-left">Cancelar</button>
+        <button type="button" class="btn btn-danger pull-right">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,3 @@ var BasicSettingsRoute = function(app) {
 };
 
 module.exports = BasicSettingsRoute;
-
-
-

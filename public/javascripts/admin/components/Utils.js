@@ -41,6 +41,27 @@ define(function() {
   };
 
   /**
+   * Verifies if a string exists in an array.
+   * @param {array} array - Array where the search will be performed
+   * @param {string} string - String to be searched
+   * @returns {boolean} boolean - Flag that indicates if the string exists in the array
+   *
+   * @function stringInArray
+   * @memberof Utils
+   * @inner
+   */
+  var stringInArray = function(array, string) {
+    if(array !== null) {
+      for(var i = 0, arrayLength = array.length; i < arrayLength; i++) {
+        if(array[i].toString() === string.toString())
+          return true;
+      }
+    }
+
+    return false;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {string} baseUrl - Base Url
    *
@@ -56,6 +77,7 @@ define(function() {
   return {
     getSocket: getSocket,
     getBaseUrl: getBaseUrl,
+    stringInArray: stringInArray,
     init: init
   };
 });
