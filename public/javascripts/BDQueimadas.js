@@ -373,7 +373,7 @@ define(
                 '</div>' +
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-type"></span>' +
-              '<span id="csvFields">' +
+              '<span id="csvFields"' + (memberFilterExport && !Utils.stringInArray(memberFilterExport.format.split(','), 'csv') ? ' style="display: none;"' : '') + '>' +
                 '<div class="form-group bdqueimadas-form">' +
                   '<label>Separador Decimal</label>' +
                   '<div class="input-group" style="width: 100%;">' +
@@ -676,7 +676,7 @@ define(
           $('#filter-satellite-export').val(memberFilterExport.satellites);
           memberFilterExport.biomes = (memberFilterExport.biomes == "" ? "all" : memberFilterExport.biomes);
           $('#filter-biome-export').val(memberFilterExport.biomes);
-          $('#exportation-type').val(memberFilterExport.format);
+          $('#exportation-type').val(memberFilterExport.format.split(','));
           $('input[name=decimalSeparator][value=\'' + memberFilterExport.decimalSeparator + '\']').prop('checked', true);
           $('input[name=fieldSeparator][value=\'' + memberFilterExport.fieldSeparator + '\']').prop('checked', true);
 
