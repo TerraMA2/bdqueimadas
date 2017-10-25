@@ -901,9 +901,9 @@ define(
         }
       });
 
-      $('#states-graphics').change(function() {
+      /*$('#states-graphics').change(function() {
         $('#filter-button-graphics').click();
-      });
+      });*/
 
       $('#continents-attributes-table').change(function() {
         if($(this).val() !== "") {
@@ -1837,7 +1837,7 @@ define(
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
           $('#states-graphics').html('');
           $('#states-graphics').attr('disabled', '');
-          $('#filter-button-graphics').click();
+          //$('#filter-button-graphics').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
           $('#states-export').html('');
           $('#states-export').attr('disabled', '');
@@ -1894,7 +1894,7 @@ define(
           $('#filter-button-attributes-table').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
           $('#states-graphics').removeAttr('disabled');
-          $('#filter-button-graphics').click();
+          //$('#filter-button-graphics').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
           $('#states-export').removeAttr('disabled');
         }
