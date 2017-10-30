@@ -44,7 +44,7 @@ define(
           var countryName = result.countries.rows[i].name;
 
           if(result.countries.rows[i].name === "Falkland Islands") {
-            countryName = "I. Malvinas";
+            countryName = "I.Malvinas/Falkland";
           } else if(result.countries.rows[i].name === "Brazil") {
             countryName = "Brasil";
           }
