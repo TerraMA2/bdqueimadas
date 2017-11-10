@@ -919,9 +919,9 @@ define(
         }
       });
 
-      $('#states-attributes-table').change(function() {
+      /*$('#states-attributes-table').change(function() {
         $('#filter-button-attributes-table').click();
-      });
+      });*/
 
       $("#search-pas-btn").on('click', function() {
         searchForPAs(true, true);
@@ -965,7 +965,7 @@ define(
                 type: data[0].value.type
               }));
 
-              $('#filter-button-attributes-table').click();
+              //$('#filter-button-attributes-table').click();
             } else {
               $('#pas-attributes-table').data('value', '');
 
@@ -987,7 +987,7 @@ define(
           $('#pas-attributes-table').val('');
           $('#pas-attributes-table').data('value', '');
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
 
@@ -1082,7 +1082,7 @@ define(
               $('#city-attributes-table').val(data[0].label);
               $('#city-attributes-table').data('value', data[0].value.id);
 
-              $('#filter-button-attributes-table').click();
+              //$('#filter-button-attributes-table').click();
             } else {
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
@@ -1102,7 +1102,7 @@ define(
           $('#city-attributes-table').val('');
           $('#city-attributes-table').data('value', '');
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
 
@@ -1833,7 +1833,7 @@ define(
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           $('#states-attributes-table').html('');
           $('#states-attributes-table').attr('disabled', '');
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
           $('#states-graphics').html('');
           $('#states-graphics').attr('disabled', '');
@@ -1891,7 +1891,7 @@ define(
 
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           $('#states-attributes-table').removeAttr('disabled');
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
           $('#states-graphics').removeAttr('disabled');
           //$('#filter-button-graphics').click();
@@ -2458,7 +2458,7 @@ define(
             type: ui.item.value.type
           }));
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
 
@@ -2523,7 +2523,7 @@ define(
           $('#city-attributes-table').val(ui.item.label);
           $('#city-attributes-table').data('value', ui.item.value.id);
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
     };
