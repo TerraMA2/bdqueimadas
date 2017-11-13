@@ -75,6 +75,33 @@
     "Id": "bdqueimadas:areas_petroliferas",
     "ContinentField": "continente_id"
   },
+  "ProtectedAreas": {
+    "UCE": {
+      "LayerName": "bdqueimadas:unidades_conservacao_estaduais_nao_reservas",
+      "IdField": "id_uce",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_estaduais_nao_reservas"
+    },
+    "RPPNE": {
+      "LayerName": "bdqueimadas:unidades_conservacao_estaduais_reservas",
+      "IdField": "id_uce",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_estaduais_reservas"
+    },
+    "UCF": {
+      "LayerName": "bdqueimadas:unidades_conservacao_federais_nao_reservas",
+      "IdField": "id_ucf",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_federais_nao_reservas"
+    },
+    "RPPNF": {
+      "LayerName": "bdqueimadas:unidades_conservacao_federais_reservas",
+      "IdField": "id_ucf",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_federais_reservas"
+    },
+    "TI": {
+      "LayerName": "bdqueimadas:terras_indigenas",
+      "IdField": "id_ti",
+      "NamesLayer": "bdqueimadas:labels_terras_indigenas"
+    }
+  },
   "SpatialFilter": {
     "Continents": {
       "MinResolution": 0.35,

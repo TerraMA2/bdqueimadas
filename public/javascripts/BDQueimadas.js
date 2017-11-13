@@ -2104,6 +2104,42 @@ define(
               memberFilterExport.bufferTen = "false";
             }
 
+            if(data[0].value.type === "UCE") {
+              var cqlUCE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.IdField + "=" + data[0].value.id;
+              var cqlRPPNE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.IdField + "=" + data[0].value.id;
+
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
+
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+            } else if(data[0].value.type === "UCF") {
+              var cqlUCF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.IdField + "=" + data[0].value.id;
+              var cqlRPPNF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.IdField + "=" + data[0].value.id;
+
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+            } else if(data[0].value.type === "TI") {
+              var cqlTI = Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.IdField + "=" + data[0].value.id;
+
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
+
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+            }
+
             $('#pas').val(data[0].label);
             Filter.setProtectedArea({
               id: data[0].value.id,
@@ -2128,6 +2164,17 @@ define(
               memberFilterExport.bufferFive = "false";
               memberFilterExport.bufferTen = "false";
             }
+
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
 
             Filter.setProtectedArea(null);
 
@@ -2402,6 +2449,42 @@ define(
         },
         select: function(event, ui) {
           event.preventDefault();
+
+          if(ui.item.value.type === "UCE") {
+            var cqlUCE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.IdField + "=" + ui.item.value.id;
+            var cqlRPPNE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.IdField + "=" + ui.item.value.id;
+
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
+
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+          } else if(ui.item.value.type === "UCF") {
+            var cqlUCF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.IdField + "=" + ui.item.value.id;
+            var cqlRPPNF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.IdField + "=" + ui.item.value.id;
+
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+          } else if(ui.item.value.type === "TI") {
+            var cqlTI = Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.IdField + "=" + ui.item.value.id;
+
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
+            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
+
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+          }
 
           if(memberFilterExport !== null) {
             memberFilterExport.protectedArea = JSON.stringify({
