@@ -41,7 +41,16 @@
     "IdFieldName": "id",
     "NameFieldName": "name",
     "CountriesFieldName": "countries",
+    "StatesFieldName": "states",
+    "CitiesFieldName": "cities",
     "GeometryFieldName": "geometry"
+  },
+  "IndustrialAreas": {
+    "Schema": "schema",
+    "TableName": "industrial_areas",
+    "IdFieldName": "id",
+    "NameFieldName": "name",
+    "GeometryFieldName": "geom"
   },
   "Fires": {
     "Schema": "schema",
@@ -147,5 +156,11 @@
     "TableName": "",
     "IdFieldName": "",
     "EmailFieldName": ""
+  },
+  "BasicSettings": {
+    "Schema": "schema",
+    "TableName": "basic_settings",
+    "InitialMessageFieldName": "initial_message",
+    "InitialMessageTimeFieldName": "initial_message_time"
   }
 }
