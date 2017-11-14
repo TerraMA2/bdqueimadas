@@ -9,6 +9,7 @@
  * @property {json} memberConfigurations - Configurations object.
  * @property {object} memberSocket - Socket object.
  * @property {string} memberBaseUrl - Base Url.
+ * @property {array} memberSpecialRegions - Special Regions.
  */
 define(function() {
 
@@ -18,6 +19,8 @@ define(function() {
   var memberSocket = null;
   // Base Url
   var memberBaseUrl = null;
+  // Special Regions
+  var memberSpecialRegions = null;
 
   /**
    * Returns the configurations object.
@@ -761,6 +764,44 @@ define(function() {
   };
 
   /**
+   * Returns the states array of a special region.
+   * @param {integer} id - Id of the special region
+   * @returns {array} states - States
+   *
+   * @function getSpecialRegionStates
+   * @memberof Utils
+   * @inner
+   */
+  var getSpecialRegionStates = function(id) {
+    for(var i = 0, memberSpecialRegionsLength = memberSpecialRegions.length; i < memberSpecialRegionsLength; i++) {
+      if(memberSpecialRegions[i].id == id) {
+        return memberSpecialRegions[i].states;
+      }
+    }
+
+    return null;
+  };
+
+  /**
+   * Returns the cities array of a special region.
+   * @param {integer} id - Id of the special region
+   * @returns {array} cities - Cities
+   *
+   * @function getSpecialRegionCities
+   * @memberof Utils
+   * @inner
+   */
+  var getSpecialRegionCities = function(id) {
+    for(var i = 0, memberSpecialRegionsLength = memberSpecialRegions.length; i < memberSpecialRegionsLength; i++) {
+      if(memberSpecialRegions[i].id == id) {
+        return memberSpecialRegions[i].cities;
+      }
+    }
+
+    return null;
+  };
+
+  /**
    * Initializes the necessary features.
    * @param {object} configurations - Configurations object
    * @param {string} baseUrl - Base Url
@@ -769,10 +810,11 @@ define(function() {
    * @memberof Utils
    * @inner
    */
-  var init = function(configurations, baseUrl) {
+  var init = function(configurations, baseUrl, specialRegions) {
     memberConfigurations = configurations;
     memberBaseUrl = baseUrl;
     memberSocket = io.connect(window.location.origin, { path: baseUrl + 'socket.io' });
+    memberSpecialRegions = specialRegions;
   };
 
   return {
@@ -802,6 +844,8 @@ define(function() {
     getCurrentDate: getCurrentDate,
     convertLatitudeToDMS: convertLatitudeToDMS,
     convertLongitudeToDMS: convertLongitudeToDMS,
+    getSpecialRegionStates: getSpecialRegionStates,
+    getSpecialRegionCities: getSpecialRegionCities,
     init: init
   };
 });

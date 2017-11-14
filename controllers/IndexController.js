@@ -59,17 +59,22 @@ var IndexController = function(app) {
       memberBasicSettings.getInitialMessageData(function(err, initialMessageData) {
         if(err) return console.error(err);
 
-        // Response parameters
-        var params = {
-          configurations: configurations,
-          continents: result,
-          initialMessage: initialMessageData.rows[0].message,
-          initialMessageTime: initialMessageData.rows[0].time,
-          csrf: request.csrfToken()
-        };
+        memberFilter.getSpecialRegions(null, function(err, specialRegions) {
+          if(err) return console.error(err);
 
-        // Response (page rendering)
-        response.render('index', params);
+          // Response parameters
+          var params = {
+            configurations: configurations,
+            continents: result,
+            initialMessage: initialMessageData.rows[0].message,
+            initialMessageTime: initialMessageData.rows[0].time,
+            specialRegions: specialRegions.rows,
+            csrf: request.csrfToken()
+          };
+
+          // Response (page rendering)
+          response.render('index', params);
+        });
       });
     });
   };

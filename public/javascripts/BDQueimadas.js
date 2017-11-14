@@ -1337,6 +1337,21 @@ define(
           $('.ol-viewport a').attr('target', '_blank');
         }, 2000);
 
+        if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer) {
+          clearUCEsLayers();
+        } else if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer) {
+          clearUCFsLayers();
+        } else if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer) {
+          clearTIsLayers();
+        }
+
         if($(this).is(":checked")) {
           Map.setBackgroundsVisibility($(this).parent().data('layerid'));
 
@@ -2071,6 +2086,63 @@ define(
     };
 
     /**
+     * Clears the cql filter of the UCEs layers.
+     *
+     * @private
+     * @function clearUCEsLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearUCEsLayers = function() {
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+    };
+
+    /**
+     * Clears the cql filter of the UCFs layers.
+     *
+     * @private
+     * @function clearUCFsLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearUCFsLayers = function() {
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+    };
+
+    /**
+     * Clears the cql filter of the TIs layers.
+     *
+     * @private
+     * @function clearTIsLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearTIsLayers = function() {
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+    };
+
+    /**
+     * Clears the cql filter of the protected areas layers.
+     *
+     * @private
+     * @function clearProtectedAreasLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearProtectedAreasLayers = function() {
+      clearUCEsLayers();
+      clearUCFsLayers();
+      clearTIsLayers();
+    };
+
+    /**
      * Returns the protected area corresponding to the protected area filter.
      * @param {boolean} showAlerts - Flag that indicates if the alerts should be shown
      * @param {boolean} async - Flag that indicates if the ajax request should be asynchronous
@@ -2090,6 +2162,8 @@ define(
           minLength: 1
         },
         success: function(data) {
+          clearProtectedAreasLayers();
+
           if(data.length > 0) {
             if(memberFilterExport !== null) {
               memberFilterExport.protectedArea = JSON.stringify({
@@ -2108,36 +2182,53 @@ define(
               var cqlUCE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.IdField + "=" + data[0].value.id;
               var cqlRPPNE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.IdField + "=" + data[0].value.id;
 
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
 
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+              Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+              Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+              Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+              Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
             } else if(data[0].value.type === "UCF") {
               var cqlUCF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.IdField + "=" + data[0].value.id;
               var cqlRPPNF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.IdField + "=" + data[0].value.id;
 
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
 
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+
+              Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+              Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+              Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+              Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
             } else if(data[0].value.type === "TI") {
               var cqlTI = Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.IdField + "=" + data[0].value.id;
 
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
-              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
 
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+              Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+              Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
             }
 
             $('#pas').val(data[0].label);
@@ -2164,17 +2255,6 @@ define(
               memberFilterExport.bufferFive = "false";
               memberFilterExport.bufferTen = "false";
             }
-
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
 
             Filter.setProtectedArea(null);
 
@@ -2224,6 +2304,9 @@ define(
               memberFilterExport.cities = data[0].value.id;
               memberFilterExport.cityLabel = data[0].label;
             }
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').click();
 
             $('#city').val(data[0].label);
             $('#city-attributes-table').val(data[0].label);
@@ -2450,40 +2533,59 @@ define(
         select: function(event, ui) {
           event.preventDefault();
 
+          clearProtectedAreasLayers();
+
           if(ui.item.value.type === "UCE") {
             var cqlUCE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.IdField + "=" + ui.item.value.id;
             var cqlRPPNE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.IdField + "=" + ui.item.value.id;
 
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
 
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+            Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+            Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+            Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+            Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
           } else if(ui.item.value.type === "UCF") {
             var cqlUCF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.IdField + "=" + ui.item.value.id;
             var cqlRPPNF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.IdField + "=" + ui.item.value.id;
 
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
 
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+
+            Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+            Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+            Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+            Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
           } else if(ui.item.value.type === "TI") {
             var cqlTI = Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.IdField + "=" + ui.item.value.id;
 
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
-            $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
 
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+            Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+            Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
           }
 
           if(memberFilterExport !== null) {
@@ -2571,6 +2673,9 @@ define(
             memberFilterExport.cities = ui.item.value.id;
             memberFilterExport.cityLabel = ui.item.label;
           }
+
+          if(!$('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').is(":checked"))
+            $('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').click();
 
           $('#city').val(ui.item.label);
           $('#city-attributes-table').val(ui.item.label);

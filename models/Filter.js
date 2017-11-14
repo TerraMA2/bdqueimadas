@@ -921,22 +921,34 @@ var Filter = function() {
     // Connection with the PostgreSQL database
     memberPgPool.connect(function(err, client, done) {
       if(!err) {
-        // Creation of the query
-        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " && ARRAY[";
+        if(countries) {
+          // Creation of the query
+          var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries, " + memberTablesConfig.SpecialRegions.StatesFieldName + " as states, " + memberTablesConfig.SpecialRegions.CitiesFieldName + " as cities from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " && ARRAY[";
 
-        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(countries[i]);
+          for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countries[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + "]::integer[] order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+
+          // Execution of the query
+          client.query(query, params, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        } else {
+          // Creation of the query
+          var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries, " + memberTablesConfig.SpecialRegions.StatesFieldName + " as states, " + memberTablesConfig.SpecialRegions.CitiesFieldName + " as cities from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+
+          // Execution of the query
+          client.query(query, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
         }
-
-        query = query.substring(0, (query.length - 1)) + "]::integer[] order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
       } else return callback(err);
     });
   };
