@@ -1,0 +1,178 @@
+<div class="box box-default color-palette-box">
+  <div class="box-body">
+    <form method="POST" action="<%- BASE_URL %>admin/deletion-of-fires-confirmation">
+      <input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="initial-date">Data Inicial</label>
+            <input type="text" class="form-control date" id="initial-date" name="initialDate" placeholder="Data Inicial">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="final-date">Data Final</label>
+            <input type="text" class="form-control date" id="final-date" name="finalDate" placeholder="Data Final">
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="continents">Continente</label>
+            <select id="continents" name="continents" class="form-control">
+              <option value="">Selectione o Continente</option>
+              <% continents.rows.forEach(function(continent, index) { %>
+                <% if(continent.name === "Americas") { %>
+                  <option value="<%- continent.id %>">Am&eacute;ricas</option>
+                <% } else if(continent.name === "Europe") { %>
+                  <option value="<%- continent.id %>">Europa</option>
+                <% } else if(continent.name === "Africa") { %>
+                  <option value="<%- continent.id %>">&Aacute;frica</option>
+                <% } else if(continent.name === "South_America") { %>
+                  <option value="<%- continent.id %>">Am&eacute;rica do Sul</option>
+                <% } else if(continent.name === "Antartica") { %>
+                  <option value="<%- continent.id %>">Ant&aacute;rtida</option>
+                <% } else if(continent.name === "Asia") { %>
+                  <option value="<%- continent.id %>">&Aacute;sia</option>
+                <% } else { %>
+                  <option value="<%- continent.id %>"><%- continent.name %></option>
+                <% } %>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="countries">País</label>
+            <select multiple id="countries" name="countries" class="form-control" disabled="disabled"></select>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="states">Estado</label>
+            <select multiple id="states" name="states" class="form-control" disabled="disabled"></select>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="satellites">Satélite</label>
+            <select multiple id="satellites" name="satellites" class="form-control">
+              <option selected value="all">TODOS</option>
+              <option value="NOAA-12">NOAA-12</option>
+              <option value="NOAA-12D">NOAA-12D</option>
+              <option value="ATSR">ATSR</option>
+              <option value="TERRA_M-M">TERRA_M-M</option>
+              <option value="TERRA_M-T">TERRA_M-T</option>
+              <option value="AQUA_M-M">AQUA_M-M</option>
+              <option value="AQUA_M-T">AQUA_M-T</option>
+              <option value="TERRA-M">TERRA-M</option>
+              <option value="TERRA-T">TERRA-T</option>
+              <option value="AQUA-M">AQUA-M</option>
+              <option value="AQUA-T">AQUA-T</option>
+              <option value="GOES-08">GOES-08</option>
+              <option value="GOES-10">GOES-10</option>
+              <option value="GOES-12">GOES-12</option>
+              <option value="GOES-13">GOES-13</option>
+              <option value="GOES-16">GOES-16</option>
+              <option value="NOAA-16">NOAA-16</option>
+              <option value="NOAA-16N">NOAA-16N</option>
+              <option value="NOAA-15">NOAA-15</option>
+              <option value="NOAA-15D">NOAA-15D</option>
+              <option value="NOAA-17">NOAA-17</option>
+              <option value="NOAA-14">NOAA-14</option>
+              <option value="NOAA-18">NOAA-18</option>
+              <option value="NOAA-18D">NOAA-18D</option>
+              <option value="MSG-02">MSG-02</option>
+              <option value="MSG-03">MSG-03</option>
+              <option value="METOP-B">METOP-B</option>
+              <option value="NOAA-19">NOAA-19</option>
+              <option value="NOAA-19D">NOAA-19D</option>
+              <option value="NPP">NPP</option>
+              <option value="NPP_375">NPP_375</option>
+              <option value="TRMM">TRMM</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-1">
+          <label>Região</label>
+          <input type="hidden" id="region" name="region"/>
+        </div>
+        <div class="col-md-7"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <input type="text" class="form-control" id="region-four" placeholder="Norte"/>
+          </div>
+        </div>
+        <div class="col-md-5"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <input type="text" class="form-control" id="region-one" placeholder="Oeste"/>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <input type="text" class="form-control" id="region-three" placeholder="Leste"/>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <input type="text" class="form-control" id="region-two" placeholder="Sul"/>
+          </div>
+        </div>
+        <div class="col-md-5"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="fires-ids">IDs dos focos a serem eliminados (IDs separados por vírgula)</label>
+            <textarea class="form-control" id="fires-ids" name="firesIds" style="width: 100%; height: 150px; resize: none;"></textarea>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-primary" id="delete-fires">Excluir Focos</button>
+        </div>
+        <div class="col-md-6"></div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+.skin-queimadas .main-header #gov-header #header #logo {
+  height: 100px;
+}
+
+.skin-queimadas .main-header #gov-header #header #logo #portal-title {
+  background:url('../externals/adminlte/img/logo_queimadas.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: 5px 0 !important;
+}
+
+.skin-queimadas .main-header #gov-header #header #social-icons li a {
+  background:url('../externals/adminlte/img/sprite.png') !important;
+  background-repeat: no-repeat !important;
+}
+
+.skin-queimadas .main-header #gov-header #header input.searchButton {
+  background:url("../externals/adminlte/img/sprite.png") 0 2px !important;
+}
+
+.skin-queimadas .main-header .logo .logo-mini {
+  background-image:url('../externals/adminlte/img/logo_bd.png') !important;
+}
+
+.skin-queimadas .main-header .logo .logo-lg {
+  background-image:url('../externals/adminlte/img/logo_bd.png') !important;
+}
+
+.skin-queimadas .main-header #gov-header #header #social-icons>ul>li>a.facebook {
+  background-position: -78px -24px !important;
+}
+
+.skin-queimadas .main-header #gov-header #header #social-icons>ul>li>a.twitter {
+  background-position: -153px -24px !important;
+}
+
+.skin-queimadas .main-header #gov-header #header #social-icons>ul>li>a.youtube {
+  background-position: -128px -24px !important;
+}
+
+.skin-queimadas .main-header #gov-header #header #social-icons>ul>li>a.flickr {
+  background-position: -103px -24px !important;
+}
+
+.skin-queimadas .main-header .logo .logo-lg {
+  font-size: 18px;
+  padding-left: 46px;
+}
+
+#table-load-div {
+  background-color: rgba(204, 204, 204, 0.7);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+#table-load-div > div {
+  background-image: url(../images/loader.gif);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+}

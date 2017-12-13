@@ -577,7 +577,7 @@ define(
      * @inner
      */
     var createBiomesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + " in (";
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName + " in (";
 
       var memberBiomesLength = memberBiomes.length;
 
@@ -586,6 +586,11 @@ define(
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+
+      cql += ")";
 
       return cql;
     };
@@ -600,7 +605,7 @@ define(
      * @inner
      */
     var createCountriesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.CountryFieldName + " in (";
 
       for(var i = 0, memberCountriesLength = memberCountries.length; i < memberCountriesLength; i++) {
         cql += memberCountries[i] + ",";
@@ -611,6 +616,11 @@ define(
       }
 
       cql = cql.substring(0, cql.length - 1) + ")";
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+
+      cql += ")";
 
       return cql;
     };
@@ -640,10 +650,10 @@ define(
      * @inner
      */
     var createStatesAndSpecialRegionsFilter = function() {
-      var cql = "";
+      var cql = "(";
 
       if(memberStates.length > 0) {
-        cql += (memberSpecialRegions.length > 0 ? "(" : "") + Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
+        cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.StateFieldName + " in (";
 
         for(var i = 0, memberStatesLength = memberStates.length; i < memberStatesLength; i++) {
           cql += "'" + memberStates[i] + "',";
@@ -659,8 +669,13 @@ define(
           cql += Utils.getConfigurations().filterConfigurations.LayerToFilter.SpecialRegionsFieldName + " like '%|" + memberSpecialRegions[i] + "|%' or ";
         }
 
-        cql = cql.substring(0, cql.length - 4) + (memberStates.length > 0 ? "))" : ")");
+        cql = cql.substring(0, cql.length - 4) + ")";
       }
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+
+      cql += ")";
 
       return cql;
     };
@@ -675,7 +690,12 @@ define(
      * @inner
      */
     var createCitiesFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
+      var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
+
+      if(memberIndustrialFires)
+        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+
+      cql += ")";
 
       return cql;
     };
@@ -770,7 +790,7 @@ define(
           cql += createBiomesFilter() + " AND ";
         }
 
-        if(memberContinent !== null) {
+        if(memberContinent !== null && memberContinent != '0') {
           cql += createContinentFilter() + " AND ";
         }
 
@@ -795,10 +815,26 @@ define(
         }
 
         updateSatellitesSelect(0);
-        TerraMA2WebComponents.MapDisplay.applyCQLFilter(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
+        applyCqlFilterToLayer(cql, Utils.getConfigurations().filterConfigurations.LayerToFilter.LayerId);
       }
 
       if(!$('#loading-span').hasClass('hide')) $('#loading-span').addClass('hide');
+    };
+
+    /**
+     * Applies a cql filter to the layer with the given id.
+     * @param {string} cqlFilter - Cql filter
+     * @param {string} layerId - Layer id
+     *
+     * @function applyCqlFilterToLayer
+     * @memberof Filter(2)
+     * @inner
+     */
+    var applyCqlFilterToLayer = function(cqlFilter, layerId) {
+      if(memberInitialFilter || cqlFilter != memberLastFilters[layerId]) {
+        TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layerId);
+        memberLastFilters[layerId] = cqlFilter;
+      }
     };
 
     /**
@@ -816,14 +852,15 @@ define(
         if(layers[i].Params.Time !== undefined && layers[i].Params.Time !== null && (memberInitialFilter || updateLayersTime)) Map.updateLayerTime(layers[i]);
 
         if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.Id) {
-          if(memberContinent !== null) {
+          if(memberContinent == '0') {
+            var cqlFilter = "";
+
+            applyCqlFilterToLayer(cqlFilter, layers[i].Id);
+          } else if(memberContinent !== null) {
             var field = layers[i].Id === Utils.getConfigurations().filterConfigurations.CountriesLayer.Id ? Utils.getConfigurations().filterConfigurations.CountriesLayer.ContinentField : Utils.getConfigurations().filterConfigurations.CountriesLabelsLayer.ContinentField;
             var cqlFilter = field + "=" + memberContinent;
 
-            if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
-              TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
-              memberLastFilters[layers[i].Id] = cqlFilter;
-            }
+            applyCqlFilterToLayer(cqlFilter, layers[i].Id);
           }
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.Id) {
           var cqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.StatesLayer.Id ? Utils.getConfigurations().filterConfigurations.StatesLayer.CountryField : Utils.getConfigurations().filterConfigurations.StatesLabelsLayer.CountryField) + " in (";
@@ -838,12 +875,10 @@ define(
             cqlFilter += "0)";
           }
 
-          if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
-            memberLastFilters[layers[i].Id] = cqlFilter;
-          }
+          applyCqlFilterToLayer(cqlFilter, layers[i].Id);
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id) {
           var cqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.CountryField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CountryField) + " in (";
+          var cqlFilterOneCity = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField) + "='";
 
           if($('#states').val() !== null) {
             var states = $('#states').val();
@@ -859,31 +894,74 @@ define(
               for(var count = 0; count < memberCountriesLength; count++) cqlFilter += memberCountries[count] + ",";
               cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ")";
             } else {
-              cqlFilter += "0)";
+              if($('#city').data('value') !== undefined && $('#city').data('value') !== null) {
+                cqlFilterOneCity += $('#city').data('value') + "'";
+                cqlFilter = cqlFilterOneCity;
+              } else
+                cqlFilter += "0)";
             }
           } else {
             var memberStatesLength = memberStates.length;
 
-            if(memberStatesLength > 0) {
+            if(memberStatesLength > 0 || memberSpecialRegions.length > 0) {
               var statesCqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.StateField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.StateField) + " in (";
               var citiesCqlFilter = (layers[i].Id === Utils.getConfigurations().filterConfigurations.CitiesLayer.Id ? Utils.getConfigurations().filterConfigurations.CitiesLayer.CityField : Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.CityField) + " in (";
 
-              for(var count = 0; count < memberStatesLength; count++) {
-                var ids = Utils.getStateIds(memberStates[count]);
-                cqlFilter += ids[0] + ",";
-                statesCqlFilter += "'" + memberStates[count] + "',";
+              var filterStates = false;
+              var filterCities = false;
+
+              if(memberStatesLength > 0) {
+                for(var count = 0; count < memberStatesLength; count++) {
+                  var ids = Utils.getStateIds(memberStates[count]);
+                  cqlFilter += ids[0] + ",";
+                  statesCqlFilter += "'" + memberStates[count] + "',";
+                }
+
+                if(!filterStates) filterStates = true;
               }
 
-              cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
+              if(memberSpecialRegions.length > 0) {
+                for(var count = 0; count < memberSpecialRegions.length; count++) {
+                  var specialRegionStates = Utils.getSpecialRegionStates(memberSpecialRegions[count]);
+                  var specialRegionCities = Utils.getSpecialRegionCities(memberSpecialRegions[count]);
+
+                  if(specialRegionStates && specialRegionStates.length > 0) {
+                    for(var j = 0, specialRegionStatesLength = specialRegionStates.length; j < specialRegionStatesLength; j++) {
+                      var ids = Utils.getStateIds(specialRegionStates[j]);
+                      cqlFilter += ids[0] + ",";
+                      statesCqlFilter += "'" + specialRegionStates[j] + "',";
+                    }
+
+                    if(!filterStates) filterStates = true;
+                  }
+
+                  if(specialRegionCities && specialRegionCities.length > 0) {
+                    for(var j = 0, specialRegionCitiesLength = specialRegionCities.length; j < specialRegionCitiesLength; j++) {
+                      citiesCqlFilter += "'" + specialRegionCities[j] + "',";
+                    }
+
+                    if(!filterCities) filterCities = true;
+                  }
+                }
+              }
+
+              if(filterStates)
+                cqlFilter = cqlFilter.substring(0, (cqlFilter.length - 1)) + ") AND " + statesCqlFilter.substring(0, (statesCqlFilter.length - 1)) + ")";
+
+              if(filterStates && filterCities)
+                cqlFilter = cqlFilter + " OR " + citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
+              else if(filterCities)
+                cqlFilter = citiesCqlFilter.substring(0, (citiesCqlFilter.length - 1)) + ")";
             } else {
-              cqlFilter += "0)";
+              if($('#city').data('value') !== undefined && $('#city').data('value') !== null) {
+                cqlFilterOneCity += $('#city').data('value') + "'";
+                cqlFilter = cqlFilterOneCity;
+              } else
+                cqlFilter += "0)";
             }
           }
 
-          if(memberInitialFilter || cqlFilter != memberLastFilters[layers[i].Id]) {
-            TerraMA2WebComponents.MapDisplay.applyCQLFilter(cqlFilter, layers[i].Id);
-            memberLastFilters[layers[i].Id] = cqlFilter;
-          }
+          applyCqlFilterToLayer(cqlFilter, layers[i].Id);
         } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.SpecialRegionsLayer.Id) {
           var featuresIds = "";
           var layerIdArray = layers[i].Id.split(':');
@@ -929,6 +1007,17 @@ define(
 
             memberLastFilters[layers[i].Id] = currentSituationFilterString;
           }
+        } else if(layers[i].Id === Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id || layers[i].Id === Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id) {
+          if(memberContinent == '0') {
+            var cqlFilter = "";
+
+            applyCqlFilterToLayer(cqlFilter, layers[i].Id);
+          } else if(memberContinent !== null) {
+            var field = layers[i].Id === Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id ? Utils.getConfigurations().filterConfigurations.OilfieldsLayer.ContinentField : Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.ContinentField;
+            var cqlFilter = field + "=" + memberContinent;
+
+            applyCqlFilterToLayer(cqlFilter, layers[i].Id);
+          }
         }
       }
     };
@@ -952,7 +1041,7 @@ define(
     var applyCurrentSituationFilter = function(begin, end, continent, countries, states, satellites, biomes, industrialFires, layer) {
       var currentSituationFilter = "begin:" + begin + ";end:" + end;
 
-      if(continent !== undefined && continent !== null && continent !== "" && continent !== '') {
+      if(continent !== undefined && continent !== null && continent !== "" && continent !== '' && continent != '0') {
         currentSituationFilter += ";continent:" + continent;
       }
 
@@ -1241,6 +1330,7 @@ define(
       updateDatesToCurrent: updateDatesToCurrent,
       updateTimesToDefault: updateTimesToDefault,
       applyFilter: applyFilter,
+      applyCqlFilterToLayer: applyCqlFilterToLayer,
       applyCurrentSituationFilter: applyCurrentSituationFilter,
       updateSatellitesSelect: updateSatellitesSelect,
       selectContinentItem: selectContinentItem,

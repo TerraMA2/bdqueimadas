@@ -13,6 +13,7 @@
                     <label for="continents-attributes-table"><%= __('Continentes') %></label>
                     <select id="continents-attributes-table" name="continents-attributes-table" class="form-control">
                       <option value=""><%= __('Selecione o continente') %></option>
+                      <option value="0"><%= __('Todos os Continentes') %></option>
                       <% continents.rows.forEach(function(continent, index) { %>
                         <% if(continent.name === "Americas") { %>
                           <option value="<%- continent.id %>">Am&eacute;ricas</option>

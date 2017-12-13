@@ -41,7 +41,16 @@
     "IdFieldName": "id",
     "NameFieldName": "name",
     "CountriesFieldName": "countries",
+    "StatesFieldName": "states",
+    "CitiesFieldName": "cities",
     "GeometryFieldName": "geometry"
+  },
+  "IndustrialAreas": {
+    "Schema": "schema",
+    "TableName": "industrial_areas",
+    "IdFieldName": "id",
+    "NameFieldName": "name",
+    "GeometryFieldName": "geom"
   },
   "Fires": {
     "Schema": "schema",
@@ -62,6 +71,7 @@
     "SpecialRegionsFieldName": "special_regions",
     "SpecialRegionsTextFieldName": "special_regions_text",
     "IndustrialFiresFieldName": "industrial_area",
+    "IndustrialFiresTypeFieldName": "id_tipo_area_industrial",
     "LatitudeFieldName": "latitude",
     "LongitudeFieldName": "longitude",
     "GeometryFieldName": "geometry",
@@ -140,5 +150,17 @@
     "FilterStatesFieldName": "filter_states",
     "FilterCitiesFieldName": "filter_cities",
     "FilterFormatFieldName": "filter_format"
+  },
+  "AuthorizedUsers": {
+    "Schema": "",
+    "TableName": "",
+    "IdFieldName": "",
+    "EmailFieldName": ""
+  },
+  "BasicSettings": {
+    "Schema": "schema",
+    "TableName": "basic_settings",
+    "InitialMessageFieldName": "initial_message",
+    "InitialMessageTimeFieldName": "initial_message_time"
   }
 }

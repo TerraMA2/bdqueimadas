@@ -73,14 +73,21 @@ var Proxy = function(io) {
     });
 
     // Piwik data request event
-    client.on('piwikDataRequest', function() {
-      var date = new Date();
+    client.on('piwikDataRequest', function(json) {
+      var initialDate = (json !== undefined && json !== null && json.initialDate !== undefined && json.initialDate !== null ? json.initialDate : "2016-07-25");
 
-      var year = date.getFullYear(),
-          month = ((date.getMonth() + 1) < 10) ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1),
-          day = (date.getDate() < 10) ? "0" + date.getDate() : date.getDate();
+      if(json !== undefined && json !== null && json.finalDate !== undefined && json.finalDate !== null)
+        var finalDate = json.finalDate;
+      else {
+        var date = new Date();
+        var year = date.getFullYear(),
+            month = ((date.getMonth() + 1) < 10) ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1),
+            day = (date.getDate() < 10) ? "0" + date.getDate() : date.getDate();
 
-      var url = memberPiwikConfigurations.Url + "/index.php?module=API&method=API.getBulkRequest&format=json&token_auth=" + memberPiwikConfigurations.TokenAuth + "&urls[0]=method=VisitsSummary.get&idSite=" + memberPiwikConfigurations.IdSite + "&period=range&date=2016-07-25," + year + "-" + month + "-" + day;
+        var finalDate = year + "-" + month + "-" + day;
+      }
+
+      var url = memberPiwikConfigurations.Url + "/index.php?module=API&method=API.getBulkRequest&format=json&token_auth=" + memberPiwikConfigurations.TokenAuth + "&urls[0]=method=VisitsSummary.get&idSite=" + memberPiwikConfigurations.IdSite + "&period=range&date=" + initialDate + "," + finalDate;
 
       var requestObject = url.substring(0, 5) === "https" ? memberHttps : memberHttp;
 

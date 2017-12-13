@@ -1,0 +1,65 @@
+<input type="hidden" name="_csrf" id="_csrf" value="<%- csrfToken %>">
+<div class="box box-default color-palette-box">
+  <div class="box-body">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="initial-date">Data Inicial</label>
+          <input type="text" class="form-control date" id="initial-date" placeholder="Data Inicial">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="initial-time">Hora Inicial</label>
+          <input type="text" class="form-control time" id="initial-time" placeholder="Hora Inicial" value="00:00">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="final-date">Data Final</label>
+          <input type="text" class="form-control date" id="final-date" placeholder="Data Final">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="final-time">Hora Final</label>
+          <input type="text" class="form-control time" id="final-time" placeholder="Hora Final" value="23:59">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-primary" style="margin-top: 24px;" id="filter-downloads">Filtrar</button>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-bordered table-hover" id="downloads-table">
+          <thead>
+            <th>Data do Download</th>
+            <th>Ip</th>
+            <th>Filtro - Data Inicial</th>
+            <th>Filtro - Data Final</th>
+            <th>Filtro - Satélites</th>
+            <th>Filtro - Biomas</th>
+            <th>Filtro - Países</th>
+            <th>Filtro - Estados</th>
+            <th>Filtro - Cidade</th>
+            <th>Formatos</th>
+          </thead>
+          <tfoot>
+            <th>Data do Download</th>
+            <th>Ip</th>
+            <th>Filtro - Data Inicial</th>
+            <th>Filtro - Data Final</th>
+            <th>Filtro - Satélites</th>
+            <th>Filtro - Biomas</th>
+            <th>Filtro - Países</th>
+            <th>Filtro - Estados</th>
+            <th>Filtro - Cidade</th>
+            <th>Formatos</th>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

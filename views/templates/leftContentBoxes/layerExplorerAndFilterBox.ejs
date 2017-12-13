@@ -5,6 +5,7 @@
       <div class="col-sm-9" style="float: right; width: 75%;">
         <select id="continents" name="continents" class="form-control">
           <option value=""><%= __('Selecione o continente') %></option>
+          <option value="0"><%= __('Todos os Continentes') %></option>
           <% continents.rows.forEach(function(continent, index) { %>
             <% if(continent.name === "Americas") { %>
               <option value="<%- continent.id %>">Am&eacute;ricas</option>
@@ -60,20 +61,20 @@
     <label style="width: 100%; text-align: center; margin-bottom: 4px !important;">Obs: dados após Jun/1998</label>
     <div style="float: left;">
       <label for="filter-date-from" style="float: left; margin-right: 4px; margin-top: 5px;"><%= __('Data / Hora Início - TMG (Z)') %></label>
-      <input type="text" style="width: 90px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="<%= __('Data Início') %>">
+      <input type="text" style="width: 86px; float: left; padding-left: 5px; padding-right: 5px;" class="form-control date filter-date filter-date-from" id="filter-date-from" placeholder="<%= __('Data Início') %>">
     </div>
     <div style="float: right;">
-      <input type="text" style="width: 50px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-from" id="filter-time-from" placeholder="<%= __('Hora Início') %>" value="00:00">
+      <input type="text" style="width: 46px; float: left; padding-left: 5px; padding-right: 5px;" class="form-control time filter-time filter-time-from" id="filter-time-from" placeholder="<%= __('Hora Início') %>" value="00:00">
     </div>
   </div>
   <div style="clear: both; height: 4px;"></div>
   <div class="form-group bdqueimadas-form">
     <div style="float: left;">
       <label for="filter-date-to" style="float: left; margin-right: 14px; margin-top: 5px;"><%= __('Data / Hora Fim - TMG (Z)') %></label>
-      <input type="text" style="width: 90px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="<%= __('Data Fim') %>">
+      <input type="text" style="width: 86px; float: left; padding-left: 5px; padding-right: 5px;" class="form-control date filter-date filter-date-to" id="filter-date-to" placeholder="<%= __('Data Fim') %>">
     </div>
     <div style="float: right;">
-      <input type="text" style="width: 50px; float: left; padding-left: 7px; padding-right: 7px;" class="form-control time filter-time filter-time-to" id="filter-time-to" placeholder="<%= __('Hora Fim') %>" value="23:59">
+      <input type="text" style="width: 46px; float: left; padding-left: 5px; padding-right: 5px;" class="form-control time filter-time filter-time-to" id="filter-time-to" placeholder="<%= __('Hora Fim') %>" value="23:59">
     </div>
   </div>
   <span class="help-block component-filter-error-main" id="filter-error-dates"></span>

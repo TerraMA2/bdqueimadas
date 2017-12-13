@@ -586,10 +586,10 @@ define(
      */
     var setSubtitlesVisibility = function(layerId) {
       var configuration = Utils.getConfigurations().mapConfigurations;
+      var hasVisibleLegend = false;
 
       for(var i = 0, subtitlesLength = configuration.Subtitles.length; i < subtitlesLength; i++) {
         var layersIds = configuration.Subtitles[i].LayerId.split('|');
-        var showSubtitles = false;
 
         for(var j = 0, layersIdsLength = layersIds.length; j < layersIdsLength; j++) {
           if(layerId === undefined || layerId === layersIds[j]) {
@@ -603,7 +603,20 @@ define(
         }
       }
 
-      if($('#map-subtitle-items').children(':visible').length == 0) {
+      var legendItems = $("#map-subtitle-items > li");
+
+      if(legendItems && typeof legendItems === "object" && legendItems.length > 0) {
+        for(var i = 0, legendItemsLength = legendItems.length; i < legendItemsLength; i++) {
+          if(legendItems[i].id !== "no-subtitles") {
+            if(legendItems[i].style.display !== "none") {
+              hasVisibleLegend = true;
+              return;
+            }
+          }
+        }
+      }
+
+      if(!hasVisibleLegend) {
         $('#no-subtitles').show();
       } else {
         $('#no-subtitles').hide();

@@ -10,6 +10,7 @@
  * @property {json} memberFilterConfig - Filter configuration.
  * @property {json} memberTablesConfig - Tables configuration.
  * @property {object} memberUtils - 'Utils' model.
+ * @property {object} memberPgPool - PostgreSQL connection pool.
  */
 var Filter = function() {
 
@@ -21,10 +22,11 @@ var Filter = function() {
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // 'Utils' model
   var memberUtils = new (require('./Utils.js'))();
+  // PostgreSQL connection pool
+  var memberPgPool = require('../pg');
 
   /**
    * Returns a list of continents.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
    *
@@ -32,9 +34,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinents = function(pgPool, callback) {
+  this.getContinents = function(callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -60,8 +62,42 @@ var Filter = function() {
   };
 
   /**
+   * Returns a list of continents.
+   * @param {function} callback - Callback function
+   * @returns {function} callback - Execution of the callback function, which will process the received data
+   *
+   * @function getAllContinents
+   * @memberof Filter
+   * @inner
+   */
+  this.getAllContinents = function(callback) {
+    // Connection with the PostgreSQL database
+    memberPgPool.connect(function(err, client, done) {
+      if(!err) {
+
+        // Creation of the query
+        var query = "select " + memberTablesConfig.Continents.IdFieldName + " as id, " + memberTablesConfig.Continents.NameFieldName +
+        " as name from " + memberTablesConfig.Continents.Schema + "." + memberTablesConfig.Continents.TableName + " order by " +
+        "case " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%south_america%' then 1 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%america%' then 2 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%africa%' then 3 " +
+        "when lower(" + memberTablesConfig.Continents.NameFieldName + ") like '%europe%' then 4 " +
+        "else 5 " +
+        "end, " + memberTablesConfig.Continents.NameFieldName + ";";
+
+        // Execution of the query
+        client.query(query, function(err, result) {
+          done();
+          if(!err) return callback(null, result);
+          else return callback(err);
+        });
+      } else return callback(err);
+    });
+  };
+
+  /**
    * Returns a continent filtered by the received country id.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} country - Country id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -70,9 +106,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinentByCountry = function(pgPool, country, callback) {
+  this.getContinentByCountry = function(country, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -91,7 +127,6 @@ var Filter = function() {
 
   /**
    * Returns a continent filtered by the received state id.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} state - State id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -100,9 +135,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinentByState = function(pgPool, state, callback) {
+  this.getContinentByState = function(state, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -121,7 +156,6 @@ var Filter = function() {
 
   /**
    * Returns a list of countries filtered by the received states ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -130,9 +164,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesByStates = function(pgPool, states, callback) {
+  this.getCountriesByStates = function(states, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -165,7 +199,6 @@ var Filter = function() {
 
   /**
    * Returns a list of countries filtered by the received continent id.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} continent - Continent id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -174,28 +207,41 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesByContinent = function(pgPool, continent, callback) {
+  this.getCountriesByContinent = function(continent, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
-        var query = "select distinct " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName + " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1 order by " + memberTablesConfig.Countries.NameFieldName + " asc;",
-            params = [continent];
+        var query = "select distinct " + memberTablesConfig.Countries.IdFieldName + " as id, " + memberTablesConfig.Countries.NameFieldName + " as name from " + memberTablesConfig.Countries.Schema + "." + memberTablesConfig.Countries.TableName;
+
+        if(continent != '0') {
+          query += " where " + memberTablesConfig.Countries.ContinentFieldName + " = $1";
+          var params = [continent];
+        }
+
+        query += " order by " + memberTablesConfig.Countries.NameFieldName + " asc;";
 
         // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
+        if(params !== undefined) {
+          client.query(query, params, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        } else {
+          client.query(query, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        }
       } else return callback(err);
     });
   };
 
   /**
    * Returns the continent extent correspondent to the received id.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} continent - Continent id
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -204,14 +250,14 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getContinentExtent = function(pgPool, continent, callback) {
+  this.getContinentExtent = function(continent, callback) {
     if(memberFilterConfig.Extents.Continents[continent] !== undefined) {
       var confExtent = memberFilterConfig.Extents.Continents[continent].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
     }
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -230,7 +276,6 @@ var Filter = function() {
 
   /**
    * Returns a list of states filtered by the received countries ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -239,9 +284,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesByCountries = function(pgPool, countries, callback) {
+  this.getStatesByCountries = function(countries, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -270,7 +315,6 @@ var Filter = function() {
 
   /**
    * Returns the countries extent correspondent to the received ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -279,7 +323,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesExtent = function(pgPool, countries, callback) {
+  this.getCountriesExtent = function(countries, callback) {
     if(countries.length === 1 && memberFilterConfig.Extents.Countries[countries[0]] !== undefined) {
       var confExtent = memberFilterConfig.Extents.Countries[countries[0]].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
@@ -305,7 +349,7 @@ var Filter = function() {
     }
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -342,7 +386,6 @@ var Filter = function() {
 
   /**
    * Returns the states extent correspondent to the received ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -351,7 +394,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesExtent = function(pgPool, states, callback) {
+  this.getStatesExtent = function(states, callback) {
     if(states.length === 1 && memberFilterConfig.Extents.States[states[0]] !== undefined) {
       var confExtent = memberFilterConfig.Extents.States[states[0]].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
@@ -377,7 +420,7 @@ var Filter = function() {
     }
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -414,7 +457,6 @@ var Filter = function() {
 
   /**
    * Returns the special regions extent correspondent to the received ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} specialRegions - Special regions ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -423,7 +465,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSpecialRegionsExtent = function(pgPool, specialRegions, callback) {
+  this.getSpecialRegionsExtent = function(specialRegions, callback) {
     if(specialRegions.length === 1 && memberFilterConfig.Extents.SpecialRegions[specialRegions[0]] !== undefined) {
       var confExtent = memberFilterConfig.Extents.SpecialRegions[specialRegions[0]].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
@@ -449,7 +491,7 @@ var Filter = function() {
     }
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -486,7 +528,6 @@ var Filter = function() {
 
   /**
    * Returns the states and special regions extent correspondent to the received ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {array} specialRegions - Special regions ids
    * @param {function} callback - Callback function
@@ -496,7 +537,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesAndSpecialRegionsExtent = function(pgPool, states, specialRegions, callback) {
+  this.getStatesAndSpecialRegionsExtent = function(states, specialRegions, callback) {
     if(states.length === 1 && memberFilterConfig.Extents.States[states[0]] !== undefined) {
       var confExtent = memberFilterConfig.Extents.States[states[0]].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
@@ -546,7 +587,7 @@ var Filter = function() {
     }
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -608,7 +649,6 @@ var Filter = function() {
 
   /**
    * Returns the extent of the protected area corresponding to the received id.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {integer} id - Id of the protected area
    * @param {string} type - Type of the protected area (TI, UCE or UCF)
    * @param {function} callback - Callback function
@@ -618,7 +658,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getProtectedAreaExtent = function(pgPool, id, ngo, type, callback) {
+  this.getProtectedAreaExtent = function(id, ngo, type, callback) {
     if(memberFilterConfig.Extents.ProtectedAreas[type][id.toString() + ngo] !== undefined) {
       var confExtent = memberFilterConfig.Extents.ProtectedAreas[type][id.toString() + ngo].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
@@ -627,7 +667,7 @@ var Filter = function() {
     var parameters = [id.toString() + ngo];
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         if(type === 'UCE') {
           var schemaAndTable = memberTablesConfig.UCE.Schema + "." + memberTablesConfig.UCE.TableName;
@@ -661,7 +701,6 @@ var Filter = function() {
 
   /**
    * Returns the extent of the city corresponding to the received id.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} id - Id of the city
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -670,7 +709,7 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCityExtent = function(pgPool, id, callback) {
+  this.getCityExtent = function(id, callback) {
     if(memberFilterConfig.Extents.Cities[id] !== undefined) {
       var confExtent = memberFilterConfig.Extents.Cities[id].split(',');
       return callback(null, { rowCount: 1, rows: [{ extent: "BOX(" + confExtent[0] + " " + confExtent[1] + "," + confExtent[2] + " " + confExtent[3] + ")" }] });
@@ -679,7 +718,7 @@ var Filter = function() {
     var parameters = [id];
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         // Creation of the query
         var query = "select ST_Expand(ST_Extent(" + memberTablesConfig.Cities.GeometryFieldName + "), 0.1) as extent from " + memberTablesConfig.Cities.Schema + "." + memberTablesConfig.Cities.TableName + " where " + memberTablesConfig.Cities.IdFieldName + " = $1;";
@@ -696,7 +735,6 @@ var Filter = function() {
 
   /**
    * Returns the data of the polygon that intersects with the received point.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} longitude - Longitude of the point
    * @param {string} latitude - Latitude of the point
    * @param {float} resolution - Current map resolution
@@ -707,9 +745,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getDataByIntersection = function(pgPool, longitude, latitude, resolution, callback) {
+  this.getDataByIntersection = function(longitude, latitude, resolution, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         var key = "States";
@@ -742,7 +780,6 @@ var Filter = function() {
 
   /**
    * Returns the BDQ names of the received countries ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Countries ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -751,9 +788,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountriesBdqNames = function(pgPool, countries, callback) {
+  this.getCountriesBdqNames = function(countries, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -785,7 +822,6 @@ var Filter = function() {
 
   /**
    * Returns the BDQ names of the received states ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} states - States ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -794,9 +830,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getStatesBdqNames = function(pgPool, states, callback) {
+  this.getStatesBdqNames = function(states, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameter = 1;
         var params = [];
@@ -828,7 +864,6 @@ var Filter = function() {
 
   /**
    * Returns the satellites for the given filter.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -839,9 +874,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSatellites = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
+  this.getSatellites = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         // Counter of the query parameters
         var parameter = 1;
@@ -869,7 +904,6 @@ var Filter = function() {
 
   /**
    * Returns the special regions.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} countries - Filtered countries
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -878,38 +912,49 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getSpecialRegions = function(pgPool, countries, callback) {
+  this.getSpecialRegions = function(countries, callback) {
     // Counter of the query parameters
     var parameter = 1;
     // Query parameters
     var params = [];
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
-        // Creation of the query
-        var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " && ARRAY[";
+        if(countries) {
+          // Creation of the query
+          var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries, " + memberTablesConfig.SpecialRegions.StatesFieldName + " as states, " + memberTablesConfig.SpecialRegions.CitiesFieldName + " as cities from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " where " + memberTablesConfig.SpecialRegions.CountriesFieldName + " && ARRAY[";
 
-        for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
-          query += "$" + (parameter++) + ",";
-          params.push(countries[i]);
+          for(var i = 0, countriesLength = countries.length; i < countriesLength; i++) {
+            query += "$" + (parameter++) + ",";
+            params.push(countries[i]);
+          }
+
+          query = query.substring(0, (query.length - 1)) + "]::integer[] order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+
+          // Execution of the query
+          client.query(query, params, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
+        } else {
+          // Creation of the query
+          var query = "select " + memberTablesConfig.SpecialRegions.IdFieldName + " as id, " + memberTablesConfig.SpecialRegions.NameFieldName + " as name, " + memberTablesConfig.SpecialRegions.CountriesFieldName + " as countries, " + memberTablesConfig.SpecialRegions.StatesFieldName + " as states, " + memberTablesConfig.SpecialRegions.CitiesFieldName + " as cities from " + memberTablesConfig.SpecialRegions.Schema + "." + memberTablesConfig.SpecialRegions.TableName + " order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
+
+          // Execution of the query
+          client.query(query, function(err, result) {
+            done();
+            if(!err) return callback(null, result);
+            else return callback(err);
+          });
         }
-
-        query = query.substring(0, (query.length - 1)) + "]::integer[] order by " + memberTablesConfig.SpecialRegions.NameFieldName + " asc;";
-
-        // Execution of the query
-        client.query(query, params, function(err, result) {
-          done();
-          if(!err) return callback(null, result);
-          else return callback(err);
-        });
       } else return callback(err);
     });
   };
 
   /**
    * Returns the protected areas that match the given value.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} value - Value to be used in the search of protected areas
    * @param {object} searchFor - Flags that indicates in which tables the search should be performed. Format: { 'UCE': true/false, 'UCF': true/false, 'TI': true/false }
    * @param {function} callback - Callback function
@@ -919,9 +964,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.searchForPAs = function(pgPool, value, searchFor, callback) {
+  this.searchForPAs = function(value, searchFor, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var parameters = [];
 
@@ -966,7 +1011,6 @@ var Filter = function() {
 
   /**
    * Returns the cities that match the given value.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} value - Value to be used in the search of cities
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -975,12 +1019,12 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.searchForCities = function(pgPool, value, countries, states, callback) {
+  this.searchForCities = function(value, countries, states, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
         var query = "select " + memberTablesConfig.Cities.IdFieldName + " as id, upper(" + memberTablesConfig.Cities.NameFieldName +
                     ") as name, " + memberTablesConfig.Cities.StateNameFieldName + " as state " +
@@ -1024,7 +1068,6 @@ var Filter = function() {
 
   /**
    * Returns the names of the country, state and city for the given cities ids.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {array} ids - Cities ids
    * @param {function} callback - Callback function
    * @returns {function} callback - Execution of the callback function, which will process the received data
@@ -1033,9 +1076,9 @@ var Filter = function() {
    * @memberof Filter
    * @inner
    */
-  this.getCountryStateAndCityNamesByCities = function(pgPool, ids, callback) {
+  this.getCountryStateAndCityNamesByCities = function(ids, callback) {
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query

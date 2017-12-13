@@ -10,6 +10,7 @@
  * @property {json} memberAttributesTableConfig - Attributes table configuration.
  * @property {json} memberTablesConfig - Tables configuration.
  * @property {object} memberUtils - 'Utils' model.
+ * @property {object} memberPgPool - PostgreSQL connection pool.
  */
 var AttributesTable = function() {
 
@@ -21,10 +22,11 @@ var AttributesTable = function() {
   var memberTablesConfig = require(memberPath.join(__dirname, '../configurations/Tables.json'));
   // 'Utils' model
   var memberUtils = new (require('./Utils.js'))();
+  // PostgreSQL connection pool
+  var memberPgPool = require('../pg');
 
   /**
    * Returns data of the attributes table accordingly with the received parameters.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {number} numberOfRegisters - Desired number of records
    * @param {number} initialRegister - Initial record
    * @param {array} order - 'order by' clause parameters
@@ -39,7 +41,7 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableData = function(pgPool, numberOfRegisters, initialRegister, order, search, dateTimeFrom, dateTimeTo, options, callback) {
+  this.getAttributesTableData = function(numberOfRegisters, initialRegister, order, search, dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
@@ -74,7 +76,7 @@ var AttributesTable = function() {
     orderText = orderText.substring(0, (orderText.length - 2));
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -113,7 +115,6 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, not considering the table search.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {json} options - Filtering options
@@ -124,12 +125,12 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCount = function(pgPool, dateTimeFrom, dateTimeTo, options, callback) {
+  this.getAttributesTableCount = function(dateTimeFrom, dateTimeTo, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query
@@ -154,7 +155,6 @@ var AttributesTable = function() {
 
   /**
    * Returns the number of rows of the attributes table accordingly with the received parameters, considering the table search.
-   * @param {object} pgPool - PostgreSQL connection pool
    * @param {string} dateTimeFrom - Initial date / time
    * @param {string} dateTimeTo - Final date / time
    * @param {string} search - String of the search
@@ -166,12 +166,12 @@ var AttributesTable = function() {
    * @memberof AttributesTable
    * @inner
    */
-  this.getAttributesTableCountWithSearch = function(pgPool, dateTimeFrom, dateTimeTo, search, options, callback) {
+  this.getAttributesTableCountWithSearch = function(dateTimeFrom, dateTimeTo, search, options, callback) {
     // Counter of the query parameters
     var parameter = 1;
 
     // Connection with the PostgreSQL database
-    pgPool.connect(function(err, client, done) {
+    memberPgPool.connect(function(err, client, done) {
       if(!err) {
 
         // Creation of the query

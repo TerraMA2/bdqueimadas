@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BDQueimadasAdmin<% if(typeof mainTitle !== "undefined") { %> - <%- mainTitle %><% } %></title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/adminlte/css/AdminLTE.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/datatables/dataTables.bootstrap.css">
+    <!-- jQuery UI 1.12.0 -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/jQueryUI/jquery-ui.min.css">
+    <!-- Template -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>externals/adminlte/css/skin-queimadas.min.css">
+    <!-- BDQueimadasAdmin Styles -->
+    <link rel="stylesheet" type="text/css" href="<%- BASE_URL %>dist/BDQueimadasAdmin.min.css">
+  </head>
+  <body class="hold-transition skin-queimadas sidebar-mini">
+    <div class="wrapper">
+      <header class="main-header">
+        <div id="gov-header">
+          <div id="gov-identity-bar">
+            <div id="barra-identidade">
+              <div id="barra-brasil">
+                <div id="wrapper-barra-brasil">
+                  <div class="brasil-flag">
+                    <a href="http://brasil.gov.br" class="link-barra">Brasil</a>
+                  </div>
+                  <span class="acesso-info">
+                    <a href="http://brasil.gov.br/barra#acesso-informacao" class="link-barra">Acesso à informação</a>
+                  </span>
+                  <nav>
+                    <ul class="list">
+                      <li><a href="#" id="menu-icon"></a></li>
+                      <li class="list-item first"><a href="http://brasil.gov.br/barra#participe" class="link-barra">Participe</a></li>
+                      <li class="list-item"><a href="http://www.servicos.gov.br/?pk_campaign=barrabrasil" class="link-barra" id="barra-brasil-orgao">Serviços</a></li>
+                      <li class="list-item"><a href="http://www.planalto.gov.br/legislacao" class="link-barra">Legislação</a></li>
+                      <li class="list-item last last-item"><a href="http://brasil.gov.br/barra#orgaos-atuacao-canais" class="link-barra">Canais</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+            <script defer="defer" src="//barra.brasil.gov.br/barra.js" type="text/javascript"></script>
+          </div>
+          <div id="header" role="banner">
+            <div>
+              <div id="logo">
+                <a href="<%- BASE_URL %>admin" title="BDQueimadasAdmin">
+                  <span id="portal-title"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="<%- BASE_URL %>admin" class="logo">
+          <span class="logo-mini"></span>
+          <span class="logo-lg">BDQueimadasAdmin</span>
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <span class="hidden-xs"><%= currentUser.nome %></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="user-header" style="height: 65px;">
+                    <p><%= currentUser.nome %></p>
+                  </li>
+                  <li class="user-footer">
+                    <div class="pull-right">
+                      <a href="<%- BASE_URL %>admin/logout" class="btn btn-default btn-flat">Sair</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <aside class="main-sidebar">
+        <section class="sidebar">
+          <ul class="sidebar-menu">
+            <li class="header">NAVEGAÇÃO</li>
+            <li><a href="<%- BASE_URL %>admin/access-statistics"><i class="fa fa-bar-chart"></i> <span>Estatísticas de Acesso</span></a></li>
+            <li><a href="<%- BASE_URL %>admin/downloads"><i class="fa fa-download"></i> <span>Registro de Downloads</span></a></li>
+            <li><a href="<%- BASE_URL %>admin/basic-settings"><i class="fa fa-gear"></i> <span>Configurações Básicas</span></a></li>
+            <!--<li><a href="<%- BASE_URL %>admin/deletion-of-fires"><i class="fa fa-remove"></i> <span>Exclusão de Focos</span></a></li>-->
+            <li><a href="<%- BASE_URL %>admin/users"><i class="fa fa-user"></i> <span>Usuários Autorizados</span></a></li>
+          </ul>
+        </section>
+      </aside>
+      <div class="content-wrapper">
+        <section class="content-header">
+          <h1><% if(typeof mainTitle !== "undefined") { %><%- mainTitle %><% } %> <small><% if(typeof secondaryTitle !== "undefined") { %><%- secondaryTitle %><% } %></small></h1>
+        </section>
+        <section class="content">
+
+          <%- include(content) %>
+
+        </section>
+      </div>
+      <footer>
+        <div id="footer" role="contentinfo">
+          <a name="afooter" id="afooter"></a>
+          <div id="doormat-container" class="columns-6">
+            <div class="doormatColumn column-0">
+              <dl class="doormatSection">
+                <dt class="doormatSectionHeader">Financiadores</dt>
+                <dd class="doormatSectionBody">The World Bank</dd>
+                <dd class="doormatSectionBody"></dd>
+                <dd class="doormatSectionBody"></dd>
+                <dd class="doormatSectionBody">Department for Environment, Food and Rural Affairs of United Kingdom (DEFRA)</dd>
+              </dl>
+            </div>
+            <div class="doormatColumn column-1">
+              <dl class="doormatSection">
+                <dt class="doormatSectionHeader">Projeto</dt>
+                <dd class="doormatSectionBody">Platform of Monitoring and Warning of Forest Fires in the Brazilian Cerrado Project</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="clear"></div>
+          <div id="footer-brasil" class="footer-logos">
+            <div>
+              <a href="http://www.acessoainformacao.gov.br/" class="logo-acesso">
+                <img src="<%- BASE_URL %>externals/adminlte/img/acesso-a-informacao.png" alt="Acesso a Informação">
+              </a>
+              <a href="http://www.brasil.gov.br/" class="logo-brasil">
+                <img src="<%- BASE_URL %>externals/adminlte/img/brasil.png" alt="Brasil - Governo Federal">
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript">
+      var BASE_URL = '<%- BASE_URL %>';
+      var currentPage = '<%- currentPage %>';
+    </script>
+
+    <!-- jQuery 2.1.4 -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- jQuery UI 1.12.0 -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/jQueryUI/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+      $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- Bootstrap 3.3.5 -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Bootstrap WYSIHTML5 -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+    <!-- Slimscroll -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/fastclick/fastclick.js"></script>
+    <!-- DataTables -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/datatables/jquery.dataTables.min.js"></script>
+    <!-- DataTables -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/datatables/dataTables.bootstrap.min.js"></script>
+    <!-- Queimadas -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/adminlte/js/queimadas.js"></script>
+    <!-- Template -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/adminlte/js/app.min.js"></script>
+    <!-- InputMask -->
+    <script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.js"></script>
+    <script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script type="text/javascript" src="<%- BASE_URL %>externals/input-mask/jquery.inputmask.extensions.js"></script>
+    <!-- Socket.IO -->
+    <script type="text/javascript" src="<%- BASE_URL %>socket.io/socket.io.js"></script>
+    <!-- BDQueimadasAdmin / RequireJS 2.2.0 -->
+    <!--<script data-main="<%- BASE_URL %>javascripts/admin/BDQueimadasAdmin.js" src="<%- BASE_URL %>externals/require.js/require.js"></script>-->
+
+    <script type="text/javascript" src="<%- BASE_URL %>dist/BDQueimadasAdmin.min.js"></script>
+  </body>
+</html>

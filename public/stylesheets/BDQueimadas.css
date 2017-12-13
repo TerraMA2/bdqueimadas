@@ -1068,3 +1068,87 @@ label { margin-bottom: 0px !important; }
   font-size: 15px;
   cursor: pointer;
 }
+
+#exportation-status {
+  z-index: 1;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0 250px 0 200px;
+  height: 50px;
+}
+
+#exportation-status > div {
+  color: #40130d;
+  padding-top: 5px;
+  background: rgb(255, 255, 255);
+  border-radius: 5px 5px 0 0;
+  height: 50px;
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  border-top: 1px solid rgb(0, 0, 0);
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  text-align: center;
+}
+
+#exportation-status > div > span > span {
+  display: inline-block;
+  width: 15px;
+}
+
+#exportation-status > div > div {
+  position: absolute;
+  width: 95%;
+  bottom: -12px;
+  margin-left: 2.5%;
+}
+
+#exportation-status > div > .progress {
+  background-color: #b4b4b4;
+}
+
+#message-div {
+  z-index: 1;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0 250px 0 200px;
+  height: auto;
+}
+
+#message-div > div {
+  color: #40130d;
+  padding: 5px 0 10px 0;
+  background: rgb(255, 255, 255);
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  border-top: 1px solid rgb(0, 0, 0);
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  text-align: center;
+}
+
+#message-div > div > .progress {
+  width: 95%;
+  margin-left: 2.5%;
+  background-color: #b4b4b4;
+  margin-bottom: 0;
+}
+
+#message-div > div > .message {
+  padding: 10px 40px 10px 40px;
+}
+
+#close-bottom-message-div {
+  position: absolute;
+  right: 260px;
+  z-index: 999;
+  font-weight: 900;
+  top: 5px;
+  color: red;
+  cursor: pointer;
+}

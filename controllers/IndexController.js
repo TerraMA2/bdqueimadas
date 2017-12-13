@@ -9,6 +9,7 @@
  * @property {object} memberPath - 'path' module.
  * @property {object} memberFs - 'fs' module.
  * @property {object} memberFilter - Filter model.
+ * @property {object} memberBasicSettings - 'BasicSettings' model.
  */
 var IndexController = function(app) {
 
@@ -18,6 +19,8 @@ var IndexController = function(app) {
   var memberFs = require('fs');
   // Filter model
   var memberFilter = new (require('../models/Filter.js'))();
+  // 'BasicSettings' model
+  var memberBasicSettings = new (require('../models/admin/BasicSettings.js'))();
 
   /**
    * Processes the request and returns a response.
@@ -50,18 +53,29 @@ var IndexController = function(app) {
       piwikIdsite: piwikConfigurations.IdSite
     };
 
-    memberFilter.getContinents(request.pgPool, function(err, result) {
+    memberFilter.getContinents(function(err, result) {
       if(err) return console.error(err);
 
-      // Response parameters
-      var params = {
-        configurations: configurations,
-        continents: result,
-        csrf: request.csrfToken()
-      };
+      memberBasicSettings.getInitialMessageData(function(err, initialMessageData) {
+        if(err) return console.error(err);
 
-      // Response (page rendering)
-      response.render('index', params);
+        memberFilter.getSpecialRegions(null, function(err, specialRegions) {
+          if(err) return console.error(err);
+
+          // Response parameters
+          var params = {
+            configurations: configurations,
+            continents: result,
+            initialMessage: initialMessageData.rows[0].message,
+            initialMessageTime: initialMessageData.rows[0].time,
+            specialRegions: specialRegions.rows,
+            csrf: request.csrfToken()
+          };
+
+          // Response (page rendering)
+          response.render('index', params);
+        });
+      });
     });
   };
 

@@ -19,6 +19,7 @@
     "BiomeFieldName": "bioma",
     "SpecialRegionsFieldName": "regioes_especiais",
     "IndustrialFiresFieldName": "area_industrial",
+    "IndustrialFiresTypeFieldName": "id_tipo_area_industrial",
     "DateFormat": "YYYY-MM-DD",
     "DateTimeFormat": "YYYY-MM-DD HH:MM:SS",
     "InitialDate": "{{-|1|d=YYYY-MM-DD}}",
@@ -67,7 +68,39 @@
     "Id": "bdqueimadas:regioes_especiais"
   },
   "IndustrialAreasLayer": {
-    "Id": "bdqueimadas:areas_industriais"
+    "Id": "bdqueimadas:areas_industriais",
+    "ContinentField": "continente_id"
+  },
+  "OilfieldsLayer": {
+    "Id": "bdqueimadas:areas_petroliferas",
+    "ContinentField": "continente_id"
+  },
+  "ProtectedAreas": {
+    "UCE": {
+      "LayerName": "bdqueimadas:unidades_conservacao_estaduais_nao_reservas",
+      "IdField": "id_uce",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_estaduais_nao_reservas"
+    },
+    "RPPNE": {
+      "LayerName": "bdqueimadas:unidades_conservacao_estaduais_reservas",
+      "IdField": "id_uce",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_estaduais_reservas"
+    },
+    "UCF": {
+      "LayerName": "bdqueimadas:unidades_conservacao_federais_nao_reservas",
+      "IdField": "id_ucf",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_federais_nao_reservas"
+    },
+    "RPPNF": {
+      "LayerName": "bdqueimadas:unidades_conservacao_federais_reservas",
+      "IdField": "id_ucf",
+      "NamesLayer": "bdqueimadas:labels_unidades_conservacao_federais_reservas"
+    },
+    "TI": {
+      "LayerName": "bdqueimadas:terras_indigenas",
+      "IdField": "id_ti",
+      "NamesLayer": "bdqueimadas:labels_terras_indigenas"
+    }
   },
   "SpatialFilter": {
     "Continents": {
@@ -85,15 +118,16 @@
   },
   "Extents": {
     "Continents": {
-      "4": "-190,1.6823687752355312,-4.5,86.81763122476447"
+      "4": "-190,1.6823687752355312,-4.5,86.81763122476447",
+      "0": "-169.3125,-86.0625,192.9375,86.0625"
     },
     "Countries": {
       "244": "-195,14.02086137281292,-60,75.97913862718708"
     },
     "States": {
-      "2440002": "-195,44.43674293405114,-125,76.56325706594886"
+      "2440002": "-195,44.43674293405114,-125,76.56325706594886",
+      "0330008": "-44.75,-21.47964333781965,-36.45,-17.67035666218035"
     },
-
     "SpecialRegions": {},
     "ProtectedAreas": {
       "UCE": {},

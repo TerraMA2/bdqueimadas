@@ -32,7 +32,7 @@ var SearchForCitiesController = function(app) {
 
     if(searchValue.length >= request.query.minLength) {
       // Call of the method 'searchForCities', responsible for returning the cities that match the provided value
-      memberFilter.searchForCities(request.pgPool, searchValue, countries, states, function(err, result) {
+      memberFilter.searchForCities(searchValue, countries, states, function(err, result) {
         if(err) return console.error(err);
 
         // Array responsible for keeping the data obtained by the method 'searchForCities'

@@ -14,6 +14,8 @@
  * @property {number} memberMapSubtitleHeight - Map subtitle height.
  * @property {number} memberButtonBlinkingInterval - Timer id of the initial blinking interval of the filter button.
  * @property {object} memberFilterExport - Saves the exportation filter parameters.
+ * @property {object} memberExportationTextTimeout - Timeout used to update exportation text.
+ * @property {boolean} memberExportationInProgress - Flag that indicates if there is a exportation in progress.
  */
 define(
   ['components/Utils', 'components/Filter', 'components/AttributesTable', 'components/Graphics', 'components/Map', 'TerraMA2WebComponents'],
@@ -35,6 +37,10 @@ define(
     var memberButtonBlinkingInterval = null;
     // Saves the exportation filter parameters
     var memberFilterExport = null;
+    // Timeout used to update exportation text
+    var memberExportationTextTimeout = null;
+    // Flag that indicates if there is a exportation in progress
+    var memberExportationInProgress = false;
 
     /**
      * Updates the necessary components.
@@ -166,6 +172,11 @@ define(
             className: 'bdqueimadas-btn'
           }]
         });
+      });
+
+      $("#close-bottom-message-div").on('click', function() {
+        if(!$('#message-div').hasClass('hidden'))
+          $('#message-div').addClass('hidden');
       });
 
       // Sidebar buttons click event
@@ -362,7 +373,7 @@ define(
                 '</div>' +
               '</div>' +
               '<span class="help-block component-filter-error" id="filter-error-export-type"></span>' +
-              '<span id="csvFields">' +
+              '<span id="csvFields"' + (memberFilterExport && !Utils.stringInArray(memberFilterExport.format.split(','), 'csv') ? ' style="display: none;"' : '') + '>' +
                 '<div class="form-group bdqueimadas-form">' +
                   '<label>Separador Decimal</label>' +
                   '<div class="input-group" style="width: 100%;">' +
@@ -390,6 +401,7 @@ define(
                   '</div>' +
                 '</div>' +
               '</span>' +
+              '<span class="help-block component-filter-error" id="filter-error-export-main"></span>' +
             '</div>' +
           '</div>',
           buttons: [
@@ -403,62 +415,68 @@ define(
               text: 'Exportar',
               className: 'bdqueimadas-btn',
               click: function() {
-                $("#filter-error-export-aps").text('');
-                $("#filter-error-export-dates").text('');
-                $("#filter-error-export-satellite").text('');
-                $("#filter-error-export-biome").text('');
-                $("#filter-error-export-type").text('');
-
-                if($("#filter-date-to-export").datepicker('getDate') !== null && $("#filter-date-from-export").datepicker('getDate') !== null) {
-                  var timeDiffBetweenDates = Math.abs($("#filter-date-to-export").datepicker('getDate').getTime() - $("#filter-date-from-export").datepicker('getDate').getTime());
-                  var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+                if(memberExportationInProgress) {
+                  vex.dialog.alert({
+                    message: '<p class="text-center">Aguarde a finalização da exportação em progresso!</p>',
+                    buttons: [{
+                      type: 'submit',
+                      text: 'Ok',
+                      className: 'bdqueimadas-btn'
+                    }]
+                  });
                 } else {
-                  var diffDaysBetweenDates = 0;
-                }
+                  $("#filter-error-export-aps").text('');
+                  $("#filter-error-export-dates").text('');
+                  $("#filter-error-export-satellite").text('');
+                  $("#filter-error-export-biome").text('');
+                  $("#filter-error-export-type").text('');
 
-                if($("#filter-date-from-export").val() === "") {
-                  $("#filter-error-export-dates").text('Data inicial inválida!');
-                } else if($("#filter-date-to-export").val() === "") {
-                  $("#filter-error-export-dates").text('Data final inválida!');
-                } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
-                  $("#filter-error-export-dates").text('Data final anterior à inicial - corrigir!');
-                  $("#filter-date-to-export").val('');
-                } else if($("#filter-date-from-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
-                  $("#filter-error-export-dates").text('Data inicial posterior à atual - corrigir!');
-                  $("#filter-date-from-export").val('');
-                } else if($("#filter-date-to-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
-                  $("#filter-error-export-dates").text('Data final posterior à atual - corrigir!');
-                  $("#filter-date-to-export").val('');
-                } else if(diffDaysBetweenDates > 366) {
-                  $("#filter-error-export-dates").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
-                  $("#filter-date-from-export").val('');
-                  $("#filter-date-to-export").val('');
-                } else if(!Utils.isTimeValid($("#filter-time-from-export").val()) && !Utils.isTimeValid($("#filter-time-to-export").val())) {
-                  $("#filter-error-export-dates").text('Horas inválidas!');
-                  $("#filter-time-from-expor").val('');
-                  $("#filter-time-to-expor").val('');
-                } else if($("#filter-time-from-export").val() === "" || !Utils.isTimeValid($("#filter-time-from-export").val())) {
-                  $("#filter-error-export-dates").text('Hora inicial inválida!');
-                  $("#filter-time-from-expor").val('');
-                } else if($("#filter-time-to-export").val() === "" || !Utils.isTimeValid($("#filter-time-to-export").val())) {
-                  $("#filter-error-export-dates").text('Hora final inválida!');
-                  $("#filter-time-to-expor").val('');
-                } else if($('#filter-satellite-export').val() === null) {
-                  $("#filter-error-export-satellite").text('Selecione algum satélite!');
-                } else if($('#filter-biome-export').val() === null) {
-                  $("#filter-error-export-biome").text('Selecione algum bioma!');
-                } else if($("#exportation-type").val() === null) {
-                  $("#filter-error-export-type").text('Formato da exportação inválido!');
-                } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
-                  $("#filter-error-export-aps").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
-                } else {
-                  var exportationSpatialFilterData = getSpatialData(2);
+                  if($("#filter-date-to-export").datepicker('getDate') !== null && $("#filter-date-from-export").datepicker('getDate') !== null) {
+                    var timeDiffBetweenDates = Math.abs($("#filter-date-to-export").datepicker('getDate').getTime() - $("#filter-date-from-export").datepicker('getDate').getTime());
+                    var diffDaysBetweenDates = Math.ceil(timeDiffBetweenDates / (1000 * 3600 * 24));
+                  } else {
+                    var diffDaysBetweenDates = 0;
+                  }
 
-                  $.ajax({
-                    async: false,
-                    url: Utils.getBaseUrl() + "exists-data-to-export",
-                    type: "POST",
-                    data: {
+                  if($("#filter-date-from-export").val() === "") {
+                    $("#filter-error-export-dates").text('Data inicial inválida!');
+                  } else if($("#filter-date-to-export").val() === "") {
+                    $("#filter-error-export-dates").text('Data final inválida!');
+                  } else if($("#filter-date-from-export").datepicker('getDate') > $("#filter-date-to-export").datepicker('getDate')) {
+                    $("#filter-error-export-dates").text('Data final anterior à inicial - corrigir!');
+                    $("#filter-date-to-export").val('');
+                  } else if($("#filter-date-from-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
+                    $("#filter-error-export-dates").text('Data inicial posterior à atual - corrigir!');
+                    $("#filter-date-from-export").val('');
+                  } else if($("#filter-date-to-export").datepicker('getDate') > Utils.getCurrentDate(true)) {
+                    $("#filter-error-export-dates").text('Data final posterior à atual - corrigir!');
+                    $("#filter-date-to-export").val('');
+                  } else if(diffDaysBetweenDates > 366) {
+                    $("#filter-error-export-dates").text('O período do filtro deve ser menor ou igual a 366 dias - corrigir!');
+                    $("#filter-date-from-export").val('');
+                    $("#filter-date-to-export").val('');
+                  } else if(!Utils.isTimeValid($("#filter-time-from-export").val()) && !Utils.isTimeValid($("#filter-time-to-export").val())) {
+                    $("#filter-error-export-dates").text('Horas inválidas!');
+                    $("#filter-time-from-expor").val('');
+                    $("#filter-time-to-expor").val('');
+                  } else if($("#filter-time-from-export").val() === "" || !Utils.isTimeValid($("#filter-time-from-export").val())) {
+                    $("#filter-error-export-dates").text('Hora inicial inválida!');
+                    $("#filter-time-from-expor").val('');
+                  } else if($("#filter-time-to-export").val() === "" || !Utils.isTimeValid($("#filter-time-to-export").val())) {
+                    $("#filter-error-export-dates").text('Hora final inválida!');
+                    $("#filter-time-to-expor").val('');
+                  } else if($('#filter-satellite-export').val() === null) {
+                    $("#filter-error-export-satellite").text('Selecione algum satélite!');
+                  } else if($('#filter-biome-export').val() === null) {
+                    $("#filter-error-export-biome").text('Selecione algum bioma!');
+                  } else if($("#exportation-type").val() === null) {
+                    $("#filter-error-export-type").text('Formato da exportação inválido!');
+                  } else if(($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '') && (!$('#buffer-internal').is(':checked') && !$('#buffer-five').is(':checked') && !$('#buffer-ten').is(':checked'))) {
+                    $("#filter-error-export-aps").text('Quando existe uma UC ou TI filtrada, deve ter pelo menos alguma das três opções marcadas: Interno, Buffer 5Km ou Buffer 10Km!');
+                  } else {
+                    var exportationSpatialFilterData = getSpatialData(2);
+
+                    Utils.getSocket().emit('existsDataToExportRequest', {
                       dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
                       dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
                       satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
@@ -470,70 +488,28 @@ define(
                       specialRegions: exportationSpatialFilterData.specialRegions,
                       protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
                       industrialFires: Filter.getIndustrialFires(),
-                      bufferInternal: $('#buffer-internal').is(':checked'),
-                      bufferFive: $('#buffer-five').is(':checked'),
-                      bufferTen: $('#buffer-ten').is(':checked')
-                    },
-                    success: function(existsDataToExport) {
-                      if(existsDataToExport.existsDataToExport) {
-                        memberFilterExport = {
-                          dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
-                          dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
-                          satellites: $('#filter-satellite-export').val().toString(),
-                          biomes: $('#filter-biome-export').val().toString(),
-                          continent: exportationSpatialFilterData.continent,
-                          countries: exportationSpatialFilterData.countries,
-                          countriesHtml: $('#countries-export').html(),
-                          states: exportationSpatialFilterData.states.concat(exportationSpatialFilterData.specialRegions),
-                          statesHtml: $('#states-export').html(),
-                          cities: exportationSpatialFilterData.cities,
-                          cityLabel: $('#city-export').val(),
-                          format: $("#exportation-type").val().toString(),
-                          protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : ''),
-                          industrialFires: Filter.getIndustrialFires(),
-                          bufferInternal: $('#buffer-internal').is(':checked'),
-                          bufferFive: $('#buffer-five').is(':checked'),
-                          bufferTen: $('#buffer-ten').is(':checked'),
-                          decimalSeparator: $('input[name=decimalSeparator]:checked').val(),
-                          fieldSeparator: $('input[name=fieldSeparator]:checked').val()
-                        };
+                      bufferInternal: $('#buffer-internal').is(':checked').toString(),
+                      bufferFive: $('#buffer-five').is(':checked').toString(),
+                      bufferTen: $('#buffer-ten').is(':checked').toString()
+                    });
 
-                        var exportLink = Utils.getBaseUrl() + "export?dateTimeFrom=" + Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00' +
-                                         "&dateTimeTo=" + Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59' +
-                                         "&satellites=" + (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()) +
-                                         "&biomes=" + (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()) +
-                                         "&continent=" + exportationSpatialFilterData.continent +
-                                         "&countries=" + exportationSpatialFilterData.countries +
-                                         "&states=" + exportationSpatialFilterData.states +
-                                         "&cities=" + exportationSpatialFilterData.cities +
-                                         "&specialRegions=" + exportationSpatialFilterData.specialRegions +
-                                         "&format=" + $("#exportation-type").val().toString() +
-                                         "&protectedArea=" + ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? $('#pas-export').data('value') : '') +
-                                         "&industrialFires=" + Filter.getIndustrialFires() +
-                                         "&bufferInternal=" + $('#buffer-internal').is(':checked') +
-                                         "&bufferFive=" + $('#buffer-five').is(':checked') +
-                                         "&bufferTen=" + $('#buffer-ten').is(':checked');
+                    $('#exportation-status > div > span').html('Verificando dados para a exportação<span>...</span>');
 
-                        if(Utils.stringInArray($('#exportation-type').val(), 'csv')) {
-                          exportLink += "&decimalSeparator=" + $('input[name=decimalSeparator]:checked').val() +
-                          "&fieldSeparator=" + $('input[name=fieldSeparator]:checked').val();
-                        }
+                    memberExportationTextTimeout = setInterval(function() {
+                      var text = $('#exportation-status > div > span > span').html();
 
-                        exportLink += "&t=" + existsDataToExport.token;
+                      if(text === "...")
+                        $('#exportation-status > div > span > span').html('&nbsp;&nbsp;&nbsp;');
+                      else if(text === "..&nbsp;")
+                        $('#exportation-status > div > span > span').html('...');
+                      else if(text === ".&nbsp;&nbsp;")
+                        $('#exportation-status > div > span > span').html('..&nbsp;');
+                      else
+                        $('#exportation-status > div > span > span').html('.&nbsp;&nbsp;');
+                    }, 800);
 
-                        window.open(exportLink, '_blank');
-                      } else {
-                        vex.dialog.alert({
-                          message: '<p class="text-center">Não existem dados para exportar!</p>',
-                          buttons: [{
-                            type: 'submit',
-                            text: 'Ok',
-                            className: 'bdqueimadas-btn'
-                          }]
-                        });
-                      }
-                    }
-                  });
+                    $('#exportation-status').removeClass('hidden');
+                  }
                 }
               }
             }
@@ -618,7 +594,7 @@ define(
         });
 
         $('#city-export').autocomplete({
-          minLength: 4,
+          minLength: 2,
           source: function(request, response) {
             var countriesAndStates = getSpatialData(2);
 
@@ -626,7 +602,7 @@ define(
               url: Utils.getBaseUrl() + "search-for-cities",
               dataType: "json",
               data: {
-                minLength: 4,
+                minLength: 2,
                 value: request.term,
                 countries: countriesAndStates.countries,
                 states: countriesAndStates.states
@@ -678,7 +654,7 @@ define(
           $('#city-export').val(memberFilterExport.cityLabel);
           $('#city-export').data('value', memberFilterExport.cities);
 
-          if(memberFilterExport.protectedArea != "") {
+          if(memberFilterExport.protectedArea !== undefined && memberFilterExport.protectedArea !== null && memberFilterExport.protectedArea != "") {
             var protectedArea = JSON.parse(memberFilterExport.protectedArea);
 
             $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
@@ -689,9 +665,9 @@ define(
             $('#buffer-ten').attr("disabled", true);
           }
 
-          $('#buffer-internal').attr('checked', memberFilterExport.bufferInternal);
-          $('#buffer-five').attr('checked', memberFilterExport.bufferFive);
-          $('#buffer-ten').attr('checked', memberFilterExport.bufferTen);
+          $('#buffer-internal').attr('checked', (memberFilterExport.bufferInternal == "true"));
+          $('#buffer-five').attr('checked', (memberFilterExport.bufferFive == "true"));
+          $('#buffer-ten').attr('checked', (memberFilterExport.bufferTen == "true"));
           $('#filter-date-from-export').val(dateTimeFromArray[0]);
           $('#filter-time-from-export').val(dateTimeFromArray[1]);
           $('#filter-date-to-export').val(dateTimeToArray[0]);
@@ -700,7 +676,7 @@ define(
           $('#filter-satellite-export').val(memberFilterExport.satellites);
           memberFilterExport.biomes = (memberFilterExport.biomes == "" ? "all" : memberFilterExport.biomes);
           $('#filter-biome-export').val(memberFilterExport.biomes);
-          $('#exportation-type').val(memberFilterExport.format);
+          $('#exportation-type').val(memberFilterExport.format.split(','));
           $('input[name=decimalSeparator][value=\'' + memberFilterExport.decimalSeparator + '\']').prop('checked', true);
           $('input[name=fieldSeparator][value=\'' + memberFilterExport.fieldSeparator + '\']').prop('checked', true);
 
@@ -713,7 +689,7 @@ define(
           $('#city-export').val($('#city').val());
 
           if(Filter.getProtectedArea() !== null) {
-            var protectedArea = JSON.stringify(Filter.getProtectedArea());
+            var protectedArea = Filter.getProtectedArea();
 
             $('#pas-export').val(protectedArea.type + ' - ' + protectedArea.name);
             $('#pas-export').data('value', JSON.stringify(protectedArea));
@@ -741,6 +717,8 @@ define(
       });
 
       $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#' + Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id.replace(':', '') + ' > input').prop('checked', !$('#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+        $('#' + Utils.getConfigurations().filterConfigurations.OilfieldsLayer.Id.replace(':', '') + ' > input').trigger("click");
         $('#filter-button').click();
       });
 
@@ -867,7 +845,7 @@ define(
         updateComponents();
       });
 
-      $('#continents').change(function() {
+      $('#continents').change(function() { // aqui
         if(memberFilterExport !== null && $(this).val() !== "")
             memberFilterExport.continent = $(this).val();
 
@@ -877,8 +855,10 @@ define(
         $('#continents-attributes-table').val($('#continents').val());
         $('#continents-attributes-table').change();
 
-        if($(this).val() !== "")
+        if($(this).val() !== "") {
+          $('#filter-button').click();
           Utils.getSocket().emit('spatialFilterRequest', { ids: $(this).val(), key: 'Continent', filterForm: false });
+        }
       });
 
       $('#countries').change(function() {
@@ -921,9 +901,9 @@ define(
         }
       });
 
-      $('#states-graphics').change(function() {
+      /*$('#states-graphics').change(function() {
         $('#filter-button-graphics').click();
-      });
+      });*/
 
       $('#continents-attributes-table').change(function() {
         if($(this).val() !== "") {
@@ -939,9 +919,9 @@ define(
         }
       });
 
-      $('#states-attributes-table').change(function() {
+      /*$('#states-attributes-table').change(function() {
         $('#filter-button-attributes-table').click();
-      });
+      });*/
 
       $("#search-pas-btn").on('click', function() {
         searchForPAs(true, true);
@@ -951,9 +931,9 @@ define(
         if($('#pas').val().length === 0) {
           if(memberFilterExport !== null) {
             memberFilterExport.protectedArea = '';
-            memberFilterExport.bufferInternal = false;
-            memberFilterExport.bufferFive = false;
-            memberFilterExport.bufferTen = false;
+            memberFilterExport.bufferInternal = "false";
+            memberFilterExport.bufferFive = "false";
+            memberFilterExport.bufferTen = "false";
           }
 
           $('#pas').val('');
@@ -985,7 +965,7 @@ define(
                 type: data[0].value.type
               }));
 
-              $('#filter-button-attributes-table').click();
+              //$('#filter-button-attributes-table').click();
             } else {
               $('#pas-attributes-table').data('value', '');
 
@@ -1007,7 +987,7 @@ define(
           $('#pas-attributes-table').val('');
           $('#pas-attributes-table').data('value', '');
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
 
@@ -1102,7 +1082,7 @@ define(
               $('#city-attributes-table').val(data[0].label);
               $('#city-attributes-table').data('value', data[0].value.id);
 
-              $('#filter-button-attributes-table').click();
+              //$('#filter-button-attributes-table').click();
             } else {
               vex.dialog.alert({
                 message: '<p class="text-center">Nenhum município corresponde à pesquisa!</p>',
@@ -1122,7 +1102,7 @@ define(
           $('#city-attributes-table').val('');
           $('#city-attributes-table').data('value', '');
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
 
@@ -1356,6 +1336,21 @@ define(
         setTimeout(function() {
           $('.ol-viewport a').attr('target', '_blank');
         }, 2000);
+
+        if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer) {
+          clearUCEsLayers();
+        } else if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer) {
+          clearUCFsLayers();
+        } else if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer) {
+          clearTIsLayers();
+        }
 
         if($(this).is(":checked")) {
           Map.setBackgroundsVisibility($(this).parent().data('layerid'));
@@ -1594,8 +1589,42 @@ define(
 
       TerraMA2WebComponents.MapDisplay.setZoomDragBoxEndEvent(function() {
         var dragBoxExtent = TerraMA2WebComponents.MapDisplay.getZoomDragBoxExtent();
-        TerraMA2WebComponents.MapDisplay.zoomToExtent(dragBoxExtent);
-        updateComponents();
+
+        vex.dialog.alert({
+          className: 'vex-theme-default export-dialog',
+          message: 
+          '<div class="component-filter">' +
+            '<div class="component-filter-title">Área de seleção:</div>' +
+            '<div class="component-filter-content" style="max-height: ' + ($(window).outerHeight() - 212) + 'px;">' +
+              '<div class="form-horizontal">' +
+                '<div class="form-group bdqueimadas-form">' +
+                  '<input type="text" id="extent-four" style="margin-left: 28%; margin-bottom: 10px;" value="' + dragBoxExtent[3] + '"/>' +
+                  '<input type="text" id="extent-one" style="margin-left: 16px;" value="' + dragBoxExtent[0] + '"/>' +
+                  '<input type="text" id="extent-three" style="margin-right: 16px; float: right;" value="' + dragBoxExtent[2] + '"/>' +
+                  '<input type="text" id="extent-two" style="margin-left: 28%; margin-top: 10px;" value="' + dragBoxExtent[1] + '"/>' +
+                '</div>' +
+              '</div>' +
+              '<div class="clear" style="height: 5px;"></div>' +
+            '</div>' +
+          '</div>',
+          buttons: [
+            {
+              type: 'submit',
+              text: 'Cancelar',
+              className: 'bdqueimadas-btn'
+            },
+            {
+              type: 'submit',
+              text: 'Filtrar',
+              className: 'bdqueimadas-btn',
+              click: function() {
+                TerraMA2WebComponents.MapDisplay.zoomToExtent([$('#extent-one').val(), $('#extent-two').val(), $('#extent-three').val(), $('#extent-four').val()]);
+                updateComponents();
+                vex.close();
+              }
+            }
+          ]
+        });
       });
 
       TerraMA2WebComponents.MapDisplay.setMapResolutionChangeEvent(function() {
@@ -1753,7 +1782,7 @@ define(
           var countryName = result.countries.rows[i].name;
 
           if(result.countries.rows[i].name === "Falkland Islands") {
-            countryName = "I. Malvinas";
+            countryName = "I.Malvinas/Falkland";
           } else if(result.countries.rows[i].name === "Brazil") {
             countryName = "Brasil";
           }
@@ -1794,7 +1823,7 @@ define(
           var countryName = result.countries.rows[i].name;
 
           if(result.countries.rows[i].name === "Falkland Islands") {
-            countryName = "I. Malvinas";
+            countryName = "I.Malvinas/Falkland";
           } else if(result.countries.rows[i].name === "Brazil") {
             countryName = "Brasil";
           }
@@ -1819,11 +1848,11 @@ define(
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           $('#states-attributes-table').html('');
           $('#states-attributes-table').attr('disabled', '');
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
           $('#states-graphics').html('');
           $('#states-graphics').attr('disabled', '');
-          $('#filter-button-graphics').click();
+          //$('#filter-button-graphics').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
           $('#states-export').html('');
           $('#states-export').attr('disabled', '');
@@ -1877,10 +1906,10 @@ define(
 
         if(result.filter !== null && result.filter !== undefined && result.filter === 1) {
           $('#states-attributes-table').removeAttr('disabled');
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 2) {
           $('#states-graphics').removeAttr('disabled');
-          $('#filter-button-graphics').click();
+          //$('#filter-button-graphics').click();
         } else if(result.filter !== null && result.filter !== undefined && result.filter === 3) {
           $('#states-export').removeAttr('disabled');
         }
@@ -1946,6 +1975,171 @@ define(
           $('#number-of-accesses').show();
         }
       });
+
+      // Exportation Listeners
+
+      Utils.getSocket().on('existsDataToExportResponse', function(result) {
+        if(result.existsDataToExport) {
+          var exportationSpatialFilterData = getSpatialData(2);
+
+          memberFilterExport = {
+            dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
+            dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
+            satellites: $('#filter-satellite-export').val().toString(),
+            biomes: $('#filter-biome-export').val().toString(),
+            continent: exportationSpatialFilterData.continent,
+            countries: exportationSpatialFilterData.countries,
+            countriesHtml: $('#countries-export').html(),
+            states: exportationSpatialFilterData.states.concat(exportationSpatialFilterData.specialRegions),
+            statesHtml: $('#states-export').html(),
+            cities: exportationSpatialFilterData.cities,
+            cityLabel: $('#city-export').val(),
+            format: $("#exportation-type").val().toString(),
+            protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
+            industrialFires: Filter.getIndustrialFires(),
+            bufferInternal: $('#buffer-internal').is(':checked').toString(),
+            bufferFive: $('#buffer-five').is(':checked').toString(),
+            bufferTen: $('#buffer-ten').is(':checked').toString(),
+            decimalSeparator: $('input[name=decimalSeparator]:checked').val(),
+            fieldSeparator: $('input[name=fieldSeparator]:checked').val()
+          };
+
+          var exportData = {
+            dateTimeFrom: Utils.dateToString(Utils.stringToDate($('#filter-date-from-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-from-export').val() + ':00',
+            dateTimeTo: Utils.dateToString(Utils.stringToDate($('#filter-date-to-export').val(), 'YYYY/MM/DD'), Utils.getConfigurations().firesDateFormat) + ' ' + $('#filter-time-to-export').val() + ':59',
+            satellites: (Utils.stringInArray($('#filter-satellite-export').val(), "all") ? '' : $('#filter-satellite-export').val().toString()),
+            biomes: (Utils.stringInArray($('#filter-biome-export').val(), "all") ? '' : $('#filter-biome-export').val().toString()),
+            continent: exportationSpatialFilterData.continent,
+            countries: exportationSpatialFilterData.countries,
+            states: exportationSpatialFilterData.states,
+            cities: exportationSpatialFilterData.cities,
+            specialRegions: exportationSpatialFilterData.specialRegions,
+            format: $("#exportation-type").val().toString(),
+            protectedArea: ($('#pas-export').data('value') !== undefined && $('#pas-export').data('value') !== '' ? JSON.parse($('#pas-export').data('value')) : null),
+            industrialFires: Filter.getIndustrialFires(),
+            bufferInternal: $('#buffer-internal').is(':checked').toString(),
+            bufferFive: $('#buffer-five').is(':checked').toString(),
+            bufferTen: $('#buffer-ten').is(':checked').toString()
+          };
+
+          if(Utils.stringInArray($('#exportation-type').val(), 'csv')) {
+            exportData.decimalSeparator = $('input[name=decimalSeparator]:checked').val();
+            exportData.fieldSeparator = $('input[name=fieldSeparator]:checked').val();
+          }
+
+          memberExportationInProgress = true;
+
+          Utils.getSocket().emit('generateFileRequest', exportData);
+
+          $('#exportation-status > div > span').html('Preparando os dados para a exportação<span>...</span>');
+
+          vex.close();
+        } else {
+          vex.dialog.alert({
+            message: '<p class="text-center">Não existem dados para exportar!</p>',
+            buttons: [{
+              type: 'submit',
+              text: 'Ok',
+              className: 'bdqueimadas-btn'
+            }]
+          });
+
+          $('#exportation-status').addClass('hidden');
+          window.clearInterval(memberExportationTextTimeout);
+          memberExportationTextTimeout = null;
+          $('#exportation-status > div > span').html('');
+        }
+      });
+
+      Utils.getSocket().on('generateFileResponse', function(result) {
+        if(result.progress !== undefined && result.progress >= 100) {
+          $('#exportation-status > div > span').html('Quase lá! O arquivo está sendo preparado para o download<span>...</span>');
+          $('#exportation-status > div > div').addClass('hidden');
+
+          $('#exportation-status > div > div > div > span').text('0% Completo');
+          $('#exportation-status > div > div > div').css('width', '0%');
+          $('#exportation-status > div > div > div').attr('aria-valuenow', 0);
+        } else if(result.progress !== undefined) {
+          if($('#exportation-status > div > div').hasClass('hidden')) {
+            $('#exportation-status > div > span').html('Aguarde, os dados solicitados estão sendo exportados<span>...</span>');
+            $('#exportation-status > div > div').removeClass('hidden');
+          }
+
+          $('#exportation-status > div > div > div > span').text(result.progress + '% Completo');
+          $('#exportation-status > div > div > div').css('width', result.progress + '%');
+          $('#exportation-status > div > div > div').attr('aria-valuenow', result.progress);
+        } else {
+          memberExportationInProgress = false;
+          $('#exportation-status').addClass('hidden');
+          window.clearInterval(memberExportationTextTimeout);
+          memberExportationTextTimeout = null;
+          $('#exportation-status > div > span').html('');
+          $('#exportation-status > div > div').addClass('hidden');
+          $('#exportation-status > div > div > div > span').text('0% Completo');
+          $('#exportation-status > div > div > div').css('width', '0%');
+
+          var exportLink = Utils.getBaseUrl() + "export?folder=" + result.folder + "&file=" + result.file;
+
+          $('#exportation-iframe').attr('src', exportLink);
+        }
+      });
+    };
+
+    /**
+     * Clears the cql filter of the UCEs layers.
+     *
+     * @private
+     * @function clearUCEsLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearUCEsLayers = function() {
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+    };
+
+    /**
+     * Clears the cql filter of the UCFs layers.
+     *
+     * @private
+     * @function clearUCFsLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearUCFsLayers = function() {
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+    };
+
+    /**
+     * Clears the cql filter of the TIs layers.
+     *
+     * @private
+     * @function clearTIsLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearTIsLayers = function() {
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+      Filter.applyCqlFilterToLayer("", Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+    };
+
+    /**
+     * Clears the cql filter of the protected areas layers.
+     *
+     * @private
+     * @function clearProtectedAreasLayers
+     * @memberof BDQueimadas
+     * @inner
+     */
+    var clearProtectedAreasLayers = function() {
+      clearUCEsLayers();
+      clearUCFsLayers();
+      clearTIsLayers();
     };
 
     /**
@@ -1968,6 +2162,8 @@ define(
           minLength: 1
         },
         success: function(data) {
+          clearProtectedAreasLayers();
+
           if(data.length > 0) {
             if(memberFilterExport !== null) {
               memberFilterExport.protectedArea = JSON.stringify({
@@ -1977,9 +2173,62 @@ define(
                 type: data[0].value.type
               });
 
-              memberFilterExport.bufferInternal = false;
-              memberFilterExport.bufferFive = false;
-              memberFilterExport.bufferTen = false;
+              memberFilterExport.bufferInternal = "false";
+              memberFilterExport.bufferFive = "false";
+              memberFilterExport.bufferTen = "false";
+            }
+
+            if(data[0].value.type === "UCE") {
+              var cqlUCE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.IdField + "=" + data[0].value.id;
+              var cqlRPPNE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.IdField + "=" + data[0].value.id;
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
+
+              Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+              Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+              Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+              Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+            } else if(data[0].value.type === "UCF") {
+              var cqlUCF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.IdField + "=" + data[0].value.id;
+              var cqlRPPNF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.IdField + "=" + data[0].value.id;
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+
+              Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+              Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+              Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+              Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+            } else if(data[0].value.type === "TI") {
+              var cqlTI = Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.IdField + "=" + data[0].value.id;
+
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
+              
+              if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+                $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
+
+              Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+              Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
             }
 
             $('#pas').val(data[0].label);
@@ -2002,9 +2251,9 @@ define(
           } else {
             if(memberFilterExport !== null) {
               memberFilterExport.protectedArea = '';
-              memberFilterExport.bufferInternal = false;
-              memberFilterExport.bufferFive = false;
-              memberFilterExport.bufferTen = false;
+              memberFilterExport.bufferInternal = "false";
+              memberFilterExport.bufferFive = "false";
+              memberFilterExport.bufferTen = "false";
             }
 
             Filter.setProtectedArea(null);
@@ -2055,6 +2304,9 @@ define(
               memberFilterExport.cities = data[0].value.id;
               memberFilterExport.cityLabel = data[0].label;
             }
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').click();
 
             $('#city').val(data[0].label);
             $('#city-attributes-table').val(data[0].label);
@@ -2281,6 +2533,61 @@ define(
         select: function(event, ui) {
           event.preventDefault();
 
+          clearProtectedAreasLayers();
+
+          if(ui.item.value.type === "UCE") {
+            var cqlUCE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.IdField + "=" + ui.item.value.id;
+            var cqlRPPNE = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.IdField + "=" + ui.item.value.id;
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
+
+            Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName);
+            Filter.applyCqlFilterToLayer(cqlUCE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer);
+            Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName);
+            Filter.applyCqlFilterToLayer(cqlRPPNE, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer);
+          } else if(ui.item.value.type === "UCF") {
+            var cqlUCF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.IdField + "=" + ui.item.value.id;
+            var cqlRPPNF = Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.IdField + "=" + ui.item.value.id;
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName.replace(':', '') + ' > input').click();
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer.replace(':', '') + ' > input').click();
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName.replace(':', '') + ' > input').click();
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer.replace(':', '') + ' > input').click();
+
+            Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName);
+            Filter.applyCqlFilterToLayer(cqlUCF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer);
+            Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName);
+            Filter.applyCqlFilterToLayer(cqlRPPNF, Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer);
+          } else if(ui.item.value.type === "TI") {
+            var cqlTI = Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.IdField + "=" + ui.item.value.id;
+
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
+            
+            if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').is(":checked"))
+              $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
+
+            Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName);
+            Filter.applyCqlFilterToLayer(cqlTI, Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer);
+          }
+
           if(memberFilterExport !== null) {
             memberFilterExport.protectedArea = JSON.stringify({
               id: ui.item.value.id,
@@ -2289,9 +2596,9 @@ define(
               type: ui.item.value.type
             });
 
-            memberFilterExport.bufferInternal = false;
-            memberFilterExport.bufferFive = false;
-            memberFilterExport.bufferTen = false;
+            memberFilterExport.bufferInternal = "false";
+            memberFilterExport.bufferFive = "false";
+            memberFilterExport.bufferTen = "false";
           }
 
           $('#pas').val(ui.item.label);
@@ -2336,12 +2643,12 @@ define(
             type: ui.item.value.type
           }));
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
 
       $('#city').autocomplete({
-        minLength: 4,
+        minLength: 2,
         source: function(request, response) {
           var countriesAndStates = getSpatialData(0);
 
@@ -2349,7 +2656,7 @@ define(
             url: Utils.getBaseUrl() + "search-for-cities",
             dataType: "json",
             data: {
-              minLength: 4,
+              minLength: 2,
               value: request.term,
               countries: countriesAndStates.countries,
               states: countriesAndStates.states
@@ -2367,6 +2674,9 @@ define(
             memberFilterExport.cityLabel = ui.item.label;
           }
 
+          if(!$('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').is(":checked"))
+            $('#' + Utils.getConfigurations().filterConfigurations.CitiesLabelsLayer.Id.replace(':', '') + ' > input').click();
+
           $('#city').val(ui.item.label);
           $('#city-attributes-table').val(ui.item.label);
 
@@ -2377,7 +2687,7 @@ define(
       });
 
       $('#city-attributes-table').autocomplete({
-        minLength: 4,
+        minLength: 2,
         source: function(request, response) {
           var countriesAndStates = getSpatialData(1);
 
@@ -2385,7 +2695,7 @@ define(
             url: Utils.getBaseUrl() + "search-for-cities",
             dataType: "json",
             data: {
-              minLength: 4,
+              minLength: 2,
               value: request.term,
               countries: countriesAndStates.countries,
               states: countriesAndStates.states
@@ -2401,7 +2711,7 @@ define(
           $('#city-attributes-table').val(ui.item.label);
           $('#city-attributes-table').data('value', ui.item.value.id);
 
-          $('#filter-button-attributes-table').click();
+          //$('#filter-button-attributes-table').click();
         }
       });
     };
@@ -2644,18 +2954,30 @@ define(
 
         TerraMA2WebComponents.MapDisplay.updateMapSize();
 
-        vex.dialog.alert({
-          message: '<p class="text-center"><strong>Atenção!</strong><br/><br/>Esta aplicação está em <strong>fase de desenvolvimento</strong>. Ela está disponível para fins de teste e coleta de sugestões e críticas sobre suas funcionalidades.<br/><br/>No mapa com a última imagem do satélite NPP, cada cruzinha indica uma detecção de fogo na vegetação.</p>',
-          buttons: [{
-            type: 'submit',
-            text: 'Ok, entendi',
-            className: 'bdqueimadas-btn bdqueimadas-initial-alert'
-          }]
-        });
+        if(initialMessage && initialMessageTime) {
+          setTimeout(function() {
+            $('#message-div .message').text(initialMessage);
+            $('#message-div').removeClass('hidden');
 
-        setTimeout(function() {
-          $('.bdqueimadas-initial-alert').click();
-        }, 15000);
+            var timeProgress = 90;
+
+            var initialMessageInterval = setInterval(function() {
+              $('#message-div > div > div > div').css('width', timeProgress + '%');
+              $('#message-div > div > div > div').attr('aria-valuenow', timeProgress);
+              timeProgress -= 10;
+            }, ((initialMessageTime * 1000) / 10));
+
+            setTimeout(function() {
+              clearInterval(initialMessageInterval);
+
+              if(!$('#message-div').hasClass('hidden'))
+                $('#message-div').addClass('hidden');
+
+              $('#message-div > div > div > div').css('width', '100%');
+              $('#message-div > div > div > div').attr('aria-valuenow', 100);
+            }, initialMessageTime * 1000);
+          }, 5000);
+        }
       });
     };
 

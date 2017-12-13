@@ -24,6 +24,14 @@ module.exports = function(grunt) {
             'components/Utils'
           ]
         }
+      },
+      BDQueimadasAdmin: {
+        options: {
+          baseUrl: "public/javascripts/admin",
+          out: "public/dist/BDQueimadasAdmin.min.js",
+          preserveLicenseComments: false,
+          include: ['../../externals/almond/almond', 'BDQueimadasAdmin']
+        }
       }
     },
     cssmin: {
@@ -75,7 +83,7 @@ module.exports = function(grunt) {
         }
       },
       js: {
-        files: ["public/javascripts/*.js", "public/javascripts/components/*.js"],
+        files: ["public/javascripts/*.js", "public/javascripts/components/*.js", "public/javascripts/admin/*.js", "public/javascripts/admin/components/*.js"],
         tasks: ["requirejs", "usebanner"],
         options: {
           // It allows to compile only when needed

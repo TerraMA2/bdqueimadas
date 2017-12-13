@@ -68,7 +68,7 @@ var SearchForPAsController = function(app) {
 
     if(searchValue.length >= request.query.minLength) {
       // Call of the method 'searchForPAs', responsible for returning the protected areas that match the provided value
-      memberFilter.searchForPAs(request.pgPool, searchValue, searchFor, function(err, result) {
+      memberFilter.searchForPAs(searchValue, searchFor, function(err, result) {
         if(err) return console.error(err);
 
         // Array responsible for keeping the data obtained by the method 'searchForPAs'

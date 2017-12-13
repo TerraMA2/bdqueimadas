@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="<%- BASE_URL %>externals/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%- BASE_URL %>externals/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%- BASE_URL %>externals/ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<%- BASE_URL %>externals/adminlte/css/AdminLTE.min.css">
+  </head>
+  <body class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <img src="<%- BASE_URL %>externals/adminlte/img/logo_queimadas.png" style="width: 360px;"/>
+      </div>
+      <div class="login-box-body">
+        <form action="<%- BASE_URL %>admin/login/process" method="POST">
+          <input type="hidden" name="_csrf" value="<%- csrfToken %>"/>
+          <div class="form-group has-feedback">
+            <input type="email" class="form-control" placeholder="E-mail" name="email" id="email">
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" class="form-control" placeholder="Senha" name="password" id="password">
+            <span class="fa fa-key form-control-feedback"></span>
+          </div>
+          <span style="color: red; font-weight: 900;"><%- message %></span>
+          <div class="row">
+            <!--<div class="col-xs-8">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"> Lembre-me
+                </label>
+              </div>
+            </div>-->
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-warning btn-block btn-flat">Entrar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- jQuery 2.1.4 -->
+    <script src="<%- BASE_URL %>externals/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="<%- BASE_URL %>externals/bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>

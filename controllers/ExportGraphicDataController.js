@@ -63,23 +63,23 @@ var ExportGraphicDataController = function(app) {
       showOnlyIfThereIsNoStateFiltered: graphicConfigurations.ShowOnlyIfThereIsNoStateFiltered
     };
 
-    memberGraphics.getFiresTotalCount(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, filterRules, options, function(err, firesTotalCount) {
+    memberGraphics.getFiresTotalCount(request.query.dateTimeFrom, request.query.dateTimeTo, filterRules, options, function(err, firesTotalCount) {
       if(err) return console.error(err);
 
       if(graphicConfigurations.Key === "week") {
-        memberGraphics.getFiresCountByWeek(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, filterRules, options, function(err, firesCount) {
+        memberGraphics.getFiresCountByWeek(request.query.dateTimeFrom, request.query.dateTimeTo, filterRules, options, function(err, firesCount) {
           if(err) return console.error(err);
 
           downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateTimeFrom, request.query.dateTimeTo, response);
         });
       } else if(graphicConfigurations.Key === "UCE" || graphicConfigurations.Key === "UCF" || graphicConfigurations.Key === "TI" || graphicConfigurations.Key === "UCE_5KM" || graphicConfigurations.Key === "UCF_5KM" || graphicConfigurations.Key === "TI_5KM" || graphicConfigurations.Key === "UCE_10KM" || graphicConfigurations.Key === "UCF_10KM" || graphicConfigurations.Key === "TI_10KM") {
-        memberGraphics.getFiresCountByPA(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+        memberGraphics.getFiresCountByPA(request.query.dateTimeFrom, request.query.dateTimeTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
           if(err) return console.error(err);
 
           downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateTimeFrom, request.query.dateTimeTo, response);
         });
       } else {
-        memberGraphics.getFiresCount(request.pgPool, request.query.dateTimeFrom, request.query.dateTimeTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
+        memberGraphics.getFiresCount(request.query.dateTimeFrom, request.query.dateTimeTo, graphicConfigurations.Key, filterRules, options, function(err, firesCount) {
           if(err) return console.error(err);
 
           downloadCsvFiresCount(firesTotalCount, firesCount, graphicConfigurations.Y, graphicConfigurations.Key, request.query.dateTimeFrom, request.query.dateTimeTo, response);

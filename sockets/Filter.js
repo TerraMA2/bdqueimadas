@@ -22,32 +22,32 @@ var Filter = function(io) {
     // Spatial filter request event
     client.on('spatialFilterRequest', function(json) {
       if(json.key === 'States' && json.specialRegions.length > 0 && json.ids.length > 0) {
-        memberFilter.getStatesAndSpecialRegionsExtent(client.pgPool, json.ids, json.specialRegions, function(err, extent) {
+        memberFilter.getStatesAndSpecialRegionsExtent(json.ids, json.specialRegions, function(err, extent) {
           if(err) return console.error(err);
 
           client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, specialRegionsCountries: json.specialRegionsCountries, extent: extent });
         });
       } else if(json.key === 'States' && json.specialRegions.length > 0 && json.ids.length === 0) {
-        memberFilter.getSpecialRegionsExtent(client.pgPool, json.specialRegions, function(err, extent) {
+        memberFilter.getSpecialRegionsExtent(json.specialRegions, function(err, extent) {
           if(err) return console.error(err);
 
           client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: json.specialRegions, specialRegionsCountries: json.specialRegionsCountries, extent: extent });
         });
       } else if(json.key === 'ProtectedArea') {
-        memberFilter.getProtectedAreaExtent(client.pgPool, json.id, json.ngo, json.type, function(err, extent) {
+        memberFilter.getProtectedAreaExtent(json.id, json.ngo, json.type, function(err, extent) {
           if(err) return console.error(err);
 
           client.emit('spatialFilterResponse', { key: json.key, id: json.id, type: json.type, extent: extent });
         });
       } else if(json.key === 'City') {
-        memberFilter.getCityExtent(client.pgPool, json.id, function(err, extent) {
+        memberFilter.getCityExtent(json.id, function(err, extent) {
           if(err) return console.error(err);
 
           client.emit('spatialFilterResponse', { key: json.key, id: json.id, extent: extent });
         });
       } else {
         var functionName = "get" + json.key + "Extent";
-        memberFilter[functionName](client.pgPool, json.ids, function(err, extent) {
+        memberFilter[functionName](json.ids, function(err, extent) {
           if(err) return console.error(err);
 
           client.emit('spatialFilterResponse', { key: json.key, ids: json.ids, specialRegions: [], specialRegionsCountries: [], extent: extent });
@@ -57,7 +57,7 @@ var Filter = function(io) {
 
     // Data by intersection request event
     client.on('dataByIntersectionRequest', function(json) {
-      memberFilter.getDataByIntersection(client.pgPool, json.longitude, json.latitude, json.resolution, function(err, data) {
+      memberFilter.getDataByIntersection(json.longitude, json.latitude, json.resolution, function(err, data) {
         if(err) return console.error(err);
 
         client.emit('dataByIntersectionResponse', { data: data });
@@ -66,7 +66,7 @@ var Filter = function(io) {
 
     // Continent by country request event
     client.on('continentByCountryRequest', function(json) {
-      memberFilter.getContinentByCountry(client.pgPool, json.country, function(err, continent) {
+      memberFilter.getContinentByCountry(json.country, function(err, continent) {
         if(err) return console.error(err);
 
         client.emit('continentByCountryResponse', { continent: continent });
@@ -75,7 +75,7 @@ var Filter = function(io) {
 
     // Continent by state request event
     client.on('continentByStateRequest', function(json) {
-      memberFilter.getContinentByState(client.pgPool, json.state, function(err, continent) {
+      memberFilter.getContinentByState(json.state, function(err, continent) {
         if(err) return console.error(err);
 
         client.emit('continentByStateResponse', { continent: continent });
@@ -84,10 +84,10 @@ var Filter = function(io) {
 
     // Country by state request event
     client.on('countriesByStatesRequest', function(json) {
-      memberFilter.getCountriesByStates(client.pgPool, json.states, function(err, countriesByStates) {
+      memberFilter.getCountriesByStates(json.states, function(err, countriesByStates) {
         if(err) return console.error(err);
 
-        memberFilter.getCountriesByContinent(client.pgPool, countriesByStates.rows[0].continent, function(err, countries) {
+        memberFilter.getCountriesByContinent(countriesByStates.rows[0].continent, function(err, countries) {
           if(err) return console.error(err);
 
           client.emit('countriesByStatesResponse', { countriesByStates: countriesByStates, countries: countries });
@@ -97,7 +97,7 @@ var Filter = function(io) {
 
     // Countries by continent request event
     client.on('countriesByContinentRequest', function(json) {
-      memberFilter.getCountriesByContinent(client.pgPool, json.continent, function(err, countries) {
+      memberFilter.getCountriesByContinent(json.continent, function(err, countries) {
         if(err) return console.error(err);
 
         client.emit('countriesByContinentResponse', { countries: countries, filter: json.filter });
@@ -106,10 +106,10 @@ var Filter = function(io) {
 
     // States by countries request event
     client.on('statesByCountriesRequest', function(json) {
-      memberFilter.getStatesByCountries(client.pgPool, json.countries, function(err, states) {
+      memberFilter.getStatesByCountries(json.countries, function(err, states) {
         if(err) return console.error(err);
 
-        memberFilter.getSpecialRegions(client.pgPool, json.countries, function(err, specialRegions) {
+        memberFilter.getSpecialRegions(json.countries, function(err, specialRegions) {
           if(err) return console.error(err);
 
           client.emit('statesByCountriesResponse', { states: states, specialRegions: specialRegions, filter: json.filter });
@@ -134,7 +134,7 @@ var Filter = function(io) {
       if(json.protectedArea !== undefined && json.protectedArea !== null && json.protectedArea !== '') options.protectedArea = JSON.parse(json.protectedArea);
       if(json.industrialFires !== undefined && json.industrialFires !== null && json.industrialFires !== '') options.industrialFires = json.industrialFires;
 
-      memberFilter.getSatellites(client.pgPool, json.dateTimeFrom, json.dateTimeTo, options, function(err, satellitesList) {
+      memberFilter.getSatellites(json.dateTimeFrom, json.dateTimeTo, options, function(err, satellitesList) {
         if(err) return console.error(err);
 
         client.emit('getSatellitesResponse', { satellitesList: satellitesList });
