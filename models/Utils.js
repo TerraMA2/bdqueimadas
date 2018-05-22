@@ -279,7 +279,7 @@ var Utils = function() {
 
     // If the 'options.industrialFires' parameter exists, a industrial fires 'where' clause is created
     if(options.industrialFires !== undefined && (options.industrialFires == "false" || !options.industrialFires)) {
-      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresFieldName + " is null";
+      query += " and " + (options.tableAlias !== undefined ? options.tableAlias + "." : "") + memberTablesConfig.Fires.IndustrialFiresFieldName + " = 0";
     }
 
     return {
@@ -289,7 +289,7 @@ var Utils = function() {
     };
   };
 
-  
+
   /**
    * Verifies if a string exists in an array.
    * @param {array} array - Array where the search will be performed

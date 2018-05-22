@@ -710,7 +710,7 @@ define(
      * @inner
      */
     var createIndustrialFiresFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresFieldName + " IS NULL";
+      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresFieldName + " = 0";
 
       return cql;
     };
@@ -1062,7 +1062,7 @@ define(
       }
 
       if(!industrialFires) {
-        currentSituationFilter += ";industrialFires: and id_area_industrial is null";
+        currentSituationFilter += ";industrialFires: and id_area_industrial = 0";
       }
 
       TerraMA2WebComponents.MapDisplay.updateLayerSourceParams(layer, { viewparams: currentSituationFilter }, false);
@@ -1131,14 +1131,14 @@ define(
           satelliteReferenceEnd = new Date(parseInt(satelliteReferenceEndArray[0]), parseInt(satelliteReferenceEndArray[1]) - 1, parseInt(satelliteReferenceEndArray[2]), 0, 0, 0);
         }
 
-        if((dateFrom <= satelliteBegin && dateTo >= satelliteEnd) || 
-          (dateFrom >= satelliteBegin && dateTo <= satelliteEnd) || 
-          (dateFrom <= satelliteBegin && dateTo >= satelliteBegin) || 
+        if((dateFrom <= satelliteBegin && dateTo >= satelliteEnd) ||
+          (dateFrom >= satelliteBegin && dateTo <= satelliteEnd) ||
+          (dateFrom <= satelliteBegin && dateTo >= satelliteBegin) ||
           (dateFrom <= satelliteEnd && dateTo >= satelliteEnd)) {
 
-          if((dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceEnd) || 
-            (dateFrom >= satelliteReferenceBegin && dateTo <= satelliteReferenceEnd) || 
-            (dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceBegin) || 
+          if((dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceEnd) ||
+            (dateFrom >= satelliteReferenceBegin && dateTo <= satelliteReferenceEnd) ||
+            (dateFrom <= satelliteReferenceBegin && dateTo >= satelliteReferenceBegin) ||
             (dateFrom <= satelliteReferenceEnd && dateTo >= satelliteReferenceEnd)) {
             if(Utils.stringInArray(selectedOptions, satellitesList[i].Id)) {
               referenceSatellite += "<option value=\"" + satellitesList[i].Id + "\" selected>Refer. (" + satellitesList[i].Name + ")</option>";
