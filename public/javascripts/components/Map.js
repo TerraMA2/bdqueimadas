@@ -436,7 +436,7 @@ define(
      * @inner
      */
     var showFogoGrama = function(longitude, latitude) {
-      $('#fogograma-box').html("<img style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"https://prodwww-queimadas.dgi.inpe.br/fogograma/?lon=" + longitude + "&lat=" + latitude + "\"/>");
+      $('#fogograma-box').html("<img style=\"width: 100%; height: 100%; border: none; margin: 0; padding: 0; overflow: hidden;\" src=\"http://www.inpe.br/queimadas/fogograma/?lon=" + longitude + "&lat=" + latitude + "\"/>");
       $('#fogograma-box').dialog({
         dialogClass: "fogograma-box",
         title: "FogoGrama",
