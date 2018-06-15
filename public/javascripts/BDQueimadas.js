@@ -1338,13 +1338,13 @@ define(
         }, 2000);
 
         if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName ||
-        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer || 
-        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName ||
         $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer) {
           clearUCEsLayers();
         } else if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.LayerName ||
-        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer || 
-        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName || 
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCF.NamesLayer ||
+        $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.LayerName ||
         $(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNF.NamesLayer) {
           clearUCFsLayers();
         } else if($(this).parent().data("layerid") === Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName ||
@@ -1592,7 +1592,7 @@ define(
 
         vex.dialog.alert({
           className: 'vex-theme-default export-dialog',
-          message: 
+          message:
           '<div class="component-filter">' +
             '<div class="component-filter-title">Área de seleção:</div>' +
             '<div class="component-filter-content" style="max-height: ' + ($(window).outerHeight() - 212) + 'px;">' +
@@ -2184,13 +2184,13 @@ define(
 
               if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').is(":checked"))
                 $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
-              
+
               if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
                 $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
-              
+
               if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').is(":checked"))
                 $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
-              
+
               if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
                 $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
 
@@ -2223,7 +2223,7 @@ define(
 
               if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').is(":checked"))
                 $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
-              
+
               if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').is(":checked"))
                 $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
 
@@ -2541,13 +2541,13 @@ define(
 
             if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').is(":checked"))
               $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.LayerName.replace(':', '') + ' > input').click();
-            
+
             if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
               $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.UCE.NamesLayer.replace(':', '') + ' > input').click();
-            
+
             if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').is(":checked"))
               $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.LayerName.replace(':', '') + ' > input').click();
-            
+
             if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').is(":checked"))
               $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.RPPNE.NamesLayer.replace(':', '') + ' > input').click();
 
@@ -2580,7 +2580,7 @@ define(
 
             if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').is(":checked"))
               $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.LayerName.replace(':', '') + ' > input').click();
-            
+
             if(!$('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').is(":checked"))
               $('#' + Utils.getConfigurations().filterConfigurations.ProtectedAreas.TI.NamesLayer.replace(':', '') + ' > input').click();
 
@@ -2922,6 +2922,14 @@ define(
      */
     var init = function() {
       $(document).ready(function() {
+        vex.dialog.alert({
+          message: '<a target="_blank" href="http://www.inpe.br/queimadas/portal/lancamento-da-colecao-2-de-dados-de-focos-de-calor"><img src="http://www.inpe.br/queimadas/portal/banner-colecao2-bdqueimadas.png"/></a>',
+          buttons: [{
+            type: 'submit',
+            text: 'OK',
+            className: 'bdqueimadas-btn'
+          }]
+        });
         memberButtonBlinkingInterval = setInterval(function() {
           if($("#layer-explorer-and-filter-button").hasClass('blink')) {
             $("#layer-explorer-and-filter-button").removeClass('blink');
