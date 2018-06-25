@@ -1935,10 +1935,19 @@ define(
 
           if(featuresLength > 0) {
             var firesAttributes = "";
+            btn_collapse = "<div class='box-tools pull-right'><button type='button' class='btn btn-box-tool collapse-btn' data-widget='collapse'>+</button></div>"
 
             for(var i = 0; i < featuresLength; i++) {
-              firesAttributes += "<strong>Id:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
-              firesAttributes += "<br/><strong>Latitude:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + ' - ' + Utils.convertLatitudeToDMS(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName]);
+
+              firesAttributes += "<div class='box box-default'>"
+              firesAttributes += "  <div class='box-header'>"
+              firesAttributes += "    <div class='box-title'>"
+              firesAttributes += "      <strong>Id:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.IdFieldName];
+              firesAttributes += "    </div>"
+              firesAttributes += btn_collapse
+              firesAttributes += "  </div>"
+              firesAttributes += "  <div class='box-body'>"
+              firesAttributes += "<strong>Latitude:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + ' - ' + Utils.convertLatitudeToDMS(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName]);
               firesAttributes += "<br/><strong>Longitude:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + ' - ' + Utils.convertLongitudeToDMS(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName]);
               firesAttributes += "<br/><strong>Data / Hora:</strong> " + Utils.dateTimeToString(Utils.stringToDateTime(featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFieldName].toString().replace('T', ' ').replace('Z', ''), Utils.getConfigurations().filterConfigurations.LayerToFilter.DateTimeFormat), "YYYY/MM/DD HH:II:SS");
               firesAttributes += "<br/><strong>Satélite:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.SatelliteFieldName];
@@ -1948,7 +1957,8 @@ define(
               firesAttributes += "<br/><strong>Nº dias sem precipitação:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.NumberOfDaysWithoutPrecipitationFieldName];
               firesAttributes += "<br/><strong>Risco Fogo / Bioma:</strong> " + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.RiskFieldName] + ' / ' + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.BiomeFieldName];
               firesAttributes += "<br/><br/><a target='_blank' href='http://maps.google.com.br/maps?q=" + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LatitudeFieldName] + "," + featureInfo.features[i].properties[Utils.getConfigurations().filterConfigurations.LayerToFilter.LongitudeFieldName] + "&hl=pt-BR&t=h&z=10'>Veja esse ponto no Google Maps</a>";
-              if(featuresLength > (i + 1)) firesAttributes += "<hr/>";
+              firesAttributes += "  </div>"
+              firesAttributes += "</div>"
             }
 
             $('#feature-info-box').html(firesAttributes);
@@ -1957,7 +1967,7 @@ define(
               dialogClass: "feature-info-box",
               title: (featuresLength > 1 ? "Atributos dos focos" : "Atributos do foco"),
               width: 300,
-              height: 280,
+              height: 380,
               modal: false,
               resizable: true,
               draggable: true,
