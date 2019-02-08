@@ -722,6 +722,18 @@ define(
         $('#filter-button').click();
       });
 
+      $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.UrbanReflexAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#filter-button').click();
+      });
+
+      $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.VolcanicAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#filter-button').click();
+      });
+
+      $(document).on('change', '#' + Utils.getConfigurations().filterConfigurations.SandbanksAreasLayer.Id.replace(':', '') + ' > input', function() {
+        $('#filter-button').click();
+      });
+
       // Filter Events
 
       $('#filter-button').on('click', function() {

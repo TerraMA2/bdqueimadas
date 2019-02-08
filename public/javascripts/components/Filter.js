@@ -21,6 +21,9 @@
  * @property {array} memberSpecialRegionsCountries - Current special regions countries.
  * @property {object} memberProtectedArea - Current protected area.
  * @property {boolean} memberIndustrialFires - Current industrial fires filter.
+ * @property {boolean} memberSandbanksFires - Current sandbanks fires filter.
+ * @property {boolean} memberUrbanReflexFires - Current urban reflex fires filter.
+ * @property {boolean} memberVolcanicFires - Current volcanic fires filter.
  * @property {boolean} memberInitialFilter - Flag that indicates if the current filter is the initial one.
  * @property {array} memberInitialSatellites - Initial satellites.
  * @property {object} memberLastFilters - Last filters used in the layers.
@@ -57,6 +60,12 @@ define(
     var memberProtectedArea = null;
     // Current industrial fires filter
     var memberIndustrialFires = false;
+    // Current sand banks fires filter
+    var memberSandbanksFires = false;
+    // Current urban reflex fires filter
+    var memberUrbanReflexFires = false;
+    // Current volcanic fires filter
+    var memberVolcanicFires = false;
     // Flag that indicates if the current filter is the initial one
     var memberInitialFilter = true;
     // Initial satellites
@@ -389,6 +398,42 @@ define(
     };
 
     /**
+     * Sets the current sandbanks fires filter.
+     * @param {boolean} sandbanksFires - Sandbanks fires filter
+     *
+     * @function setSandbanksFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setSandbanksFires = function(sandbanksFires) {
+      memberSandbanksFires = sandbanksFires;
+    };
+
+    /**
+     * Sets the current urban reflex fires filter.
+     * @param {boolean} urbanReflexFires - Urbans reflex fires filter
+     *
+     * @function setUrbanReflexFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setUrbanReflexFires = function(urbanReflexFires) {
+      memberUrbanReflexFires = urbanReflexFires;
+    };
+
+    /**
+     * Sets the current volcanic fires filter.
+     * @param {boolean} volcanicFires - Volcanic fires filter
+     *
+     * @function setVolcanicFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var setVolcanicFires = function(volcanicFires) {
+      memberVolcanicFires = volcanicFires;
+    };
+
+    /**
      * Returns the current industrial fires filter.
      * @returns {boolean} memberIndustrialFires - Current industrial fires filter
      *
@@ -398,6 +443,42 @@ define(
      */
     var getIndustrialFires = function() {
       return memberIndustrialFires;
+    };
+
+    /**
+     * Returns the current industrial fires filter.
+     * @returns {boolean} memberSandbanksFires - Current sandbanks fires filter
+     *
+     * @function getSandbanksFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getSandbanksFires = function() {
+      return memberSandbanksFires;
+    };
+
+    /**
+     * Returns the current industrial fires filter.
+     * @returns {boolean} memberUrbanReflexFires - Current urban reflex fires filter
+     *
+     * @function getUrbanReflexFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getUrbanReflexFires = function() {
+      return memberUrbanReflexFires;
+    };
+
+    /**
+     * Returns the current industrial fires filter.
+     * @returns {boolean} memberVolcanicFires - Current volcanic fires filter
+     *
+     * @function getVolcanicFires
+     * @memberof Filter(2)
+     * @inner
+     */
+    var getVolcanicFires = function() {
+      return memberVolcanicFires;
     };
 
     /**
@@ -537,6 +618,63 @@ define(
     };
 
     /**
+     * Returns if there is any spurious member equal to true
+     * @returns {boolean}
+     *
+     * @private
+     * @function hasSpuriousFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var hasSpuriousFilter = function() {
+      var vals = [
+        memberIndustrialFires,
+        memberUrbanReflexFires,
+        memberVolcanicFires,
+        memberSandbanksFires
+      ]
+
+      return vals.filter(function(v) {return v}).length > 0
+    }
+
+    /**
+     * Creates the spurious filter.
+     * @returns {string} cql - Spurious cql filter
+     *
+     * @private
+     * @function createSpuriousFilter
+     * @memberof Filter(2)
+     * @inner
+     */
+    var createSpuriousFilter = function() {
+      if (!hasSpuriousFilter())
+        return ''
+
+      var cql = '';
+      var config = Utils.getConfigurations();
+      var fieldName = config.filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName;
+
+      var keyval = {
+        'industrialFires': [memberIndustrialFires, 2],
+        'urbanReflexFires': [memberUrbanReflexFires, 3],
+        'volcanicFires': [memberVolcanicFires, 4],
+        'sandbanksFires': [memberSandbanksFires, 5]
+      }
+
+      var keys = Object.keys(keyval);
+      var ids = keys.filter(function(key) {
+        return keyval[key][0]
+      }).map(function(key) {
+        return keyval[key][1]
+      });
+
+      if (ids.length > 0)
+        cql = fieldName + " in (" + ids.join(', ') + ")";
+
+      return cql
+    }
+
+    /**
      * Creates the satellites filter.
      * @returns {string} cql - Satellites cql filter
      *
@@ -587,8 +725,8 @@ define(
 
       cql = cql.substring(0, cql.length - 1) + ")";
 
-      if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+      if (hasSpuriousFilter())
+        cql += " OR " + createSpuriousFilter();
 
       cql += ")";
 
@@ -617,8 +755,8 @@ define(
 
       cql = cql.substring(0, cql.length - 1) + ")";
 
-      if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+      if (hasSpuriousFilter())
+        cql += " OR " + createSpuriousFilter();
 
       cql += ")";
 
@@ -672,8 +810,8 @@ define(
         cql = cql.substring(0, cql.length - 4) + ")";
       }
 
-      if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+      if (hasSpuriousFilter())
+        cql += " OR " + createSpuriousFilter();
 
       cql += ")";
 
@@ -692,8 +830,8 @@ define(
     var createCitiesFilter = function() {
       var cql = "(" + Utils.getConfigurations().filterConfigurations.LayerToFilter.CityFieldName + "='" + memberCity + "'";
 
-      if(memberIndustrialFires)
-        cql += " OR " + Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresTypeFieldName + " = 2";
+      if (hasSpuriousFilter())
+        cql += " OR " + createSpuriousFilter();
 
       cql += ")";
 
@@ -710,7 +848,8 @@ define(
      * @inner
      */
     var createIndustrialFiresFilter = function() {
-      var cql = Utils.getConfigurations().filterConfigurations.LayerToFilter.IndustrialFiresFieldName + " = 0";
+      var filters = Utils.getConfigurations().filterConfigurations;
+      var cql = filters.LayerToFilter.IndustrialFiresFieldName + " = 0";
 
       return cql;
     };
@@ -769,6 +908,12 @@ define(
 
         setIndustrialFires($('#' + Utils.getConfigurations().filterConfigurations.IndustrialAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
 
+        setSandbanksFires($('#' + Utils.getConfigurations().filterConfigurations.SandbanksAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+
+        setUrbanReflexFires($('#' + Utils.getConfigurations().filterConfigurations.UrbanReflexAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+
+        setVolcanicFires($('#' + Utils.getConfigurations().filterConfigurations.VolcanicAreasLayer.Id.replace(':', '') + ' > input').is(':checked'));
+
         var cql = "";
 
         if(filterDateFrom.length > 0 && filterDateTo.length > 0 && filterTimeFrom.length > 0 && filterTimeTo.length > 0) {
@@ -806,7 +951,7 @@ define(
           cql += createCitiesFilter() + " AND ";
         }
 
-        if(!memberIndustrialFires) {
+        if(!hasSpuriousFilter()) {
           cql += createIndustrialFiresFilter() + " AND ";
         }
 
@@ -989,7 +1134,10 @@ define(
             states: memberStates,
             satellites: memberSatellites,
             biomes: memberBiomes,
-            industrialFires: memberIndustrialFires
+            industrialFires: memberIndustrialFires,
+            sandbanksFires: memberSandbanksFires,
+            urbanReflexFires: memberUrbanReflexFires,
+            volcanicFires: memberVolcanicFires
           });
 
           if(memberInitialFilter || currentSituationFilterString != memberLastFilters[layers[i].Id]) {
@@ -1001,7 +1149,7 @@ define(
               memberStates,
               memberSatellites,
               memberBiomes,
-              memberIndustrialFires,
+              hasSpuriousFilter(),
               layers[i].Id
             );
 
@@ -1322,6 +1470,12 @@ define(
       getProtectedArea: getProtectedArea,
       setIndustrialFires: setIndustrialFires,
       getIndustrialFires: getIndustrialFires,
+      setSandbanksFires: setSandbanksFires,
+      getSandbanksFires: getSandbanksFires,
+      getUrbanReflexFires: getUrbanReflexFires,
+      setUrbanReflexFires: setUrbanReflexFires,
+      getVolcanicFires: getVolcanicFires,
+      setVolcanicFires: setVolcanicFires,
       isInitialFilter: isInitialFilter,
       setInitialFilterToFalse: setInitialFilterToFalse,
       getInitialSatellites: getInitialSatellites,
