@@ -2679,6 +2679,70 @@
       ]
     },
     {
+      "Id": "other_spurious",
+      "Name": "Outros Espúrios",
+      "LayerGroup": true,
+      "Layers": [
+        {
+          "Id": "bdqueimadas:areas_bancos_areia",
+          "Name": "Bancos de Areia",
+          "Title": "Bancos de Areia",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "http://queimadas.dgi.inpe.br/queimadas/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Classes": "unsortable float-left clear-left"
+          }
+        },
+        {
+          "Id": "bdqueimadas:areas_urbanas_reflexo",
+          "Name": "Áreas Urbanas de Reflexo",
+          "Title": "Áreas Urbanas de Reflexo",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "http://queimadas.dgi.inpe.br/queimadas/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Classes": "unsortable float-left clear-left"
+          }
+        },
+        {
+          "Id": "bdqueimadas:areas_vulcanica",
+          "Name": "Áreas Vulcânicas",
+          "Title": "Áreas Vulcânicas",
+          "LayerGroup": false,
+          "Background": false,
+          "Wmts": false,
+          "Visible": false,
+          "Disabled": false,
+          "AddsInTheStart": true,
+          "AppendAtTheEnd": false,
+          "Params": {
+            "Url": "http://queimadas.dgi.inpe.br/queimadas/geoserver/ows",
+            "ServerType": "geoserver",
+            "MinResolution": 0,
+            "MaxResolution": "Infinity",
+            "Classes": "unsortable float-left clear-left"
+          }
+        }
+      ]
+    },
+    {
       "Id": "fires_spatial_map",
       "Name": "Mapa Espacial de Focos",
       "LayerGroup": true,

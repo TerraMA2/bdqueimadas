@@ -71,6 +71,18 @@
     "Id": "bdqueimadas:areas_industriais",
     "ContinentField": "continente_id"
   },
+  "SandbanksAreasLayer":{
+    "Id": "bdqueimadas:areas_bancos_areia",
+    "ContinentField": "continente_id"
+  },
+  "UrbanReflexAreasLayer":{
+    "Id": "bdqueimadas:areas_urbanas_reflexo",
+    "ContinentField": "continente_id"
+  },
+  "VolcanicAreasLayer":{
+    "Id": "bdqueimadas:areas_vulcanica",
+    "ContinentField": "continente_id"
+  },
   "OilfieldsLayer": {
     "Id": "bdqueimadas:areas_petroliferas",
     "ContinentField": "continente_id"
